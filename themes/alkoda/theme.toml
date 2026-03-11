@@ -1,0 +1,16 @@
+name = "Alkoda"
+license = "MIT"
+licenselink = "https://github.com/hugo-sid/hugo-blog-awesome/blob/main/LICENSE"
+description = "Hugo blog theme (hugo-blog-awesome) adapted for Hugo v0.146+ template system"
+
+homepage = "https://github.com/hugo-sid/hugo-blog-awesome/"
+demosite = "https://hugo-blog-awesome.netlify.app/"
+
+tags = ["blog", "responsive", "minimal", "dark", "light", "multilingual"]
+features = ["blog", "sass", "dark"]
+
+min_version = "0.146.0"
+
+[author]
+    name = "Sidharth R"
+    homepage = "https://sidh.dev"

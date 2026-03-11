@@ -1,0 +1,21 @@
+{{/* Section "Réalisations récentes" : 3 dernières vidéos, 1 grande à gauche + 2 plus petites à droite. */}}
+{{ $videosSection := .Site.GetPage "/videos" }}
+{{ if not $videosSection }}{{ $videosSection = .Site.GetPage "videos" }}{{ end }}
+{{ if $videosSection }}
+  {{ $recent := $videosSection.Pages.ByDate.Reverse | first 3 }}
+  {{ if $recent }}
+<section class="home-recent-videos" aria-labelledby="home-recent-videos-title">
+  <h3 id="home-recent-videos-title" class="home-recent-videos-heading">{{ T "home.recent_realizations" | default "Réalisations récentes" }}</h3>
+  <div class="home-recent-videos-grid">
+    {{ range $index, $v := $recent }}
+    <div class="home-recent-videos-cell home-recent-videos-cell-{{ add $index 1 }}">
+      {{ partial "videoCard" $v }}
+    </div>
+    {{ end }}
+  </div>
+  <p class="home-recent-videos-more">
+    <a href="{{ "/videos/" | relLangURL }}">{{ T "home.see_all_realizations" | default "Voir toutes les réalisations" }}</a>
+  </p>
+</section>
+  {{ end }}
+{{ end }}

@@ -1,0 +1,16 @@
+# English language
+languageName = "🇬🇧"
+languageCode = "en-us"
+contentDir = "content/en"
+weight = 2
+
+[[menu.main]]
+  pageRef = "about"
+  name = "Alkoda"
+  url = "/about/"
+  weight = 20
+[[menu.main]]
+  pageRef = "videos"
+  name = "Videos"
+  url = "/videos/"
+  weight = 30

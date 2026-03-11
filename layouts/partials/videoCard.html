@@ -1,0 +1,36 @@
+{{/* Mini carte pour la liste des réalisations : cover si dispo, sinon miniature YouTube. */}}
+{{ $cover := "" }}
+{{ if .Params.cover }}
+  {{ $cover = .Resources.GetMatch .Params.cover }}
+  {{ if not $cover }}{{ $cover = .CurrentSection.Resources.GetMatch .Params.cover }}{{ end }}
+{{ else }}
+  {{ $cover = .Resources.GetMatch "cover.*" }}
+  {{ if not $cover }}{{ $cover = .CurrentSection.Resources.GetMatch "cover.*" }}{{ end }}
+{{ end }}
+{{ $thumb := "" }}
+{{ if $cover }}
+  {{ $thumb = $cover.RelPermalink }}
+{{ else if .Params.youtube }}
+  {{/* Miniature YouTube (hqdefault 480x360, disponible pour toutes les vidéos) */}}
+  {{ $thumb = printf "https://img.youtube.com/vi/%s/hqdefault.jpg" .Params.youtube }}
+{{ end }}
+
+<article class="video-card">
+  <a href="{{ .RelPermalink }}" class="video-card-link">
+    <div class="video-card-media">
+      {{ if $thumb }}
+      <img src="{{ $thumb }}" alt="" loading="lazy" />
+      {{ else }}
+      <div class="video-card-placeholder">{{ .Title }}</div>
+      {{ end }}
+    </div>
+    <div class="video-card-body">
+      <h3 class="video-card-title">{{ .Title }}</h3>
+      {{ $configDateFormat := .Site.Params.dateFormat | default ":date_medium" }}
+      <time class="video-card-date" datetime="{{ .Date.Format "2006-01-02" }}">{{ .Date | time.Format $configDateFormat }}</time>
+      {{ with .Params.description }}
+      <p class="video-card-desc">{{ . | truncate 100 }}</p>
+      {{ end }}
+    </div>
+  </a>
+</article>

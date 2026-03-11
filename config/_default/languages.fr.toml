@@ -1,0 +1,16 @@
+# French language
+languageName = "🇫🇷"
+languageCode = "fr-fr"
+contentDir = "content/fr"
+weight = 1
+
+[[menu.main]]
+  pageRef = "about"
+  name = "Alkoda"
+  url = "/about/"
+  weight = 20
+[[menu.main]]
+  pageRef = "videos"
+  name = "Réalisations"
+  url = "/videos/"
+  weight = 30

@@ -1,0 +1,777 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>ALKODA ON AIR — Signal Flow [VIEWER]</title>
+<style>
+
+@import url('https://fonts.googleapis.com/css2?family=Share+Tech+Mono&family=Orbitron:wght@400;600;800;900&family=Rajdhani:wght@300;400;500;600;700&display=swap');
+
+:root {
+  --bg:       #05070f;
+  --bg2:      #080b17;
+  --bg3:      #0c1020;
+  --panel:    #0f1422;
+  --border:   #1a2235;
+  --border2:  #212d45;
+  --accent:   #00d4ff;
+  --accent2:  #ff6b35;
+  --green:    #39ff14;
+  --text:     #b8ccec;
+  --textdim:  #4a5a7a;
+  --textbr:   #ffffff;
+  --mono:     'Share Tech Mono', monospace;
+  --display:  'Orbitron', sans-serif;
+  --body:     'Rajdhani', sans-serif;
+}
+
+*{margin:0;padding:0;box-sizing:border-box}
+html,body{width:100%;height:100%;overflow:hidden;background:var(--bg);color:var(--text);font-family:var(--body)}
+
+/* ─── LOADING ─────────────────────────────── */
+#loading{
+  position:fixed;inset:0;background:var(--bg);z-index:9999;
+  display:flex;flex-direction:column;align-items:center;justify-content:center;
+  transition:opacity .6s ease .2s;
+}
+#loading.done{opacity:0;pointer-events:none}
+.ld-hex{
+  width:80px;height:80px;margin-bottom:32px;
+  clip-path:polygon(50% 0%,100% 25%,100% 75%,50% 100%,0% 75%,0% 25%);
+  background:linear-gradient(135deg,var(--accent),#0066ff);
+  animation:hex-pulse 2s ease-in-out infinite;
+  display:flex;align-items:center;justify-content:center;
+  font-family:var(--display);font-size:20px;font-weight:900;color:#fff;
+}
+@keyframes hex-pulse{0%,100%{filter:drop-shadow(0 0 20px rgba(0,212,255,.8))}50%{filter:drop-shadow(0 0 50px rgba(0,212,255,.4))}}
+.ld-title{font-family:var(--display);font-size:32px;font-weight:900;letter-spacing:10px;color:#fff;margin-bottom:6px}
+.ld-sub{font-family:var(--mono);font-size:11px;letter-spacing:6px;color:var(--accent);margin-bottom:40px;text-transform:uppercase}
+.ld-bar-wrap{width:320px;height:2px;background:var(--border);border-radius:1px;overflow:hidden;margin-bottom:16px}
+.ld-bar{height:100%;width:0;background:linear-gradient(90deg,var(--accent),#0099ff);border-radius:1px;transition:width .3s ease;box-shadow:0 0 12px var(--accent)}
+.ld-status{font-family:var(--mono);font-size:10px;color:var(--textdim);letter-spacing:2px;min-height:16px;transition:opacity .2s}
+
+/* ─── LAYOUT ───────────────────────────────── */
+#app{display:grid;grid-template-rows:52px 1fr 32px;grid-template-columns:200px 1fr 300px;height:100vh;width:100vw}
+
+/* ─── HEADER ───────────────────────────────── */
+#header{
+  grid-column:1/-1;grid-row:1;
+  background:linear-gradient(90deg,var(--bg2) 0%,#0a1128 50%,var(--bg2) 100%);
+  border-bottom:1px solid var(--border2);
+  display:flex;align-items:center;gap:16px;padding:0 20px;
+  position:relative;z-index:50;
+}
+#header::after{
+  content:'';position:absolute;bottom:0;left:0;right:0;height:1px;
+  background:linear-gradient(90deg,transparent 0%,var(--accent) 30%,#0066ff 70%,transparent 100%);
+  opacity:.5;
+}
+.h-logo{display:flex;align-items:center;gap:10px}
+.h-hex{
+  width:28px;height:28px;
+  clip-path:polygon(50% 0%,100% 25%,100% 75%,50% 100%,0% 75%,0% 25%);
+  background:var(--accent);animation:hex-pulse 3s ease-in-out infinite;
+}
+.h-name{font-family:var(--display);font-size:14px;font-weight:900;letter-spacing:4px;color:#fff}
+.h-ver{font-family:var(--mono);font-size:9px;color:var(--accent);letter-spacing:3px}
+
+.h-sep{width:1px;height:28px;background:var(--border2);margin:0 4px}
+
+.h-oab{
+  padding:3px 10px;background:#cc0000;color:#fff;
+  font-family:var(--display);font-size:9px;font-weight:700;letter-spacing:3px;
+  border-radius:2px;animation:oab 1.4s ease-in-out infinite;
+  box-shadow:0 0 16px rgba(255,0,0,.5);
+}
+@keyframes oab{0%,100%{opacity:1}50%{opacity:.5}}
+
+.h-search{
+  position:relative;margin-left:8px;display:flex;align-items:center;gap:6px;
+}
+#search-input{
+  background:var(--bg3);border:1px solid var(--border2);border-radius:4px;
+  padding:5px 12px 5px 28px;font-family:var(--mono);font-size:11px;
+  color:var(--text);width:200px;outline:none;transition:all .2s;
+}
+#search-input:focus{border-color:rgba(0,212,255,.4);background:rgba(0,212,255,.04);width:240px}
+.h-search-icon{position:absolute;left:8px;top:50%;transform:translateY(-50%);color:var(--textdim);font-size:14px;pointer-events:none}
+#search-drop{
+  position:absolute;top:calc(100% + 4px);left:0;min-width:240px;max-height:240px;
+  overflow-y:auto;background:var(--panel);border:1px solid var(--border2);
+  border-radius:4px;z-index:9999;display:none;
+  box-shadow:0 8px 32px rgba(0,0,0,.6);
+}
+#search-drop.open{display:block}
+.sd-item{
+  padding:7px 12px;font-family:var(--body);font-size:12px;color:var(--text);
+  cursor:pointer;display:flex;align-items:center;gap:8px;
+  border-bottom:1px solid rgba(255,255,255,.03);transition:background .1s;
+}
+.sd-item:hover,.sd-item.active{background:rgba(0,212,255,.1);color:#fff}
+.sd-dot{width:7px;height:7px;border-radius:2px;flex-shrink:0}
+.sd-cat{font-family:var(--mono);font-size:9px;color:var(--textdim);margin-left:auto}
+/* ── Undo / Redo dans le header */
+.h-ur{display:flex;gap:3px;align-items:center}
+.h-ur-btn{
+  background:var(--bg3);border:1px solid var(--border2);border-radius:3px;
+  color:var(--textdim);font-family:var(--mono);font-size:11px;padding:4px 8px;
+  cursor:pointer;transition:all .15s;opacity:.35;
+}
+.h-ur-btn:hover{background:var(--border2);color:var(--text)}
+.h-ur-btn.active{opacity:1}
+
+.h-stats{margin-left:auto;display:flex;gap:20px;align-items:center}
+.h-stat{display:flex;align-items:center;gap:6px;font-family:var(--mono);font-size:10px;color:var(--textdim)}
+.h-dot{width:6px;height:6px;border-radius:50%;animation:stat-p 2s infinite}
+@keyframes stat-p{0%,100%{opacity:1}50%{opacity:.3}}
+
+/* ─── SIDEBAR LEFT ─────────────────────────── */
+#sidebar-left{
+  grid-column:1;grid-row:2;
+  background:var(--bg2);border-right:1px solid var(--border);
+  overflow-y:auto;display:flex;flex-direction:column;gap:0;
+}
+#sidebar-left::-webkit-scrollbar{width:3px}
+#sidebar-left::-webkit-scrollbar-track{background:transparent}
+#sidebar-left::-webkit-scrollbar-thumb{background:var(--border2);border-radius:2px}
+
+.sl-section{padding:14px 14px 10px;border-bottom:1px solid var(--border)}
+.sl-title{font-family:var(--mono);font-size:8px;letter-spacing:3px;color:var(--textdim);text-transform:uppercase;margin-bottom:10px}
+
+.f-btn{
+  display:flex;align-items:center;gap:8px;width:100%;padding:6px 8px;
+  background:transparent;border:1px solid transparent;border-radius:4px;
+  cursor:pointer;margin-bottom:2px;transition:all .15s;text-align:left;
+}
+.f-btn:hover{background:rgba(255,255,255,.04);border-color:var(--border)}
+.f-btn.active{background:rgba(0,212,255,.07);border-color:rgba(0,212,255,.25)}
+.f-dot{width:9px;height:9px;border-radius:2px;flex-shrink:0}
+.f-label{font-family:var(--body);font-size:12px;font-weight:600;color:var(--text)}
+.f-count{margin-left:auto;font-family:var(--mono);font-size:9px;color:var(--textdim);background:var(--bg3);padding:1px 5px;border-radius:2px}
+
+.c-btn{
+  display:flex;align-items:center;gap:7px;width:100%;padding:5px 8px;
+  background:transparent;border:1px solid transparent;border-radius:3px;
+  cursor:pointer;margin-bottom:2px;transition:all .15s;
+}
+.c-btn:hover{background:rgba(255,255,255,.03)}
+.c-btn.active{background:rgba(255,255,255,.04);border-color:var(--border)}
+.c-line{width:22px;height:2px;border-radius:1px;flex-shrink:0}
+.c-label{font-family:var(--mono);font-size:10px}
+
+.sl-actions{padding:12px 14px;margin-top:auto}
+.act-btn{
+  display:flex;align-items:center;gap:7px;width:100%;padding:7px 10px;
+  background:var(--bg3);border:1px solid var(--border);border-radius:4px;
+  cursor:pointer;font-family:var(--mono);font-size:10px;color:var(--textdim);
+  margin-bottom:4px;transition:all .15s;
+}
+.act-btn:hover{background:var(--border);color:var(--text)}
+
+/* ─── CANVAS AREA ──────────────────────────── */
+#canvas-area{
+  grid-column:2;grid-row:2;
+  position:relative;overflow:hidden;cursor:grab;
+  background:var(--bg);
+}
+#canvas-area:active{cursor:grabbing}
+#canvas-area::before{
+  content:'';position:absolute;inset:0;pointer-events:none;
+  background-image:
+    linear-gradient(rgba(26,34,53,.35) 1px,transparent 1px),
+    linear-gradient(90deg,rgba(26,34,53,.35) 1px,transparent 1px);
+  background-size:50px 50px;z-index:0;
+}
+#canvas-area::after{
+  content:'';position:absolute;inset:0;pointer-events:none;z-index:1;
+  background:radial-gradient(ellipse at center,transparent 30%,rgba(5,7,15,.75) 100%);
+}
+
+#canvas-root{position:absolute;top:0;left:0;transform-origin:0 0;z-index:2}
+#nodes-layer{position:relative;z-index:10}
+
+/* SVG cables layer */
+#cables-svg{position:absolute;top:0;left:0;overflow:visible;pointer-events:all;z-index:10;cursor:default}
+#cables-svg .cp{cursor:default;transition:opacity .2s,stroke-width .2s;pointer-events:stroke;}
+#cables-svg .cp:hover{stroke-width:5px!important;opacity:1!important}
+#cables-svg .anchor-handle{transition:filter .15s}
+#cables-svg .anchor-handle:hover{filter:brightness(1.5)}
+
+/* Nodes */
+.node{position:absolute;cursor:url('data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSIyMCIgaGVpZ2h0PSIyMCIgdmlld0JveD0iMCAwIDIwIDIwIj4KICA8cGF0aCBkPSJNMTAgMSBMOCA0IEw5LjUgNCBMOS41IDkuNSBMNCA5LjUgTDQgOCBMMSAxMCBMNCAxMiBMNCAxMC41IEw5LjUgMTAuNSBMOS41IDE2IEw4IDE2IEwxMCAxOSBMMTIgMTYgTDEwLjUgMTYgTDEwLjUgMTAuNSBMMTYgMTAuNSBMMTYgMTIgTDE5IDEwIEwxNiA4IEwxNiA5LjUgTDEwLjUgOS41IEwxMC41IDQgTDEyIDQgWiIgZmlsbD0id2hpdGUiIHN0cm9rZT0iYmxhY2siIHN0cm9rZS13aWR0aD0iMC44Ii8+Cjwvc3ZnPg==') 10 10, move;user-select:none;-webkit-user-drag:none}
+.node-box{
+  border:1px solid var(--border2);border-radius:5px;overflow:hidden;
+  background:transparent;transition:all .2s ease;
+  box-shadow:0 3px 16px rgba(0,0,0,.5);
+}
+.node:hover .node-box{
+  border-color:rgba(255,255,255,.2);
+  box-shadow:0 6px 28px rgba(0,0,0,.7),0 0 16px rgba(0,212,255,.08);
+  transform:translateY(-2px);
+}
+.node.sel .node-box{
+  border-color:var(--accent);
+  box-shadow:0 0 0 2px rgba(0,212,255,.25),0 8px 40px rgba(0,0,0,.8),0 0 30px rgba(0,212,255,.12);
+}
+.node.lit .node-box{border-color:rgba(255,200,0,.5);box-shadow:0 0 0 1px rgba(255,200,0,.15),0 6px 24px rgba(0,0,0,.7)}
+.node.dim .node-box{opacity:.12;transform:none}
+.node-catbar{height:3px;width:100%}
+.node-img-wrap{display:flex;align-items:center;justify-content:center;overflow:hidden;background:transparent}
+.node-img-wrap img{object-fit: cover;width:100%;height:100%;padding:3px;-webkit-user-drag:none;user-drag:none;pointer-events:none}
+/* ── Resize handles */
+.rh{
+  position:absolute;z-index:20;background:var(--accent);border:1px solid #fff;
+  border-radius:2px;opacity:.9;transition:opacity .1s;
+}
+.rh:hover{opacity:1;box-shadow:0 0 6px var(--accent)}
+.rh-n,.rh-s{left:50%;transform:translateX(-50%);width:30px;height:6px;cursor:ns-resize}
+.rh-w,.rh-e{top:50%;transform:translateY(-50%);width:6px;height:30px;cursor:ew-resize}
+.rh-nw,.rh-ne,.rh-sw,.rh-se{width:10px;height:10px;cursor:nwse-resize}
+.rh-ne,.rh-se{cursor:nesw-resize}
+.rh-n{top:-4px}.rh-s{bottom:-4px}.rh-w{left:-4px}.rh-e{right:-4px}
+.rh-nw{top:-4px;left:-4px}.rh-ne{top:-4px;right:-4px}
+.rh-sw{bottom:-4px;left:-4px}.rh-se{bottom:-4px;right:-4px}
+
+.node-lbl{
+  position:absolute;bottom:-19px;left:50%;transform:translateX(-50%);
+  white-space:nowrap;font-family:var(--mono);font-size:8px;color:var(--textdim);
+  pointer-events:none;letter-spacing:.5px;text-shadow:0 1px 4px rgba(0,0,0,.9);
+  transition:color .2s;
+}
+.node.sel .node-lbl,.node.lit .node-lbl{color:var(--text)}
+
+/* Zone labels */
+.zone-lbl{
+  position:absolute;font-family:var(--display);font-size:9px;
+  letter-spacing:6px;text-transform:uppercase;color:rgba(255,255,255,.04);
+  pointer-events:none;user-select:none;font-weight:700;
+}
+
+/* Minimap */
+#minimap{
+  position:absolute;bottom:8px;left:8px;z-index:20;
+  width:160px;height:90px;border:1px solid var(--border2);border-radius:4px;
+  overflow:hidden;background:rgba(8,11,23,.9);cursor:pointer;
+}
+#minimap canvas{width:100%;height:100%;display:block}
+
+/* Corners */
+.corner{position:absolute;width:20px;height:20px;pointer-events:none;z-index:3}
+.corner.tl{top:8px;left:8px;border-top:1px solid rgba(0,212,255,.2);border-left:1px solid rgba(0,212,255,.2)}
+.corner.tr{top:8px;right:8px;border-top:1px solid rgba(0,212,255,.2);border-right:1px solid rgba(0,212,255,.2)}
+.corner.bl{bottom:42px;left:8px;border-bottom:1px solid rgba(0,212,255,.2);border-left:1px solid rgba(0,212,255,.2)}
+.corner.br{bottom:42px;right:8px;border-bottom:1px solid rgba(0,212,255,.2);border-right:1px solid rgba(0,212,255,.2)}
+
+/* ─── INFO PANEL RIGHT ─────────────────────── */
+#info-panel{
+  grid-column:3;grid-row:2;
+  background:var(--bg2);border-left:1px solid var(--border);
+  display:flex;flex-direction:column;overflow:hidden;
+  transform:translateX(100%);transition:transform .3s cubic-bezier(.16,1,.3,1);
+}
+#info-panel.open{transform:translateX(0)}
+
+.ip-header{padding:18px 18px 14px;border-bottom:1px solid var(--border);position:relative;flex-shrink:0}
+.ip-badge{
+  display:inline-block;font-family:var(--mono);font-size:8px;letter-spacing:3px;
+  text-transform:uppercase;padding:3px 8px;border-radius:2px;margin-bottom:8px;
+}
+.ip-name{font-family:var(--display);font-size:14px;font-weight:700;color:#fff;letter-spacing:1px;line-height:1.3}
+.ip-close{
+  position:absolute;top:14px;right:14px;width:22px;height:22px;
+  background:transparent;border:1px solid var(--border2);border-radius:3px;
+  cursor:pointer;color:var(--textdim);font-size:12px;
+  display:flex;align-items:center;justify-content:center;transition:all .15s;
+}
+.ip-close:hover{background:rgba(255,255,255,.08);color:var(--text)}
+
+.ip-img{margin:14px 18px;height:130px;border-radius:5px;overflow:hidden;background:var(--bg3);border:1px solid var(--border);display:flex;align-items:center;justify-content:center;flex-shrink:0}
+.ip-img img{max-width:100%;max-height:100%;object-fit: cover;padding:6px}
+
+.ip-desc{padding:0 18px 14px;font-family:var(--body);font-size:13px;line-height:1.6;color:var(--text);border-bottom:1px solid var(--border);flex-shrink:0;white-space:pre-line}
+
+.ip-conns{padding:14px 18px;overflow-y:auto;flex:1}
+.ip-conns::-webkit-scrollbar{width:3px}
+.ip-conns::-webkit-scrollbar-thumb{background:var(--border2);border-radius:2px}
+
+/* ── MODE SIGNAL ─────────────────────────────── */
+#info-panel.signal-mode .ip-img{display:none}
+#info-panel.signal-mode .ip-conn-title{display:none}
+.ip-conn-title{font-family:var(--mono);font-size:8px;letter-spacing:3px;color:var(--textdim);text-transform:uppercase;margin-bottom:10px}
+.ip-conn-item{
+  display:flex;align-items:center;gap:8px;padding:7px 0;
+  border-bottom:1px solid rgba(255,255,255,.04);cursor:pointer;transition:all .12s;
+}
+.ip-conn-item:hover{padding-left:4px}
+.ip-conn-dot{width:8px;height:8px;border-radius:2px;flex-shrink:0}
+.ip-conn-name{font-family:var(--body);font-size:12px;font-weight:600;color:var(--text);flex:1}
+.ip-conn-type{font-family:var(--mono);font-size:9px;padding:2px 6px;background:var(--bg3);border-radius:2px}
+
+/* ─── BOTTOM BAR ───────────────────────────── */
+#bottom-bar{
+  grid-column:1/-1;grid-row:3;
+  background:var(--bg2);border-top:1px solid var(--border);
+  display:flex;align-items:center;padding:0 14px;gap:16px;
+  font-family:var(--mono);font-size:10px;color:var(--textdim);
+}
+.bb-sep{width:1px;height:14px;background:var(--border)}
+.bb-info{flex:1;color:var(--text)}
+.zoom-ctrl{display:flex;align-items:center;gap:5px;margin-left:auto}
+.zoom-btn{
+  width:22px;height:22px;background:var(--bg3);border:1px solid var(--border2);
+  border-radius:3px;cursor:pointer;color:var(--text);
+  display:flex;align-items:center;justify-content:center;font-size:13px;
+  transition:all .12s;font-family:var(--mono);
+}
+.zoom-btn:hover{background:var(--border2)}
+#zoom-val{font-family:var(--mono);font-size:10px;color:var(--textdim);min-width:38px;text-align:center}
+
+/* ─── TOOLTIP ──────────────────────────────── */
+#tt{
+  position:fixed;background:var(--panel);border:1px solid var(--border2);
+  border-radius:5px;padding:10px 13px;pointer-events:none;z-index:500;
+  display:none;max-width:220px;box-shadow:0 8px 30px rgba(0,0,0,.6);
+}
+.tt-name{font-family:var(--display);font-size:11px;font-weight:700;color:#fff;margin-bottom:4px;letter-spacing:.5px}
+.tt-cat{font-family:var(--mono);font-size:8px;letter-spacing:2px;text-transform:uppercase;margin-bottom:5px}
+.tt-info{font-family:var(--mono);font-size:9px;color:var(--textdim)}
+
+/* ─── CABLE TOOLTIP ────────────────────────── */
+#ctt{position:fixed;background:rgba(10,13,22,.95);border:1px solid var(--border2);border-radius:3px;padding:5px 10px;pointer-events:none;z-index:501;display:none;font-family:var(--mono);font-size:10px}
+
+/* ─── SCANLINES ────────────────────────────── */
+#scanlines{
+  position:fixed;inset:0;pointer-events:none;z-index:1000;
+  background:repeating-linear-gradient(0deg,transparent,transparent 2px,rgba(0,0,0,.025) 2px,rgba(0,0,0,.025) 4px);
+}
+
+/* ─── KEYBOARD HINTS ───────────────────────── */
+#kbd-hints{
+  position:absolute;bottom:8px;right:8px;z-index:20;
+  display:flex;gap:6px;flex-direction:column;align-items:flex-end;
+}
+.kbd-hint{font-family:var(--mono);font-size:8px;color:var(--textdim);letter-spacing:.5px}
+kbd{background:var(--bg3);border:1px solid var(--border2);border-radius:2px;padding:1px 4px;font-family:var(--mono);font-size:8px;color:var(--textdim)}
+
+.node{cursor:pointer!important}
+.rh{display:none!important}
+</style>
+</head>
+<body>
+<div id="loading">
+  <div class="ld-hex">⬡</div>
+  <div class="ld-title">ALKODA</div>
+  <div class="ld-sub">Signal Flow — Viewer</div>
+  <div class="ld-bar-wrap"><div class="ld-bar" id="ld-bar"></div></div>
+  <div class="ld-status" id="ld-status">LOADING...</div>
+</div>
+<div id="app">
+  <header id="header">
+    <div class="h-logo">
+      <div class="h-hex"></div>
+      <div><div class="h-name">ALKODA ON AIR</div><div class="h-ver">BROADCAST SYSTEM · SIGNAL MAP</div></div>
+    </div>
+    <div class="h-sep"></div>
+    <div class="h-oab">● ON AIR</div>
+    <div style="margin-left:8px;padding:3px 10px;background:#0c1020;color:#4a5a7a;font-family:'Share Tech Mono',monospace;font-size:9px;letter-spacing:3px;border-radius:2px;border:1px solid #1a2235;">VIEW ONLY</div>
+    <div class="h-stats">
+      <div class="h-stat"><div class="h-dot" style="background:#4caf50"></div> ATEM ONLINE</div>
+      <div class="h-stat"><div class="h-dot" style="background:#4caf50"></div> RÉSEAU OK</div>
+      <div class="h-stat"><div class="h-dot" style="background:#ffc000"></div> 31 APPAREILS · 56 CONNEXIONS</div>
+    </div>
+  </header>
+  <aside id="sidebar-left">
+    <div class="sl-section">
+      <div class="sl-title">Catégories</div>
+      <button class="f-btn active" data-cat="all" onclick="fCat('all',this)"><div class="f-dot" style="background:#555"></div><span class="f-label">Tout afficher</span></button>
+      <button class="f-btn" data-cat="switcher" onclick="fCat('switcher',this)"><div class="f-dot" style="background:#ff6b35"></div><span class="f-label">Switcher</span><span class="f-count">1</span></button><button class="f-btn" data-cat="capture" onclick="fCat('capture',this)"><div class="f-dot" style="background:#00bcd4"></div><span class="f-label">Capture</span><span class="f-count">2</span></button><button class="f-btn" data-cat="conversion" onclick="fCat('conversion',this)"><div class="f-dot" style="background:#ab47bc"></div><span class="f-label">Conversion</span><span class="f-count">3</span></button><button class="f-btn" data-cat="video" onclick="fCat('video',this)"><div class="f-dot" style="background:#42a5f5"></div><span class="f-label">Vidéo</span><span class="f-count">5</span></button><button class="f-btn" data-cat="audio" onclick="fCat('audio',this)"><div class="f-dot" style="background:#ec407a"></div><span class="f-label">Audio</span><span class="f-count">3</span></button><button class="f-btn" data-cat="network" onclick="fCat('network',this)"><div class="f-dot" style="background:#66bb6a"></div><span class="f-label">Réseau</span><span class="f-count">4</span></button><button class="f-btn" data-cat="rack" onclick="fCat('rack',this)"><div class="f-dot" style="background:#78909c"></div><span class="f-label">Rack</span><span class="f-count">4</span></button><button class="f-btn" data-cat="external" onclick="fCat('external',this)"><div class="f-dot" style="background:#ffa726"></div><span class="f-label">Externe</span><span class="f-count">4</span></button><button class="f-btn" data-cat="usb" onclick="fCat('usb',this)"><div class="f-dot" style="background:#ffca28"></div><span class="f-label">USB</span><span class="f-count">1</span></button><button class="f-btn" data-cat="power" onclick="fCat('power',this)"><div class="f-dot" style="background:#a1887f"></div><span class="f-label">Alim.</span><span class="f-count">3</span></button><button class="f-btn" data-cat="storage" onclick="fCat('storage',this)"><div class="f-dot" style="background:#bdbdbd"></div><span class="f-label">Stockage</span><span class="f-count">1</span></button>
+    </div>
+    <div class="sl-section">
+      <div class="sl-title">Câbles</div>
+      <button class="c-btn active" data-ctype="all" onclick="fCable('all',this)"><div class="c-line" style="background:#888"></div><span class="c-label" style="color:var(--text)">Tous</span></button>
+      <button class="c-btn" data-ctype="HDMI" onclick="fCable('HDMI',this)"><div class="c-line" style="background:#00b0f0"></div><span class="c-label" style="color:#00b0f0">HDMI</span></button>
+      <button class="c-btn" data-ctype="SDI" onclick="fCable('SDI',this)"><div class="c-line" style="background:#00b050"></div><span class="c-label" style="color:#00b050">SDI</span></button>
+      <button class="c-btn" data-ctype="RJ45" onclick="fCable('RJ45',this)"><div class="c-line" style="background:#bfbfbf"></div><span class="c-label" style="color:#bfbfbf">RJ45</span></button>
+      <button class="c-btn" data-ctype="USB" onclick="fCable('USB',this)"><div class="c-line" style="background:#ffc000"></div><span class="c-label" style="color:#ffc000">USB</span></button>
+      <button class="c-btn" data-ctype="Audio" onclick="fCable('Audio',this)"><div class="c-line" style="background:#ff4444"></div><span class="c-label" style="color:#ff4444">Audio</span></button>
+      <button class="c-btn" data-ctype="DC-USB" onclick="fCable('DC-USB',this)"><div class="c-line" style="background:repeating-linear-gradient(90deg,#888 0,#888 4px,transparent 4px,transparent 8px)"></div><span class="c-label" style="color:#888">DC-USB</span></button>
+    </div>
+    <div class="sl-actions">
+      <button class="act-btn" onclick="resetView()"><span>⊡</span> Vue d'ensemble</button>
+      <button class="act-btn" onclick="clearSel()"><span>✕</span> Effacer sélection</button>
+    </div>
+  </aside>
+  <main id="canvas-area">
+    <div class="corner tl"></div><div class="corner tr"></div>
+    <div class="corner bl"></div><div class="corner br"></div>
+    <div id="canvas-root">
+      <svg id="cables-svg"></svg>
+      <div id="nodes-layer"></div>
+    </div>
+    <div id="minimap"><canvas id="mm-canvas" width="160" height="90"></canvas></div>
+    <div id="kbd-hints">
+      <div class="kbd-hint"><kbd>F</kbd> Fit</div>
+      <div class="kbd-hint"><kbd>Esc</kbd> Reset</div>
+      <div class="kbd-hint"><kbd>+/-</kbd> Zoom</div>
+    </div>
+  </main>
+  <aside id="info-panel">
+    <div class="ip-header">
+      <div class="ip-badge" id="ip-badge"></div>
+      <div class="ip-name" id="ip-name"></div>
+      <button class="ip-close" onclick="closePanel()">✕</button>
+    </div>
+    <div class="ip-img"><img id="ip-img" src="" alt=""></div>
+    <div class="ip-desc" id="ip-desc"></div>
+    <div class="ip-conns">
+      <div class="ip-conn-title">Connexions</div>
+      <div id="ip-conn-list"></div>
+    </div>
+  </aside>
+  <div id="bottom-bar">
+    <span>⬡ 31 équipements</span>
+    <div class="bb-sep"></div>
+    <span>◈ 56 connexions</span>
+    <div class="bb-sep"></div>
+    <span class="bb-info" id="bb-info">Cliquez sur un équipement pour voir ses connexions</span>
+    <div class="zoom-ctrl">
+      <button class="zoom-btn" onclick="dz(-.15)">−</button>
+      <span id="zoom-val">100%</span>
+      <button class="zoom-btn" onclick="dz(.15)">+</button>
+      <button class="zoom-btn" onclick="resetView()" title="Fit">⊡</button>
+    </div>
+  </div>
+</div>
+<div id="tt"><div class="tt-name" id="tt-n"></div><div class="tt-cat" id="tt-c"></div><div class="tt-info" id="tt-i"></div></div>
+<div id="ctt"></div>
+<script>
+const CAT={"switcher":{"label":"Switcher","color":"#ff6b35"},"capture":{"label":"Capture","color":"#00bcd4"},"conversion":{"label":"Conversion","color":"#ab47bc"},"video":{"label":"Vidéo","color":"#42a5f5"},"audio":{"label":"Audio","color":"#ec407a"},"network":{"label":"Réseau","color":"#66bb6a"},"rack":{"label":"Rack","color":"#78909c"},"external":{"label":"Externe","color":"#ffa726"},"usb":{"label":"USB","color":"#ffca28"},"power":{"label":"Alim.","color":"#a1887f"},"storage":{"label":"Stockage","color":"#bdbdbd"}};
+const SH={"4":{"id":"4","name":"Decimator MD-HX 1","short":"DECI 1","cat":"conversion","desc":"Conversion SDI→HDMI\nEntrée PTZ HE130 (SDI) → Sortie HDMI vers rack sorties (SDI-HDMI)","img":"assets/Decimator_MD-HX.avif","x":2665,"y":1237,"w":152,"h":115,"zindex":1,"bb":{"left":0,"right":1,"top":0.05,"bottom":0.95}},"5":{"id":"5","name":"Decimator MD-HX 2","short":"DECI 2","cat":"conversion","desc":"Conversion HDMI→SDI+HDMI\nOBSBOT UVC → Sorties Programme HDMI & SDI","img":"assets/Decimator_MD-HX.avif","x":2665,"y":1582,"w":152,"h":115,"zindex":1,"bb":{"left":0,"right":1,"top":0.05,"bottom":0.95}},"7":{"id":"7","name":"Raspberry Pi","short":"RPi","cat":"network","desc":"Playout Bee (simule HyperDeck)\nSignal HDMI → Splitter 1 → ATEM entrée 7\nContrôle IP via réseau local","img":"assets/raspberry_pi.avif","x":2989,"y":1920,"w":168,"h":125,"zindex":1,"bb":{"left":0.98,"right":1,"top":0.05,"bottom":0.95}},"12":{"id":"12","name":"Rack AC Infinity","short":"FAN","cat":"rack","desc":"Rack ventilateur 1U\nFace avant valise","img":"assets/Fan-AC-Infinity.avif","x":4099,"y":1596,"w":580,"h":60,"zindex":1,"bb":{"left":0.05,"right":0.95,"top":0,"bottom":0.01}},"13":{"id":"13","name":"OBSBOT UVC","short":"OBSBOT","cat":"conversion","desc":"Convertisseur USB-C → HDMI\nSortie programme ATEM → Decimator 2","img":"assets/Osbot.avif","x":2689,"y":1943,"w":122,"h":98,"zindex":1,"bb":{"left":0.05,"right":0.95,"top":0.8,"bottom":1}},"14":{"id":"14","name":"Elite Splitter 1","short":"SPL 1","cat":"video","desc":"Splitter HDMI 1→2\nEntrée: Raspberry Pi\nSortie 1: ATEM entrée 7\nSortie 2: HDMI 2.1 Switch","img":"assets/splitter_HDElite.avif","x":3375,"y":1936,"w":110,"h":66,"zindex":1,"bb":{"left":0,"right":1,"top":0.2,"bottom":0.8}},"15":{"id":"15","name":"Elite Splitter 2","short":"SPL 2","cat":"video","desc":"Splitter HDMI 1→2\nEntrée: StarTech Fill\nSortie 1: ATEM entrée 8\nSortie 2: HDMI 2.1 Switch","img":"assets/splitter_HDElite.avif","x":3375,"y":2138,"w":110,"h":66,"zindex":1,"bb":{"left":0,"right":1,"top":0.2,"bottom":0.8}},"16":{"id":"16","name":"HDMI Converter Audio","short":"AUD CVT","cat":"audio","desc":"Extracteur audio HDMI\nATEM → RCA L/R → Rack patch sorties\n→ Enceintes externes XLR","img":"assets/Hdmi-to-RCA.avif","x":2697,"y":2321,"w":115,"h":90,"zindex":1,"bb":{"left":0,"right":1,"top":0.2,"bottom":0.8}},"17":{"id":"17","name":"PC MSI","short":"MSI PC","cat":"external","desc":"PC portable MSI\nH2R Graphics · OBS Studio\nCompanion · Stream Deck","img":"assets/laptop.avif","x":869,"y":659,"w":300,"h":250,"zindex":1,"bb":{"left":0.05,"right":0.95,"top":0,"bottom":0.02}},"18":{"id":"18","name":"Écran Aztine 15.6\"","short":"PROG","cat":"external","desc":"Écran programme externe\nFull HD 1080p\nSortie PROGRAM OUT rack","img":"assets/Moniteur-Programme.avif","x":3751,"y":515,"w":420,"h":345,"zindex":1,"bb":{"left":0,"right":0.02,"top":0.05,"bottom":0.95}},"19":{"id":"19","name":"Écran Multiview","short":"MV","cat":"external","desc":"Écran multiview principal\nSortie MULTIVIEW ATEM\nPreview + Program + 8 cams","img":"assets/Moniteur-Multiview.avif","x":2911,"y":51,"w":490,"h":330,"zindex":1,"bb":{"left":0,"right":0.02,"top":0.05,"bottom":0.95}},"20":{"id":"20","name":"Routeur GL.iNet AX","short":"ROUTER","cat":"network","desc":"Routeur WiFi 6 AX1800\nCrée le réseau local\nConnexion Internet via WWW","img":"assets/Routeur.avif","x":2406,"y":1249,"w":108,"h":90,"zindex":1,"bb":{"left":0.5,"right":1,"top":0.3,"bottom":0.9}},"21":{"id":"21","name":"Switch TP-Link PoE","short":"SWITCH","cat":"network","desc":"Switch 5 ports Gigabit PoE+\nDistribution réseau filaire\nAlimente PTZ via PoE","img":"assets/Switch-POE.avif","x":2406,"y":1482,"w":108,"h":55,"zindex":1,"bb":{"left":0.05,"right":0.95,"top":0.98,"bottom":1}},"22":{"id":"22","name":"Multiprise AC BACK","short":"AC EXT","cat":"power","desc":"Multiprise secteur BACK\nFace extérieure valise\nPrises accessibles dehors","img":"assets/Multiprise-Rack-Back.avif","x":1477,"y":1342,"w":490,"h":50,"zindex":1,"bb":null},"23":{"id":"23","name":"SSD SanDisk","short":"SSD","cat":"storage","desc":"SSD SanDisk Extreme USB\nEnregistrement ISO ATEM\nToutes sources + programme","img":"assets/DD_externe.avif","x":4502,"y":1932,"w":105,"h":102,"zindex":1,"bb":{"left":0.05,"right":0.95,"top":0.98,"bottom":1}},"25":{"id":"25","name":"MOTU M6 (avant)","short":"MOTU F","cat":"audio","desc":"Interface audio 6in/4out\n4 préamplis XLR\nVU-mètres LCD couleur\nFace avant valise","img":"assets/Motu-M6.avif","x":4390,"y":1659,"w":281,"h":55,"zindex":40,"bb":null},"26":{"id":"26","name":"Rack Avant Boutons","short":"CTRL","cat":"rack","desc":"Rack contrôle face avant\nBouton ATEM · MOTU · Magewell\nPorts Stream Deck XL USB","img":"assets/Patch-Front-Middle2.avif","x":4101,"y":1656,"w":580,"h":118,"zindex":1,"bb":{"left":0.05,"right":0.95,"top":0.98,"bottom":1}},"27":{"id":"27","name":"Rack Patch Entrées","short":"PATCH IN","cat":"rack","desc":"Patch entrées 1U\nSDI IN 1-3 · HDMI IN 1-8\nCONV IN · WWW · PC (RJ45)","img":"assets/Patch-Back-Down.avif","x":1477,"y":1460,"w":490,"h":60,"zindex":1,"bb":{"left":0.05,"right":0.95,"top":0.98,"bottom":1}},"28":{"id":"28","name":"Rack Patch Sorties","short":"PATCH OUT","cat":"rack","desc":"Patch sorties 1U\nProgram · Multiview · PC IN\nSDI-HDMI · Master L/R\nMic 1-2 IN · Alim écrans","img":"assets/Patch-Back-Up.avif","x":1477,"y":1274,"w":490,"h":60,"zindex":1,"bb":{"left":0.05,"right":0.95,"top":0,"bottom":0.02}},"29":{"id":"29","name":"ATEM Mini Extreme ISO","short":"ATEM","cat":"switcher","desc":"Switcher principal 8 entrées\n2 sorties HDMI · USB-C programme\nISO recording · Fairlight audio\nEntrée 3: Magewell 4K · E7: RPi","img":"assets/ATEM-Mini-Extreme.avif","x":2700,"y":2562,"w":680,"h":345,"zindex":1,"bb":{"left":0.05,"right":0.95,"top":0,"bottom":0.02}},"52":{"id":"52","name":"Hub USB 3","short":"USB HUB","cat":"usb","desc":"Hub USB 3.0 alimenté secteur\n4 ports avec interrupteurs\nMagewell Gen2 + 4K + PC MSI","img":"assets/Hub-USB3.avif","x":2342,"y":2051,"w":185,"h":170,"zindex":1,"bb":{"left":0.98,"right":1,"top":0.05,"bottom":0.95}},"55":{"id":"55","name":"PWAY HDMI Extender","short":"PWAY","cat":"video","desc":"Récepteur HDMI over RJ45\nSignal écran speaker → ATEM E3\nVia rack entrées WWW","img":"assets/extender-hdmi-RJ45-RX.avif","x":3363,"y":1249,"w":125,"h":90,"zindex":1,"bb":{"left":0,"right":1,"top":0.2,"bottom":0.8}},"60":{"id":"60","name":"StarTech USB→2xHDMI","short":"STARTECH","cat":"video","desc":"Adaptateur USB 3.0 → 2x HDMI\nKey → ATEM entrée 5\nFill → Splitter 2 → ATEM E8","img":"assets/StarTech.avif","x":3363,"y":1596,"w":125,"h":98,"zindex":1,"bb":{"left":0,"right":0.02,"top":0.05,"bottom":0.95}},"63":{"id":"63","name":"Multiprise AC INSIDE","short":"AC INT","cat":"power","desc":"Multiprise secteur INSIDE\nFace intérieure valise","img":"assets/Multiprise-Rack.avif","x":979,"y":1342,"w":490,"h":50,"zindex":1,"bb":null},"65":{"id":"65","name":"Hub USB-C Alim.","short":"PD HUB","cat":"power","desc":"Chargeur USB-C 4 ports PD\nAlimente: Écrans · Routeur\nRack avant boutons","img":"assets/Station-USB-C.avif","x":921,"y":2263,"w":148,"h":138,"zindex":1,"bb":{"left":0,"right":1,"top":0.05,"bottom":0.95}},"72":{"id":"72","name":"Internet (WWW)","short":"WWW","cat":"network","desc":"Connexion Internet RJ45\nVia rack entrées (WWW)\n→ Routeur GL.iNet","img":"assets/www.avif","x":1031,"y":2719,"w":108,"h":98,"zindex":1,"bb":{"left":0.98,"right":1,"top":0.05,"bottom":0.95}},"80":{"id":"80","name":"MOTU M6 (arrière)","short":"MOTU R","cat":"audio","desc":"MOTU M6 face arrière\nXLR IN 1-4 (micros)\nLine Out → ATEM MIC 1/2\nUSB-C · 15V DC","img":"assets/Motu-M6-back.avif","x":4689,"y":1654,"w":281,"h":55,"zindex":1,"bb":{"left":0.05,"right":0.95,"top":0,"bottom":1}},"104":{"id":"104","name":"H2R Graphics (Key/Fill)","short":"PREV","cat":"external","desc":"Petit écran rack avant\nVia HDMI 2.1 Switch\nAffiche: Key ou Raspberry Pi","img":"assets/h2r-exemple.avif","x":4154,"y":1691,"w":105,"h":77,"zindex":30,"bb":{"left":0,"right":1,"top":0.2,"bottom":0.8}},"115":{"id":"115","name":"HDMI 2.1 Switch 8K","short":"HMD SW","cat":"video","desc":"Switch HDMI 2→1 8K\nE1: Splitter 1 (Raspberry Pi)\nE2: Splitter 2 (Fill)\nSortie: Écran prévisualisation","img":"assets/Switch.avif","x":3667,"y":1241,"w":115,"h":100,"zindex":1,"bb":{"left":0,"right":1,"top":0.2,"bottom":0.8}},"117":{"id":"117","name":"Magewell Gen 2","short":"MW GEN2","cat":"capture","desc":"USB Capture HDMI Gen 2\nCapture plan large → OBS Source 1\nVia rack patch entrées HDMI IN","img":"assets/Magewell_Capture_Gen2.avif","x":2956,"y":1199,"w":168,"h":110,"zindex":1,"bb":{"left":0,"right":1,"top":0.3,"bottom":0.7}},"119":{"id":"119","name":"Magewell 4K","short":"MW 4K","cat":"capture","desc":"Magewell 4K USB Capture\nCapture écran speaker (PWAY)\n→ OBS Source 2 · ATEM entrée 3","img":"assets/magewell-usb-capture-hdmi-4k-plus.avif","x":3000,"y":1582,"w":155,"h":115,"zindex":1,"bb":{"left":0,"right":1,"top":0.3,"bottom":0.7}}};
+const CA=[{"id":0,"from":"52","to":"80","type":"USB","color":"#ffc000","dashed":false,"from_nx":0.3849,"from_ny":0.6798,"to_nx":0.158,"to_ny":1},{"id":1,"from":"115","to":"26","type":"HDMI","color":"#00b0f0","dashed":false,"from_nx":0.6041,"from_ny":0.1493,"to_nx":0.1869,"to_ny":1},{"id":2,"from":"115","to":"14","type":"HDMI","color":"#00b0f0","dashed":false,"from_nx":0.3375,"from_ny":0.7666,"to_nx":0.8728,"to_ny":0.6342},{"id":3,"from":"52","to":"26","type":"USB","color":"#ffc000","dashed":false,"from_nx":0.3173,"from_ny":0.6141,"to_nx":0.9192,"to_ny":1},{"id":4,"from":"15","to":"60","type":"HDMI","color":"#00b0f0","dashed":false,"from_nx":0.1484,"from_ny":0.2677,"to_nx":0.5743,"to_ny":0.9297},{"id":5,"from":"19","to":"28","type":"DC-USB","color":"#cc8800","dashed":true,"from_nx":0,"from_ny":0.8944,"to_nx":0.4883,"to_ny":0},{"id":6,"from":"28","to":"19","type":"HDMI","color":"#00b0f0","dashed":false,"from_nx":0.1462,"from_ny":0,"to_nx":0,"to_ny":0.7191},{"id":7,"from":"28","to":"18","type":"DC-USB","color":"#cc8800","dashed":true,"from_nx":0.3743,"from_ny":0,"to_nx":0.0225,"to_ny":0.2798},{"id":8,"from":"18","to":"28","type":"SDI","color":"#00b050","dashed":false,"from_nx":0.0677,"from_ny":0.826,"to_nx":0.0829,"to_ny":0},{"id":9,"from":"26","to":"29","type":"Audio","color":"#ff4444","dashed":false,"from_nx":0.0657,"from_ny":0.6979,"to_nx":0.0745,"to_ny":0.0445},{"id":10,"from":"28","to":"17","type":"HDMI","color":"#00b0f0","dashed":false,"from_nx":0.4301,"from_ny":0,"to_nx":0.5,"to_ny":0},{"id":11,"from":"28","to":"4","type":"HDMI","color":"#00b0f0","dashed":false,"from_nx":0.5451,"from_ny":0,"to_nx":0,"to_ny":0.5361},{"id":12,"from":"27","to":"4","type":"SDI","color":"#00b050","dashed":false,"from_nx":0.1,"from_ny":1.05,"to_nx":1,"to_ny":0.2132},{"id":13,"from":"20","to":"27","type":"RJ45","color":"#bfbfbf","dashed":false,"from_nx":0.8942,"from_ny":0.7522,"to_nx":0.8624,"to_ny":1},{"id":14,"from":"27","to":"21","type":"RJ45","color":"#bfbfbf","dashed":false,"from_nx":0.9194,"from_ny":1,"to_nx":0.1111,"to_ny":1},{"id":15,"from":"20","to":"21","type":"RJ45","color":"#bfbfbf","dashed":false,"from_nx":0.7566,"from_ny":0.8347,"to_nx":0.7265,"to_ny":1},{"id":16,"from":"28","to":"80","type":"Audio","color":"#ffffff","dashed":false,"from_nx":0.761,"from_ny":0,"to_nx":0.9124,"to_ny":0},{"id":17,"from":"29","to":"80","type":"Audio","color":"#ffffff","dashed":false,"from_nx":0.1064,"from_ny":0.0445,"to_nx":0.4296,"to_ny":0},{"id":18,"from":"29","to":"80","type":"Audio","color":"#ff4444","dashed":false,"from_nx":0.1383,"from_ny":0.0445,"to_nx":0.4296,"to_ny":1},{"id":19,"from":"80","to":"28","type":"Audio","color":"#ffffff","dashed":false,"from_nx":0.6911,"from_ny":0,"to_nx":0.8685,"to_ny":0},{"id":20,"from":"80","to":"28","type":"Audio","color":"#ff4444","dashed":false,"from_nx":0.8018,"from_ny":0,"to_nx":0.8178,"to_ny":0},{"id":21,"from":"63","to":"80","type":"DC","color":"#555555","dashed":true,"from_nx":0.9255,"from_ny":0.556,"to_nx":0.0976,"to_ny":1},{"id":22,"from":"17","to":"60","type":"USB","color":"#ffc000","dashed":false,"from_nx":0.935,"from_ny":0.8257,"to_nx":0.0428,"to_ny":0.6345},{"id":23,"from":"29","to":"15","type":"HDMI","color":"#00b0f0","dashed":false,"from_nx":0.6223,"from_ny":0.0445,"to_nx":0.5299,"to_ny":0.8785},{"id":24,"from":"29","to":"13","type":"USB","color":"#ffc000","dashed":false,"from_nx":0.8298,"from_ny":0.0445,"to_nx":0.2732,"to_ny":0.9183},{"id":25,"from":"28","to":"16","type":"Audio","color":"#ffffff","dashed":false,"from_nx":0.4883,"from_ny":0,"to_nx":0.4924,"to_ny":0.8823},{"id":26,"from":"28","to":"16","type":"Audio","color":"#ff4444","dashed":false,"from_nx":0.6718,"from_ny":0,"to_nx":0.9026,"to_ny":0.6432},{"id":27,"from":"28","to":"16","type":"HDMI","color":"#00b0f0","dashed":false,"from_nx":0.6151,"from_ny":0,"to_nx":0.8037,"to_ny":0.7002},{"id":28,"from":"16","to":"29","type":"HDMI","color":"#00b0f0","dashed":false,"from_nx":0.1554,"from_ny":0.2164,"to_nx":0.6809,"to_ny":0.0445},{"id":29,"from":"13","to":"5","type":"HDMI","color":"#00b0f0","dashed":false,"from_nx":0.8148,"from_ny":0.1007,"to_nx":0,"to_ny":0.2681},{"id":30,"from":"5","to":"28","type":"HDMI","color":"#00b0f0","dashed":false,"from_nx":0,"from_ny":0.5265,"to_nx":0.3743,"to_ny":0},{"id":31,"from":"5","to":"28","type":"SDI","color":"#00b050","dashed":false,"from_nx":1,"from_ny":0.6987,"to_nx":0.3236,"to_ny":0},{"id":32,"from":"29","to":"28","type":"HDMI","color":"#00b0f0","dashed":false,"from_nx":0.1835,"from_ny":0.0445,"to_nx":0.4301,"to_ny":0},{"id":33,"from":"14","to":"29","type":"HDMI","color":"#00b0f0","dashed":false,"from_nx":0.5337,"from_ny":0.8785,"to_nx":0.5585,"to_ny":0.0445},{"id":34,"from":"29","to":"27","type":"HDMI","color":"#00b0f0","dashed":false,"from_nx":0.2473,"from_ny":0.0445,"to_nx":0.3957,"to_ny":1},{"id":35,"from":"29","to":"60","type":"HDMI","color":"#00b0f0","dashed":false,"from_nx":0.4335,"from_ny":0.0445,"to_nx":0.3242,"to_ny":0.8032},{"id":36,"from":"27","to":"29","type":"HDMI","color":"#00b0f0","dashed":false,"from_nx":0.6164,"from_ny":1,"to_nx":0.4973,"to_ny":0.0445},{"id":37,"from":"29","to":"29","type":"HDMI","color":"#00b0f0","dashed":false,"from_nx":0.3723,"from_ny":0.0445,"to_nx":0.7447,"to_ny":0.0445},{"id":38,"from":"29","to":"20","type":"RJ45","color":"#bfbfbf","dashed":false,"from_nx":0.8777,"from_ny":0.0445,"to_nx":0.8254,"to_ny":0.7935},{"id":39,"from":"27","to":"117","type":"HDMI","color":"#00b0f0","dashed":false,"from_nx":0.3122448979591837,"from_ny":1.0166666666666666,"to_nx":0.0932,"to_ny":0.5},{"id":40,"from":"117","to":"52","type":"USB","color":"#ffc000","dashed":false,"from_nx":0.9028,"from_ny":0.5,"to_nx":0.4552,"to_ny":0.7508},{"id":41,"from":"52","to":"17","type":"USB","color":"#ffc000","dashed":false,"from_nx":0.958,"from_ny":0.518,"to_nx":0.9677,"to_ny":0.9004},{"id":42,"from":"55","to":"27","type":"RJ45","color":"#bfbfbf","dashed":false,"from_nx":0.8489,"from_ny":0.1314,"to_nx":0.8058,"to_ny":1},{"id":43,"from":"55","to":"119","type":"HDMI","color":"#00b0f0","dashed":false,"from_nx":0.1606,"from_ny":0.8185,"to_nx":0.1143,"to_ny":0.7656},{"id":44,"from":"119","to":"52","type":"USB","color":"#ffc000","dashed":false,"from_nx":0.7427,"from_ny":0.0819,"to_nx":0.5262,"to_ny":0.8209},{"id":45,"from":"119","to":"29","type":"HDMI","color":"#00b0f0","dashed":false,"from_nx":0.3285,"from_ny":0.9219,"to_nx":0.3085,"to_ny":0.0445},{"id":46,"from":"7","to":"14","type":"HDMI","color":"#00b0f0","dashed":false,"from_nx":0.67,"from_ny":0.7704,"to_nx":0.1946,"to_ny":0.2067},{"id":47,"from":"7","to":"21","type":"RJ45","color":"#bfbfbf","dashed":false,"from_nx":0.7301,"from_ny":0.0813,"to_nx":0.3162,"to_ny":1},{"id":48,"from":"65","to":"28","type":"DC-USB","color":"#cc8800","dashed":true,"from_nx":0.9648,"from_ny":0.8751,"to_nx":0.0829,"to_ny":0},{"id":49,"from":"65","to":"28","type":"DC-USB","color":"#cc8800","dashed":true,"from_nx":0.9648,"from_ny":0.5458,"to_nx":0.1462,"to_ny":0},{"id":50,"from":"65","to":"26","type":"DC-USB","color":"#cc8800","dashed":true,"from_nx":0.9648,"from_ny":0.6872,"to_nx":0.6919,"to_ny":1},{"id":51,"from":"65","to":"20","type":"DC-USB","color":"#cc8800","dashed":true,"from_nx":0.9648,"from_ny":0.3794,"to_nx":0.619,"to_ny":0.9173},{"id":52,"from":"17","to":"27","type":"RJ45","color":"#bfbfbf","dashed":false,"from_nx":0.9252,"from_ny":0.7908,"to_nx":0.9194,"to_ny":1},{"id":53,"from":"72","to":"27","type":"RJ45","color":"#bfbfbf","dashed":false,"from_nx":1,"from_ny":0.5,"to_nx":0.8624,"to_ny":1},{"id":54,"from":"115","to":"15","type":"HDMI","color":"#00b0f0","dashed":false,"from_nx":0.1375,"from_ny":0.6123,"to_nx":0.1484,"to_ny":0.2677},{"id":55,"from":"29","to":"23","type":"USB","color":"#ffc000","dashed":false,"from_nx":0.7926,"from_ny":0.0445,"to_nx":0.6186,"to_ny":1}];
+const ROUTES={"0":[[2413.2065000000002,2166.566],[3312,2166.566],[3312,2074.2],[4423.25,2074.2],[4423.25,1947.96],[4733.398,1947.96],[4733.398,1709]],"1":[[3736.4715,1255.93],[4060,1255.93],[4060,1656.6],[4130,1656.6],[4130,1779],[4209,1779],[4209,1774]],"2":[[3705.8125,1317.66],[3562,1317.66],[3562,1378],[3471.008,1378],[3471.008,1977.8572]],"3":[[2400.7005,2155.397],[3326,2155.397],[3326,2088.2],[4437.25,2088.2],[4437.25,1961.96],[4634,1961.96],[4634,1774]],"4":[[3391.324,2155.6682],[3284,2155.6682],[3284,1872.2],[3434.7875,1872.2],[3434.7875,1687.1106]],"5":[[2911,346.152],[1709.267,346.152],[1709.267,1274]],"6":[[1548.638,1274],[1548.638,1159],[2590,1159],[2590,1156.75],[2911,1156.75],[2911,288.303]],"7":[[1660.407,1274],[1660.407,1180.75],[2604,1180.75],[2604,1170.75],[3760,1170.75],[3760,612]],"8":[[3779,800],[1517.621,800],[1517.621,1274]],"9":[[4139,1738],[4139,1816.3522],[2874.9,1816.3522],[2874.9,2463],[2750.66,2463],[2750.66,2577.3525]],"10":[[1687.749,1274],[1687.749,1145],[1099,1145],[1099,659],[1019,659]],"11":[[1744.099,1274],[1744.099,1201],[2665,1201],[2665,1299]],"12":[[1526,1523],[1526,1574],[2611,1574],[2611,1537.9],[2817,1537.9],[2817,1262]],"13":[[2502.5736,1316.698],[2079,1316.698],[2079,1462],[1899.576,1462],[1899.576,1520]],"14":[[1927.5059999999999,1520],[1927.5059999999999,1621],[2417.9988,1621],[2417.9988,1537]],"15":[[2487.7128,1324.123],[2484.462,1324.123],[2484.462,1537]],"16":[[1849.8899999999999,1274],[1849.8899999999999,1243],[2555,1243],[2555,1405],[4945.3844,1405],[4945.3844,1654]],"17":[[2772.352,2577.3525],[2772.352,2476.3525],[4802.7176,2476.3525],[4802.7176,1654]],"18":[[2794.044,2577.3525],[2794.044,2490.3525],[4816.7176,2490.3525],[4816.7176,1709]],"19":[[4883.1991,1647],[4715,1647],[4715,1509.9],[2578.6,1509.9],[2578.6,1451.9],[2009,1451.9],[2009,1300],[1902.565,1300],[1902.565,1274]],"20":[[4914.3058,1661],[4729,1661],[4729,1523.9],[2592.6,1523.9],[2592.6,1465.9],[2023,1465.9],[2023,1286],[1877.722,1286],[1877.722,1274]],"21":[[1432.495,1369.8],[1432.495,1709],[4716.4256,1709]],"22":[[1149.5,865.425],[3305,865.425],[3305,1378],[3368.35,1378],[3368.35,1658.181]],"23":[[3123.1639999999998,2577.3525],[3123.1639999999998,2546.3525],[3433.289,2546.3525],[3433.289,2195.9809999999998]],"24":[[3264.264,2577.3525],[3264.264,2504.3525],[2882,2504.3525],[2882,2289.5],[2722.3304,2289.5],[2722.3304,2032.9934]],"25":[[1723.267,1274],[1723.267,1262],[2569,1262],[2569,1745.1],[2611.1,1745.1],[2611.1,2090],[2753.626,2090],[2753.626,2400.407]],"26":[[1806.182,1274],[1806.182,1229],[2583,1229],[2583,1759.1],[2625.1,1759.1],[2625.1,2104],[2800.799,2104],[2800.799,2378.888]],"27":[[1778.399,1274],[1778.399,1215],[2597,1215],[2597,1773.1],[2639.1,1773.1],[2639.1,2118],[2789.4255,2118],[2789.4255,2384.018]],"28":[[2714.871,2340.476],[3163.0119999999997,2340.476],[3163.0119999999997,2577.3525]],"29":[[2788.4056,1952.8686],[2665,1952.8686],[2665,1612.8315]],"30":[[2665,1642.5475],[2037,1642.5475],[2037,1258],[1660.407,1258],[1660.407,1274]],"31":[[2817,1662.3505],[2051,1662.3505],[2051,1284],[1635.564,1284],[1635.564,1274]],"32":[[2824.78,2577.3525],[2824.78,2448.3525],[2065,2448.3525],[2065,1272],[1687.749,1272],[1687.749,1274]],"33":[[3433.707,1993.981],[3225,1993.981],[3225,2104],[3079.7799999999997,2104],[3079.7799999999997,2577.3525]],"34":[[2868.1639999999998,2577.3525],[2868.1639999999998,2434.3525],[1670.893,2434.3525],[1670.893,1520]],"35":[[2994.7799999999997,2577.3525],[2994.7799999999997,2532.3525],[3298,2532.3525],[3298,1886.2],[3403.525,1886.2],[3403.525,1674.7136]],"36":[[1779.036,1520],[1779.036,1607],[2639,1607],[2639,1787.1],[3038.1639999999998,1787.1],[3038.1639999999998,2577.3525]],"37":[[2953.164,2577.3525],[2953.164,2518.3525],[3206.396,2518.3525],[3206.396,2577.3525]],"38":[[3296.8360000000002,2577.3525],[3296.8360000000002,2462.3525],[2578.6,2462.3525],[2578.6,1989.5],[2575.1432,1989.5],[2575.1432,1320.415],[2495.1432,1320.415]],"39":[[1630,1521],[1630,1549],[2625,1549],[2625,1551.9],[2972,1551.9],[2972,1254]],"40":[[3108,1254],[2867.9,1254],[2867.9,1391],[2564.6,1391],[2564.6,1590],[2426.212,1590],[2426.212,2178.636]],"41":[[2519.23,2139.06],[1481,2139.06],[1481,1107],[1239.31,1107],[1239.31,884.1],[1159.31,884.1]],"42":[[3469.1125,1260.826],[3225,1260.826],[3225,1345],[2881.9,1345],[2881.9,1377],[2093,1377],[2093,1448],[1871.842,1448],[1871.842,1520]],"43":[[3383.075,1322.665],[3227,1322.665],[3227,1385],[3017.7165,1385],[3017.7165,1670.044]],"44":[[3115.1185,1591.4185],[2874.9,1591.4185],[2874.9,1731.1],[2446.347,1731.1],[2446.347,2190.553]],"45":[[3050.9175,1688.0185],[2909.78,1688.0185],[2909.78,2577.3525]],"46":[[3101.56,2016.3],[3396.406,2016.3],[3396.406,1949.6422]],"47":[[3111.6568,1930.1625],[2433.1496,1930.1625],[2433.1496,1537]],"48":[[1063.7904,2383.7638],[902,2383.7638],[902,1265],[1517.621,1265],[1517.621,1274]],"49":[[1063.7904,2338.3204],[916,2338.3204],[916,1279],[1548.638,1279],[1548.638,1274]],"50":[[1063.7904,2357.8336],[2627,2357.8336],[2627,2275.5],[4451.25,2275.5],[4451.25,1975.96],[4502,1975.96],[4502,1774]],"51":[[1063.7904,2315.3572],[2341.4,2315.3572],[2341.4,1479.9],[2552.852,1479.9],[2552.852,1331.557],[2472.852,1331.557]],"52":[[1146.56,849.7],[1981,849.7],[1981,1476],[1927.5059999999999,1476],[1927.5059999999999,1520]],"53":[[1139,2768],[1899.576,2768],[1899.576,1520]],"54":[[3682.8125,1302.23],[3548,1302.23],[3548,2058.8],[3391.324,2058.8],[3391.324,2155.6682]],"55":[[3238.968,2577.3525],[3238.968,2560.3525],[4566.953,2560.3525],[4566.953,2034]]};
+const CW=6008,CH=3172;
+let zoom=1,panX=0,panY=0,drag=false,lmx=0,lmy=0;
+let selId=null,activeCat='all',activeCable='all';
+let CM={};
+const area=document.getElementById('canvas-area');
+const root=document.getElementById('canvas-root');
+const svg=document.getElementById('cables-svg');
+const nodesL=document.getElementById('nodes-layer');
+const infoP=document.getElementById('info-panel');
+const tt=document.getElementById('tt');
+const ctt=document.getElementById('ctt');
+function buildCM(){
+  CM={};
+  CA.forEach(c=>{
+    const add=(a,b)=>{if(!CM[a])CM[a]=[];CM[a].push({sid:b,cid:c.id,type:c.type,color:c.color});};
+    add(c.from,c.to);add(c.to,c.from);
+  });
+}
+function toSVG(pts){
+  if(pts.length<2)return'';
+  const R=10;
+  if(pts.length===2)return`M${pts[0][0]} ${pts[0][1]} L${pts[1][0]} ${pts[1][1]}`;
+  let d=`M${pts[0][0].toFixed(1)} ${pts[0][1].toFixed(1)}`;
+  for(let i=1;i<pts.length-1;i++){
+    const [px,py]=pts[i-1],[cx,cy]=pts[i],[nx,ny]=pts[i+1];
+    const l1=Math.hypot(cx-px,cy-py),l2=Math.hypot(nx-cx,ny-cy);
+    const r=Math.min(R,l1/2,l2/2);
+    const dx1=(cx-px)/l1*r,dy1=(cy-py)/l1*r;
+    const dx2=(nx-cx)/l2*r,dy2=(ny-cy)/l2*r;
+    d+=` L${(cx-dx1).toFixed(1)} ${(cy-dy1).toFixed(1)} Q${cx} ${cy} ${(cx+dx2).toFixed(1)} ${(cy+dy2).toFixed(1)}`;
+  }
+  d+=` L${pts[pts.length-1][0].toFixed(1)} ${pts[pts.length-1][1].toFixed(1)}`;
+  return d;
+}
+function renderZones(){
+  [{t:'FACE ARRIÈRE',x:90,y:600,rot:-90},{t:'FACE AVANT',x:2700,y:600,rot:-90},
+   {t:'RÉSEAU LOCAL',x:750,y:30,rot:0},{t:'SWITCHER CENTRAL',x:1100,y:30,rot:0},
+   {t:'CAPTURE & CONVERSION',x:1400,y:30,rot:0},{t:'MONITORING',x:1900,y:30,rot:0}]
+  .forEach(z=>{
+    const d=document.createElement('div');
+    d.className='zone-lbl';d.textContent=z.t;
+    d.style.cssText=`left:${z.x}px;top:${z.y}px;transform:rotate(${z.rot}deg)`;
+    nodesL.appendChild(d);
+  });
+}
+function renderCables(){
+  const defs=document.createElementNS('http://www.w3.org/2000/svg','defs');
+  const gf=document.createElementNS('http://www.w3.org/2000/svg','filter');
+  gf.setAttribute('id','glow');
+  const gb=document.createElementNS('http://www.w3.org/2000/svg','feGaussianBlur');
+  gb.setAttribute('stdDeviation','2.5');gb.setAttribute('result','blur');
+  const fm=document.createElementNS('http://www.w3.org/2000/svg','feMerge');
+  const fn1=document.createElementNS('http://www.w3.org/2000/svg','feMergeNode');fn1.setAttribute('in','blur');
+  const fn2=document.createElementNS('http://www.w3.org/2000/svg','feMergeNode');fn2.setAttribute('in','SourceGraphic');
+  fm.append(fn1,fn2);gf.append(gb,fm);defs.append(gf);svg.append(defs);
+  CA.forEach(c=>{
+    const pts=ROUTES[c.id];
+    if(!pts||pts.length<2)return;
+    const p=document.createElementNS('http://www.w3.org/2000/svg','path');
+    p.setAttribute('d',toSVG(pts));
+    p.setAttribute('stroke',c.color);p.setAttribute('stroke-width','3.5');
+    p.setAttribute('fill','none');p.setAttribute('opacity','0.85');
+    p.setAttribute('data-cid',c.id);p.setAttribute('data-from',c.from);
+    p.setAttribute('data-to',c.to);p.setAttribute('data-type',c.type);
+    p.classList.add('cp','cable-visual');
+    if(c.dashed)p.setAttribute('stroke-dasharray','6,4');
+    p.addEventListener('mouseenter',e=>{
+      if(!selId){
+        ctt.style.display='block';
+        ctt.innerHTML=`<span style="color:${c.color}">${c.type}</span> — ${SH[c.from]?.name||''} ↔ ${SH[c.to]?.name||''}`;
+      }
+    });
+    p.addEventListener('mousemove',e=>{
+      ctt.style.left=Math.min(e.clientX+12,window.innerWidth-300)+'px';
+      ctt.style.top=(e.clientY-30)+'px';
+    });
+    p.addEventListener('mouseleave',()=>{ctt.style.display='none';});
+    p.addEventListener('click',e=>{e.stopPropagation();ctt.style.display='none';showCablePanel(c);});
+    svg.append(p);
+  });
+}
+function showCablePanel(c){
+  selId=null;
+  const sa=SH[c.from],sb=SH[c.to];
+  if(!sa||!sb)return;
+  const badge=document.getElementById('ip-badge');
+  badge.textContent=c.type;
+  badge.style.cssText=`background:${c.color}22;color:${c.color};border:1px solid ${c.color}44`;
+  document.getElementById('ip-name').textContent=`${sa.name}  ↔  ${sb.name}`;
+  document.getElementById('ip-img').src='';
+  document.getElementById('ip-desc').textContent=`Signal : ${c.type}\nSource  : ${sa.name}\nDest.   : ${sb.name}`;
+  const list=document.getElementById('ip-conn-list');
+  list.innerHTML=`
+    <div class="ip-conn-item" onclick="selectNode('${c.from}')">
+      <div class="ip-conn-dot" style="background:${c.color}"></div>
+      <div class="ip-conn-name">${sa.name}</div>
+      <div class="ip-conn-type" style="color:${c.color}">SOURCE</div>
+    </div>
+    <div style="padding:6px 8px;font-family:var(--mono);font-size:9px;color:var(--textdim);text-align:center;letter-spacing:2px;border-bottom:1px solid rgba(255,255,255,.04)">── ${c.type} ──</div>
+    <div class="ip-conn-item" onclick="selectNode('${c.to}')">
+      <div class="ip-conn-dot" style="background:${c.color}"></div>
+      <div class="ip-conn-name">${sb.name}</div>
+      <div class="ip-conn-type" style="color:${c.color}">DEST.</div>
+    </div>`;
+  document.querySelectorAll('.node').forEach(n=>{
+    const nid=n.id.replace('n-','');
+    n.classList.remove('sel','lit','dim');
+    if(nid===c.from||nid===c.to)n.classList.add('lit');
+    else n.classList.add('dim');
+  });
+  document.querySelectorAll('.cp').forEach(p=>{
+    const cid=parseInt(p.getAttribute('data-cid'));
+    if(cid===c.id){p.setAttribute('opacity','0.95');p.setAttribute('stroke-width','4.5');p.setAttribute('filter','url(#glow)');}
+    else{p.setAttribute('opacity','0.05');p.setAttribute('stroke-width','1');p.removeAttribute('filter');}
+  });
+  document.getElementById('bb-info').textContent=`◈ ${c.type}  —  ${sa.name} ↔ ${sb.name}`;
+  infoP.classList.add('open');
+}
+function renderNodes(){
+  Object.values(SH).forEach(s=>{
+    const node=document.createElement('div');
+    node.className='node';node.id='n-'+s.id;
+    node.style.cssText=`left:${s.x}px;top:${s.y}px;width:${s.w}px;height:${s.h+22}px;z-index:${s.zindex||1};cursor:pointer`;
+    const box=document.createElement('div');
+    box.className='node-box';box.style.width=s.w+'px';box.style.height=s.h+'px';
+    const wrap=document.createElement('div');
+    wrap.className='node-img-wrap';
+    wrap.style.cssText=`width:${s.w}px;height:${s.h-3}px`;
+    if(s.img){
+      const img=document.createElement('img');
+      img.src=s.img;img.alt=s.name;
+      img.style.cssText=`width:${s.w}px;height:${s.h-3}px`;
+      if(s.id==='25'){img.style.objectFit='fill';img.style.padding='0';}
+      if(s.id==='63'||s.id==='22')img.style.objectPosition='top';
+      wrap.append(img);
+    }
+    box.append(wrap);node.append(box);
+    const lbl=document.createElement('div');
+    lbl.className='node-lbl';lbl.textContent=s.short||s.name;
+    node.append(lbl);
+    node.addEventListener('mouseenter',e=>showTT(e,s));
+    node.addEventListener('mousemove',e=>moveTT(e));
+    node.addEventListener('mouseleave',()=>hideTT());
+    node.addEventListener('click',e=>{e.stopPropagation();selectNode(s.id);});
+    nodesL.append(node);
+  });
+}
+function selectNode(id){
+  if(selId===id){clearSel();return;}
+  selId=id;
+  const s=SH[id];if(!s)return;
+  const conns=CM[id]||[];
+  const litSet=new Set(conns.map(c=>c.sid));
+  const cabSet=new Set(conns.map(c=>c.cid));
+  document.querySelectorAll('.node').forEach(n=>{
+    const nid=n.id.replace('n-','');
+    n.classList.remove('sel','lit','dim');
+    if(nid===id)n.classList.add('sel');
+    else if(litSet.has(nid))n.classList.add('lit');
+    else n.classList.add('dim');
+  });
+  document.querySelectorAll('.cp').forEach(p=>{
+    const cid=parseInt(p.getAttribute('data-cid'));
+    if(cabSet.has(cid)){
+      p.setAttribute('opacity','0.95');p.setAttribute('stroke-width','3.5');p.setAttribute('filter','url(#glow)');
+    }else{
+      p.setAttribute('opacity','0.05');p.setAttribute('stroke-width','1');p.removeAttribute('filter');
+    }
+  });
+  showPanel(s,conns);
+  document.getElementById('bb-info').textContent=`▶ ${s.name}  —  ${conns.length} connexion${conns.length>1?'s':''}`;
+}
+function clearSel(){
+  selId=null;
+  infoP.classList.remove('signal-mode');
+  document.querySelectorAll('.node').forEach(n=>n.classList.remove('sel','lit','dim'));
+  document.querySelectorAll('.cp').forEach(p=>{
+    p.removeAttribute('filter');
+    const t=p.getAttribute('data-type');
+    p.setAttribute('opacity',(activeCable==='all'||t===activeCable)?'0.85':'0.05');
+    p.setAttribute('stroke-width','3.5');
+  });
+  document.getElementById('bb-info').textContent='Cliquez sur un équipement pour voir ses connexions';
+  applyFilters();
+}
+function showPanel(s,conns){
+  const cat=CAT[s.cat]||{label:s.cat,color:'#888'};
+  const badge=document.getElementById('ip-badge');
+  badge.textContent=cat.label.toUpperCase();
+  badge.style.cssText=`background:${cat.color}22;color:${cat.color};border:1px solid ${cat.color}44`;
+  document.getElementById('ip-name').textContent=s.name;
+  document.getElementById('ip-img').src=s.img;
+  document.getElementById('ip-desc').textContent=s.desc;
+  const list=document.getElementById('ip-conn-list');
+  list.innerHTML='';
+  conns.forEach(c=>{
+    const other=SH[c.sid];if(!other)return;
+    const item=document.createElement('div');
+    item.className='ip-conn-item';item.onclick=()=>selectNode(c.sid);
+    item.innerHTML=`<div class="ip-conn-dot" style="background:${c.color}"></div><div class="ip-conn-name">${other.name}</div><div class="ip-conn-type" style="color:${c.color}">${c.type}</div>`;
+    list.append(item);
+  });
+  infoP.classList.add('open');
+}
+function closePanel(){infoP.classList.remove('open','signal-mode');clearSel();}
+function fCat(cat,btn){
+  document.querySelectorAll('.f-btn').forEach(b=>b.classList.remove('active'));
+  btn.classList.add('active');activeCat=cat;applyFilters();
+}
+function fCable(type,btn){
+  document.querySelectorAll('.c-btn').forEach(b=>b.classList.remove('active'));
+  btn.classList.add('active');activeCable=type;applyFilters();
+}
+function applyFilters(){
+  if(selId)return;
+  Object.values(SH).forEach(s=>{
+    const node=document.getElementById('n-'+s.id);if(!node)return;
+    const vis=activeCat==='all'||s.cat===activeCat;
+    node.style.opacity=vis?'1':'0.06';
+    node.style.pointerEvents=vis?'auto':'none';
+  });
+  document.querySelectorAll('.cp').forEach(p=>{
+    const t=p.getAttribute('data-type');
+    p.setAttribute('opacity',(activeCable==='all'||t===activeCable)?'0.85':'0.03');
+  });
+}
+function showTT(e,s){
+  const cat=CAT[s.cat]||{label:s.cat,color:'#888'};
+  const n=CM[s.id]?.length||0;
+  document.getElementById('tt-n').textContent=s.name;
+  const ttc=document.getElementById('tt-c');
+  ttc.textContent=cat.label.toUpperCase();ttc.style.color=cat.color;
+  document.getElementById('tt-i').textContent=`${n} connexion${n>1?'s':''}`;
+  tt.style.display='block';moveTT(e);
+}
+function moveTT(e){tt.style.left=Math.min(e.clientX+14,window.innerWidth-240)+'px';tt.style.top=Math.max(e.clientY-10,4)+'px';}
+function hideTT(){tt.style.display='none';}
+function applyT(){
+  root.style.transform=`translate(${panX}px,${panY}px) scale(${zoom})`;
+  document.getElementById('zoom-val').textContent=Math.round(zoom*100)+'%';
+  drawMinimap();
+}
+function fitView(){
+  const ww=area.clientWidth,wh=area.clientHeight;
+  const sx=ww/CW,sy=wh/CH;
+  zoom=Math.min(sx,sy)*.92;
+  panX=(ww-CW*zoom)/2;panY=(wh-CH*zoom)/2;
+  applyT();
+}
+function resetView(){fitView();clearSel();closePanel();}
+function dz(d){
+  const ww=area.clientWidth,wh=area.clientHeight;
+  const nz=Math.max(.15,Math.min(4,zoom+d));
+  const sc=nz/zoom;
+  panX=ww/2-sc*(ww/2-panX);panY=wh/2-sc*(wh/2-panY);
+  zoom=nz;applyT();
+}
+function drawMinimap(){
+  const mc=document.getElementById('mm-canvas');
+  const ctx=mc.getContext('2d');
+  ctx.clearRect(0,0,160,90);
+  const sx=160/CW,sy=90/CH;
+  CA.forEach(c=>{
+    const pts=ROUTES[c.id];if(!pts||pts.length<2)return;
+    ctx.beginPath();ctx.moveTo(pts[0][0]*sx,pts[0][1]*sy);
+    for(let i=1;i<pts.length;i++)ctx.lineTo(pts[i][0]*sx,pts[i][1]*sy);
+    ctx.strokeStyle=c.color+'66';ctx.lineWidth=.6;ctx.stroke();
+  });
+  Object.values(SH).forEach(s=>{
+    ctx.fillStyle=(CAT[s.cat]?.color||'#888')+'cc';
+    ctx.fillRect(s.x*sx,s.y*sy,Math.max(s.w*sx,2.5),Math.max(s.h*sy,2.5));
+  });
+  const vx=-panX/zoom*sx,vy=-panY/zoom*sy;
+  const vw=area.clientWidth/zoom*sx,vh=area.clientHeight/zoom*sy;
+  ctx.strokeStyle='rgba(0,212,255,.7)';ctx.lineWidth=1;ctx.strokeRect(vx,vy,vw,vh);
+}
+function setupEvents(){
+  area.addEventListener('mousedown',e=>{if(e.button!==0)return;drag=true;lmx=e.clientX;lmy=e.clientY;});
+  window.addEventListener('mousemove',e=>{if(!drag)return;panX+=e.clientX-lmx;panY+=e.clientY-lmy;lmx=e.clientX;lmy=e.clientY;applyT();});
+  window.addEventListener('mouseup',()=>{drag=false;});
+  area.addEventListener('wheel',e=>{
+    e.preventDefault();
+    const r=area.getBoundingClientRect();
+    const mx=e.clientX-r.left,my=e.clientY-r.top;
+    const nd=e.deltaY<0?0.1:-0.1;
+    const nz=Math.max(.15,Math.min(4,zoom+nd));
+    panX=mx-(mx-panX)*(nz/zoom);panY=my-(my-panY)*(nz/zoom);
+    zoom=nz;applyT();
+  },{passive:false});
+  area.addEventListener('click',e=>{if(e.target===area||e.target===svg){clearSel();closePanel();}});
+  svg.addEventListener('pointerdown',e=>{if(e.target===svg){drag=true;lmx=e.clientX;lmy=e.clientY;}});
+  document.getElementById('mm-canvas').addEventListener('click',e=>{
+    const r=e.target.getBoundingClientRect();
+    const mx=(e.clientX-r.left)/r.width,my=(e.clientY-r.top)/r.height;
+    panX=area.clientWidth/2-mx*CW*zoom;panY=area.clientHeight/2-my*CH*zoom;applyT();
+  });
+}
+window.addEventListener('DOMContentLoaded',()=>{
+  root.style.width=CW+'px';root.style.height=CH+'px';
+  svg.setAttribute('width',CW);svg.setAttribute('height',CH);
+  svg.style.width=CW+'px';svg.style.height=CH+'px';
+  buildCM();renderZones();renderCables();renderNodes();setupEvents();
+  setTimeout(()=>{fitView();drawMinimap();},100);
+  const ldMsgs=[[0,'LOADING SIGNAL MAP...'],[30,'PARSING DEVICES...'],[65,'DRAWING CABLES...'],[100,'READY']];
+  let ldIdx=0;
+  const ldBar=document.getElementById('ld-bar'),ldStat=document.getElementById('ld-status');
+  function ldStep(){
+    if(ldIdx>=ldMsgs.length)return;
+    const [pct,msg]=ldMsgs[ldIdx++];
+    ldBar.style.width=pct+'%';ldStat.textContent=msg;
+    if(ldIdx<ldMsgs.length)setTimeout(ldStep,280);
+    else setTimeout(()=>document.getElementById('loading').classList.add('done'),350);
+  }
+  setTimeout(ldStep,200);
+});
+window.addEventListener('keydown',e=>{
+  if(e.key==='Escape'){clearSel();closePanel();}
+  if(e.key==='f'||e.key==='F')resetView();
+  if(e.key==='+'||e.key==='=')dz(.15);
+  if(e.key==='-')dz(-.15);
+});
+window.addEventListener('resize',fitView);
+</script>
+</body>
+</html>

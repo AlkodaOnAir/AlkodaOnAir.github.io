@@ -232,7 +232,6 @@ footer{padding:28px 0 40px;border-top:1px solid var(--line);background:var(--bg)
 .contact-new{display:grid;grid-template-columns:1fr 1fr;gap:56px;margin-top:48px;align-items:stretch}
 
 .contact-lead-text{font-size:16px;color:var(--muted);font-weight:300;line-height:1.7;margin-bottom:28px}
-.contact-left{display:flex;flex-direction:column;justify-content:space-between}
 .contact-direct{display:flex;flex-direction:column;gap:12px;margin-bottom:28px}
 .contact-btn-main{display:flex;align-items:center;gap:12px;padding:15px 22px;border-radius:12px;background:var(--accent);color:#03080f;font-size:15px;font-weight:700;transition:.2s;text-decoration:none}
 .contact-btn-main:hover{transform:translateY(-2px);box-shadow:0 8px 24px rgba(0,210,255,.25)}
@@ -242,12 +241,12 @@ footer{padding:28px 0 40px;border-top:1px solid var(--line);background:var(--bg)
 .social-btn{display:inline-flex;align-items:center;gap:8px;padding:10px 16px;border-radius:10px;background:rgba(255,255,255,.05);border:1px solid var(--line);color:var(--muted);font-size:13px;font-weight:500;transition:.2s;text-decoration:none}
 .social-btn:hover{border-color:var(--accent);color:var(--accent);background:rgba(0,210,255,.06)}
 .contact-location{display:inline-flex;align-items:center;gap:8px;padding:10px 14px;font-size:13px;color:var(--dim)}
-.contact-project-box{background:linear-gradient(135deg,rgba(0,210,255,.08),rgba(255,107,53,.06));border:1px solid rgba(255,255,255,.08);border-radius:var(--rad);padding:32px;height:100%;box-sizing:border-box;display:flex;flex-direction:column;justify-content:center}
+.contact-project-box{background:linear-gradient(135deg,rgba(0,210,255,.08),rgba(255,107,53,.06));border:1px solid rgba(255,255,255,.08);border-radius:var(--rad);padding:32px;display:flex;flex-direction:column;justify-content:center;height:100%;box-sizing:border-box}
 .contact-project-box h3{font-size:24px;font-weight:800;color:#fff;margin-bottom:14px;letter-spacing:-.01em}
 .contact-project-box p{font-size:15px;color:var(--muted);font-weight:300;line-height:1.7;margin-bottom:24px}
 .contact-response-time{display:inline-flex;align-items:center;gap:8px;font-family:'Share Tech Mono',monospace;font-size:11px;letter-spacing:.12em;text-transform:uppercase;color:var(--accent3)}
 .rt-dot{width:7px;height:7px;border-radius:50%;background:var(--accent3);box-shadow:0 0 8px var(--accent3);animation:blink 2s ease-in-out infinite;flex-shrink:0}
-@media(max-width:1040px){.contact-new{display:grid;grid-template-columns:1fr 1fr;gap:56px;margin-top:48px;align-items:stretch}}
+@media(max-width:1040px){.contact-new{grid-template-columns:1fr;gap:36px}}
 </style>
 </head>
 <body>
@@ -302,7 +301,7 @@ footer{padding:28px 0 40px;border-top:1px solid var(--line);background:var(--bg)
   <div class="shell">
     <div class="section-kicker" data-i18n="corp_kicker">Prestations</div>
     <h2 data-i18n="corp_h2">Votre événement mérite<br><em>une vraie régie TV.</em></h2>
-    <p class="lead">Meetup, conférence, séminaire, concert — vous voulez le filmer, le diffuser en live, le garder en vidéo de qualité. Alkoda On Air s'occupe de tout, de A à Z.</p>
+    <p class="lead" data-i18n="corp_lead">Meetup, conférence, séminaire, concert — vous voulez le filmer, le diffuser en live, le garder en vidéo de qualité. Alkoda On Air s'occupe de tout, de A à Z.</p>
 
     <img class="corporate-hero-img"
          src="corporate-regie-meetup-elastic-deezer.avif"
@@ -327,37 +326,37 @@ footer{padding:28px 0 40px;border-top:1px solid var(--line);background:var(--bg)
     <div class="services-grid">
       <div class="srv">
         <div class="srv-icon">📡</div>
-        <h3>Live streaming & diffusion</h3>
+        <h3 data-i18n="card_live">Live streaming & diffusion</h3>
         <p>Diffusion en direct sur YouTube, LinkedIn, Twitch ou toute plateforme. Habillage graphique temps réel, lower thirds, transitions — qualité broadcast.</p>
         <div class="srv-tags"><span class="srv-tag">YouTube Live</span><span class="srv-tag">Multi-plateforme</span><span class="srv-tag">Lower thirds</span></div>
       </div>
       <div class="srv">
         <div class="srv-icon">🎥</div>
-        <h3>Captation multicaméra</h3>
+        <h3 data-i18n="card_multi">Captation multicaméra</h3>
         <p>Plusieurs caméras, plusieurs angles, réalisation en temps réel. L'écran du speaker intégré proprement dans le plan large — pas filmé à la caméra.</p>
         <div class="srv-tags"><span class="srv-tag">Multi-cam</span><span class="srv-tag">Écran speaker</span><span class="srv-tag">Réalisation live</span></div>
       </div>
       <div class="srv">
         <div class="srv-icon">✨</div>
-        <h3>Habillage graphique</h3>
+        <h3 data-i18n="card_graphic">Habillage graphique</h3>
         <p>Votre charte graphique intégrée en key/fill broadcast. Noms des intervenants, titres animés, jingles — sans chromakey, sans artéfacts.</p>
         <div class="srv-tags"><span class="srv-tag">Key/Fill</span><span class="srv-tag">Charte graphique</span><span class="srv-tag">H2R Graphics</span></div>
       </div>
       <div class="srv">
         <div class="srv-icon">🏢</div>
-        <h3>Meetups & conférences tech</h3>
+        <h3 data-i18n="card_meetup">Meetups & conférences tech</h3>
         <p>Format éprouvé sur plus de 100 événements. Déploiement rapide, setup discret. Elastic, Liferay, LeBonCoin, Confluent — nous connaissons votre terrain.</p>
         <div class="srv-tags"><span class="srv-tag">Meetup tech</span><span class="srv-tag">Setup rapide</span><span class="srv-tag">+100 événements</span></div>
       </div>
       <div class="srv">
         <div class="srv-icon">🎬</div>
-        <h3>Films & post-production</h3>
+        <h3 data-i18n="card_film">Films & post-production</h3>
         <p>Films institutionnels, clips, publicités. Tournage DJI Ronin, Sony Alpha 7 IV. Montage, mixage, compositing After Effects et DaVinci Resolve en interne.</p>
         <div class="srv-tags"><span class="srv-tag">DJI Ronin</span><span class="srv-tag">After Effects</span><span class="srv-tag">DaVinci Resolve</span></div>
       </div>
       <div class="srv">
         <div class="srv-icon">🎼</div>
-        <h3>Concerts & musique classique</h3>
+        <h3 data-i18n="card_concert">Concerts & musique classique</h3>
         <p>Notre ADN. Jusqu'à 9 caméras Sony FX6, régie fibre optique, 24 micros, production DVD commercial. Un savoir-faire rare au service de la musique vivante.</p>
         <div class="srv-tags"><span class="srv-tag">9 Sony FX6</span><span class="srv-tag">Fibre optique</span><span class="srv-tag">DVD commercial</span></div>
       </div>
@@ -376,7 +375,7 @@ footer{padding:28px 0 40px;border-top:1px solid var(--line);background:var(--bg)
   <div class="shell">
     <div class="section-kicker" data-i18n="clients_kicker">Clients & partenaires</div>
     <h2 data-i18n="clients_h2">Ils nous ont<br><em>fait confiance.</em></h2>
-    <p class="clients-intro">Des startups tech aux grandes entreprises, des associations culturelles aux chaînes TV. Nous nous adaptons à chaque contexte avec le même niveau d'exigence.</p>
+    <p class="clients-intro" data-i18n="clients_lead">Des startups tech aux grandes entreprises, des associations culturelles aux chaînes TV. Nous nous adaptons à chaque contexte avec le même niveau d'exigence.</p>
     <div class="logos-grid">
       <div class="logo-cell"><a href="https://www.elastic.co" target="_blank" rel="noopener"><img src="logo-elastic.avif" alt="Elastic"></a></div>
       <div class="logo-cell"><a href="https://www.leboncoin.fr" target="_blank" rel="noopener"><img src="logo-leboncoin.avif" alt="LeBonCoin"></a></div>
@@ -403,7 +402,7 @@ footer{padding:28px 0 40px;border-top:1px solid var(--line);background:var(--bg)
   <div class="shell">
     <div class="section-kicker" data-i18n="valise_kicker">Notre solution technique</div>
     <h2 data-i18n="valise_h2">Une régie mobile<br><em>broadcast compacte.</em></h2>
-    <p class="lead">Pour tenir nos engagements sur chaque événement, nous avons conçu une régie mobile broadcast déployable en moins d'une heure — architecture pensée brique par brique, pas un assemblage grand public.</p>
+    <p class="lead" data-i18n="valise_body1">Pour tenir nos engagements sur chaque événement, nous avons conçu une régie mobile broadcast déployable en moins d'une heure — architecture pensée brique par brique, pas un assemblage grand public.</p>
 
     <div class="valise-grid">
       <div class="valise-text">
@@ -461,22 +460,22 @@ footer{padding:28px 0 40px;border-top:1px solid var(--line);background:var(--bg)
       <div class="step">
         <div class="step-num">01</div>
         <h4>Cadrage & devis</h4>
-        <p>Vous décrivez votre projet. Nous établissons un devis détaillé et transparent, adapté à vos besoins réels.</p>
+        <p data-i18n="wf1_desc">Vous décrivez votre projet. Nous établissons un devis détaillé et transparent, adapté à vos besoins réels.</p>
       </div>
       <div class="step">
         <div class="step-num">02</div>
         <h4>Préparation</h4>
-        <p>Repérage du lieu, setup technique défini, charte graphique intégrée dans nos outils. Rien n'est laissé au hasard.</p>
+        <p data-i18n="wf2_desc">Repérage du lieu, setup technique défini, charte graphique intégrée dans nos outils. Rien n'est laissé au hasard.</p>
       </div>
       <div class="step">
         <div class="step-num">03</div>
         <h4>Tournage live</h4>
-        <p>Déploiement de la régie, réalisation multicaméra, streaming en direct, enregistrement ISO de toutes les sources.</p>
+        <p data-i18n="wf3_desc">Déploiement de la régie, réalisation multicaméra, streaming en direct, enregistrement ISO de toutes les sources.</p>
       </div>
       <div class="step">
         <div class="step-num">04</div>
         <h4>Post-production</h4>
-        <p>Montage, mixage audio, compositing. Livraison dans tous les formats : web, TV, réseaux sociaux, DVD.</p>
+        <p data-i18n="wf4_desc">Montage, mixage audio, compositing. Livraison dans tous les formats : web, TV, réseaux sociaux, DVD.</p>
       </div>
     </div>
   </div>
@@ -548,7 +547,7 @@ footer{padding:28px 0 40px;border-top:1px solid var(--line);background:var(--bg)
           </a>
           <a href="#" onclick="this.href='mai'+'lto:contact@alkoda-onair.com';return true;" class="contact-btn-main contact-btn-outline">
             <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"/><polyline points="22,6 12,12 2,6"/></svg>
-            contact@alkoda-onair.com
+            <span class="__cf_email__" data-cfemail="10737f7e6471736450717c7b7f74713d7f7e7179623e737f7d">[email&#160;protected]</span>
           </a>
         </div>
         <div class="contact-socials">
@@ -717,7 +716,27 @@ const STRINGS={
     contact_cta_body:'Décrivez-nous votre événement, la date, le lieu, vos besoins — par email ou par téléphone. Nous revenons vers vous sous 24h avec une proposition adaptée.',
     email_btn:'Envoyer un email →',
     footer_copy:'© 2026 Alkoda On Air · Paris',
-    legal:'Mentions légales'
+    legal:'Mentions légales',
+    card_live:'Live streaming & diffusion',
+    card_multi:'Captation multicaméra',
+    card_graphic:'Habillage graphique',
+    card_meetup:'Meetups & conférences tech',
+    card_film:'Films & post-production',
+    card_concert:'Concerts & musique classique',
+    card_live_desc:'Pas d\'équipe vidéo en interne ? Nous intervenons comme votre prestataire broadcast clé en main, de la prise de vue au replay.',
+    card_graphic_desc:'Slides intégrées proprement, habillage à votre charte, son soigné — pas une webcam sur un trépied. Un rendu professionnel dès la première image.',
+    card_film_desc:'Replays YouTube, extraits réseaux sociaux, montage final pour la communication interne — on anticipe la post-production dès le tournage.',
+    card_multi_desc:'Diffusion en direct sur YouTube, LinkedIn, Twitch ou toute plateforme. Habillage graphique temps réel, monitoring audio, encodage HD.',
+    valise_body1:'Pour tenir nos engagements sur chaque événement, nous avons conçu une régie mobile broadcast déployable en moins d\'une heure — architecture pensée brique par brique, pas un assemblage grand public.',
+    valise_body2:'Chaque composant a un rôle précis : mélange vidéo, composition, graphique, playback, monitoring, audio, réseau. Cette séparation des fonctions donne une <strong>qualité d\'image plus propre et une stabilité supérieure</strong> à tout ce que peut offrir un logiciel tout-en-un.',
+    valise_body3:'Nous adaptons les moyens humains et matériels à chaque projet pour <strong>maximiser la qualité tout en maîtrisant votre budget</strong>. Un technicien ou une équipe complète — selon vos besoins.',
+    wf1_title:'Cadrage & devis',wf2_title:'Préparation',wf3_title:'Tournage live',wf4_title:'Post-production',
+    wf1_desc:'Vous décrivez votre projet. Nous établissons un devis détaillé et transparent, adapté à vos besoins réels.',
+    wf2_desc:'Repérage du lieu, setup technique défini, charte graphique intégrée dans nos outils. Rien n\'est laissé au hasard.',
+    wf3_desc:'Déploiement de la régie, réalisation multicaméra, streaming en direct, enregistrement ISO de toutes les sources.',
+    wf4_desc:'Montage, mixage audio, compositing. Livraison dans tous les formats : web, TV, réseaux sociaux, DVD.',
+    orig_body1:'Alkoda On Air c\'est <strong>plus de 30 ans dans l\'audiovisuel broadcast</strong>, une expertise qui s\'est naturellement étendue au monde de l\'entreprise. Nous nous entourons des <strong>meilleurs techniciens selon vos besoins</strong> — réalisateurs, cadreurs, ingénieurs du son, opérateurs grue, pilotes de drone.',
+    footer_lang:'English'
   },
   en:{
     nav_prestations:'Services', nav_clients:'Clients', nav_valise:'The case',
@@ -756,7 +775,27 @@ const STRINGS={
     contact_cta_body:'Tell us about your event, the date, the venue, your needs — by email or phone. We\'ll get back to you within 24h with a tailored proposal.',
     email_btn:'Send an email →',
     footer_copy:'© 2026 Alkoda On Air · Paris',
-    legal:'Legal notice'
+    legal:'Legal notice',
+    card_live:'Live streaming & broadcast',
+    card_multi:'Multi-camera capture',
+    card_graphic:'Broadcast graphics',
+    card_meetup:'Meetups & tech conferences',
+    card_film:'Film & post-production',
+    card_concert:'Concerts & classical music',
+    card_live_desc:'No in-house video team? We step in as your turnkey broadcast provider, from shooting to replay delivery.',
+    card_graphic_desc:'Clean slide integration, branded graphics, quality sound — not a webcam on a tripod. Professional output from the very first frame.',
+    card_film_desc:'YouTube replays, social media clips, final edit for internal communications — we plan post-production from the shoot.',
+    card_multi_desc:'Live broadcast on YouTube, LinkedIn, Twitch or any platform. Real-time graphics, audio monitoring, HD encoding.',
+    valise_body1:'To deliver on our quality commitments at every event, we designed a mobile broadcast control room deployable in under an hour — built component by component, not an off-the-shelf assembly.',
+    valise_body2:'Each component has a precise role: video mixing, compositing, graphics, playback, monitoring, audio, network. This separation of functions delivers <strong>cleaner image quality and superior stability</strong> compared to any all-in-one software solution.',
+    valise_body3:'We adapt our human and technical resources to each project to <strong>maximise quality while keeping your budget in check</strong>. One technician or a full crew — depending on your needs.',
+    wf1_title:'Scoping & quote',wf2_title:'Preparation',wf3_title:'Live shoot',wf4_title:'Post-production',
+    wf1_desc:'You describe your project. We provide a detailed, transparent quote tailored to your actual needs.',
+    wf2_desc:'Venue scouting, technical setup defined, your branding integrated into our tools. Nothing left to chance.',
+    wf3_desc:'Control room deployment, multi-camera direction, live streaming, ISO recording of all sources.',
+    wf4_desc:'Editing, audio mixing, compositing. Delivery in all formats: web, TV, social media, DVD.',
+    orig_body1:'Alkoda On Air brings <strong>over 30 years in broadcast</strong>, an expertise that has naturally expanded into the corporate world. We work with the <strong>best technicians for your needs</strong> — directors, camera operators, sound engineers, crane operators, drone pilots.',
+    footer_lang:'Français'
   }
 };
 
@@ -791,7 +830,7 @@ function setLang(lang){
   });
 }
 
-functiontoggleLang(){setLang(_lang==='fr'?'en':'fr');}
+function toggleLang(){setLang(_lang==='fr'?'en':'fr');}
 
 // Init langue
 (function(){

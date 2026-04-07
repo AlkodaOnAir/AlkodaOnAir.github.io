@@ -3,52 +3,321 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Mentions légales — Alkoda On Air</title>
-<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;700&family=Share+Tech+Mono&display=swap">
+<title>Mentions légales & CGV — Alkoda On Air</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Share+Tech+Mono&display=swap">
 <style>
-:root{--bg:#07101d;--bg2:#0d1627;--card:#101b2f;--line:#22314f;--text:#e8eefb;--muted:#9db0d0;--accent:#00d2ff;}
+:root{--bg:#07101d;--card:#101b2f;--line:#22314f;--text:#e8eefb;--muted:#9db0d0;--accent:#00d2ff;}
 *{box-sizing:border-box;margin:0;padding:0}
-body{font-family:'Inter',sans-serif;background:var(--bg);color:var(--text);line-height:1.7;padding:100px 0 60px}
-.shell{width:min(760px,calc(100% - 48px));margin:0 auto}
-.back{display:inline-flex;align-items:center;gap:8px;font-size:13px;color:var(--muted);margin-bottom:40px;transition:.2s}
-.back:hover{color:var(--accent)}
-h1{font-size:36px;font-weight:900;color:#fff;margin-bottom:8px}
-.kicker{font-family:'Share Tech Mono',monospace;font-size:11px;letter-spacing:.2em;text-transform:uppercase;color:var(--accent);margin-bottom:16px}
-h2{font-size:18px;font-weight:700;color:#fff;margin:36px 0 10px;border-bottom:1px solid var(--line);padding-bottom:8px}
-p{color:var(--muted);font-size:15px;font-weight:300;margin-bottom:12px}
-strong{color:var(--text);font-weight:600}
-a{color:var(--accent)}a:hover{color:#fff}
+html{scroll-behavior:smooth}
+body{font-family:'Inter',sans-serif;background:var(--bg);color:var(--text);line-height:1.75;padding:0 0 60px}
+a{color:var(--accent);text-decoration:none}
+a:hover{text-decoration:underline}
+.nav{position:sticky;top:0;z-index:100;backdrop-filter:blur(18px);background:rgba(7,16,29,.88);border-bottom:1px solid rgba(255,255,255,.05);padding:0 48px;height:62px;display:flex;align-items:center;justify-content:space-between}
+.back-btn{display:inline-flex;align-items:center;gap:8px;font-size:13px;font-weight:500;color:var(--muted);transition:.2s;cursor:pointer;background:none;border:none}
+.back-btn:hover{color:var(--accent)}
+.back-btn svg{width:16px;height:16px}
+.nav-right{display:flex;align-items:center;gap:16px}
+.nav-title{font-family:'Share Tech Mono',monospace;font-size:11px;letter-spacing:.2em;text-transform:uppercase;color:var(--muted)}
+#lang-toggle-l{background:rgba(255,255,255,.06);border:1px solid rgba(255,255,255,.12);border-radius:4px;padding:3px 8px;cursor:pointer;opacity:.85;display:flex;align-items:center;transition:.2s}
+#lang-toggle-l:hover{opacity:1;border-color:var(--accent)}
+.shell{width:min(860px,calc(100% - 48px));margin:0 auto;padding-top:52px}
+.toc{background:var(--card);border:1px solid var(--line);border-radius:16px;padding:24px 28px;margin-bottom:52px}
+.toc-title{font-family:'Share Tech Mono',monospace;font-size:10px;letter-spacing:.2em;text-transform:uppercase;color:var(--accent);margin-bottom:16px}
+.toc ul{list-style:none;display:grid;grid-template-columns:1fr 1fr;gap:6px 24px}
+.toc li a{font-size:14px;color:var(--muted);transition:.2s}
+.toc li a:hover{color:var(--accent);text-decoration:none}
+.toc li::before{content:"→ ";color:var(--line);font-size:12px}
+.legal-section{margin-bottom:48px;padding-top:16px}
+.section-kicker{font-family:'Share Tech Mono',monospace;font-size:10px;letter-spacing:.2em;text-transform:uppercase;color:var(--accent);margin-bottom:10px}
+h1{font-size:clamp(32px,4vw,48px);font-weight:900;line-height:1;letter-spacing:-.02em;color:#fff;margin-bottom:8px}
+h2{font-size:20px;font-weight:700;color:#fff;margin:32px 0 12px;padding-bottom:8px;border-bottom:1px solid var(--line)}
+h3{font-size:16px;font-weight:600;color:var(--text);margin:20px 0 8px}
+p{font-size:15px;color:var(--muted);font-weight:300;margin-bottom:12px}
+p strong{color:var(--text);font-weight:600}
+.info-grid{display:grid;grid-template-columns:auto 1fr;gap:4px 24px;margin:16px 0;font-size:14px}
+.info-grid dt{color:var(--muted);font-weight:400;white-space:nowrap}
+.info-grid dd{color:var(--text);font-weight:500}
+.highlight-box{background:rgba(0,210,255,.06);border-left:3px solid var(--accent);border-radius:0 10px 10px 0;padding:16px 20px;margin:16px 0}
+.highlight-box p{margin:0;font-size:14px}
+.divider{border:none;border-top:1px solid var(--line);margin:48px 0}
+.lang-en{display:none}
 </style>
 </head>
 <body>
+
+<nav class="nav">
+  <button class="back-btn" onclick="history.back()">
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M19 12H5M5 12l7 7M5 12l7-7"/></svg>
+    <span id="back-label">Retour au site</span>
+  </button>
+  <div class="nav-right">
+    <span class="nav-title" id="nav-title">Mentions légales & CGV</span>
+    <button id="lang-toggle-l" onclick="toggleLangL()" title="Change language"><span id="lang-flag-l"></span></button>
+  </div>
+</nav>
+
 <div class="shell">
-  <a href="index.html" class="back">← Retour au site</a>
-  <div class="kicker">Informations légales</div>
-  <h1>Mentions légales</h1>
 
-  <h2>Éditeur du site</h2>
-  <p><strong>Alkoda On Air</strong><br>
-  Production audiovisuelle broadcast<br>
-  Paris, France<br>
-  Email : <a href="mailto:contact@alkoda-onair.com">contact@alkoda-onair.com</a><br>
-  Téléphone : <a href="tel:+33607861211">06 07 86 12 11</a></p>
+  <!-- VERSION FRANÇAISE -->
+  <div class="lang-fr">
+    <div class="section-kicker">Documents légaux</div>
+    <h1>Mentions légales<br>&amp; Conditions générales</h1>
+    <p style="margin-top:16px;margin-bottom:40px">Documents applicables à toute relation commerciale avec Alkoda On Air.</p>
+    <div class="toc">
+      <div class="toc-title">Sommaire</div>
+      <ul>
+        <li><a href="#mentions">Mentions légales</a></li>
+        <li><a href="#definitions">Définitions</a></li>
+        <li><a href="#objet">Objet &amp; champ d'application</a></li>
+        <li><a href="#publicite">Droit de publicité</a></li>
+        <li><a href="#commande">Commande</a></li>
+        <li><a href="#engagements">Engagements réciproques</a></li>
+        <li><a href="#tournage">Conditions de tournage</a></li>
+        <li><a href="#annulation">Annulation</a></li>
+        <li><a href="#image">Droit à l'image</a></li>
+        <li><a href="#diffusion">Droit de diffusion</a></li>
+        <li><a href="#paiement">Conditions de paiement</a></li>
+        <li><a href="#penalites">Pénalités de retard</a></li>
+        <li><a href="#modification">Modification</a></li>
+        <li><a href="#livraison">Livraison</a></li>
+        <li><a href="#propriete">Réserve de propriété</a></li>
+        <li><a href="#fichiers">Conservation des fichiers</a></li>
+      </ul>
+    </div>
+    <div class="legal-section" id="mentions">
+      <h2>Mentions légales</h2>
+      <dl class="info-grid">
+        <dt>Raison sociale</dt><dd>Alkoda On Air</dd>
+        <dt>Forme juridique</dt><dd>Entrepreneur Individuel (EI)</dd>
+        <dt>Responsable</dt><dd>Christophe Koclejda</dd>
+        <dt>SIRET</dt><dd>820 390 409 00010</dd>
+        <dt>Adresse</dt><dd>25 rue Pradier – 75019 Paris, France</dd>
+        <dt>Email</dt><dd><a href="#" onclick="this.href='mai'+'lto:contact@alkoda-onair.com';return true;">contact@alkoda-onair.com</a></dd>
+        <dt>Téléphone</dt><dd><a href="tel:+33607861211">06 07 86 12 11</a></dd>
+        <dt>TVA</dt><dd>Non applicable — article 293B du CGI (auto-entrepreneur)</dd>
+        <dt>Hébergeur</dt><dd>GitHub, Inc. — 88 Colin P Kelly Jr St, San Francisco, CA 94107, États-Unis</dd>
+      </dl>
+    </div>
+    <hr class="divider">
+    <div class="legal-section">
+      <div class="section-kicker">CGV</div>
+      <h2 style="border:none;padding:0;margin-bottom:16px">Conditions Générales de Vente — Production Vidéo</h2>
+      <div class="highlight-box"><p>Les présentes CGV ont pour objet de régir les relations entre <strong>Alkoda On Air</strong> et ses clients. Toute commande implique l'entière adhésion aux présentes conditions.</p></div>
+    </div>
+    <div class="legal-section" id="definitions">
+      <h2>Définitions</h2>
+      <p><strong>« ALKODA ON AIR »</strong> désigne Christophe Koclejda, entreprise individuelle, SIRET N° 820 390 409 00010, dont le siège social est situé 25 rue Pradier – 75019 Paris.</p>
+      <p><strong>« CLIENT »</strong> désigne toute personne physique majeure ou personne morale sollicitant les services d'Alkoda On Air. La personne signataire des présentes CGV se porte garante du paiement de la facture même si celle-ci doit être établie au nom d'un tiers.</p>
+    </div>
+    <div class="legal-section" id="objet">
+      <h2>Objet et champ d'application</h2>
+      <p>Le CLIENT peut consulter les CGV à tout moment sur le site internet d'Alkoda On Air. Toute commande passée emporte acceptation sans réserve des présentes CGV.</p>
+      <p>Alkoda On Air propose : films vidéo d'entreprise, corporate, interviews — productions pour associations et artistes, concerts, théâtre — tournage et montage vidéo — diffusions Internet, streaming — captations aériennes, terrestres, sous-marines — post-production, motion design, colorimétrie.</p>
+    </div>
+    <div class="legal-section" id="publicite">
+      <h2>Droit de publicité</h2>
+      <p>Le CLIENT autorise Alkoda On Air à citer son nom et des extraits de productions à titre de références commerciales. Le CLIENT peut s'y opposer par courrier adressé au prestataire.</p>
+    </div>
+    <div class="legal-section" id="commande">
+      <h2>Commande</h2>
+      <p>Alkoda On Air propose un devis précisant : durée, lieu, date — analyse des besoins — options discutées — scènes et personnes à filmer avec leur consentement — prix et délai prévisionnel.</p>
+      <p>Les tarifs sont valables <strong>30 jours</strong> suivant l'envoi du devis. La commande devient définitive dès réception du bon de commande signé et d'un <strong>acompte de 30%</strong>. Les prix sont en euros et <strong>non soumis à la TVA</strong> (article 293B du CGI).</p>
+    </div>
+    <div class="legal-section" id="engagements">
+      <h2>Engagements réciproques</h2>
+      <h3>Alkoda On Air s'engage à :</h3>
+      <p>Exécuter la prestation selon les indications du client — respecter la confidentialité — ne divulguer aucune information — restituer les documents à la fin de la mission — signer un accord de confidentialité si demandé.</p>
+      <h3>Le client s'engage à :</h3>
+      <p>Ne pas détourner, copier ou utiliser les fichiers en dehors du champ du contrat — considérer les clauses du contrat comme confidentielles.</p>
+    </div>
+    <div class="legal-section" id="tournage">
+      <h2>Conditions particulières relatives au tournage</h2>
+      <p>Alkoda On Air s'engage à déployer ses meilleurs efforts, sous réserve d'impossibilité technique ou liée à des droits de propriété intellectuelle. En cas de danger, Alkoda On Air se réserve le droit d'interrompre les prises de vue. Si la prestation ne peut être réalisée, l'acompte est intégralement restitué.</p>
+    </div>
+    <div class="legal-section" id="annulation">
+      <h2>Annulation</h2>
+      <p>En cas d'annulation par écrit et recommandé <strong>avant la mise en production</strong>, l'acompte de 30% est conservé.</p>
+    </div>
+    <div class="legal-section" id="image">
+      <h2>Droit à l'image</h2>
+      <p>Le client s'engage à informer ses participants qu'ils seront filmés. Si des personnes refusent, le client en informe Alkoda On Air. Il est recommandé de faire signer une autorisation. En cas de refus, Alkoda On Air ne peut être tenu responsable de la non-réalisation partielle.</p>
+    </div>
+    <div class="legal-section" id="diffusion">
+      <h2>Droit de diffusion</h2>
+      <p>Le produit vidéo est destiné aux médias définis sur le devis. Toute diffusion sur d'autres médias fait l'objet d'un contrat supplémentaire. Alkoda On Air peut utiliser les images à des fins de promotion. Refus par courrier recommandé avec AR.</p>
+    </div>
+    <div class="legal-section" id="paiement">
+      <h2>Conditions de paiement</h2>
+      <p>Paiement par <strong>virement bancaire</strong>. Services non soumis à la TVA (art. 293B du CGI). En général : <strong>30% d'acompte</strong> à la signature, solde à la livraison.</p>
+    </div>
+    <div class="legal-section" id="penalites">
+      <h2>Pénalités de retard de paiement</h2>
+      <p>Après mise en demeure par lettre recommandée, pénalités de <strong>10% du montant total par mois de retard</strong>, plus frais de recouvrement éventuels.</p>
+    </div>
+    <div class="legal-section" id="modification">
+      <h2>Modification</h2>
+      <p>Toute modification doit être demandée par écrit avant production. Durant <strong>15 jours</strong> après livraison, modifications mineures possibles. Les modifications majeures font l'objet d'une nouvelle facturation.</p>
+    </div>
+    <div class="legal-section" id="livraison">
+      <h2>Livraison</h2>
+      <p>Alkoda On Air s'engage à livrer dans le délai contractuel. Le paiement intégral vaut réception et acceptation définitive.</p>
+    </div>
+    <div class="legal-section" id="propriete">
+      <h2>Réserve de propriété</h2>
+      <p>Conformément à la loi n° 80-335 du 12 mai 1980, le transfert de propriété n'intervient qu'au complet paiement. Pénalités de 10% par mois de retard. Tout mois engagé est dû.</p>
+    </div>
+    <div class="legal-section" id="fichiers">
+      <h2>Conservation des fichiers</h2>
+      <p>Les rushes sont conservés <strong>3 mois</strong> après livraison. Sauvegarde plus longue sur demande écrite et participation financière.</p>
+    </div>
+    <div class="legal-section">
+      <h2>Droit de reproduction</h2>
+      <p>Selon l'art. L 335-1 à L 335-4 du code de la propriété intellectuelle, la reproduction est interdite. <strong>Seuls les tribunaux français sont compétents en cas de litige.</strong></p>
+    </div>
+    <p style="margin-top:40px;font-family:'Share Tech Mono',monospace;font-size:11px;color:var(--muted);letter-spacing:.08em">© 2026 Alkoda On Air — Christophe Koclejda — SIRET 820 390 409 00010</p>
+  </div>
 
-  <h2>Directeur de la publication</h2>
-  <p>Christophe Koclejda</p>
+  <!-- ENGLISH VERSION -->
+  <div class="lang-en">
+    <div class="section-kicker">Legal documents</div>
+    <h1>Legal Notice<br>&amp; General Terms</h1>
+    <p style="margin-top:16px;margin-bottom:40px">Documents applicable to any commercial relationship with Alkoda On Air.</p>
+    <div class="toc">
+      <div class="toc-title">Contents</div>
+      <ul>
+        <li><a href="#mentions">Legal notice</a></li>
+        <li><a href="#definitions">Definitions</a></li>
+        <li><a href="#objet">Purpose &amp; scope</a></li>
+        <li><a href="#publicite">Publicity rights</a></li>
+        <li><a href="#commande">Order</a></li>
+        <li><a href="#engagements">Reciprocal commitments</a></li>
+        <li><a href="#tournage">Filming conditions</a></li>
+        <li><a href="#annulation">Cancellation</a></li>
+        <li><a href="#image">Image rights</a></li>
+        <li><a href="#diffusion">Broadcasting rights</a></li>
+        <li><a href="#paiement">Payment terms</a></li>
+        <li><a href="#penalites">Late payment penalties</a></li>
+        <li><a href="#modification">Modifications</a></li>
+        <li><a href="#livraison">Delivery</a></li>
+        <li><a href="#propriete">Reservation of ownership</a></li>
+        <li><a href="#fichiers">File retention</a></li>
+      </ul>
+    </div>
+    <div class="legal-section">
+      <h2>Legal Notice</h2>
+      <dl class="info-grid">
+        <dt>Company name</dt><dd>Alkoda On Air</dd>
+        <dt>Legal form</dt><dd>Sole proprietorship (Entrepreneur Individuel)</dd>
+        <dt>Director</dt><dd>Christophe Koclejda</dd>
+        <dt>SIRET</dt><dd>820 390 409 00010</dd>
+        <dt>Address</dt><dd>25 rue Pradier – 75019 Paris, France</dd>
+        <dt>Email</dt><dd><a href="#" onclick="this.href='mai'+'lto:contact@alkoda-onair.com';return true;">contact@alkoda-onair.com</a></dd>
+        <dt>Phone</dt><dd><a href="tel:+33607861211">+33 6 07 86 12 11</a></dd>
+        <dt>VAT</dt><dd>Not applicable — article 293B of the French Tax Code</dd>
+        <dt>Host</dt><dd>GitHub, Inc. — 88 Colin P Kelly Jr St, San Francisco, CA 94107, USA</dd>
+      </dl>
+    </div>
+    <hr class="divider">
+    <div class="legal-section">
+      <div class="section-kicker">GTC</div>
+      <h2 style="border:none;padding:0;margin-bottom:16px">General Terms and Conditions of Sale — Video Production</h2>
+      <div class="highlight-box"><p>These GTC govern the relationship between <strong>Alkoda On Air</strong> and its clients. Any order implies full adherence to these terms.</p></div>
+    </div>
+    <div class="legal-section">
+      <h2>Definitions</h2>
+      <p><strong>"ALKODA ON AIR"</strong> refers to Christophe Koclejda, sole proprietorship, SIRET No. 820 390 409 00010, headquartered at 25 rue Pradier – 75019 Paris.</p>
+      <p><strong>"CLIENT"</strong> refers to any adult individual or legal entity soliciting Alkoda On Air's services. The signatory guarantees payment even if the invoice is issued in a third party's name.</p>
+    </div>
+    <div class="legal-section">
+      <h2>Purpose and Scope</h2>
+      <p>The CLIENT can consult the GTC at any time on the Alkoda On Air website. Any order constitutes acceptance without reservation.</p>
+      <p>Alkoda On Air offers: corporate and commercial videos, interviews — productions for associations and artists, concerts, theatre — filming and editing — internet broadcasting, streaming — aerial, ground and underwater recordings — post-production, motion design, colour grading.</p>
+    </div>
+    <div class="legal-section">
+      <h2>Publicity Rights</h2>
+      <p>The CLIENT authorises Alkoda On Air to cite their name and video excerpts as commercial references. The CLIENT may object by sending a letter to the provider.</p>
+    </div>
+    <div class="legal-section">
+      <h2>Order</h2>
+      <p>Alkoda On Air provides a quote specifying: duration, location, date — needs analysis — options discussed — scenes and individuals to be filmed with their consent — price and estimated timeline.</p>
+      <p>Rates are valid for <strong>30 days</strong>. The order becomes final upon receipt of the signed form and a <strong>30% deposit</strong>. Prices are in euros and <strong>not subject to VAT</strong> (article 293B of the French Tax Code).</p>
+    </div>
+    <div class="legal-section">
+      <h2>Reciprocal Commitments</h2>
+      <h3>Alkoda On Air commits to:</h3>
+      <p>Performing the service per client instructions — maintaining strict confidentiality — not disclosing information — returning documents at mission end — signing a confidentiality agreement if requested.</p>
+      <h3>The CLIENT commits to:</h3>
+      <p>Not diverting, copying or using digital files outside the contract scope — treating contract clauses as confidential.</p>
+    </div>
+    <div class="legal-section">
+      <h2>Specific Filming Conditions</h2>
+      <p>Alkoda On Air commits to best efforts, subject to technical impossibilities or third-party intellectual property rights. In dangerous situations, Alkoda On Air may halt filming. If the service cannot be performed, the deposit is fully refunded.</p>
+    </div>
+    <div class="legal-section">
+      <h2>Cancellation</h2>
+      <p>If the CLIENT cancels in writing via registered mail <strong>before production starts</strong>, the 30% deposit is retained.</p>
+    </div>
+    <div class="legal-section">
+      <h2>Image Rights</h2>
+      <p>The CLIENT must inform participants they will be filmed. Those who refuse must be reported to Alkoda On Air promptly. A signed image rights release is recommended. Alkoda On Air cannot be held responsible for incomplete service in case of refusal.</p>
+    </div>
+    <div class="legal-section">
+      <h2>Broadcasting Rights</h2>
+      <p>The video is for distribution on media defined in the quote only. Any other use requires an additional agreement. Alkoda On Air may use footage for promotional purposes. Refusal must be sent by registered letter with acknowledgment.</p>
+    </div>
+    <div class="legal-section">
+      <h2>Payment Terms</h2>
+      <p>Payment by <strong>bank transfer</strong>. Services not subject to VAT (art. 293B). Generally: <strong>30% deposit</strong> on signing, balance on delivery.</p>
+    </div>
+    <div class="legal-section">
+      <h2>Late Payment Penalties</h2>
+      <p>After formal notice by registered letter, penalties of <strong>10% of the total invoice per month of delay</strong>, plus judicial recovery costs.</p>
+    </div>
+    <div class="legal-section">
+      <h2>Modifications</h2>
+      <p>Modification requests must be in writing before production. Within <strong>15 days</strong> of delivery, minor modifications are possible. Major changes incur additional charges.</p>
+    </div>
+    <div class="legal-section">
+      <h2>Delivery</h2>
+      <p>Alkoda On Air commits to delivering within the contractual timeframe. Full payment constitutes final acceptance.</p>
+    </div>
+    <div class="legal-section">
+      <h2>Reservation of Ownership</h2>
+      <p>Per Law No. 80-335 of May 12, 1980, ownership transfers only upon full payment. Penalties of 10% per month of delay. Any initiated month is due in full.</p>
+    </div>
+    <div class="legal-section">
+      <h2>File Retention</h2>
+      <p>Raw footage retained for <strong>3 months</strong> after delivery. Longer retention available on written request with financial contribution.</p>
+    </div>
+    <div class="legal-section">
+      <h2>Reproduction Rights</h2>
+      <p>Per Article L 335-1 to L 335-4 of the French Intellectual Property Code, reproduction is prohibited. <strong>Only French courts have jurisdiction in case of dispute.</strong></p>
+    </div>
+    <p style="margin-top:40px;font-family:'Share Tech Mono',monospace;font-size:11px;color:var(--muted);letter-spacing:.08em">© 2026 Alkoda On Air — Christophe Koclejda — SIRET 820 390 409 00010</p>
+  </div>
 
-  <h2>Hébergement</h2>
-  <p>Ce site est hébergé par <strong>GitHub Pages</strong><br>
-  GitHub, Inc. — 88 Colin P Kelly Jr St, San Francisco, CA 94107, États-Unis<br>
-  <a href="https://pages.github.com" target="_blank" rel="noopener">pages.github.com</a></p>
-
-  <h2>Propriété intellectuelle</h2>
-  <p>L'ensemble des contenus présents sur ce site (textes, images, vidéos, logos) sont la propriété exclusive d'Alkoda On Air ou de leurs auteurs respectifs. Toute reproduction, même partielle, est interdite sans autorisation préalable.</p>
-
-  <h2>Données personnelles</h2>
-  <p>Ce site ne collecte aucune donnée personnelle. Aucun cookie de traçage n'est utilisé. Les liens vers YouTube et LinkedIn sont soumis aux politiques de confidentialité de ces plateformes.</p>
-
-  <h2>Liens externes</h2>
-  <p>Ce site contient des liens vers des sites tiers. Alkoda On Air ne peut être tenu responsable du contenu de ces sites externes.</p>
 </div>
+
+<script>
+const _svgFRl='<svg width="22" height="15" viewBox="0 0 3 2" xmlns="http://www.w3.org/2000/svg" style="border-radius:2px;vertical-align:middle;display:inline-block"><rect width="1" height="2" fill="#002395"/><rect x="1" width="1" height="2" fill="#fff"/><rect x="2" width="1" height="2" fill="#ED2939"/></svg>';
+const _svgUKl='<svg width="22" height="15" viewBox="0 0 60 30" xmlns="http://www.w3.org/2000/svg" style="border-radius:2px;vertical-align:middle;display:inline-block"><rect width="60" height="30" fill="#012169"/><path d="M0,0 L60,30 M60,0 L0,30" stroke="#fff" stroke-width="6"/><path d="M0,0 L60,30 M60,0 L0,30" stroke="#C8102E" stroke-width="4"/><path d="M30,0 V30 M0,15 H60" stroke="#fff" stroke-width="10"/><path d="M30,0 V30 M0,15 H60" stroke="#C8102E" stroke-width="6"/></svg>';
+let _langL='fr';
+try{_langL=localStorage.getItem('alkoda_lang')||'fr';}catch(e){}
+function setLangL(lang){
+  _langL=lang;
+  try{localStorage.setItem('alkoda_lang',lang);}catch(e){}
+  document.getElementById('lang-flag-l').innerHTML=lang==='fr'?_svgFRl:_svgUKl;
+  document.getElementById('back-label').textContent=lang==='fr'?'Retour au site':'Back to site';
+  document.getElementById('nav-title').textContent=lang==='fr'?'Mentions légales & CGV':'Legal Notice & GTC';
+  document.title=lang==='fr'?'Mentions légales & CGV — Alkoda On Air':'Legal Notice & GTC — Alkoda On Air';
+  document.documentElement.lang=lang;
+  document.querySelectorAll('.lang-fr').forEach(el=>el.style.display=lang==='fr'?'':'none');
+  document.querySelectorAll('.lang-en').forEach(el=>el.style.display=lang==='en'?'':'none');
+}
+function toggleLangL(){setLangL(_langL==='fr'?'en':'fr');}
+setLangL(_langL);
+</script>
 </body>
 </html>

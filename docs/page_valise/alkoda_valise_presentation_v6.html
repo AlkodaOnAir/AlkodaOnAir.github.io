@@ -1,0 +1,724 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Alkoda On Air — Valise de réalisation mobile</title>
+  <meta name="description" content="Découvrez la valise de réalisation Alkoda On Air : une régie mobile compacte capable de captation multicaméra, livestreaming, habillage graphique broadcast, playback et enregistrement ISO." />
+  <style>
+    :root{
+      --bg:#07101d;
+      --bg2:#0d1627;
+      --bg3:#121e33;
+      --card:#101b2f;
+      --line:#22314f;
+      --line2:#30456f;
+      --text:#e8eefb;
+      --muted:#9db0d0;
+      --accent:#00d2ff;
+      --accent2:#ff6b35;
+      --accent3:#7cff8a;
+      --shadow:0 18px 60px rgba(0,0,0,.35);
+      --radius:24px;
+      --max:1240px;
+    }
+    *{box-sizing:border-box}
+    html{scroll-behavior:smooth}
+    body{margin:0;font-family:Inter,Segoe UI,Roboto,Helvetica,Arial,sans-serif;background:radial-gradient(circle at top,#11213c 0,#09101d 42%,#050b16 100%);color:var(--text);line-height:1.6}
+    a{color:inherit;text-decoration:none}
+    img{max-width:100%;display:block}
+    .shell{width:min(var(--max),calc(100% - 40px));margin:0 auto}
+    .nav{position:sticky;top:0;z-index:50;backdrop-filter:blur(14px);background:rgba(7,16,29,.78);border-bottom:1px solid rgba(255,255,255,.06)}
+    .nav-inner{display:flex;align-items:center;justify-content:space-between;gap:24px;padding:14px 0}
+    .brand{display:flex;align-items:center;gap:14px;font-weight:800;letter-spacing:.08em;text-transform:uppercase}
+    .brand-badge{width:38px;height:38px;border-radius:12px;background:linear-gradient(135deg,var(--accent),#0088ff);box-shadow:0 0 0 1px rgba(255,255,255,.08),0 10px 24px rgba(0,210,255,.2)}
+    .nav-links{display:flex;flex-wrap:wrap;gap:16px;font-size:14px;color:var(--muted);row-gap:8px}
+    .nav-links a:hover{color:#fff}
+    .hero{padding:84px 0 52px;position:relative;overflow:hidden}
+    .hero::before,.hero::after{content:"";position:absolute;inset:auto;width:420px;height:420px;border-radius:999px;filter:blur(80px);opacity:.22;pointer-events:none}
+    .hero::before{top:-100px;left:-80px;background:var(--accent)}
+    .hero::after{right:-120px;top:40px;background:var(--accent2)}
+    .hero-grid{display:grid;grid-template-columns:1.15fr .85fr;gap:34px;align-items:center}
+    .eyebrow{display:inline-flex;align-items:center;gap:10px;padding:8px 14px;border:1px solid rgba(0,210,255,.18);background:rgba(0,210,255,.08);border-radius:999px;font-size:12px;font-weight:700;letter-spacing:.12em;text-transform:uppercase;color:#c8f6ff}
+    .eyebrow::before{content:"";width:8px;height:8px;border-radius:999px;background:var(--accent3);box-shadow:0 0 12px var(--accent3)}
+    h1{font-size:clamp(38px,6vw,72px);line-height:.98;margin:18px 0 18px;font-weight:900;letter-spacing:-.03em}
+    .hero p{font-size:clamp(17px,2.2vw,22px);color:var(--muted);max-width:780px;margin:0 0 28px}
+    .cta-row{display:flex;flex-wrap:wrap;gap:14px;margin-bottom:26px}
+    .btn{display:inline-flex;align-items:center;gap:10px;padding:14px 22px;border-radius:999px;font-weight:800;letter-spacing:.02em;transition:.2s transform,.2s opacity,.2s background,.2s border-color;border:1px solid transparent}
+    .btn:hover{transform:translateY(-1px)}
+    .btn-primary{background:linear-gradient(135deg,var(--accent),#0ba3ff);color:#03101d;box-shadow:0 12px 28px rgba(0,210,255,.22)}
+    .btn-secondary{border-color:rgba(255,255,255,.12);background:rgba(255,255,255,.04)}
+    .btn-ghost{border-color:rgba(255,255,255,.12);background:transparent;color:var(--muted)}
+    .hero-stats{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:14px;margin-top:24px}
+    .stat{padding:18px 18px 16px;border:1px solid rgba(255,255,255,.06);background:linear-gradient(180deg,rgba(255,255,255,.04),rgba(255,255,255,.02));border-radius:18px;box-shadow:var(--shadow)}
+    .stat strong{display:block;font-size:26px;line-height:1;margin-bottom:8px}
+    .stat span{display:block;color:var(--muted);font-size:14px}
+    .hero-card{position:relative;padding:22px;border-radius:28px;border:1px solid rgba(255,255,255,.08);background:linear-gradient(180deg,rgba(16,27,47,.95),rgba(10,18,31,.95));box-shadow:var(--shadow)}
+    .hero-card::after{content:"";position:absolute;inset:auto 18px 18px 18px;height:1px;background:linear-gradient(90deg,transparent,rgba(255,255,255,.18),transparent)}
+    .broadcast-top{display:flex;justify-content:space-between;align-items:center;gap:10px;margin-bottom:14px;font-size:12px;color:var(--muted);text-transform:uppercase;letter-spacing:.12em}
+    .broadcast-screen{aspect-ratio:16/9;border-radius:20px;background:linear-gradient(160deg,#0a1220,#131f35 56%,#0f1930);border:1px solid rgba(255,255,255,.08);padding:18px;position:relative;overflow:hidden}
+    .broadcast-screen::before{content:"";position:absolute;inset:-20% auto auto -10%;width:220px;height:220px;background:radial-gradient(circle,var(--accent) 0,transparent 70%);opacity:.14}
+    .screen-grid{height:100%;display:grid;grid-template-columns:1.2fr .8fr;grid-template-rows:.8fr 1fr;gap:12px}
+    .screen-panel{border-radius:18px;border:1px solid rgba(255,255,255,.08);background:linear-gradient(180deg,rgba(255,255,255,.06),rgba(255,255,255,.03));position:relative;overflow:hidden}
+    .screen-panel::after{content:"";position:absolute;inset:auto 0 0;height:38%;background:linear-gradient(180deg,transparent,rgba(0,0,0,.25))}
+    .screen-panel.main{grid-row:1 / span 2;padding:16px}
+    .screen-panel.main .tag{position:absolute;top:16px;left:16px;padding:6px 10px;background:rgba(0,0,0,.45);backdrop-filter:blur(6px);border:1px solid rgba(255,255,255,.1);border-radius:999px;font-size:12px;font-weight:700}
+    .speaker-stage{position:absolute;left:18px;right:18px;bottom:20px;height:45%;border-radius:22px;background:linear-gradient(180deg,#f7c57a,#f39249 56%,#7d3c1f);box-shadow:inset 0 -16px 30px rgba(0,0,0,.18)}
+    .speaker-stage::before{content:"";position:absolute;left:14%;top:-22%;width:28%;aspect-ratio:16/9;border-radius:12px;background:linear-gradient(160deg,#dbe7ff,#a6bdf9);border:3px solid rgba(255,255,255,.7);box-shadow:0 12px 30px rgba(0,0,0,.18)}
+    .speaker-stage::after{content:"";position:absolute;left:48%;top:10%;width:16%;height:58%;border-radius:50% 50% 44% 44% / 30% 30% 70% 70%;background:#243248;box-shadow:24px 0 0 -8px #243248}
+    .screen-panel.side{padding:14px}
+    .side-lines{display:grid;gap:10px;height:100%}
+    .side-lines span{display:block;border-radius:999px;background:linear-gradient(90deg,rgba(255,255,255,.12),rgba(255,255,255,.03));height:18px}
+    .side-lines span:nth-child(2){width:82%}.side-lines span:nth-child(3){width:58%}.side-lines span:nth-child(4){width:66%}
+    .section{padding:68px 0}
+    .section.alt{background:linear-gradient(180deg,rgba(255,255,255,.03),rgba(255,255,255,.015))}
+    .section-head{display:flex;justify-content:space-between;gap:22px;align-items:end;margin-bottom:28px}
+    .section-kicker{font-size:12px;font-weight:800;letter-spacing:.14em;text-transform:uppercase;color:var(--accent)}
+    h2{font-size:clamp(28px,4vw,48px);line-height:1.02;margin:10px 0 0}
+    .section-head p{max-width:700px;color:var(--muted);font-size:18px;margin:0}
+    .grid-3{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:20px}
+    .card{background:linear-gradient(180deg,var(--card),rgba(12,20,35,.96));border:1px solid rgba(255,255,255,.07);border-radius:var(--radius);padding:24px;box-shadow:var(--shadow)}
+    .card h3{margin:0 0 10px;font-size:22px}
+    .card p{margin:0;color:var(--muted)}
+    .pill-list{display:flex;flex-wrap:wrap;gap:10px;margin-top:18px}
+    .pill{padding:8px 12px;border-radius:999px;background:rgba(255,255,255,.05);border:1px solid rgba(255,255,255,.08);font-size:13px;color:#dce7ff}
+    .split{display:grid;grid-template-columns:1fr 1fr;gap:24px;align-items:center}
+    .narrative{display:grid;gap:16px}
+    .narrative p{margin:0;color:var(--muted);font-size:17px}
+    .feature-box{display:grid;gap:12px}
+    .feature{display:grid;grid-template-columns:auto 1fr;gap:14px;padding:18px;border-radius:20px;background:rgba(255,255,255,.04);border:1px solid rgba(255,255,255,.06)}
+    .feature-icon{width:46px;height:46px;border-radius:14px;display:grid;place-items:center;background:linear-gradient(135deg,rgba(0,210,255,.16),rgba(255,107,53,.14));font-size:20px}
+    .media-card{background:linear-gradient(180deg,#101b2e,#0a1322);border:1px solid rgba(255,255,255,.08);border-radius:28px;padding:18px;box-shadow:var(--shadow)}
+    .media-frame{aspect-ratio:16/10;border-radius:22px;overflow:hidden;background:#07111f;border:1px solid rgba(255,255,255,.08)}
+
+    .brand-logo{height:42px;width:auto;display:block;filter:drop-shadow(0 10px 30px rgba(0,0,0,.35))}
+    .hero-logo{height:72px;width:auto;display:block;margin-bottom:18px;filter:drop-shadow(0 10px 30px rgba(0,0,0,.45))}
+    .media-frame img{width:100%;height:100%;object-fit:cover;display:block}
+    .img-placeholder{height:100%;display:flex;align-items:center;justify-content:center;flex-direction:column;gap:8px;padding:24px;text-align:center;background:linear-gradient(180deg,#081423,#0d1a2c);color:#9db6d7;font-family:Inter,system-ui,sans-serif}
+    .img-placeholder strong{font-size:16px;color:#fff}
+    .img-placeholder span{font-size:13px;opacity:.9}
+    .filename-note{display:inline-flex;align-items:center;gap:8px;margin-top:10px;padding:8px 12px;border-radius:999px;background:rgba(255,255,255,.06);border:1px solid rgba(255,255,255,.08);font-size:13px;color:#cfe2ff}
+
+    .media-caption{display:flex;justify-content:space-between;gap:12px;align-items:center;padding:14px 4px 0;color:var(--muted);font-size:14px}
+    .media-caption strong{color:#fff}
+    .mock-ui{position:relative;height:100%;background:linear-gradient(180deg,#0c1830,#0a1120)}
+    .mock-ui::before{content:"";position:absolute;left:0;right:0;top:0;height:16%;background:linear-gradient(180deg,rgba(255,255,255,.08),rgba(255,255,255,.02))}
+    .mock-ui::after{content:"";position:absolute;left:16px;right:16px;bottom:16px;height:28%;border-radius:16px;background:linear-gradient(160deg,rgba(255,255,255,.06),rgba(255,255,255,.02));border:1px solid rgba(255,255,255,.06)}
+    .ui-badges{position:absolute;top:22px;left:18px;display:flex;gap:8px}
+    .ui-badges span{display:inline-block;padding:6px 10px;border-radius:999px;background:rgba(0,0,0,.35);border:1px solid rgba(255,255,255,.08);font-size:12px}
+    .ui-panels{position:absolute;left:18px;right:18px;top:62px;bottom:70px;display:grid;grid-template-columns:1.25fr .75fr;gap:12px}
+    .ui-panels div{border-radius:18px;background:linear-gradient(180deg,rgba(255,255,255,.06),rgba(255,255,255,.03));border:1px solid rgba(255,255,255,.07);position:relative;overflow:hidden}
+    .ui-panels div::after{content:"";position:absolute;inset:auto 16px 16px 16px;height:10px;border-radius:999px;background:rgba(255,255,255,.08);box-shadow:0 -24px 0 rgba(255,255,255,.08),0 -48px 0 rgba(255,255,255,.05)}
+    .process{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:18px}
+    .step{padding:22px;border-radius:22px;background:linear-gradient(180deg,rgba(255,255,255,.04),rgba(255,255,255,.02));border:1px solid rgba(255,255,255,.07);position:relative;overflow:hidden}
+    .step::before{content:"";position:absolute;top:0;left:0;width:100%;height:4px;background:linear-gradient(90deg,var(--accent),var(--accent2))}
+    .step-num{display:inline-grid;place-items:center;width:38px;height:38px;border-radius:999px;background:rgba(255,255,255,.06);font-weight:800;margin-bottom:14px}
+    .step h4{margin:0 0 10px;font-size:20px}
+    .step p{margin:0;color:var(--muted)}
+    .deep-grid{display:grid;grid-template-columns:1.05fr .95fr;gap:24px}
+    .deep-card{padding:24px;border-radius:28px;background:linear-gradient(180deg,#10192b,#0b1220);border:1px solid rgba(255,255,255,.08);box-shadow:var(--shadow)}
+    .deep-card h3{margin:0 0 14px;font-size:26px}
+    .deep-card p{color:var(--muted)}
+    .flow-list{display:grid;gap:14px;margin-top:18px}
+    .flow-item{padding:18px;border-radius:20px;background:rgba(255,255,255,.04);border:1px solid rgba(255,255,255,.06)}
+    .flow-item strong{display:block;font-size:18px;margin-bottom:6px}
+    .flow-path{margin-top:10px;font-family:ui-monospace,SFMono-Regular,Menlo,Consolas,monospace;font-size:13px;line-height:1.8;color:#d7e4ff;background:#09111d;border:1px solid rgba(255,255,255,.06);padding:14px 16px;border-radius:16px;white-space:pre-line}
+    .gear-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:16px;margin-top:14px}
+    .gear{padding:18px;border-radius:18px;background:rgba(255,255,255,.035);border:1px solid rgba(255,255,255,.06)}
+    .gear h4{margin:0 0 8px;font-size:18px}
+    .gear p{margin:0;color:var(--muted)}
+    .cta-panel{display:grid;grid-template-columns:1.1fr .9fr;gap:24px;align-items:center;padding:28px;border-radius:32px;background:linear-gradient(135deg,rgba(0,210,255,.12),rgba(255,107,53,.12));border:1px solid rgba(255,255,255,.08);box-shadow:var(--shadow)}
+    .cta-panel h2{margin:0 0 14px}
+    .cta-panel p{margin:0;color:#dbe7ff;font-size:18px}
+    .cta-box{padding:24px;border-radius:24px;background:rgba(5,10,18,.5);border:1px solid rgba(255,255,255,.08)}
+    .footer{padding:30px 0 46px;color:var(--muted);font-size:14px}
+    .small{font-size:13px;color:var(--muted)}
+    .tech-note{margin-top:14px;padding:14px 16px;border-left:3px solid var(--accent);background:rgba(0,210,255,.06);border-radius:0 16px 16px 0;color:#d9f9ff}
+
+    .inline-link{color:#c8f6ff;text-decoration:underline;text-decoration-color:rgba(0,210,255,.35);text-underline-offset:3px}
+    .inline-link:hover{color:#fff;text-decoration-color:rgba(255,255,255,.55)}
+    .vendor-grid{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:16px}
+    .vendor-card{padding:18px;border-radius:20px;background:rgba(255,255,255,.04);border:1px solid rgba(255,255,255,.07);box-shadow:var(--shadow)}
+    .vendor-card h4{margin:0 0 8px;font-size:18px}
+    .vendor-card p{margin:0;color:var(--muted);font-size:15px}
+    .vendor-card a{display:inline-block;margin-top:10px;font-weight:700;color:#d9f9ff;text-decoration:underline;text-underline-offset:3px}
+    .media-frame video{width:100%;height:100%;object-fit:cover;display:block;background:#07111f}
+    .copyright-note{margin-top:14px;padding-top:14px;border-top:1px solid rgba(255,255,255,.08);font-size:12px;color:var(--muted)}
+
+    .media-frame.contain-frame{
+      display:flex;
+      align-items:center;
+      justify-content:center;
+      background:linear-gradient(180deg,#0a1322,#0d1728);
+      padding:18px;
+    }
+    .media-frame.contain-frame img{
+      width:100%;
+      height:100%;
+      object-fit:contain;
+      object-position:center;
+      background:transparent;
+    }
+    .media-frame.video-frame{
+      aspect-ratio:16/9;
+    }
+    .section p, .card p, .gear p, .vendor-card p, .flow-item p{overflow-wrap:anywhere}
+    @media (max-width: 1040px){
+      .hero{padding:64px 0 42px}
+      .hero-card{padding:18px}
+      .media-frame{aspect-ratio:16/10}
+    }
+    @media (max-width: 720px){
+      .nav{position:static}
+      .hero{padding:40px 0 28px}
+      h1{font-size:clamp(34px,10vw,52px);line-height:1.02}
+      .hero p{font-size:17px}
+      .hero-logo{height:58px;margin-bottom:14px}
+      .eyebrow{font-size:11px;padding:7px 12px}
+      .hero-stats{gap:10px;margin-top:18px}
+      .stat{padding:16px 14px 14px}
+      .section{padding:46px 0}
+      .section-head{margin-bottom:20px}
+      .section-head p{font-size:16px}
+      .card,.deep-card,.media-card,.cta-box,.vendor-card,.step,.feature,.flow-item,.gear{padding:18px}
+      .media-frame{aspect-ratio:16/11;border-radius:18px}
+      .media-frame.video-frame{aspect-ratio:16/9}
+      .process{gap:14px}
+      .split,.deep-grid,.cta-panel{gap:18px}
+      .nav-links{font-size:13px}
+      .cta-row{gap:10px;margin-bottom:18px}
+      .cta-panel{padding:20px;border-radius:24px}
+      .footer{padding:24px 0 34px}
+      .brand-logo{height:34px}
+    }
+    @media (max-width: 1040px){
+      .hero-grid,.split,.deep-grid,.cta-panel{grid-template-columns:1fr}
+      .grid-3,.process{grid-template-columns:1fr 1fr}
+      .section-head{display:block}
+      .section-head p{margin-top:16px}
+    }
+    @media (max-width: 720px){
+      .shell{width:min(var(--max),calc(100% - 26px))}
+      .nav-inner{align-items:flex-start;flex-direction:column}
+      .nav-links{gap:12px}
+      .hero{padding-top:54px}
+      .hero-stats,.grid-3,.process,.gear-grid,.vendor-grid{grid-template-columns:1fr}
+      .btn{width:100%;justify-content:center}
+      .media-caption{display:block}
+      .media-caption span{display:block;margin-top:6px}
+    }
+  </style>
+</head>
+<body>
+  <header class="nav">
+    <div class="shell nav-inner">
+      <div class="brand">
+        <img class="brand-logo" src="Alkoda_on_Air_transparent.png" alt="Alkoda On Air">
+        <div>Alkoda On Air</div>
+      </div>
+      <nav class="nav-links">
+        <a href="#missions">Possibilités</a>
+        <a href="#workflow">Comment ça marche</a>
+        <a href="#broadcast">Pourquoi c'est différent</a>
+        <a href="#playout">Playback</a>
+        <a href="#tech">Partie technique</a>
+        <a href="#visio">Vue graphique</a>
+      </nav>
+    </div>
+  </header>
+
+  <main>
+    <section class="hero">
+      <div class="shell hero-grid">
+        <div>
+          <img class="hero-logo" src="Alkoda_on_Air_transparent.png" alt="Alkoda On Air">
+          <div class="eyebrow">Régie mobile • Captation • Streaming • Habillage broadcast</div>
+          <h1>Une vraie régie télévision,<br>dans un format compact.</h1>
+          <p>
+            Alkoda On Air conçoit et exploite une valise de réalisation capable de prendre en charge un événement de A à Z : captation multicaméra, intégration des écrans intervenants, habillage graphique, playback, livestreaming et enregistrement ISO pour la postproduction.
+          </p>
+          <div class="cta-row">
+            <a class="btn btn-primary" href="#missions">Découvrir les possibilités</a>
+            <a class="btn btn-secondary" href="#visio">Voir la vue graphique</a>
+            <a class="btn btn-ghost" href="#tech">Lecture technique</a>
+          </div>
+          <div class="hero-stats">
+            <div class="stat"><strong>Multicam</strong><span>Caméras, écrans, playback, habillage et monitoring dans un système cohérent.</span></div>
+            <div class="stat"><strong>Broadcast</strong><span>Logique de régie TV avec key/fill, magnétos et enregistrement ISO.</span></div>
+            <div class="stat"><strong>Compact</strong><span>Une architecture pensée pour être déployée vite, sans renoncer aux fonctions avancées.</span></div>
+          </div>
+        </div>
+        <aside class="hero-card">
+          <div class="broadcast-top">
+            <span>Valise broadcast interactive</span>
+            <span>IMG_0232.avif</span>
+          </div>
+          <div class="media-frame" style="aspect-ratio:16/11; margin-top:10px;">
+            <img src="IMG_0232.avif" alt="Valise Alkoda On Air en situation" onerror="this.outerHTML='&lt;div class=&quot;img-placeholder&quot;&gt;&lt;strong&gt;IMG_0232.avif&lt;/strong&gt;&lt;span&gt;Ce visuel apparaîtra ici lorsque le média correspondant sera présent dans le même dossier que la page.&lt;/span&gt;&lt;/div&gt;'">
+          </div>
+          <div class="media-caption" style="padding-top:14px">
+            <strong>La valise en situation réelle</strong>
+            <span>Compacte en encombrement, mais pensée comme une vraie petite régie de télévision capable de capter, habiller, streamer et enregistrer un événement.</span>
+          </div>
+        </aside>
+      </div>
+    </section>
+
+    <section class="section" id="missions">
+      <div class="shell">
+        <div class="section-head">
+          <div>
+            <div class="section-kicker">Ce que la valise permet</div>
+            <h2>Une solution polyvalente pour piloter, habiller, diffuser et enregistrer.</h2>
+          </div>
+          <p>
+            Pour un client, l’intérêt est simple : une seule régie mobile peut prendre en charge l’image, les écrans, les titres, la diffusion live et la matière de postproduction, avec un niveau de maîtrise proche d’une installation bien plus lourde.
+          </p>
+        </div>
+
+        <div class="grid-3">
+          <article class="card">
+            <h3>Captation multicaméra lisible</h3>
+            <p>Le système gère plusieurs sources vidéo, sélectionne les bons plans, garde une vision claire du programme et permet une réalisation fluide, même sur des événements où les sources doivent rester très lisibles.</p>
+            <div class="pill-list">
+              <span class="pill">Conférences</span>
+              <span class="pill">Corporate</span>
+              <span class="pill">Concerts</span>
+            </div>
+          </article>
+          <article class="card">
+            <h3>Écrans intervenants intégrés proprement</h3>
+            <p>Les slides ou l’écran du speaker ne sont pas simplement “vus” par une caméra : ils peuvent être captés, recomposés et réintégrés proprement pour rester lisibles dans le plan final.</p>
+            <div class="pill-list">
+              <span class="pill">Écran speaker</span>
+              <span class="pill">Slides</span>
+              <span class="pill">OBS</span>
+            </div>
+          </article>
+          <article class="card">
+            <h3>Streaming + enregistrement</h3>
+            <p>Le programme final peut servir au live, à l’enregistrement et à la postproduction. Chaque choix de flux est pensé pour garder une grande souplesse après l’événement.</p>
+            <div class="pill-list">
+              <span class="pill">Live streaming</span>
+              <span class="pill">Programme final</span>
+              <span class="pill">ISO</span>
+            </div>
+          </article>
+        </div>
+      </div>
+    </section>
+
+    <section class="section alt" id="workflow">
+      <div class="shell split">
+        <div class="narrative">
+          <div class="section-kicker">Comment Alkoda On Air y parvient</div>
+          <h2>Une architecture pensée comme une vraie régie, pas comme un simple assemblage d’appareils.</h2>
+          <p>
+            La valise ne repose pas sur un “logiciel miracle” qui ferait tout. Chaque brique a un rôle clair : mélange vidéo, composition, graphique, playback, monitoring, audio, réseau. Cette séparation des fonctions permet d’obtenir une qualité plus propre, une meilleure stabilité et davantage de souplesse en exploitation.
+          </p>
+          <p>
+            Cela permet par exemple de fabriquer un plan large plus intelligent, de produire des incrustations graphiques propres sans chromakey, de rejouer des clips comme dans une logique broadcast, ou encore de rendre certaines compositions directement réexploitables au montage.
+          </p>
+          <div class="feature-box">
+            <div class="feature">
+              <div class="feature-icon">🎥</div>
+              <div>
+                <strong><a class="inline-link" href="https://www.blackmagicdesign.com/fr/products/atemmini" target="_blank" rel="noopener noreferrer">Blackmagic Design ATEM Mini Extreme ISO</a></strong><br>
+                Le cœur du mélange, du programme final et de l’enregistrement.
+              </div>
+            </div>
+            <div class="feature">
+              <div class="feature-icon">🖥️</div>
+              <div>
+                <strong>PC MSI + <a class="inline-link" href="https://obsproject.com/" target="_blank" rel="noopener noreferrer">OBS Studio</a></strong><br>
+                La brique qui recompose le plan large avec l’écran speaker pour un rendu beaucoup plus lisible.
+              </div>
+            </div>
+            <div class="feature">
+              <div class="feature-icon">✨</div>
+              <div>
+                <strong><a class="inline-link" href="https://h2r.graphics/" target="_blank" rel="noopener noreferrer">H2R Graphics</a> & <a class="inline-link" href="https://layouts.heretorecord.com/" target="_blank" rel="noopener noreferrer">H2R Layouts</a></strong><br>
+                Les lower thirds, le key/fill et les compositions animées pour enrichir la réalisation.
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="media-card">
+          <div class="media-frame">
+            <img src="plan.large.avif" alt="Plan large recomposé avec écran speaker" onerror="this.outerHTML='&lt;div class=&quot;img-placeholder&quot;&gt;&lt;strong&gt;plan.large.avif&lt;/strong&gt;&lt;span&gt;Visuel du plan large recomposé avec l’écran speaker.&lt;/span&gt;&lt;/div&gt;'">
+          </div>
+          <div class="media-caption">
+            <strong>Résultat final du plan large recomposé</strong>
+            <span><a class="inline-link" href="https://obsproject.com/" target="_blank" rel="noopener noreferrer">OBS Studio</a> ne sert ici qu’à une mission précise : produire une image plus lisible et plus qualitative que la simple captation d’un écran projeté.</span>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section class="section" id="broadcast">
+      <div class="shell">
+        <div class="section-head">
+          <div>
+            <div class="section-kicker">Ce qui fait la différence</div>
+            <h2>Pourquoi cette valise est plus polyvalente qu’un simple mélangeur compact.</h2>
+          </div>
+          <p>
+            L’intérêt commercial d’Alkoda On Air, c’est de pouvoir prendre en charge un événement comme une petite régie télévision : traiter des sources diverses, générer des habillages, lancer des médias, gérer des compositions, diffuser en direct, et conserver une vraie marge de manœuvre pour la postproduction.
+          </p>
+        </div>
+
+        <div class="process">
+          <article class="step">
+            <div class="step-num">01</div>
+            <h4>Plan large recomposé</h4>
+            <p>Le plan large n’est pas juste une caméra : l’écran du speaker est capté séparément, recomposé dans OBS puis réincrusté proprement pour rester lisible.</p>
+          </article>
+          <article class="step">
+            <div class="step-num">02</div>
+            <h4>Habillage broadcast</h4>
+            <p>Les lower thirds et éléments graphiques sont produits en key/fill, avec une propreté d’incrustation impossible à obtenir avec un simple chromakey.</p>
+          </article>
+          <article class="step">
+            <div class="step-num">03</div>
+            <h4>Super Sources réexploitables</h4>
+            <p>Les compositions ne sont pas seulement “vues” en direct : elles sont structurées pour rester utiles et réutilisables ensuite dans le workflow Resolve.</p>
+          </article>
+          <article class="step">
+            <div class="step-num">04</div>
+            <h4>Magnétos et contenus</h4>
+            <p>PlayoutBee remplit le rôle d’un HyperDeck moderne : clips, jingles, triggers et lecture média dans une logique de régie TV.</p>
+          </article>
+        </div>
+      </div>
+    </section>
+
+    <section class="section">
+      <div class="shell split">
+        <div class="narrative">
+          <div class="section-kicker">Habillage graphique</div>
+          <h2>Des lower thirds et habillages propres grâce à H2R Graphics.</h2>
+          <p>
+            Les habillages ne sont pas ajoutés à l’ancienne avec un fond vert approximatif. Alkoda On Air utilise une logique Key / Fill pour obtenir une incrustation plus propre, plus souple et plus professionnelle.
+          </p>
+          <p>
+            Cela permet d’intégrer des lower thirds, noms, fonctions, logos ou éléments de marque avec un rendu net, parfaitement lisible, et sans les limites d’une incrustation chromakey classique.
+          </p>
+</div>
+        <div class="media-card">
+          <div class="media-frame">
+            <img src="speaker.h2rGraphics.avif" alt="Exemple d'habillage H2R Graphics" onerror="this.outerHTML='&lt;div class=&quot;img-placeholder&quot;&gt;&lt;strong&gt;speaker.h2rGraphics.avif&lt;/strong&gt;&lt;span&gt;Visuel d’un habillage généré avec H2R Graphics.&lt;/span&gt;&lt;/div&gt;'">
+          </div>
+          <div class="media-caption">
+            <strong>Exemple d’habillage à l’écran</strong>
+            <span><a class="inline-link" href="https://h2r.graphics/" target="_blank" rel="noopener noreferrer">H2R Graphics</a> sert ici à produire des lower thirds propres, identifiables immédiatement et compatibles avec une logique de réalisation broadcast.</span>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section class="section alt">
+      <div class="shell split">
+        <div class="media-card">
+          <div class="media-frame">
+            <img src="alkoda_multiview.avif" alt="Vue multiview de la régie Alkoda On Air" onerror="this.outerHTML='&lt;div class=&quot;img-placeholder&quot;&gt;&lt;strong&gt;alkoda_multiview.avif&lt;/strong&gt;&lt;span&gt;Visuel du multiview réel de la régie.&lt;/span&gt;&lt;/div&gt;'">
+          </div>
+          <div class="media-caption">
+            <strong>Multiview réel de la régie</strong>
+            <span>Le réalisateur voit d’un coup d’œil les sources, le programme et l’état global du système.</span>
+          </div>
+        </div>
+        <div class="narrative">
+          <div class="section-kicker">Multiview et contrôle</div>
+          <h2>Une vision globale du système, indispensable pour une réalisation sereine.</h2>
+          <p>
+            Le multiview n’est pas un luxe : c’est ce qui permet de voir toutes les sources en même temps, d’anticiper les bascules, de vérifier les retours et de garder la main sur un événement en direct.
+          </p>
+          <p>
+            Dans une logique de prestation, cela change tout : on ne subit pas l’événement, on le pilote. C’est ce qui permet à Alkoda On Air d’assurer des captations propres, des transitions maîtrisées et une exploitation en direct beaucoup plus fluide.
+          </p>
+          <div class="tech-note">
+            Cette logique de contrôle est aussi ce qui rend possible le livestreaming dans de bonnes conditions : on peut piloter le direct, vérifier les retours et sécuriser le programme final sans déployer une régie lourde.
+          </div>
+        </div>
+      </div>
+    </section>
+
+    
+    <section class="section">
+      <div class="shell split">
+        <div class="media-card">
+          <div class="media-frame contain-frame">
+            <img src="ATEM-Mini-Extreme.avif" alt="Blackmagic Design ATEM Mini Extreme ISO" onerror="this.outerHTML='&lt;div class=&quot;img-placeholder&quot;&gt;&lt;strong&gt;ATEM-Mini-Extreme.avif&lt;/strong&gt;&lt;span&gt;Visuel de la régie Blackmagic au cœur du système.&lt;/span&gt;&lt;/div&gt;'">
+          </div>
+          <div class="media-caption">
+            <strong>Le cœur de la régie</strong>
+            <span>Le <a class="inline-link" href="https://www.blackmagicdesign.com/fr/products/atemmini" target="_blank" rel="noopener noreferrer">Blackmagic Design ATEM Mini Extreme ISO</a> centralise le mélange, le programme final, le multiview et l’enregistrement.</span>
+          </div>
+        </div>
+        <div class="narrative">
+          <div class="section-kicker">Le centre du dispositif</div>
+          <h2>Une régie Blackmagic pensée comme le cœur d’un workflow plus large.</h2>
+          <p>
+            Le mélangeur n’est pas présenté ici comme un simple boîtier de commutation. Il constitue le noyau de la réalisation : sélection des sources, programme final, multiview, monitoring et enregistrement ISO. C’est lui qui donne la structure de direct, pendant que les autres outils viennent enrichir, préparer ou spécialiser certains flux.
+          </p>
+          <p>
+            Ce choix permet à Alkoda On Air de s’appuyer sur une base de régie reconnue dans le monde de la production live, tout en l’étendant avec des briques complémentaires pour obtenir davantage de souplesse, de lisibilité et de possibilités graphiques.
+          </p>
+          <div class="tech-note">
+            Ici, la logique n’est pas “un appareil fait tout”. La logique est : <strong>une régie Blackmagic robuste au centre</strong>, enrichie par des outils spécialisés quand ils apportent un vrai gain qualitatif ou opérationnel.
+          </div>
+        </div>
+      </div>
+    </section>
+
+
+    <section class="section" id="tech">
+      <div class="shell">
+        <div class="section-head">
+          <div>
+            <div class="section-kicker">Partie technique — pour les pros et les geeks</div>
+            <h2>Lecture détaillée des flux, des outils et des choix techniques.</h2>
+          </div>
+          <p>
+            Cette deuxième partie est volontairement plus détaillée. Elle explique non seulement quels outils sont utilisés, mais surtout pourquoi ils sont organisés de cette façon et ce qu’ils apportent concrètement dans la chaîne de production.
+          </p>
+        </div>
+
+        <div class="deep-grid">
+          <div class="deep-card">
+            <h3>Chaînes de signal emblématiques</h3>
+            <p>Quelques chemins clés suffisent à comprendre la philosophie de la valise : qualité d’image, flexibilité de réalisation, habillage graphique propre et réexploitabilité en postproduction.</p>
+            <div class="flow-list">
+              <div class="flow-item">
+                <strong>1. Plan large OBS → ATEM 1</strong>
+                <div class="flow-path">Caméra plan large + écran speaker
+→ capture dédiée
+→ recomposition dans OBS
+→ sortie HDMI du PC
+→ retour vers ATEM entrée 1</div>
+              </div>
+              <div class="flow-item">
+                <strong>2. Écran speaker plein écran → ATEM 3</strong>
+                <div class="flow-path">Ordinateur du speaker
+→ transport PWAY
+→ Magewell 4K
+→ chaîne PC / restitution dédiée
+→ entrée 3 de l’ATEM</div>
+              </div>
+              <div class="flow-item">
+                <strong>3. Key / Fill → ATEM 5 & 8</strong>
+                <div class="flow-path">H2R Graphics
+→ StarTech USB → HDMI
+→ voie KEY vers entrée 5
+→ voie FILL vers entrée 8</div>
+              </div>
+              <div class="flow-item">
+                <strong>4. Super Source rebouclée → ATEM 4</strong>
+                <div class="flow-path">ATEM sortie HDMI 2
+(configurée en Super Source)
+→ rebouclage interne
+→ ATEM entrée 4</div>
+              </div>
+              <div class="flow-item">
+                <strong>5. Playback / magnéto → ATEM 7</strong>
+                <div class="flow-path">Raspberry Pi + PlayoutBee
+→ Splitter
+→ entrée 7 de l’ATEM
+→ sortie parallèle possible vers prévisualisation</div>
+              </div>
+            </div>
+          </div>
+
+          <div class="deep-card">
+            <h3>Pourquoi ces outils</h3>
+            <p>La page ne se contente pas de lister des marques : elle explique le rôle de chaque brique dans l’ensemble.</p>
+            <div class="gear-grid">
+              <div class="gear">
+                <h4><a class="inline-link" href="https://www.blackmagicdesign.com/fr/products/atemmini" target="_blank" rel="noopener noreferrer">Blackmagic Design ATEM Mini Extreme ISO</a></h4>
+                <p>Le mélangeur central : il gère les entrées, le programme, l’enregistrement ISO et les bascules en direct. C’est le point de convergence de la régie.</p>
+              </div>
+              <div class="gear">
+                <h4>OBS sur PC MSI</h4>
+                <p>Utilisé ici pour une mission précise : fabriquer un plan large enrichi de l’écran speaker, plus lisible et plus propre qu’une simple captation d’écran projeté.</p>
+              </div>
+              <div class="gear">
+                <h4>H2R Graphics</h4>
+                <p>Génère les lower thirds et graphiques en key/fill, ce qui évite le chromakey et offre un rendu beaucoup plus propre et plus libre.</p>
+              </div>
+              <div class="gear">
+                <h4>H2R Layouts</h4>
+                <p>Gère les super sources et les transitions entre compositions, avec une logique proche d’un système de mix effect, mais pensée pour cette régie compacte.</p>
+              </div>
+              <div class="gear">
+                <h4>Magewell</h4>
+                <p>Assure la capture fiable de signaux vidéo vers le PC, pour que certaines sources puissent être recomposées, exploitées ou réintégrées proprement.</p>
+              </div>
+              <div class="gear">
+                <h4>PlayoutBee</h4>
+                <p>Remplace un HyperDeck pour tout ce qui relève de la logique magnéto : clips, jingles, triggers et lecture média en direct.</p>
+              </div>
+              <div class="gear">
+                <h4>MOTU M6</h4>
+                <p>Permet de contrôler et régler les niveaux micros avant d’envoyer l’audio dans l’ATEM. Le son est traité comme un vrai maillon de production.</p>
+              </div>
+              <div class="gear">
+                <h4>StarTech, splitters, réseau</h4>
+                <p>Ce sont les outils de transport, de conversion et de duplication des signaux. Ils rendent possible une architecture compacte mais très flexible.</p>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div class="split" style="margin-top:34px">
+          <div class="media-card">
+            <div class="media-frame">
+              <video autoplay muted loop playsinline controls preload="metadata" style="width:100%;height:100%;object-fit:cover;display:block;background:#07111f" onerror="this.outerHTML='&lt;div class=&quot;img-placeholder&quot;&gt;&lt;strong&gt;h2r.layouts.webm&lt;/strong&gt;&lt;span&gt;Animation WebM montrant les transitions entre compositions de H2R Layouts.&lt;/span&gt;&lt;/div&gt;'">
+                <source src="h2r.layouts.webm" type="video/webm">
+              </video>
+            </div>
+            <div class="media-caption">
+              <strong>H2R Layouts en mouvement</strong>
+              <span>Animation WebM des transitions entre compositions et super sources, optimisée pour le web.</span>
+            </div>
+          </div>
+          <div class="narrative">
+            <div class="section-kicker">Super sources animées</div>
+            <h2>H2R Layouts permet de construire des compositions avancées, avec transitions visuelles entre plusieurs dispositions.</h2>
+            <p>
+              Cette brique donne une vraie souplesse de réalisation : passages d’une composition à l’autre, variations de layouts, mises en avant successives de plusieurs sources et rendu plus vivant qu’une simple succession de cuts.
+            </p>
+            <p>
+              Cette section utilise maintenant une animation WebM légère, mieux adaptée au web qu’un GIF pour montrer les transitions.
+            </p>
+</div>
+              </div>
+    </section>
+
+
+    <section class="section" id="playout">
+      <div class="shell split">
+        <div class="narrative">
+          <div class="section-kicker">Playback / magnéto broadcast</div>
+          <h2><a class="inline-link" href="https://playoutbee.com/" target="_blank" rel="noopener noreferrer">PlayoutBee</a> joue le rôle d’un HyperDeck moderne, tout en servant aussi de lecteur de contenus, jingles et vidéos.</h2>
+          <p>
+            Dans cette valise, PlayoutBee ne sert pas juste à « lire une vidéo ». Il remplit une vraie fonction de magnéto broadcast : préparer des médias, les rappeler au bon moment et les injecter proprement dans la réalisation comme une source dédiée.
+          </p>
+          <p>
+            En pratique, cela permet de lancer des jingles, des vidéos, des transitions ou des contenus préparés soit automatiquement par trigger, soit directement via la logique de l’entrée 7 de l’ATEM. Pour un client, cela veut dire une réalisation plus fluide, plus habillée et plus professionnelle. Pour un profil technique, cela veut dire une vraie brique de playback intégrée dans l’écosystème de la régie.
+          </p>
+          <p>
+            Autrement dit : PlayoutBee remplace ici le rôle « magnétos » que l’on retrouve dans une régie télévision, tout en restant assez souple pour servir aussi de lecteur de contenus événementiels.
+          </p>
+</div>
+        <div class="media-card">
+          <div class="media-frame video-frame">
+            <video autoplay muted loop playsinline controls preload="metadata" style="width:100%;height:100%;object-fit:cover;display:block;background:#07111f" onerror="this.outerHTML='&lt;div class=&quot;img-placeholder&quot;&gt;&lt;strong&gt;playoutbee.webm&lt;/strong&gt;&lt;span&gt;Animation de l’interface PlayoutBee et de la logique de playback.&lt;/span&gt;&lt;/div&gt;'">
+              <source src="playoutbee.webm" type="video/webm">
+            </video>
+          </div>
+          <div class="media-caption">
+            <strong>PlayoutBee en situation</strong>
+            <span>Une logique de magnéto broadcast pour lancer des médias, tout en restant un lecteur de contenus extrêmement pratique sur le terrain.</span>
+          </div>
+        </div>
+      </div>
+    </section>
+
+
+    
+    <section class="section alt" id="ecosystem">
+      <div class="shell">
+        <div class="section-head">
+          <div>
+            <div class="section-kicker">Marques et outils utilisés</div>
+            <h2>Un écosystème volontairement choisi, chaque brique ayant un rôle précis.</h2>
+          </div>
+          <p>
+            Cette valise combine des outils du monde live, broadcast et streaming. Ils ne sont pas là pour “faire joli” : chacun répond à un besoin concret de captation, de composition, d’habillage, de playback, de capture ou de contrôle.
+          </p>
+        </div>
+        <div class="vendor-grid">
+          <article class="vendor-card">
+            <h4>Blackmagic Design</h4>
+            <p>L’ATEM Mini Extreme ISO sert de cœur de régie : mélange, multiview, programme final, streaming et enregistrement ISO.</p>
+            <a href="https://www.blackmagicdesign.com/fr/products/atemmini" target="_blank" rel="noopener noreferrer">Site officiel</a>
+          </article>
+          <article class="vendor-card">
+            <h4>OBS Studio</h4>
+            <p>Utilisé pour recomposer le plan large avec l’écran du speaker, quand une simple captation directe ne suffit pas à garder un résultat propre et lisible.</p>
+            <a href="https://obsproject.com/" target="_blank" rel="noopener noreferrer">Site officiel</a>
+          </article>
+          <article class="vendor-card">
+            <h4>H2R Graphics</h4>
+            <p>Génère les lower thirds et habillages en logique key/fill, pour obtenir une incrustation plus propre qu’un chromakey classique.</p>
+            <a href="https://h2r.graphics/" target="_blank" rel="noopener noreferrer">Site officiel</a>
+          </article>
+          <article class="vendor-card">
+            <h4>H2R Layouts</h4>
+            <p>Permet de construire et d’animer des compositions complexes, notamment autour des super sources, avec une logique de transition fluide entre layouts.</p>
+            <a href="https://layouts.heretorecord.com/" target="_blank" rel="noopener noreferrer">Site officiel</a>
+          </article>
+          <article class="vendor-card">
+            <h4>PlayoutBee</h4>
+            <p>Joue le rôle d’un magnéto broadcast moderne et sert aussi de lecteur de contenus, jingles et vidéos pilotables dans la réalisation.</p>
+            <a href="https://playoutbee.com/" target="_blank" rel="noopener noreferrer">Site officiel</a>
+          </article>
+          <article class="vendor-card">
+            <h4>Magewell</h4>
+            <p>Les cartes de capture Magewell servent à faire entrer proprement certaines sources HDMI dans le PC pour les recomposer ou les exploiter dans OBS.</p>
+            <a href="https://www.magewell.com/capture/usb-capture" target="_blank" rel="noopener noreferrer">Site officiel</a>
+          </article>
+          <article class="vendor-card">
+            <h4>StarTech</h4>
+            <p>L’adaptateur USB vers double HDMI permet de transformer la sortie du PC en vrais signaux vidéo exploitables par la régie, notamment pour le key/fill.</p>
+            <a href="https://www.startech.com/en-eu/display-video-adapters/usb32hd2" target="_blank" rel="noopener noreferrer">Site officiel</a>
+          </article>
+          <article class="vendor-card">
+            <h4>MOTU</h4>
+            <p>Le MOTU M6 sert à régler et contrôler les niveaux micro avant l’entrée dans l’ATEM, pour garder une vraie maîtrise audio en amont du direct.</p>
+            <a href="https://motu.com/products/m-series/m6" target="_blank" rel="noopener noreferrer">Site officiel</a>
+          </article>
+          <article class="vendor-card">
+            <h4>PWAY / HDMI Extender</h4>
+            <p>Le couple émetteur/récepteur HDMI sur RJ45 permet de récupérer l’écran du speaker à distance et de l’intégrer dans le workflow de composition.</p>
+            <a href="https://www.pwaytek.com/" target="_blank" rel="noopener noreferrer">Fabricant</a>
+          </article>
+        </div>
+      </div>
+    </section>
+
+
+    <section class="section alt" id="visio">
+      <div class="shell cta-panel">
+        <div>
+          <div class="section-kicker">Vue graphique interactive</div>
+          <h2>Voir le système comme un schéma vivant.</h2>
+          <p>
+            Une page graphique de type Visio permet de parcourir visuellement les équipements, les liaisons et les chemins de signal. Elle complète cette page commerciale en donnant une lecture beaucoup plus fine du graphe réel.
+          </p>
+          <div class="cta-row" style="margin-top:20px">
+            <a class="btn btn-primary" href="#">Voir le schéma interactif</a>
+            <a class="btn btn-secondary" href="#tech">Revenir à la partie technique</a>
+          </div>
+        </div>
+        <div class="cta-box">
+          <strong style="display:block;font-size:22px;margin-bottom:12px">Pour un futur client</strong>
+          <p style="margin:0 0 14px;color:var(--muted)">
+            Cette valise n’est pas qu’un assemblage de matériel. C’est une petite régie complète, conçue pour absorber un événement réel : live, captation, habillage, playback et postproduction.
+          </p>
+          <p style="margin:0;color:var(--muted)">
+            En d’autres termes : Alkoda On Air peut prendre en charge votre événement avec une logique de télévision, dans un format beaucoup plus agile.
+          </p>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <footer class="footer">
+    <div class="shell">
+      <div><strong>Alkoda On Air</strong> — régie mobile de captation, streaming, habillage broadcast et réalisation multicaméra.</div>
+            <div class="copyright-note">Les marques citées appartiennent à leurs propriétaires respectifs, notamment Blackmagic Design, OBS Studio, H2R Graphics, H2R Layouts, PlayoutBee, Magewell, StarTech et MOTU. Cette page les cite à titre descriptif pour expliquer le workflow utilisé par Alkoda On Air.</div>
+    </div>
+  </footer>
+</body>
+</html>

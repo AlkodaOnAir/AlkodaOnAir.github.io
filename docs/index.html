@@ -74,7 +74,7 @@ h2 em{font-style:normal;color:var(--accent)}
 
 /* ── CORPORATE ── */
 #corporate{background:linear-gradient(180deg,var(--bg) 0,var(--bg2) 100%)}
-.corporate-hero-img{width:100%;aspect-ratio:21/9;object-fit:cover;border-radius:var(--rad);margin:40px 0;border:1px solid var(--line);box-shadow:var(--shadow)}
+.corporate-hero-img{width:100%;aspect-ratio:21/9;object-fit:cover;object-position:center bottom;border-radius:var(--rad);margin:40px 0;border:1px solid var(--line);box-shadow:var(--shadow)}
 .needs-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:14px;margin:40px 0}
 .need{padding:22px;border-radius:16px;background:rgba(255,255,255,.03);border:1px solid var(--line);border-top:3px solid var(--accent)}
 .need h4{font-size:15px;font-weight:700;color:#fff;margin-bottom:8px}
@@ -343,7 +343,7 @@ footer{padding:28px 0 40px;border-top:1px solid var(--line);background:var(--bg)
     </div>
 
     <div class="photo-strip" style="margin-top:32px">
-      <img src="corporate-lbc2-regie.avif" alt="Régie LeBonCoin LBC2" onerror="this.style.display='none'">
+      <img src="corporate-leboncoin-regie.avif" alt="Régie LeBonCoin live" onerror="this.style.display='none'">
       <img src="corporate-elastic-interview.avif" alt="Interview Elastic" onerror="this.style.display='none'">
       <img src="concert-eglise-grue.avif" alt="Captation concert église" onerror="this.style.display='none'">
     </div>
@@ -491,13 +491,13 @@ footer{padding:28px 0 40px;border-top:1px solid var(--line);background:var(--bg)
           <span class="pill">9 caméras Sony FX6</span>
         </div>
       </div>
-      <div class="equipe-img">
-        <picture>
-  <source srcset="equipe-staff-dos.avif" type="image/avif">
-  <img src="equipe-staff-dos.jpg" alt="Équipe Alkoda On Air"
-       style="width:100%;object-fit:cover"
-       onerror="this.parentElement.parentElement.style.background='var(--card)'">
-</picture>
+      <div>
+        <div class="equipe-img">
+          <img src="concert-orchestre-camera.avif" alt="Captation concert orchestre" style="width:100%;object-fit:cover" onerror="this.style.display='none'">
+        </div>
+        <div class="equipe-img" style="margin-top:14px">
+          <img src="concert-regie-boisee.avif" alt="Régie concert salle boisée" style="width:100%;object-fit:cover" onerror="this.style.display='none'">
+        </div>
       </div>
     </div>
   </div>
@@ -574,7 +574,7 @@ footer{padding:28px 0 40px;border-top:1px solid var(--line);background:var(--bg)
   </div>
 </div>
 
-<script data-cfasync="false" src="/cdn-cgi/scripts/5c5dd728/cloudflare-static/email-decode.min.js"></script><script>
+<script data-cfasync="false" src="/cdn-cgi/scripts/5c5dd728/cloudflare-static/email-decode.min.js"></script><script data-cfasync="false">
 const VIDEOS=[
   {id:'oTBYBw6Vz78',title:'Meetup Elastic FR — 100ème édition',desc:'DJI Ronin · Sony Alpha 7 IV',cat:'corporate',year:2026},
   {id:'1y6aHvDyMYM',title:'ElasticON Paris 2026 — Résumé',desc:'DJI Ronin · Sony Alpha 7 IV',cat:'corporate',year:2026},
@@ -636,4 +636,13 @@ function openMod(v){
   document.getElementById('modal').classList.add('open');
   document.body.style.overflow='hidden';
 }
-function closeMod(e){if(e.target===document.getElem
+function closeMod(e){if(e.target===document.getElementById('modal'))closeModDir();}
+function closeModDir(){
+  document.getElementById('modal').classList.remove('open');
+  document.getElementById('mif').src='';
+  document.body.style.overflow='';
+}
+document.addEventListener('keydown',e=>{if(e.key==='Escape')closeModDir();});
+</script>
+</body>
+</html>

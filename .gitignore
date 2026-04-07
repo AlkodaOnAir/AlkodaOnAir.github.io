@@ -1,14 +1,2 @@
-# Hugo build output
-public/
-
-# Hugo build lock file
-.hugo_build.lock
-
-# Generated files
-resources/_gen/
-
-# Python venv (scripts)
-scripts/.venv/
-
 # Remove Mac DS Store files
 **/.DS_Store

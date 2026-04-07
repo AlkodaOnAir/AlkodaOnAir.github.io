@@ -284,7 +284,7 @@ footer{padding:28px 0 40px;border-top:1px solid var(--line);background:var(--bg)
     <p class="lead">Meetup, conférence, séminaire, concert — vous voulez le filmer, le diffuser en live, le garder en vidéo de qualité. Alkoda On Air s'occupe de tout, de A à Z.</p>
 
     <img class="corporate-hero-img"
-         src="corporate-regie-salle.avif"
+         src="corporate-regie-meetup-elastic-deezer.avif"
          alt="Régie Alkoda On Air en situation lors d'un meetup"
          onerror="this.style.display='none'">
 
@@ -343,8 +343,8 @@ footer{padding:28px 0 40px;border-top:1px solid var(--line);background:var(--bg)
     </div>
 
     <div class="photo-strip" style="margin-top:32px">
-      <img src="corporate-leboncoin-regie.avif" alt="Régie LeBonCoin live" onerror="this.style.display='none'">
-      <img src="corporate-elastic-interview.avif" alt="Interview Elastic" onerror="this.style.display='none'">
+      <img src="regie-concert-jean-francaix.avif" alt="Régie LeBonCoin live" onerror="this.style.display='none'">
+      <img src="corporate-meetup-leboncoin.avif" alt="Interview Elastic" onerror="this.style.display='none'">
       <img src="concert-eglise-grue.avif" alt="Captation concert église" onerror="this.style.display='none'">
     </div>
   </div>
@@ -424,7 +424,7 @@ footer{padding:28px 0 40px;border-top:1px solid var(--line);background:var(--bg)
           <img src="hero-valise-meetup.avif" alt="Valise Alkoda On Air en situation" onerror="this.style.display='none'">
         </div>
         <div class="valise-rack" style="margin-top:12px">
-          <img src="valise-rack-atem.avif" alt="Rack ATEM Alkoda On Air" onerror="this.style.display='none'">
+          <img src="interview-elasticon-2026.avif" alt="Rack ATEM Alkoda On Air" onerror="this.style.display='none'">
         </div>
       </div>
     </div>
@@ -584,7 +584,8 @@ footer{padding:28px 0 40px;border-top:1px solid var(--line);background:var(--bg)
   </div>
 </div>
 
-<script data-cfasync="false" src="/cdn-cgi/scripts/5c5dd728/cloudflare-static/email-decode.min.js"></script><script data-cfasync="false">
+<script data-cfasync="false" src="/cdn-cgi/scripts/5c5dd728/cloudflare-static/email-decode.min.js"></script>
+<script>
 const VIDEOS=[
   {id:'oTBYBw6Vz78',title:'Meetup Elastic FR — 100ème édition',desc:'DJI Ronin · Sony Alpha 7 IV',cat:'corporate',year:2026},
   {id:'1y6aHvDyMYM',title:'ElasticON Paris 2026 — Résumé',desc:'DJI Ronin · Sony Alpha 7 IV',cat:'corporate',year:2026},
@@ -637,7 +638,7 @@ document.querySelectorAll('.f-btn').forEach(b=>{
     renderVideos(b.dataset.f);
   });
 });
-renderVideos('all');
+if(document.readyState==='loading'){document.addEventListener('DOMContentLoaded',()=>renderVideos('all'));} else {renderVideos('all');}
 
 function openMod(v){
   document.getElementById('mtitle').textContent=v.title;

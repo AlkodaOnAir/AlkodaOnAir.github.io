@@ -35,8 +35,8 @@ img{max-width:100%;display:block}
 .nav-links{display:flex;align-items:center;gap:24px;font-size:13px;font-weight:500;color:var(--muted)}
 .nav-links a{transition:color .2s}.nav-links a:hover{color:#fff}
 .nav-sep{color:var(--line2)}
-.lang-btn{font-family:'Share Tech Mono',monospace;font-size:11px;padding:4px 11px;border:1px solid var(--line2);border-radius:4px;color:var(--muted);transition:.2s}
-.lang-btn:hover{border-color:var(--accent);color:var(--accent)}
+#lang-toggle{background:rgba(255,255,255,.06);border:1px solid var(--line2);border-radius:4px;font-size:18px;cursor:pointer;padding:3px 8px;opacity:.85;transition:opacity .15s,border-color .15s;flex-shrink:0;line-height:1;display:flex;align-items:center}
+#lang-toggle:hover{opacity:1;border-color:var(--accent)}
 .nav-cta{padding:8px 20px;border-radius:999px;background:var(--accent);color:#03080f;font-size:13px;font-weight:700;transition:.2s;white-space:nowrap}
 .nav-cta:hover{background:#fff}
 
@@ -238,16 +238,16 @@ footer{padding:28px 0 40px;border-top:1px solid var(--line);background:var(--bg)
            onerror="this.src='logo_letttre_Alkoda_On_Air-centré-Long.jpg'">
     </a>
     <div class="nav-links">
-      <a href="#corporate">Prestations</a>
-      <a href="#clients">Clients</a>
-      <a href="#valise">La valise</a>
-      <a href="#realisations">Réalisations</a>
-      <a href="#origine">À propos</a>
-      <a href="#contact">Contact</a>
+      <a href="#corporate" data-i18n="nav_prestations">Prestations</a>
+      <a href="#clients" data-i18n="nav_clients">Clients</a>
+      <a href="#valise" data-i18n="nav_valise">La valise</a>
+      <a href="#realisations" data-i18n="nav_realisations">Réalisations</a>
+      <a href="#origine" data-i18n="nav_about">À propos</a>
+      <a href="#contact" data-i18n="nav_contact">Contact</a>
       <span class="nav-sep">|</span>
-      <a href="en.html" class="lang-btn">EN</a>
+      <button id="lang-toggle" onclick="toggleLang()" title="Change language / Changer de langue"><span id="lang-flag"></span></button>
     </div>
-    <a href="#contact" class="btn btn-primary nav-cta">Nous contacter</a>
+    <a href="#contact" class="btn btn-primary nav-cta" data-i18n="nav_cta">Nous contacter</a>
   </div>
 </nav>
 
@@ -260,18 +260,18 @@ footer{padding:28px 0 40px;border-top:1px solid var(--line);background:var(--bg)
          onerror="this.src='Alkoda_on_Air_transparent.png'">
     <div class="eyebrow">
       <span class="eyebrow-dot"></span>
-      Production audiovisuelle broadcast · Paris
+      <span data-i18n="hero_badge">Production audiovisuelle broadcast · Paris</span>
     </div>
-    <h1>Votre événement,<br><em>filmé et diffusé</em> avec précision.</h1>
-    <p class="hero-sub">Captation multicaméra, live streaming, habillage graphique, post-production. Meetups, conférences, concerts — 30 ans d'expertise au service de votre image.</p>
+    <h1 data-i18n="hero_h1">Votre événement,<br><em>filmé et diffusé</em> avec précision.</h1>
+    <p class="hero-sub" data-i18n="hero_sub">Captation multicaméra, live streaming, habillage graphique, post-production. Meetups, conférences, concerts — 30 ans d'expertise au service de votre image.</p>
     <div class="cta-row">
-      <a href="#corporate" class="btn btn-primary">Découvrir nos prestations</a>
-      <a href="#realisations" class="btn btn-secondary">Voir les réalisations</a>
+      <a href="#corporate" class="btn btn-primary" data-i18n="hero_cta1">Découvrir nos prestations</a>
+      <a href="#realisations" class="btn btn-secondary" data-i18n="hero_cta2">Voir les réalisations</a>
     </div>
     <div class="hero-stats">
-      <div class="stat"><strong>30<span>+</span></strong><small>Ans d'expérience broadcast</small></div>
-      <div class="stat"><strong><span>+</span>100</strong><small>Événements produits</small></div>
-      <div class="stat"><strong>9<span> cam</span></strong><small>Captation multicaméra max</small></div>
+      <div class="stat"><strong>30<span>+</span></strong><small data-i18n="stat1">Ans d'expérience broadcast</small></div>
+      <div class="stat"><strong><span>+</span>100</strong><small data-i18n="stat2">Événements produits</small></div>
+      <div class="stat"><strong>9<span> cam</span></strong><small data-i18n="stat3">Captation multicaméra max</small></div>
     </div>
   </div>
 </section>
@@ -279,8 +279,8 @@ footer{padding:28px 0 40px;border-top:1px solid var(--line);background:var(--bg)
 <!-- CORPORATE -->
 <section id="corporate">
   <div class="shell">
-    <div class="section-kicker">Prestations</div>
-    <h2>Votre événement mérite<br><em>une vraie régie TV.</em></h2>
+    <div class="section-kicker" data-i18n="corp_kicker">Prestations</div>
+    <h2 data-i18n="corp_h2">Votre événement mérite<br><em>une vraie régie TV.</em></h2>
     <p class="lead">Meetup, conférence, séminaire, concert — vous voulez le filmer, le diffuser en live, le garder en vidéo de qualité. Alkoda On Air s'occupe de tout, de A à Z.</p>
 
     <img class="corporate-hero-img"
@@ -353,8 +353,8 @@ footer{padding:28px 0 40px;border-top:1px solid var(--line);background:var(--bg)
 <!-- CLIENTS -->
 <section id="clients">
   <div class="shell">
-    <div class="section-kicker">Clients & partenaires</div>
-    <h2>Ils nous ont<br><em>fait confiance.</em></h2>
+    <div class="section-kicker" data-i18n="clients_kicker">Clients & partenaires</div>
+    <h2 data-i18n="clients_h2">Ils nous ont<br><em>fait confiance.</em></h2>
     <p class="clients-intro">Des startups tech aux grandes entreprises, des associations culturelles aux chaînes TV. Nous nous adaptons à chaque contexte avec le même niveau d'exigence.</p>
     <div class="logos-grid">
       <div class="logo-cell"><a href="https://www.elastic.co" target="_blank" rel="noopener"><img src="logo-elastic.avif" alt="Elastic"></a></div>
@@ -380,8 +380,8 @@ footer{padding:28px 0 40px;border-top:1px solid var(--line);background:var(--bg)
 <!-- VALISE -->
 <section id="valise">
   <div class="shell">
-    <div class="section-kicker">Notre solution technique</div>
-    <h2>Une régie mobile<br><em>broadcast compacte.</em></h2>
+    <div class="section-kicker" data-i18n="valise_kicker">Notre solution technique</div>
+    <h2 data-i18n="valise_h2">Une régie mobile<br><em>broadcast compacte.</em></h2>
     <p class="lead">Pour tenir nos engagements sur chaque événement, nous avons conçu une régie mobile broadcast déployable en moins d'une heure — architecture pensée brique par brique, pas un assemblage grand public.</p>
 
     <div class="valise-grid">
@@ -407,14 +407,14 @@ footer{padding:28px 0 40px;border-top:1px solid var(--line);background:var(--bg)
           </div>
         </div>
         <div class="valise-links">
-          <a href="page_valise/alkoda_valise_presentation_v6.html" class="valise-link">
+          <a href="page_valise/valise.html" class="valise-link">
             <div class="vl-icon">📋</div>
-            <div><strong>Présentation complète de la valise</strong><span>Architecture, workflow, équipements détaillés</span></div>
+            <div><strong data-i18n="valise_link1_title">Présentation complète de la valise</strong><span data-i18n="valise_link1_sub">Architecture, workflow, équipements détaillés</span></div>
             <span class="vl-arr">→</span>
           </a>
           <a href="visio/alkoda_visio.html" class="valise-link">
             <div class="vl-icon">🔌</div>
-            <div><strong>Signal Flow interactif</strong><span>Diagramme de câblage complet de la régie</span></div>
+            <div><strong data-i18n="valise_link2_title">Signal Flow interactif</strong><span data-i18n="valise_link2_sub">Diagramme de câblage complet de la régie</span></div>
             <span class="vl-arr">→</span>
           </a>
         </div>
@@ -434,8 +434,8 @@ footer{padding:28px 0 40px;border-top:1px solid var(--line);background:var(--bg)
 <!-- WORKFLOW -->
 <section id="workflow">
   <div class="shell">
-    <div class="section-kicker">Comment ça se passe</div>
-    <h2>De la demande<br><em>à la livraison.</em></h2>
+    <div class="section-kicker" data-i18n="workflow_kicker">Comment ça se passe</div>
+    <h2 data-i18n="workflow_h2">De la demande<br><em>à la livraison.</em></h2>
     <div class="process">
       <div class="step">
         <div class="step-num">01</div>
@@ -464,9 +464,9 @@ footer{padding:28px 0 40px;border-top:1px solid var(--line);background:var(--bg)
 <!-- RÉALISATIONS -->
 <section id="realisations">
   <div class="shell">
-    <div class="section-kicker">Réalisations</div>
-    <h2>24 projets,<br><em>un seul niveau d'exigence.</em></h2>
-    <p class="lead">Cliquez sur une vidéo pour la visionner directement.</p>
+    <div class="section-kicker" data-i18n="real_kicker">Réalisations</div>
+    <h2 data-i18n="real_h2">24 projets,<br><em>un seul niveau d'exigence.</em></h2>
+    <p class="lead" data-i18n="real_lead">Cliquez sur une vidéo pour la visionner directement.</p>
     <div class="filters">
       <button class="f-btn active" data-f="all">Tout</button>
       <button class="f-btn" data-f="corporate">Corporate & Meetup</button>
@@ -481,8 +481,8 @@ footer{padding:28px 0 40px;border-top:1px solid var(--line);background:var(--bg)
 <!-- À L'ORIGINE -->
 <section id="origine">
   <div class="shell">
-    <div class="section-kicker">À l'origine</div>
-    <h2>Alkoda —<br><em>la musique</em> avant tout.</h2>
+    <div class="section-kicker" data-i18n="orig_kicker">À l'origine</div>
+    <h2 data-i18n="orig_h2">Alkoda —<br><em>la musique</em> avant tout.</h2>
     <div class="origine-grid">
       <div class="origine-text">
         <p><strong>« Al Coda »</strong>, notation de solfège, est à l'origine du nom de notre société. Une vocation première : la captation de concerts de musique classique.</p>
@@ -516,8 +516,8 @@ footer{padding:28px 0 40px;border-top:1px solid var(--line);background:var(--bg)
 <!-- CONTACT -->
 <section id="contact">
   <div class="shell">
-    <div class="section-kicker">Nous contacter</div>
-    <h2>Parlons de<br><em>votre projet.</em></h2>
+    <div class="section-kicker" data-i18n="contact_kicker">Nous contacter</div>
+    <h2 data-i18n="contact_h2">Parlons de<br><em>votre projet.</em></h2>
     <div class="contact-grid">
       <div>
         <p class="contact-text" style="font-size:16px;color:var(--muted);font-weight:300;line-height:1.75;margin-bottom:32px">
@@ -562,16 +562,16 @@ footer{padding:28px 0 40px;border-top:1px solid var(--line);background:var(--bg)
       <img src="logo-alkoda-long.avif" alt="Alkoda On Air" onerror="this.style.display='none'">
     </div>
     <div class="footer-links">
-      <a href="#corporate">Prestations</a>
-      <a href="#realisations">Réalisations</a>
-      <a href="#origine">À propos</a>
+      <a href="#corporate" data-i18n="nav_prestations">Prestations</a>
+      <a href="#realisations" data-i18n="nav_realisations">Réalisations</a>
+      <a href="#origine" data-i18n="nav_about">À propos</a>
       <a href="#contact">Contact</a>
       <a href="https://www.youtube.com/@alkoda" target="_blank" rel="noopener">YouTube</a>
       <a href="https://www.linkedin.com/company/alkoda-onair/" target="_blank" rel="noopener">LinkedIn</a>
       <a href="en.html">English</a>
-      <a href="legal.html">Mentions légales</a>
+      <a href="legal.html" data-i18n="legal">Mentions légales</a>
     </div>
-    <div class="footer-copy">© 2026 Alkoda On Air · Paris</div>
+    <div class="footer-copy" data-i18n="footer_copy">© 2026 Alkoda On Air · Paris</div>
   </div>
 </footer>
 
@@ -653,6 +653,128 @@ function closeModDir(){
   document.body.style.overflow='';
 }
 document.addEventListener('keydown',e=>{if(e.key==='Escape')closeModDir();});
+// ── SYSTÈME DE LANGUE ──
+const STRINGS={
+  fr:{
+    nav_prestations:'Prestations', nav_clients:'Clients', nav_valise:'La valise',
+    nav_realisations:'Réalisations', nav_about:'À propos', nav_contact:'Contact',
+    nav_cta:'Nous contacter',
+    hero_badge:'Production audiovisuelle broadcast · Paris',
+    hero_h1:'Votre événement,<br><em>filmé et diffusé</em> avec précision.',
+    hero_sub:'Captation multicaméra, live streaming, habillage graphique, post-production. Meetups, conférences, concerts — 30 ans d'expertise au service de votre image.',
+    hero_cta1:'Découvrir nos prestations', hero_cta2:'Voir les réalisations',
+    stat1:'Ans d'expérience broadcast', stat2:'Événements produits', stat3:'Captation multicaméra max',
+    corp_kicker:'Prestations',
+    corp_h2:'Votre événement mérite<br><em>une vraie régie TV.</em>',
+    corp_lead:'Meetup, conférence, séminaire, concert — vous voulez le filmer, le diffuser en live, le garder en vidéo de qualité. Alkoda On Air s'occupe de tout, de A à Z.',
+    clients_kicker:'Clients & partenaires',
+    clients_h2:'Ils nous ont<br><em>fait confiance.</em>',
+    clients_lead:'Des startups tech aux grandes entreprises, des associations culturelles aux chaînes TV. Nous nous adaptons à chaque contexte avec le même niveau d'exigence.',
+    valise_kicker:'Notre solution technique',
+    valise_h2:'Une régie mobile<br><em>broadcast compacte.</em>',
+    valise_lead:'Pour tenir nos engagements sur chaque événement, nous avons conçu une régie mobile broadcast déployable en moins d'une heure.',
+    valise_link1_title:'Présentation complète de la valise',
+    valise_link1_sub:'Architecture, workflow, équipements détaillés',
+    valise_link2_title:'Signal Flow interactif',
+    valise_link2_sub:'Diagramme de câblage complet de la régie',
+    workflow_kicker:'Comment ça se passe',
+    workflow_h2:'De la demande<br><em>à la livraison.</em>',
+    real_kicker:'Réalisations',
+    real_h2:'24 projets,<br><em>un seul niveau d'exigence.</em>',
+    real_lead:'Cliquez sur une vidéo pour la visionner directement.',
+    filter_all:'Tout', filter_corp:'Corporate & Meetup', filter_concert:'Concert', filter_tv:'TV', filter_clip:'Clip & Création',
+    orig_kicker:'À l'origine',
+    orig_h2:'Alkoda —<br><em>la musique</em> avant tout.',
+    contact_kicker:'Nous contacter',
+    contact_h2:'Parlons de<br><em>votre projet.</em>',
+    contact_lead:'Vous avez un événement à filmer, un live à diffuser, un concert à capter ? Contactez-nous directement — nous répondons rapidement avec un devis détaillé.',
+    contact_cta_title:'Un projet en tête ?',
+    contact_cta_body:'Décrivez-nous votre événement, la date, le lieu, vos besoins — par email ou par téléphone. Nous revenons vers vous sous 24h avec une proposition adaptée.',
+    email_btn:'Envoyer un email →',
+    footer_copy:'© 2026 Alkoda On Air · Paris',
+    legal:'Mentions légales'
+  },
+  en:{
+    nav_prestations:'Services', nav_clients:'Clients', nav_valise:'The case',
+    nav_realisations:'Portfolio', nav_about:'About', nav_contact:'Contact',
+    nav_cta:'Contact us',
+    hero_badge:'Broadcast video production · Paris',
+    hero_h1:'Your event,<br><em>filmed and broadcast</em> with precision.',
+    hero_sub:'Multi-camera capture, live streaming, broadcast graphics, post-production. Meetups, conferences, concerts — 30 years of expertise at the service of your image.',
+    hero_cta1:'Discover our services', hero_cta2:'See our work',
+    stat1:'Years of broadcast experience', stat2:'Events produced', stat3:'Max multi-camera capture',
+    corp_kicker:'Services',
+    corp_h2:'Your event deserves<br><em>a real TV control room.</em>',
+    corp_lead:'Meetup, conference, seminar, concert — you want to film it, stream it live, keep it as quality video. Alkoda On Air handles everything from A to Z.',
+    clients_kicker:'Clients & partners',
+    clients_h2:'They trusted<br><em>us.</em>',
+    clients_lead:'From tech startups to large corporations, cultural associations to TV channels. We adapt to every context with the same level of excellence.',
+    valise_kicker:'Our technical solution',
+    valise_h2:'A compact mobile<br><em>broadcast control room.</em>',
+    valise_lead:'To deliver on our quality commitments at every event, we designed a mobile broadcast control room deployable in under an hour.',
+    valise_link1_title:'Full broadcast case presentation',
+    valise_link1_sub:'Architecture, workflow, detailed equipment list',
+    valise_link2_title:'Interactive Signal Flow',
+    valise_link2_sub:'Complete wiring diagram of the control room',
+    workflow_kicker:'How it works',
+    workflow_h2:'From request<br><em>to delivery.</em>',
+    real_kicker:'Portfolio',
+    real_h2:'24 projects,<br><em>one standard of excellence.</em>',
+    real_lead:'Click on a video to watch it directly.',
+    filter_all:'All', filter_corp:'Corporate & Meetup', filter_concert:'Concert', filter_tv:'TV', filter_clip:'Clip & Creation',
+    orig_kicker:'Origins',
+    orig_h2:'Alkoda —<br><em>music</em> first.',
+    contact_kicker:'Contact us',
+    contact_h2:'Let's talk about<br><em>your project.</em>',
+    contact_lead:'Have an event to film, a live to broadcast, a concert to capture? Contact us directly — we respond quickly with a detailed, transparent quote.',
+    contact_cta_title:'Have a project in mind?',
+    contact_cta_body:'Tell us about your event, the date, the venue, your needs — by email or phone. We'll get back to you within 24h with a tailored proposal.',
+    email_btn:'Send an email →',
+    footer_copy:'© 2026 Alkoda On Air · Paris',
+    legal:'Legal notice'
+  }
+};
+
+const _svgFR='<svg width="22" height="15" viewBox="0 0 3 2" xmlns="http://www.w3.org/2000/svg" style="border-radius:2px;vertical-align:middle;display:inline-block"><rect width="1" height="2" fill="#002395"/><rect x="1" width="1" height="2" fill="#fff"/><rect x="2" width="1" height="2" fill="#ED2939"/></svg>';
+const _svgUK='<svg width="22" height="15" viewBox="0 0 60 30" xmlns="http://www.w3.org/2000/svg" style="border-radius:2px;vertical-align:middle;display:inline-block"><rect width="60" height="30" fill="#012169"/><path d="M0,0 L60,30 M60,0 L0,30" stroke="#fff" stroke-width="6"/><path d="M0,0 L60,30 M60,0 L0,30" stroke="#C8102E" stroke-width="4"/><path d="M30,0 V30 M0,15 H60" stroke="#fff" stroke-width="10"/><path d="M30,0 V30 M0,15 H60" stroke="#C8102E" stroke-width="6"/></svg>';
+
+let _lang='fr';
+function t(k){return(STRINGS[_lang]||STRINGS.fr)[k]||k;}
+
+function setLang(lang){
+  _lang=lang;
+  try{localStorage.setItem('alkoda_lang',lang);}catch(e){}
+  const fl=document.getElementById('lang-flag');
+  if(fl)fl.innerHTML=lang==='fr'?_svgFR:_svgUK;
+  document.documentElement.lang=lang;
+  // Mettre à jour tous les éléments data-i18n
+  document.querySelectorAll('[data-i18n]').forEach(el=>{
+    const key=el.getAttribute('data-i18n');
+    const val=t(key);
+    if(el.tagName==='INPUT'||el.tagName==='TEXTAREA') el.placeholder=val;
+    else el.innerHTML=val;
+  });
+  // Filtres vidéo
+  const fbtns=document.querySelectorAll('.f-btn');
+  fbtns.forEach(b=>{
+    const f=b.dataset.f;
+    if(f==='all') b.textContent=t('filter_all');
+    else if(f==='corporate') b.textContent=t('filter_corp');
+    else if(f==='concert') b.textContent=t('filter_concert');
+    else if(f==='tv') b.textContent=t('filter_tv');
+    else if(f==='clip') b.textContent=t('filter_clip');
+  });
+}
+
+function toggleLang(){setLang(_lang==='fr'?'en':'fr');}
+
+// Init langue
+(function(){
+  let lang='fr';
+  try{lang=localStorage.getItem('alkoda_lang')||'fr';}catch(e){}
+  setLang(lang);
+})();
+
 </script>
 </body>
 </html>

@@ -208,29 +208,9 @@
       .media-caption span{display:block;margin-top:6px}
     }
   </style>
-
-  <style>
-    .back-btn{
-      position:fixed;bottom:28px;left:28px;z-index:999;
-      display:inline-flex;align-items:center;gap:8px;
-      padding:10px 18px;border-radius:999px;
-      background:rgba(7,16,29,.85);backdrop-filter:blur(12px);
-      border:1px solid rgba(0,210,255,.3);
-      color:#00d2ff;font-family:Inter,system-ui,sans-serif;
-      font-size:13px;font-weight:600;text-decoration:none;
-      transition:.2s;box-shadow:0 8px 24px rgba(0,0,0,.4);
-    }
-    .back-btn:hover{background:rgba(0,210,255,.15);border-color:rgba(0,210,255,.7);color:#fff}
-    .back-btn svg{width:16px;height:16px;flex-shrink:0}
-  </style>
 </head>
 <body>
-  <a href="../index.html" class="back-btn">
-    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
-      <path d="M19 12H5M5 12l7 7M5 12l7-7"/>
-    </svg>
-    Retour au site
-  </a>
+
 
   <header class="nav">
     <div class="shell nav-inner">
@@ -239,12 +219,14 @@
         <div>Alkoda On Air</div>
       </div>
       <nav class="nav-links">
+        <button onclick="history.back()" style="background:rgba(255,255,255,.06);border:1px solid rgba(255,255,255,.12);color:#9db0d0;border-radius:4px;padding:4px 12px;font-family:inherit;font-size:13px;cursor:pointer;display:flex;align-items:center;gap:6px;transition:.2s" onmouseover="this.style.borderColor='#00d2ff';this.style.color='#00d2ff'" onmouseout="this.style.borderColor='rgba(255,255,255,.12)';this.style.color='#9db0d0'">← <span id="back-label">Retour</span></button>
         <a href="#missions">Possibilités</a>
         <a href="#workflow">Comment ça marche</a>
         <a href="#broadcast">Pourquoi c'est différent</a>
         <a href="#playout">Playback</a>
         <a href="#tech">Partie technique</a>
         <a href="#visio">Vue graphique</a>
+        <button id="lang-toggle-v" onclick="toggleLangV()" style="background:rgba(255,255,255,.06);border:1px solid rgba(255,255,255,.12);border-radius:4px;padding:3px 8px;cursor:pointer;opacity:.85;display:flex;align-items:center" title="Change language"><span id="lang-flag-v"></span></button>
       </nav>
     </div>
   </header>
@@ -742,5 +724,27 @@
             <div class="copyright-note">Les marques citées appartiennent à leurs propriétaires respectifs, notamment Blackmagic Design, OBS Studio, H2R Graphics, H2R Layouts, PlayoutBee, Magewell, StarTech et MOTU. Cette page les cite à titre descriptif pour expliquer le workflow utilisé par Alkoda On Air.</div>
     </div>
   </footer>
+
+<script>
+const _svgFRv='<svg width="22" height="15" viewBox="0 0 3 2" xmlns="http://www.w3.org/2000/svg" style="border-radius:2px;vertical-align:middle;display:inline-block"><rect width="1" height="2" fill="#002395"/><rect x="1" width="1" height="2" fill="#fff"/><rect x="2" width="1" height="2" fill="#ED2939"/></svg>';
+const _svgUKv='<svg width="22" height="15" viewBox="0 0 60 30" xmlns="http://www.w3.org/2000/svg" style="border-radius:2px;vertical-align:middle;display:inline-block"><rect width="60" height="30" fill="#012169"/><path d="M0,0 L60,30 M60,0 L0,30" stroke="#fff" stroke-width="6"/><path d="M0,0 L60,30 M60,0 L0,30" stroke="#C8102E" stroke-width="4"/><path d="M30,0 V30 M0,15 H60" stroke="#fff" stroke-width="10"/><path d="M30,0 V30 M0,15 H60" stroke="#C8102E" stroke-width="6"/></svg>';
+let _langV='fr';
+
+// Sync avec la langue du site principal
+try{_langV=localStorage.getItem('alkoda_lang')||'fr';}catch(e){}
+
+function setLangV(lang){
+  _langV=lang;
+  try{localStorage.setItem('alkoda_lang',lang);}catch(e){}
+  const fl=document.getElementById('lang-flag-v');
+  if(fl)fl.innerHTML=lang==='fr'?_svgFRv:_svgUKv;
+  const bl=document.getElementById('back-label');
+  if(bl)bl.textContent=lang==='fr'?'Retour':'Back';
+  // Mettre à jour le titre de la page
+  document.title=lang==='fr'?'Alkoda On Air — Valise de réalisation mobile':'Alkoda On Air — Mobile broadcast control room';
+}
+function toggleLangV(){setLangV(_langV==='fr'?'en':'fr');}
+setLangV(_langV);
+</script>
 </body>
 </html>

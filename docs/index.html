@@ -29,7 +29,7 @@ img{max-width:100%;display:block}
 .shell{width:min(var(--max),calc(100% - 48px));margin:0 auto}
 
 /* ── NAV ── */
-.nav{position:fixed;top:0;left:0;right:0;z-index:200;backdrop-filter:blur(18px);background:rgba(7,16,29,.88);border-bottom:1px solid rgba(255,255,255,.05)}
+.nav{position:fixed;top:0;left:0;right:0;z-index:200;backdrop-filter:blur(18px);background:#000;border-bottom:1px solid rgba(255,255,255,.05)}
 .nav-inner{display:flex;align-items:center;justify-content:space-between;gap:24px;height:62px}
 .brand img{height:34px;width:auto;display:block}
 .nav-links{display:flex;align-items:center;gap:24px;font-size:13px;font-weight:500;color:var(--muted)}
@@ -411,19 +411,19 @@ footer{padding:28px 0 40px;border-top:1px solid var(--line);background:var(--bg)
         <div class="feat-list">
           <div class="feat">
             <div class="feat-icon">🔀</div>
-            <div><strong>ATEM Mini Extreme ISO</strong><span>Mélange, programme final, enregistrement ISO de chaque source</span></div>
+            <div><strong>ATEM Mini Extreme ISO</strong><span data-i18n="feat_atem">Mélange, programme final, enregistrement ISO de chaque source</span></div>
           </div>
           <div class="feat">
             <div class="feat-icon">🖥️</div>
-            <div><strong>OBS Studio + PC MSI</strong><span>Intégration propre de l'écran speaker dans le plan large</span></div>
+            <div><strong>OBS Studio + PC MSI</strong><span data-i18n="feat_obs">Intégration propre de l'écran speaker dans le plan large</span></div>
           </div>
           <div class="feat">
             <div class="feat-icon">✨</div>
-            <div><strong>H2R Graphics</strong><span>Habillage graphique key/fill, lower thirds, compositions animées</span></div>
+            <div><strong>H2R Graphics</strong><span data-i18n="feat_h2r">Habillage graphique key/fill, lower thirds, compositions animées</span></div>
           </div>
           <div class="feat">
             <div class="feat-icon">▶️</div>
-            <div><strong>PlayoutBee</strong><span>Magnéto broadcast : clips, jingles, triggers en logique régie TV</span></div>
+            <div><strong>PlayoutBee</strong><span data-i18n="feat_playout">Magnéto broadcast : clips, jingles, triggers en logique régie TV</span></div>
           </div>
         </div>
         <div class="valise-links">
@@ -509,16 +509,16 @@ footer{padding:28px 0 40px;border-top:1px solid var(--line);background:var(--bg)
         <p data-i18n="orig_body1">Alkoda On Air c'est <strong>plus de 30 ans dans l'audiovisuel broadcast</strong>, une expertise qui s'est naturellement étendue au monde de l'entreprise. Nous nous entourons des <strong>meilleurs techniciens selon vos besoins</strong> — réalisateurs, cadreurs, ingénieurs du son, opérateurs grue, pilotes de drone.</p>
         <p data-i18n="orig_body2">Nous disposons d'un matériel constamment renouvelé et savons nous adapter à toutes les productions. Réactifs, nous intégrons également vos projets existants si besoin.</p>
         <div class="coda-quote">
-          <p>« La notation musicale "al coda" indique le retour à l'essentiel. C'est exactement ce que nous faisons : ramener chaque événement à ce qui compte — l'image, le son, le live. »</p>
-          <small>— Christophe Koclejda, fondateur Alkoda On Air</small>
+          <p data-i18n="coda_quote">« La notation musicale "al coda" indique le retour à l'essentiel. C'est exactement ce que nous faisons : ramener chaque événement à ce qui compte — l'image, le son, le live. »</p>
+          <small data-i18n="coda_author">— Christophe Koclejda, fondateur Alkoda On Air</small>
         </div>
         <div class="pills">
-          <span class="pill hi">Corporate & meetups</span>
-          <span class="pill hi">Musique classique</span>
+          <span class="pill hi" data-i18n="pill_corporate">Corporate & meetups</span>
+          <span class="pill hi" data-i18n="pill_music">Musique classique</span>
           <span class="pill hi">Live streaming</span>
-          <span class="pill">30+ ans broadcast</span>
-          <span class="pill">Paris & déplacement</span>
-          <span class="pill">9 caméras Sony FX6</span>
+          <span class="pill" data-i18n="pill_years">30+ ans broadcast</span>
+          <span class="pill" data-i18n="pill_location">Paris & déplacement</span>
+          <span class="pill" data-i18n="pill_cameras">9 caméras Sony FX6</span>
         </div>
       </div>
       <div>
@@ -705,6 +705,17 @@ const STRINGS={
     card_concert_p:'Notre ADN. Jusqu\'à 9 caméras Sony FX6, régie fibre optique, 24 micros, production DVD commercial. Un savoir-faire rare au service de la musique vivante.',
     orig_intro:'<strong>« Al Coda »</strong>, notation de solfège, est à l\'origine du nom de notre société. Une vocation première : la captation de concerts de musique classique.',
     orig_body2:'Nous disposons d\'un matériel constamment renouvelé et savons nous adapter à toutes les productions. Réactifs, nous intégrons également vos projets existants si besoin.',
+    feat_atem:'Mélange, programme final, enregistrement ISO de chaque source',
+    feat_obs:'Intégration propre de l\'écran speaker dans le plan large',
+    feat_h2r:'Habillage graphique key/fill, lower thirds, compositions animées',
+    feat_playout:'Magnéto broadcast : clips, jingles, triggers en logique régie TV',
+    coda_quote:'« La notation musicale "al coda" indique le retour à l\'essentiel. C\'est exactement ce que nous faisons : ramener chaque événement à ce qui compte — l\'image, le son, le live. »',
+    coda_author:'— Christophe Koclejda, fondateur Alkoda On Air',
+    pill_corporate:'Corporate & meetups',
+    pill_music:'Musique classique',
+    pill_years:'30+ ans broadcast',
+    pill_location:'Paris & déplacement',
+    pill_cameras:'9 caméras Sony FX6',
     clients_kicker:'Clients & partenaires',
     clients_h2:'Ils nous ont<br><em>fait confiance.</em>',
     clients_lead:'Des startups tech aux grandes entreprises, des associations culturelles aux chaînes TV. Nous nous adaptons à chaque contexte avec le même niveau d\'exigence.',
@@ -778,6 +789,17 @@ const STRINGS={
     card_concert_p:'Our DNA. Up to 9 Sony FX6 cameras, fibre optic control room, 24 microphones, commercial DVD production. A rare expertise in live music.',
     orig_intro:'<strong>"Al Coda"</strong>, a musical notation, is the origin of our company name. A founding purpose: capturing classical music concerts.',
     orig_body2:'Our equipment is constantly renewed and we adapt to all types of productions. Responsive, we can also integrate into your existing projects when needed.',
+    feat_atem:'Mixing, final programme, ISO recording of every source',
+    feat_obs:'Clean integration of the speaker screen into the wide shot',
+    feat_h2r:'Broadcast key/fill graphics, lower thirds, animated compositions',
+    feat_playout:'Broadcast playout: clips, jingles, triggers in TV control room logic',
+    coda_quote:'"The musical notation \'al coda\' signals a return to the essential. That\'s exactly what we do: bring every event back to what matters — image, sound, live."',
+    coda_author:'— Christophe Koclejda, founder of Alkoda On Air',
+    pill_corporate:'Corporate & meetups',
+    pill_music:'Classical music',
+    pill_years:'30+ yrs broadcast',
+    pill_location:'Paris & on location',
+    pill_cameras:'9 Sony FX6 cameras',
     clients_kicker:'Clients & partners',
     clients_h2:'They trusted<br><em>us.</em>',
     clients_lead:'From tech startups to large corporations, cultural associations to TV channels. We adapt to every context with the same level of excellence.',

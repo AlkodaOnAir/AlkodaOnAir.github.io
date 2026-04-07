@@ -219,13 +219,13 @@
         <div>Alkoda On Air</div>
       </div>
       <nav class="nav-links">
-        <button onclick="history.back()" style="background:rgba(255,255,255,.06);border:1px solid rgba(255,255,255,.12);color:#9db0d0;border-radius:4px;padding:4px 12px;font-family:inherit;font-size:13px;cursor:pointer;display:flex;align-items:center;gap:6px;transition:.2s" onmouseover="this.style.borderColor='#00d2ff';this.style.color='#00d2ff'" onmouseout="this.style.borderColor='rgba(255,255,255,.12)';this.style.color='#9db0d0'">← <span id="back-label">Retour</span></button>
-        <a href="#missions">Possibilités</a>
-        <a href="#workflow">Comment ça marche</a>
-        <a href="#broadcast">Pourquoi c'est différent</a>
-        <a href="#playout">Playback</a>
-        <a href="#tech">Partie technique</a>
-        <a href="#visio">Vue graphique</a>
+        <button onclick="history.back()" style="background:rgba(255,255,255,.06);border:1px solid rgba(255,255,255,.12);color:#9db0d0;border-radius:4px;padding:4px 12px;font-family:inherit;font-size:13px;cursor:pointer;display:flex;align-items:center;gap:6px;transition:.2s" onmouseover="this.style.borderColor='#00d2ff';this.style.color='#00d2ff'" onmouseout="this.style.borderColor='rgba(255,255,255,.12)';this.style.color='#9db0d0'">← <span id="back-label" data-i18n="back_btn">Retour</span></button>
+        <a href="#missions" data-i18n="v_nav1">Possibilités</a>
+        <a href="#workflow" data-i18n="v_nav2">Comment ça marche</a>
+        <a href="#broadcast" data-i18n="v_nav3">Pourquoi c'est différent</a>
+        <a href="#playout" data-i18n="v_nav4">Playback</a>
+        <a href="#tech" data-i18n="v_nav5">Partie technique</a>
+        <a href="#visio" data-i18n="v_nav6">Vue graphique</a>
         <button id="lang-toggle-v" onclick="toggleLangV()" style="background:rgba(255,255,255,.06);border:1px solid rgba(255,255,255,.12);border-radius:4px;padding:3px 8px;cursor:pointer;opacity:.85;display:flex;align-items:center" title="Change language"><span id="lang-flag-v"></span></button>
       </nav>
     </div>
@@ -236,20 +236,20 @@
       <div class="shell hero-grid">
         <div>
           <img class="hero-logo" src="Alkoda_on_Air_transparent.png" alt="Alkoda On Air">
-          <div class="eyebrow">Régie mobile • Captation • Streaming • Habillage broadcast</div>
-          <h1>Une vraie régie télévision,<br>dans un format compact.</h1>
+          <div class="eyebrow" data-i18n="v_eyebrow">Régie mobile • Captation • Streaming • Habillage broadcast</div>
+          <h1 data-i18n="v_h1">Une vraie régie télévision,<br>dans un format compact.</h1>
           <p data-i18n="vp1">
             Alkoda On Air conçoit et exploite une valise de réalisation capable de prendre en charge un événement de A à Z : captation multicaméra, intégration des écrans intervenants, habillage graphique, playback, livestreaming et enregistrement ISO pour la postproduction.
           </p>
           <div class="cta-row">
-            <a class="btn btn-primary" href="#missions">Découvrir les possibilités</a>
-            <a class="btn btn-secondary" href="#visio">Voir la vue graphique</a>
-            <a class="btn btn-ghost" href="#tech">Lecture technique</a>
+            <a class="btn btn-primary" href="#missions" data-i18n="v_cta1">Découvrir les possibilités</a>
+            <a class="btn btn-secondary" href="#visio" data-i18n="v_cta2">Voir la vue graphique</a>
+            <a class="btn btn-ghost" href="#tech" data-i18n="v_cta3">Lecture technique</a>
           </div>
           <div class="hero-stats">
-            <div class="stat"><strong>Multicam</strong><span>Caméras, écrans, playback, habillage et monitoring dans un système cohérent.</span></div>
-            <div class="stat"><strong>Broadcast</strong><span>Logique de régie TV avec key/fill, magnétos et enregistrement ISO.</span></div>
-            <div class="stat"><strong>Compact</strong><span>Une architecture pensée pour être déployée vite, sans renoncer aux fonctions avancées.</span></div>
+            <div class="stat"><strong>Multicam</strong><span data-i18n="v_stat1">Caméras, écrans, playback, habillage et monitoring dans un système cohérent.</span></div>
+            <div class="stat"><strong>Broadcast</strong><span data-i18n="v_stat2">Logique de régie TV avec key/fill, magnétos et enregistrement ISO.</span></div>
+            <div class="stat"><strong>Compact</strong><span data-i18n="v_stat3">Une architecture pensée pour être déployée vite, sans renoncer aux fonctions avancées.</span></div>
           </div>
         </div>
         <aside class="hero-card">
@@ -272,7 +272,7 @@
       <div class="shell">
         <div class="section-head">
           <div>
-            <div class="section-kicker">Ce que la valise permet</div>
+            <div class="section-kicker" data-i18n="v_kicker1">Ce que la valise permet</div>
             <h2 data-i18n="v_h2_1">Une solution polyvalente pour piloter, habiller, diffuser et enregistrer.</h2>
           </div>
           <p data-i18n="vp2">
@@ -315,8 +315,8 @@
     <section class="section alt" id="workflow">
       <div class="shell split">
         <div class="narrative">
-          <div class="section-kicker">Comment Alkoda On Air y parvient</div>
-          <h2>Une architecture pensée comme une vraie régie, pas comme un simple assemblage d’appareils.</h2>
+          <div class="section-kicker" data-i18n="v_kicker2">Comment Alkoda On Air y parvient</div>
+          <h2 data-i18n="v_h2_2">Une architecture pensée comme une vraie régie, pas comme un simple assemblage d’appareils.</h2>
           <p data-i18n="vp6">
             La valise ne repose pas sur un “logiciel miracle” qui ferait tout. Chaque brique a un rôle clair : mélange vidéo, composition, graphique, playback, monitoring, audio, réseau. Cette séparation des fonctions permet d’obtenir une qualité plus propre, une meilleure stabilité et davantage de souplesse en exploitation.
           </p>
@@ -363,8 +363,8 @@
       <div class="shell">
         <div class="section-head">
           <div>
-            <div class="section-kicker">Ce qui fait la différence</div>
-            <h2>Pourquoi cette valise est plus polyvalente qu’un simple mélangeur compact.</h2>
+            <div class="section-kicker" data-i18n="v_kicker3">Ce qui fait la différence</div>
+            <h2 data-i18n="v_h2_3">Pourquoi cette valise est plus polyvalente qu’un simple mélangeur compact.</h2>
           </div>
           <p data-i18n="vp17">
             L’intérêt commercial d’Alkoda On Air, c’est de pouvoir prendre en charge un événement comme une petite régie télévision : traiter des sources diverses, générer des habillages, lancer des médias, gérer des compositions, diffuser en direct, et conserver une vraie marge de manœuvre pour la postproduction.
@@ -372,25 +372,25 @@
         </div>
 
         <div class="process">
-          <article class="step">
-            <div class="step-num">01</div>
-            <h4>Plan large recomposé</h4>
-            <p data-i18n="vp9">Le plan large n’est pas juste une caméra : l’écran du speaker est capté séparément, recomposé dans OBS puis réincrusté proprement pour rester lisible.</p>
+          <article class=”step”>
+            <div class=”step-num”>01</div>
+            <h4 data-i18n=”v_step1_h4”>Plan large recomposé</h4>
+            <p data-i18n=”vp9”>Le plan large n’est pas juste une caméra : l’écran du speaker est capté séparément, recomposé dans OBS puis réincrusté proprement pour rester lisible.</p>
           </article>
-          <article class="step">
-            <div class="step-num">02</div>
-            <h4>Habillage broadcast</h4>
-            <p data-i18n="vp10">Les lower thirds et éléments graphiques sont produits en key/fill, avec une propreté d’incrustation impossible à obtenir avec un simple chromakey.</p>
+          <article class=”step”>
+            <div class=”step-num”>02</div>
+            <h4 data-i18n=”v_step2_h4”>Habillage broadcast</h4>
+            <p data-i18n=”vp10”>Les lower thirds et éléments graphiques sont produits en key/fill, avec une propreté d’incrustation impossible à obtenir avec un simple chromakey.</p>
           </article>
-          <article class="step">
-            <div class="step-num">03</div>
-            <h4>Super Sources réexploitables</h4>
-            <p data-i18n="vp11">Les compositions ne sont pas seulement “vues” en direct : elles sont structurées pour rester utiles et réutilisables ensuite dans le workflow Resolve.</p>
+          <article class=”step”>
+            <div class=”step-num”>03</div>
+            <h4 data-i18n=”v_step3_h4”>Super Sources réexploitables</h4>
+            <p data-i18n=”vp11”>Les compositions ne sont pas seulement “vues” en direct : elles sont structurées pour rester utiles et réutilisables ensuite dans le workflow Resolve.</p>
           </article>
-          <article class="step">
-            <div class="step-num">04</div>
-            <h4>Magnétos et contenus</h4>
-            <p data-i18n="vp12">PlayoutBee remplit le rôle d’un HyperDeck moderne : clips, jingles, triggers et lecture média dans une logique de régie TV.</p>
+          <article class=”step”>
+            <div class=”step-num”>04</div>
+            <h4 data-i18n=”v_step4_h4”>Magnétos et contenus</h4>
+            <p data-i18n=”vp12”>PlayoutBee remplit le rôle d’un HyperDeck moderne : clips, jingles, triggers et lecture média dans une logique de régie TV.</p>
           </article>
         </div>
       </div>
@@ -399,7 +399,7 @@
     <section class="section">
       <div class="shell split">
         <div class="narrative">
-          <div class="section-kicker">Habillage graphique</div>
+          <div class="section-kicker" data-i18n="v_kicker4">Habillage graphique</div>
           <h2 data-i18n="v_h2_4">Des lower thirds et habillages propres grâce à H2R Graphics.</h2>
           <p data-i18n="vp13">
             Les habillages ne sont pas ajoutés à l’ancienne avec un fond vert approximatif. Alkoda On Air utilise une logique Key / Fill pour obtenir une incrustation plus propre, plus souple et plus professionnelle.
@@ -432,7 +432,7 @@
           </div>
         </div>
         <div class="narrative">
-          <div class="section-kicker">Multiview et contrôle</div>
+          <div class="section-kicker" data-i18n="v_kicker5">Multiview et contrôle</div>
           <h2 data-i18n="v_h2_5">Une vision globale du système, indispensable pour une réalisation sereine.</h2>
           <p data-i18n="vp15">
             Le multiview n’est pas un luxe : c’est ce qui permet de voir toutes les sources en même temps, d’anticiper les bascules, de vérifier les retours et de garder la main sur un événement en direct.
@@ -460,8 +460,8 @@
           </div>
         </div>
         <div class="narrative">
-          <div class="section-kicker">Le centre du dispositif</div>
-          <h2>Une régie Blackmagic pensée comme le cœur d’un workflow plus large.</h2>
+          <div class="section-kicker" data-i18n="v_kicker6">Le centre du dispositif</div>
+          <h2 data-i18n="v_h2_6">Une régie Blackmagic pensée comme le cœur d’un workflow plus large.</h2>
           <p>
             Le mélangeur n’est pas présenté ici comme un simple boîtier de commutation. Il constitue le noyau de la réalisation : sélection des sources, programme final, multiview, monitoring et enregistrement ISO. C’est lui qui donne la structure de direct, pendant que les autres outils viennent enrichir, préparer ou spécialiser certains flux.
           </p>
@@ -480,7 +480,7 @@
       <div class="shell">
         <div class="section-head">
           <div>
-            <div class="section-kicker">Partie technique — pour les pros et les geeks</div>
+            <div class="section-kicker" data-i18n="v_kicker7">Partie technique — pour les pros et les geeks</div>
             <h2 data-i18n="v_h2_7">Lecture détaillée des flux, des outils et des choix techniques.</h2>
           </div>
           <p data-i18n="vp19">
@@ -586,7 +586,7 @@
             </div>
           </div>
           <div class="narrative">
-            <div class="section-kicker">Super sources animées</div>
+            <div class="section-kicker" data-i18n="v_kicker8">Super sources animées</div>
             <h2 data-i18n="v_h2_8">H2R Layouts permet de construire des compositions avancées, avec transitions visuelles entre plusieurs dispositions.</h2>
             <p>
               Cette brique donne une vraie souplesse de réalisation : passages d’une composition à l’autre, variations de layouts, mises en avant successives de plusieurs sources et rendu plus vivant qu’une simple succession de cuts.
@@ -602,7 +602,7 @@
     <section class="section" id="playout">
       <div class="shell split">
         <div class="narrative">
-          <div class="section-kicker">Playback / magnéto broadcast</div>
+          <div class="section-kicker" data-i18n="v_kicker9">Playback / magnéto broadcast</div>
           <h2><a class="inline-link" href="https://playoutbee.com/" target="_blank" rel="noopener noreferrer">PlayoutBee</a> joue le rôle d’un HyperDeck moderne, tout en servant aussi de lecteur de contenus, jingles et vidéos.</h2>
           <p>
             Dans cette valise, PlayoutBee ne sert pas juste à « lire une vidéo ». Il remplit une vraie fonction de magnéto broadcast : préparer des médias, les rappeler au bon moment et les injecter proprement dans la réalisation comme une source dédiée.
@@ -634,7 +634,7 @@
       <div class="shell">
         <div class="section-head">
           <div>
-            <div class="section-kicker">Marques et outils utilisés</div>
+            <div class="section-kicker" data-i18n="v_kicker10">Marques et outils utilisés</div>
             <h2 data-i18n="v_h2_9">Un écosystème volontairement choisi, chaque brique ayant un rôle précis.</h2>
           </div>
           <p>
@@ -695,7 +695,7 @@
     <section class="section alt" id="visio">
       <div class="shell cta-panel">
         <div>
-          <div class="section-kicker">Vue graphique interactive</div>
+          <div class="section-kicker" data-i18n="v_kicker11">Vue graphique interactive</div>
           <h2 data-i18n="v_h2_10">Voir le système comme un schéma vivant.</h2>
           <p>
             Une page graphique de type Visio permet de parcourir visuellement les équipements, les liaisons et les chemins de signal. Elle complète cette page commerciale en donnant une lecture beaucoup plus fine du graphe réel.
@@ -764,6 +764,35 @@ const STRINGS_V={
     vp19:"Cette deuxième partie est volontairement plus détaillée. Elle explique les choix techniques qui permettent à la valise de fonctionner comme une vraie régie.",
     vp20:"Quelques chemins clés suffisent à comprendre la philosophie de la valise : qualité d'image, stabilité et souplesse d'adaptation.",
     back_btn:'← Retour',
+    v_eyebrow:'Régie mobile • Captation • Streaming • Habillage broadcast',
+    v_h1:'Une vraie régie télévision,<br>dans un format compact.',
+    v_cta1:'Découvrir les possibilités',
+    v_cta2:'Voir la vue graphique',
+    v_cta3:'Lecture technique',
+    v_stat1:'Caméras, écrans, playback, habillage et monitoring dans un système cohérent.',
+    v_stat2:'Logique de régie TV avec key/fill, magnétos et enregistrement ISO.',
+    v_stat3:'Une architecture pensée pour être déployée vite, sans renoncer aux fonctions avancées.',
+    v_kicker1:'Ce que la valise permet',
+    v_kicker2:'Comment Alkoda On Air y parvient',
+    v_kicker3:'Ce qui fait la différence',
+    v_kicker4:'Habillage graphique',
+    v_kicker5:'Multiview et contrôle',
+    v_kicker6:'Le centre du dispositif',
+    v_kicker7:'Partie technique — pour les pros et les geeks',
+    v_kicker8:'Super sources animées',
+    v_kicker9:'Playback / magnéto broadcast',
+    v_kicker10:'Marques et outils utilisés',
+    v_kicker11:'Vue graphique interactive',
+    v_step1_h4:'Plan large recomposé',
+    v_step2_h4:'Habillage broadcast',
+    v_step3_h4:'Super Sources réexploitables',
+    v_step4_h4:'Magnétos et contenus',
+    v_nav1:'Possibilités',
+    v_nav2:'Comment ça marche',
+    v_nav3:'Pourquoi c\'est différent',
+    v_nav4:'Playback',
+    v_nav5:'Partie technique',
+    v_nav6:'Vue graphique',
   },
   en:{
     v_h2_1:'A versatile solution for directing, graphics, broadcasting and recording.',
@@ -802,6 +831,35 @@ const STRINGS_V={
     vp19:'This second part is deliberately more detailed. It explains the technical choices that allow the case to function as a real control room.',
     vp20:'A few key signal paths are enough to understand the philosophy of the case: image quality, stability and adaptability.',
     back_btn:'← Back',
+    v_eyebrow:'Mobile control room • Capture • Streaming • Broadcast graphics',
+    v_h1:'A real TV control room,<br>in a compact format.',
+    v_cta1:'Discover the capabilities',
+    v_cta2:'See the visual diagram',
+    v_cta3:'Technical deep-dive',
+    v_stat1:'Cameras, screens, playback, graphics and monitoring in a coherent system.',
+    v_stat2:'TV control room logic with key/fill, playout and ISO recording.',
+    v_stat3:'An architecture designed for fast deployment, without sacrificing advanced features.',
+    v_kicker1:'What the case can do',
+    v_kicker2:'How Alkoda On Air achieves this',
+    v_kicker3:'What makes the difference',
+    v_kicker4:'Broadcast graphics',
+    v_kicker5:'Multiview and control',
+    v_kicker6:'The heart of the system',
+    v_kicker7:'Technical section — for pros and geeks',
+    v_kicker8:'Animated super sources',
+    v_kicker9:'Playout / broadcast recorder',
+    v_kicker10:'Brands and tools used',
+    v_kicker11:'Interactive visual diagram',
+    v_step1_h4:'Recomposed wide shot',
+    v_step2_h4:'Broadcast graphics',
+    v_step3_h4:'Reusable Super Sources',
+    v_step4_h4:'Playout and media',
+    v_nav1:'Capabilities',
+    v_nav2:'How it works',
+    v_nav3:'Why it\'s different',
+    v_nav4:'Playout',
+    v_nav5:'Technical',
+    v_nav6:'Visual diagram',
   }
 };
 

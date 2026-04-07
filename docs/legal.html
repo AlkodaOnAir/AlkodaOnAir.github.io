@@ -314,7 +314,7 @@ function setLangL(lang){
   document.title=lang==='fr'?'Mentions légales & CGV — Alkoda On Air':'Legal Notice & GTC — Alkoda On Air';
   document.documentElement.lang=lang;
   document.querySelectorAll('.lang-fr').forEach(el=>el.style.display=lang==='fr'?'':'none');
-  document.querySelectorAll('.lang-en').forEach(el=>el.style.display=lang==='en'?'':'none');
+  document.querySelectorAll('.lang-en').forEach(el=>el.style.display=lang==='en'?'block':'none');
 }
 function toggleLangL(){setLangL(_langL==='fr'?'en':'fr');}
 setLangL(_langL);

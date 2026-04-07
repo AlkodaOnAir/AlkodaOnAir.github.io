@@ -227,6 +227,25 @@ footer{padding:28px 0 40px;border-top:1px solid var(--line);background:var(--bg)
   .vgrid,.services-grid,.photo-strip{grid-template-columns:1fr}
   .logos-grid{grid-template-columns:repeat(3,1fr)}
 }
+
+/* ── CONTACT NEW ── */
+.contact-new{display:grid;grid-template-columns:1fr 1fr;gap:56px;margin-top:48px;align-items:start}
+.contact-lead-text{font-size:16px;color:var(--muted);font-weight:300;line-height:1.7;margin-bottom:28px}
+.contact-direct{display:flex;flex-direction:column;gap:12px;margin-bottom:28px}
+.contact-btn-main{display:flex;align-items:center;gap:12px;padding:15px 22px;border-radius:12px;background:var(--accent);color:#03080f;font-size:15px;font-weight:700;transition:.2s;text-decoration:none}
+.contact-btn-main:hover{transform:translateY(-2px);box-shadow:0 8px 24px rgba(0,210,255,.25)}
+.contact-btn-outline{background:transparent;border:1px solid var(--line2);color:var(--text)}
+.contact-btn-outline:hover{border-color:var(--accent);color:var(--accent);box-shadow:none;transform:none}
+.contact-socials{display:flex;flex-wrap:wrap;align-items:center;gap:10px}
+.social-btn{display:inline-flex;align-items:center;gap:8px;padding:10px 16px;border-radius:10px;background:rgba(255,255,255,.05);border:1px solid var(--line);color:var(--muted);font-size:13px;font-weight:500;transition:.2s;text-decoration:none}
+.social-btn:hover{border-color:var(--accent);color:var(--accent);background:rgba(0,210,255,.06)}
+.contact-location{display:inline-flex;align-items:center;gap:8px;padding:10px 14px;font-size:13px;color:var(--dim)}
+.contact-project-box{background:linear-gradient(135deg,rgba(0,210,255,.08),rgba(255,107,53,.06));border:1px solid rgba(255,255,255,.08);border-radius:var(--rad);padding:36px;height:100%}
+.contact-project-box h3{font-size:24px;font-weight:800;color:#fff;margin-bottom:14px;letter-spacing:-.01em}
+.contact-project-box p{font-size:15px;color:var(--muted);font-weight:300;line-height:1.7;margin-bottom:24px}
+.contact-response-time{display:inline-flex;align-items:center;gap:8px;font-family:'Share Tech Mono',monospace;font-size:11px;letter-spacing:.12em;text-transform:uppercase;color:var(--accent3)}
+.rt-dot{width:7px;height:7px;border-radius:50%;background:var(--accent3);box-shadow:0 0 8px var(--accent3);animation:blink 2s ease-in-out infinite;flex-shrink:0}
+@media(max-width:1040px){.contact-new{grid-template-columns:1fr;gap:36px}}
 </style>
 </head>
 <body>
@@ -518,38 +537,46 @@ footer{padding:28px 0 40px;border-top:1px solid var(--line);background:var(--bg)
   <div class="shell">
     <div class="section-kicker" data-i18n="contact_kicker">Nous contacter</div>
     <h2 data-i18n="contact_h2">Parlons de<br><em>votre projet.</em></h2>
-    <div class="contact-grid">
-      <div>
-        <p class="contact-text" style="font-size:16px;color:var(--muted);font-weight:300;line-height:1.75;margin-bottom:32px">
-          Vous avez un événement à filmer, un live à diffuser, un concert à capter ? Contactez-nous directement — nous répondons rapidement avec un devis détaillé et transparent.
-        </p>
-        <div class="cinfo">
-          <div class="cinfo-icon">📞</div>
-          <div><strong>Téléphone</strong><a href="tel:+33607861211">06 07 86 12 11</a></div>
+    <div class="contact-new">
+      <div class="contact-left">
+        <p class="contact-lead-text" data-i18n="contact_lead">Vous avez un événement à filmer, un live à diffuser, un concert à capter ? Contactez-nous directement.</p>
+        <div class="contact-direct">
+          <a href="tel:+33607861211" class="contact-btn-main">
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M22 16.92v3a2 2 0 01-2.18 2 19.79 19.79 0 01-8.63-3.07A19.5 19.5 0 013.07 9.8a19.79 19.79 0 01-3.07-8.67A2 2 0 012 1h3a2 2 0 012 1.72c.127.96.361 1.903.7 2.81a2 2 0 01-.45 2.11L6.09 8.91a16 16 0 006 6l1.27-1.27a2 2 0 012.11-.45c.907.339 1.85.573 2.81.7A2 2 0 0122 16.92z"/></svg>
+            06 07 86 12 11
+          </a>
+          <a href="#" onclick="this.href='mai'+'lto:contact@alkoda-onair.com';return true;" class="contact-btn-main contact-btn-outline">
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"/><polyline points="22,6 12,12 2,6"/></svg>
+            contact@alkoda-onair.com
+          </a>
         </div>
-        <div class="cinfo">
-          <div class="cinfo-icon">✉️</div>
-          <div><strong>Email</strong><a href="#" id="email-link" onclick="this.href='mai'+'lto:contact@alkoda-onair.com';return true;">contact@alkoda-onair.com</a></div>
-        </div>
-        <div class="cinfo">
-          <div class="cinfo-icon">▶️</div>
-          <div><strong>YouTube</strong><a href="https://www.youtube.com/@alkoda" target="_blank" rel="noopener">youtube.com/@alkoda</a></div>
-        </div>
-        <div class="cinfo">
-          <div class="cinfo-icon">💼</div>
-          <div><strong>LinkedIn</strong><a href="https://www.linkedin.com/company/alkoda-onair/" target="_blank" rel="noopener">Alkoda On Air</a></div>
-        </div>
-        <div class="cinfo">
-          <div class="cinfo-icon">📍</div>
-          <div><strong>Localisation</strong><a href="https://maps.google.com/?q=Paris" target="_blank" rel="noopener">Paris, France — déplacements possibles</a></div>
+        <div class="contact-socials">
+          <a href="https://www.youtube.com/@alkoda" target="_blank" rel="noopener" class="social-btn" title="YouTube">
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor"><path d="M23.498 6.186a3.016 3.016 0 00-2.122-2.136C19.505 3.545 12 3.545 12 3.545s-7.505 0-9.377.505A3.017 3.017 0 00.502 6.186C0 8.07 0 12 0 12s0 3.93.502 5.814a3.016 3.016 0 002.122 2.136c1.871.505 9.376.505 9.376.505s7.505 0 9.377-.505a3.015 3.015 0 002.122-2.136C24 15.93 24 12 24 12s0-3.93-.502-5.814zM9.545 15.568V8.432L15.818 12l-6.273 3.568z"/></svg>
+            YouTube
+          </a>
+          <a href="https://www.linkedin.com/company/alkoda-onair/" target="_blank" rel="noopener" class="social-btn" title="LinkedIn">
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor"><path d="M20.447 20.452h-3.554v-5.569c0-1.328-.027-3.037-1.852-3.037-1.853 0-2.136 1.445-2.136 2.939v5.667H9.351V9h3.414v1.561h.046c.477-.9 1.637-1.85 3.37-1.85 3.601 0 4.267 2.37 4.267 5.455v6.286zM5.337 7.433a2.062 2.062 0 01-2.063-2.065 2.064 2.064 0 112.063 2.065zm1.782 13.019H3.555V9h3.564v11.452zM22.225 0H1.771C.792 0 0 .774 0 1.729v20.542C0 23.227.792 24 1.771 24h20.451C23.2 24 24 23.227 24 22.271V1.729C24 .774 23.2 0 22.222 0h.003z"/></svg>
+            LinkedIn
+          </a>
+          <a href="https://facebook.com/alkodaonair" target="_blank" rel="noopener" class="social-btn" title="Facebook">
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor"><path d="M24 12.073c0-6.627-5.373-12-12-12s-12 5.373-12 12c0 5.99 4.388 10.954 10.125 11.854v-8.385H7.078v-3.47h3.047V9.43c0-3.007 1.792-4.669 4.533-4.669 1.312 0 2.686.235 2.686.235v2.953H15.83c-1.491 0-1.956.925-1.956 1.874v2.25h3.328l-.532 3.47h-2.796v8.385C19.612 23.027 24 18.062 24 12.073z"/></svg>
+            Facebook
+          </a>
+          <div class="contact-location">
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0118 0z"/><circle cx="12" cy="10" r="3"/></svg>
+            Paris, France
+          </div>
         </div>
       </div>
-      <div class="contact-cta">
-        <p style="font-size:17px;font-weight:600;color:#fff;margin-bottom:12px">Un projet en tête ?</p>
-        <p>Décrivez-nous votre événement, la date, le lieu, vos besoins — par email ou par téléphone. Nous revenons vers vous sous 24h avec une proposition adaptée.</p>
-        <div style="margin-top:24px;display:flex;flex-wrap:wrap;gap:12px">
-          <a href="#" onclick="this.href='mai'+'lto:contact@alkoda-onair.com';return true;" class="btn btn-primary" data-i18n="email_btn">Envoyer un email →</a>
-          <a href="tel:+33607861211" class="btn btn-secondary">06 07 86 12 11</a>
+      <div class="contact-right">
+        <div class="contact-project-box">
+          <h3 data-i18n="contact_cta_title">Un projet en tête ?</h3>
+          <p data-i18n="contact_cta_body">Décrivez-nous votre événement, la date, le lieu, vos besoins — par email ou par téléphone. Nous revenons vers vous sous 24h avec une proposition adaptée.</p>
+          <div class="contact-response-time">
+            <span class="rt-dot"></span>
+            <span>Réponse sous 24h</span>
+          </div>
         </div>
       </div>
     </div>
@@ -775,7 +802,6 @@ function toggleLang(){setLang(_lang==='fr'?'en':'fr');}
   try{lang=localStorage.getItem('alkoda_lang')||'fr';}catch(e){}
   setLang(lang);
 })();
-
 </script>
 </body>
 </html>

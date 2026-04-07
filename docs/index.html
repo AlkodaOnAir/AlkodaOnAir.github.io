@@ -183,7 +183,7 @@ h2 em{font-style:normal;color:var(--accent)}
 
 /* ── CONTACT ── */
 #contact{background:var(--bg)}
-.contact-grid{display:grid;grid-template-columns:1fr 1fr;gap:56px;margin-top:48px;align-items:start}
+.contact-grid{display:grid;grid-template-columns:1fr 1fr;gap:56px;margin-top:48px;align-items:stretch}
 .contact-text p{font-size:16px;color:var(--muted);font-weight:300;line-height:1.75;margin-bottom:32px}
 .cinfo{display:flex;align-items:center;gap:14px;padding:16px 0;border-bottom:1px solid rgba(255,255,255,.05)}
 .cinfo:last-child{border:none}
@@ -229,8 +229,10 @@ footer{padding:28px 0 40px;border-top:1px solid var(--line);background:var(--bg)
 }
 
 /* ── CONTACT NEW ── */
-.contact-new{display:grid;grid-template-columns:1fr 1fr;gap:56px;margin-top:48px;align-items:start}
+.contact-new{display:grid;grid-template-columns:1fr 1fr;gap:56px;margin-top:48px;align-items:stretch}
+
 .contact-lead-text{font-size:16px;color:var(--muted);font-weight:300;line-height:1.7;margin-bottom:28px}
+.contact-left{display:flex;flex-direction:column;justify-content:space-between}
 .contact-direct{display:flex;flex-direction:column;gap:12px;margin-bottom:28px}
 .contact-btn-main{display:flex;align-items:center;gap:12px;padding:15px 22px;border-radius:12px;background:var(--accent);color:#03080f;font-size:15px;font-weight:700;transition:.2s;text-decoration:none}
 .contact-btn-main:hover{transform:translateY(-2px);box-shadow:0 8px 24px rgba(0,210,255,.25)}
@@ -240,12 +242,12 @@ footer{padding:28px 0 40px;border-top:1px solid var(--line);background:var(--bg)
 .social-btn{display:inline-flex;align-items:center;gap:8px;padding:10px 16px;border-radius:10px;background:rgba(255,255,255,.05);border:1px solid var(--line);color:var(--muted);font-size:13px;font-weight:500;transition:.2s;text-decoration:none}
 .social-btn:hover{border-color:var(--accent);color:var(--accent);background:rgba(0,210,255,.06)}
 .contact-location{display:inline-flex;align-items:center;gap:8px;padding:10px 14px;font-size:13px;color:var(--dim)}
-.contact-project-box{background:linear-gradient(135deg,rgba(0,210,255,.08),rgba(255,107,53,.06));border:1px solid rgba(255,255,255,.08);border-radius:var(--rad);padding:36px;height:100%}
+.contact-project-box{background:linear-gradient(135deg,rgba(0,210,255,.08),rgba(255,107,53,.06));border:1px solid rgba(255,255,255,.08);border-radius:var(--rad);padding:32px;height:100%;box-sizing:border-box;display:flex;flex-direction:column;justify-content:center}
 .contact-project-box h3{font-size:24px;font-weight:800;color:#fff;margin-bottom:14px;letter-spacing:-.01em}
 .contact-project-box p{font-size:15px;color:var(--muted);font-weight:300;line-height:1.7;margin-bottom:24px}
 .contact-response-time{display:inline-flex;align-items:center;gap:8px;font-family:'Share Tech Mono',monospace;font-size:11px;letter-spacing:.12em;text-transform:uppercase;color:var(--accent3)}
 .rt-dot{width:7px;height:7px;border-radius:50%;background:var(--accent3);box-shadow:0 0 8px var(--accent3);animation:blink 2s ease-in-out infinite;flex-shrink:0}
-@media(max-width:1040px){.contact-new{grid-template-columns:1fr;gap:36px}}
+@media(max-width:1040px){.contact-new{display:grid;grid-template-columns:1fr 1fr;gap:56px;margin-top:48px;align-items:stretch}}
 </style>
 </head>
 <body>
@@ -539,7 +541,6 @@ footer{padding:28px 0 40px;border-top:1px solid var(--line);background:var(--bg)
     <h2 data-i18n="contact_h2">Parlons de<br><em>votre projet.</em></h2>
     <div class="contact-new">
       <div class="contact-left">
-        <p class="contact-lead-text" data-i18n="contact_lead">Vous avez un événement à filmer, un live à diffuser, un concert à capter ? Contactez-nous directement.</p>
         <div class="contact-direct">
           <a href="tel:+33607861211" class="contact-btn-main">
             <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M22 16.92v3a2 2 0 01-2.18 2 19.79 19.79 0 01-8.63-3.07A19.5 19.5 0 013.07 9.8a19.79 19.79 0 01-3.07-8.67A2 2 0 012 1h3a2 2 0 012 1.72c.127.96.361 1.903.7 2.81a2 2 0 01-.45 2.11L6.09 8.91a16 16 0 006 6l1.27-1.27a2 2 0 012.11-.45c.907.339 1.85.573 2.81.7A2 2 0 0122 16.92z"/></svg>
@@ -573,10 +574,6 @@ footer{padding:28px 0 40px;border-top:1px solid var(--line);background:var(--bg)
         <div class="contact-project-box">
           <h3 data-i18n="contact_cta_title">Un projet en tête ?</h3>
           <p data-i18n="contact_cta_body">Décrivez-nous votre événement, la date, le lieu, vos besoins — par email ou par téléphone. Nous revenons vers vous sous 24h avec une proposition adaptée.</p>
-          <div class="contact-response-time">
-            <span class="rt-dot"></span>
-            <span>Réponse sous 24h</span>
-          </div>
         </div>
       </div>
     </div>
@@ -612,7 +609,7 @@ footer{padding:28px 0 40px;border-top:1px solid var(--line);background:var(--bg)
 </div>
 
 
-<script>
+<script data-cfasync="false" src="/cdn-cgi/scripts/5c5dd728/cloudflare-static/email-decode.min.js"></script><script>
 const VIDEOS=[
   {id:'oTBYBw6Vz78',title:'Meetup Elastic FR — 100ème édition',desc:'DJI Ronin · Sony Alpha 7 IV',cat:'corporate',year:2026},
   {id:'1y6aHvDyMYM',title:'ElasticON Paris 2026 — Résumé',desc:'DJI Ronin · Sony Alpha 7 IV',cat:'corporate',year:2026},
@@ -794,7 +791,7 @@ function setLang(lang){
   });
 }
 
-function toggleLang(){setLang(_lang==='fr'?'en':'fr');}
+functiontoggleLang(){setLang(_lang==='fr'?'en':'fr');}
 
 // Init langue
 (function(){

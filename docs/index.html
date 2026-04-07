@@ -213,9 +213,22 @@ footer{padding:28px 0 40px;border-top:1px solid var(--line);background:#000}
   .logos-grid{grid-template-columns:repeat(4,1fr)}
   .photo-strip{grid-template-columns:1fr 1fr}
 }
+/* ── MOBILE NAV ── */
+#mob-menu{display:none;flex-direction:column;justify-content:center;gap:5px;width:36px;height:36px;background:rgba(255,255,255,.06);border:1px solid rgba(255,255,255,.12);border-radius:6px;cursor:pointer;padding:8px;flex-shrink:0}
+#mob-menu span{display:block;width:100%;height:2px;background:#e8eefb;border-radius:2px}
+#mob-panel{display:none;position:fixed;top:62px;left:0;right:0;background:#000;border-bottom:1px solid rgba(255,255,255,.08);z-index:199}
+#mob-panel a{display:block;padding:13px 20px;font-size:15px;color:var(--muted);border-bottom:1px solid rgba(255,255,255,.05);text-decoration:none}
+#mob-panel a:hover{color:#fff;background:rgba(255,255,255,.04)}
+#mob-panel .mob-bottom{display:flex;align-items:center;justify-content:space-between;padding:12px 20px;border-top:1px solid rgba(255,255,255,.08)}
+#mob-panel .mob-cta{color:var(--accent);font-weight:700;border-bottom:none}
+#mob-panel.open{display:block}
+#lang-toggle-mob{background:rgba(255,255,255,.06);border:1px solid rgba(255,255,255,.12);border-radius:4px;padding:3px 8px;cursor:pointer;display:flex;align-items:center}
+
 @media(max-width:720px){
   .shell{width:calc(100% - 32px)}
   .nav-links,.nav-cta{display:none}
+  #mob-menu{display:flex}
+  .footer-links{flex-wrap:wrap;gap:12px}
   section{padding:56px 0}
   .services-grid,.vgrid,.photo-strip{grid-template-columns:1fr 1fr}
   .needs-grid,.process{grid-template-columns:1fr}
@@ -268,8 +281,21 @@ footer{padding:28px 0 40px;border-top:1px solid var(--line);background:#000}
       <button id="lang-toggle" onclick="toggleLang()" title="Change language / Changer de langue"><span id="lang-flag"></span></button>
     </div>
     <a href="#contact" class="btn btn-primary nav-cta" data-i18n="nav_cta">Nous contacter</a>
+    <button id="mob-menu" onclick="toggleMobMenu()" aria-label="Menu"><span></span><span></span><span></span></button>
   </div>
 </nav>
+<div id="mob-panel">
+  <a href="#corporate" data-i18n="nav_prestations" onclick="closeMobMenu()">Prestations</a>
+  <a href="#clients" data-i18n="nav_clients" onclick="closeMobMenu()">Clients</a>
+  <a href="#valise" data-i18n="nav_valise" onclick="closeMobMenu()">La valise</a>
+  <a href="#realisations" data-i18n="nav_realisations" onclick="closeMobMenu()">Réalisations</a>
+  <a href="#origine" data-i18n="nav_about" onclick="closeMobMenu()">À propos</a>
+  <a href="#contact" data-i18n="nav_contact" onclick="closeMobMenu()">Contact</a>
+  <div class="mob-bottom">
+    <a href="#contact" class="mob-cta" data-i18n="nav_cta" onclick="closeMobMenu()">Nous contacter</a>
+    <button id="lang-toggle-mob" onclick="toggleLang()" title="Changer de langue"><span id="lang-flag-mob"></span></button>
+  </div>
+</div>
 
 <!-- HERO -->
 <section class="hero" id="accueil">
@@ -859,6 +885,8 @@ function setLang(lang){
   try{localStorage.setItem('alkoda_lang',lang);}catch(e){}
   const fl=document.getElementById('lang-flag');
   if(fl)fl.innerHTML=lang==='fr'?_svgFR:_svgUK;
+  const flm=document.getElementById('lang-flag-mob');
+  if(flm)flm.innerHTML=lang==='fr'?_svgFR:_svgUK;
   document.documentElement.lang=lang;
   // Mettre à jour tous les éléments data-i18n
   document.querySelectorAll('[data-i18n]').forEach(el=>{
@@ -880,6 +908,8 @@ function setLang(lang){
 }
 
 function toggleLang(){setLang(_lang==='fr'?'en':'fr');}
+function toggleMobMenu(){document.getElementById('mob-panel').classList.toggle('open');}
+function closeMobMenu(){document.getElementById('mob-panel').classList.remove('open');}
 
 // Init langue
 (function(){

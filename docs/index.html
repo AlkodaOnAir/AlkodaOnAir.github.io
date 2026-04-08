@@ -42,7 +42,7 @@ img{max-width:100%;display:block}
 
 /* ── HERO ── */
 .hero{min-height:100vh;display:flex;align-items:center;padding:90px 0 60px;position:relative;overflow:hidden}
-.hero-bg-img{position:absolute;inset:0;background:url('hero-valise-meetup.avif') center/cover no-repeat;filter:brightness(.28) saturate(.8)}
+.hero-bg-video{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;filter:brightness(.28) saturate(.8)}
 .hero-overlay{position:absolute;inset:0;background:linear-gradient(135deg,rgba(7,16,29,.92) 0%,rgba(7,16,29,.7) 50%,rgba(7,16,29,.85) 100%)}
 .hero-content{position:relative;z-index:1;display:flex;flex-direction:column;align-items:center;text-align:center;max-width:860px;margin:0 auto}
 .hero-logo{width:min(560px,85%);margin:0 auto 32px}
@@ -89,7 +89,7 @@ h2 em{font-style:normal;color:var(--accent)}
 .srv-tags{display:flex;flex-wrap:wrap;gap:6px;margin-top:14px}
 .srv-tag{font-family:'Share Tech Mono',monospace;font-size:11px;padding:3px 8px;border-radius:4px;background:rgba(255,255,255,.04);border:1px solid var(--line);color:var(--dim)}
 
-/* ── PHOTOS GRILLE ── */
+/* ── PHOTOS ── */
 .photo-strip{display:grid;grid-template-columns:repeat(3,1fr);gap:12px;margin-top:48px}
 .photo-strip img{width:100%;aspect-ratio:16/10;object-fit:cover;border-radius:14px;border:1px solid var(--line);transition:.3s}
 .photo-strip img:hover{transform:scale(1.02);border-color:var(--line2)}
@@ -103,57 +103,17 @@ h2 em{font-style:normal;color:var(--accent)}
 .logo-cell img{height:32px;width:auto;object-fit:contain;transition:.2s}
 .logo-cell:hover img{opacity:.8}
 
-/* ── VALISE ── */
-#valise{background:var(--bg2)}
-.valise-grid{display:grid;grid-template-columns:1fr 1fr;gap:56px;align-items:start;margin-top:48px}
-.valise-text p{font-size:16px;color:var(--muted);font-weight:300;line-height:1.75;margin-bottom:16px}
-.valise-text p strong{color:var(--text);font-weight:600}
-.feat-list{display:grid;gap:10px;margin:24px 0}
-.feat{display:grid;grid-template-columns:auto 1fr;gap:14px;padding:16px 18px;border-radius:14px;background:rgba(255,255,255,.04);border:1px solid rgba(255,255,255,.06)}
-.feat-icon{width:40px;height:40px;border-radius:11px;background:linear-gradient(135deg,rgba(0,210,255,.16),rgba(255,107,53,.14));display:grid;place-items:center;font-size:17px}
-.feat div strong{display:block;font-size:14px;font-weight:700;color:#fff;margin-bottom:2px}
-.feat div span{font-size:13px;color:var(--muted);font-weight:300}
-.valise-links{display:flex;flex-direction:column;gap:10px;margin-top:8px}
-.valise-link{display:flex;align-items:center;gap:14px;padding:15px 18px;border:1px solid var(--line2);border-radius:12px;background:rgba(0,210,255,.04);transition:.2s}
-.valise-link:hover{border-color:var(--accent);background:rgba(0,210,255,.08)}
-.vl-icon{width:36px;height:36px;border-radius:9px;background:rgba(0,210,255,.1);border:1px solid rgba(0,210,255,.2);display:flex;align-items:center;justify-content:center;font-size:15px;flex-shrink:0}
-.valise-link div strong{display:block;font-size:14px;font-weight:700;color:#fff;margin-bottom:1px}
-.valise-link div span{font-size:12px;color:var(--muted)}
-.vl-arr{margin-left:auto;color:var(--accent);font-size:18px;flex-shrink:0}
-.valise-img{border-radius:var(--rad);overflow:hidden;border:1px solid var(--line);box-shadow:var(--shadow)}
-.valise-img img{width:100%;aspect-ratio:4/3;object-fit:cover}
-.valise-rack{margin-top:12px;border-radius:14px;overflow:hidden;border:1px solid var(--line)}
-.valise-rack img{width:100%;aspect-ratio:16/9;object-fit:cover}
+/* ── DEMO VIDEO ── */
+#demo{background:var(--bg2)}
+.demo-video-wrap{margin-top:40px;border-radius:var(--rad);overflow:hidden;border:1px solid var(--line);box-shadow:var(--shadow);max-width:70%;margin-left:auto;margin-right:auto}
+.demo-video-wrap video{width:100%;aspect-ratio:16/9;display:block;background:#000}
 
-/* ── WORKFLOW ── */
-#workflow{background:var(--bg)}
-.process{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:16px;margin-top:48px}
-.step{padding:24px;border-radius:18px;background:linear-gradient(180deg,rgba(255,255,255,.04),rgba(255,255,255,.02));border:1px solid rgba(255,255,255,.07);position:relative;overflow:hidden}
-.step::before{content:"";position:absolute;top:0;left:0;right:0;height:3px;background:linear-gradient(90deg,var(--accent),var(--accent2))}
-.step-num{font-size:40px;font-weight:900;color:rgba(255,255,255,.07);line-height:1;margin-bottom:10px}
-.step h4{font-size:16px;font-weight:800;color:#fff;margin-bottom:8px}
-.step p{font-size:13px;color:var(--muted);font-weight:300;line-height:1.6}
+/* ── FEATURED VIDEOS ── */
+#featured{background:var(--bg)}
+#featured .vgrid{grid-template-columns:repeat(3,minmax(0,1fr))}
+.featured-cta-row{text-align:center;margin-top:40px}
 
-/* ── ORIGINE ── */
-#origine{background:linear-gradient(180deg,var(--bg2) 0,var(--bg) 100%)}
-.origine-grid{display:grid;grid-template-columns:1fr 1fr;gap:56px;align-items:start;margin-top:48px}
-.origine-text p{font-size:16px;color:var(--muted);font-weight:300;line-height:1.75;margin-bottom:16px}
-.origine-text p strong{color:var(--text);font-weight:600}
-.coda-quote{margin-top:28px;padding:22px 24px;border-left:3px solid var(--accent);background:rgba(0,210,255,.05);border-radius:0 14px 14px 0}
-.coda-quote p{font-size:17px;font-weight:500;font-style:italic;color:var(--text);line-height:1.55;margin-bottom:8px}
-.coda-quote small{font-family:'Share Tech Mono',monospace;font-size:10px;letter-spacing:.12em;text-transform:uppercase;color:var(--muted)}
-.pills{display:flex;flex-wrap:wrap;gap:8px;margin-top:22px}
-.pill{padding:6px 13px;border-radius:999px;background:rgba(255,255,255,.05);border:1px solid rgba(255,255,255,.08);font-size:12px;color:var(--muted)}
-.pill.hi{border-color:rgba(0,210,255,.25);color:var(--accent);background:rgba(0,210,255,.07)}
-.equipe-img{border-radius:var(--rad);overflow:hidden;border:1px solid var(--line);box-shadow:var(--shadow)}
-.equipe-img img{width:100%;object-fit:cover}
-
-/* ── RÉALISATIONS ── */
-#realisations{background:var(--bg2)}
-.filters{display:flex;flex-wrap:wrap;gap:8px;margin:32px 0}
-.f-btn{font-family:'Share Tech Mono',monospace;font-size:12px;letter-spacing:.1em;text-transform:uppercase;padding:7px 15px;border-radius:999px;border:1px solid var(--line2);background:transparent;color:var(--muted);cursor:pointer;transition:.2s}
-.f-btn:hover{border-color:var(--accent);color:var(--accent)}
-.f-btn.active{background:var(--accent);border-color:var(--accent);color:#03101d;font-weight:700}
+/* ── VIDEO GRID (shared with realisations) ── */
 .vgrid{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:14px}
 .vcard{border-radius:12px;overflow:hidden;background:var(--card);border:1px solid rgba(255,255,255,.07);transition:.25s;cursor:pointer}
 .vcard:hover{border-color:rgba(255,255,255,.16);transform:translateY(-4px)}
@@ -181,69 +141,23 @@ h2 em{font-style:normal;color:var(--accent)}
 .modal-meta h3{font-size:16px;font-weight:800;color:#fff;margin-bottom:3px}
 .modal-meta p{font-size:13px;color:var(--muted)}
 
+/* ── À L'ORIGINE ── */
+#origine{background:linear-gradient(180deg,var(--bg2) 0,var(--bg) 100%)}
+.origine-grid{display:grid;grid-template-columns:1fr 1fr;gap:56px;align-items:start;margin-top:48px}
+.origine-text p{font-size:16px;color:var(--muted);font-weight:300;line-height:1.75;margin-bottom:16px}
+.origine-text p strong{color:var(--text);font-weight:600}
+.coda-quote{margin-top:28px;padding:22px 24px;border-left:3px solid var(--accent);background:rgba(0,210,255,.05);border-radius:0 14px 14px 0}
+.coda-quote p{font-size:17px;font-weight:500;font-style:italic;color:var(--text);line-height:1.55;margin-bottom:8px}
+.coda-quote small{font-family:'Share Tech Mono',monospace;font-size:10px;letter-spacing:.12em;text-transform:uppercase;color:var(--muted)}
+.pills{display:flex;flex-wrap:wrap;gap:8px;margin-top:22px}
+.pill{padding:6px 13px;border-radius:999px;background:rgba(255,255,255,.05);border:1px solid rgba(255,255,255,.08);font-size:12px;color:var(--muted)}
+.pill.hi{border-color:rgba(0,210,255,.25);color:var(--accent);background:rgba(0,210,255,.07)}
+.equipe-img{border-radius:var(--rad);overflow:hidden;border:1px solid var(--line);box-shadow:var(--shadow)}
+.equipe-img img{width:100%;object-fit:cover}
+
 /* ── CONTACT ── */
 #contact{background:var(--bg)}
-.contact-grid{display:grid;grid-template-columns:1fr 1fr;gap:56px;margin-top:48px;align-items:stretch}
-.contact-text p{font-size:16px;color:var(--muted);font-weight:300;line-height:1.75;margin-bottom:32px}
-.cinfo{display:flex;align-items:center;gap:14px;padding:16px 0;border-bottom:1px solid rgba(255,255,255,.05)}
-.cinfo:last-child{border:none}
-.cinfo-icon{width:40px;height:40px;border-radius:10px;background:rgba(0,210,255,.08);border:1px solid rgba(0,210,255,.15);display:flex;align-items:center;justify-content:center;font-size:17px;flex-shrink:0}
-.cinfo div strong{font-family:'Share Tech Mono',monospace;font-size:10px;letter-spacing:.14em;text-transform:uppercase;color:var(--muted);display:block;margin-bottom:3px}
-.cinfo div a{font-size:15px;color:var(--text);transition:.2s}
-.cinfo div a:hover{color:var(--accent)}
-.contact-map{border-radius:var(--rad);overflow:hidden;border:1px solid var(--line);height:320px;background:var(--card);display:flex;align-items:center;justify-content:center;flex-direction:column;gap:10px}
-.contact-map span{font-family:'Share Tech Mono',monospace;font-size:11px;color:var(--dim);letter-spacing:.1em;text-transform:uppercase}
-.contact-cta{margin-top:32px;padding:28px;border-radius:var(--rad);background:linear-gradient(135deg,rgba(0,210,255,.1),rgba(255,107,53,.08));border:1px solid rgba(255,255,255,.08)}
-.contact-cta p{font-size:15px;color:var(--muted);margin-bottom:16px;font-weight:300}
-
-/* ── FOOTER ── */
-footer{padding:28px 0 40px;border-top:1px solid var(--line);background:#000}
-.footer-inner{display:flex;align-items:center;justify-content:space-between;gap:20px;flex-wrap:wrap}
-.footer-brand img{height:26px;width:auto;opacity:.6}
-.footer-links{display:flex;gap:18px;font-size:12px;color:var(--dim)}
-.footer-links a:hover{color:var(--accent)}
-.footer-copy{font-family:'Share Tech Mono',monospace;font-size:11px;color:var(--dim);letter-spacing:.07em}
-
-/* ── RESPONSIVE ── */
-@media(max-width:1040px){
-  .valise-grid,.origine-grid,.contact-grid{grid-template-columns:1fr;gap:36px}
-  .services-grid,.needs-grid{grid-template-columns:1fr 1fr}
-  .vgrid{grid-template-columns:repeat(3,1fr)}
-  .process{grid-template-columns:1fr 1fr}
-  .logos-grid{grid-template-columns:repeat(4,1fr)}
-  .photo-strip{grid-template-columns:1fr 1fr}
-}
-/* ── MOBILE NAV ── */
-#mob-menu{display:none;flex-direction:column;justify-content:center;gap:5px;width:36px;height:36px;background:rgba(255,255,255,.06);border:1px solid rgba(255,255,255,.12);border-radius:6px;cursor:pointer;padding:8px;flex-shrink:0}
-#mob-menu span{display:block;width:100%;height:2px;background:#e8eefb;border-radius:2px}
-#mob-panel{display:none;position:fixed;top:62px;left:0;right:0;background:#000;border-bottom:1px solid rgba(255,255,255,.08);z-index:199}
-#mob-panel a{display:block;padding:13px 20px;font-size:15px;color:var(--muted);border-bottom:1px solid rgba(255,255,255,.05);text-decoration:none}
-#mob-panel a:hover{color:#fff;background:rgba(255,255,255,.04)}
-#mob-panel .mob-bottom{display:flex;align-items:center;justify-content:space-between;padding:12px 20px;border-top:1px solid rgba(255,255,255,.08)}
-#mob-panel .mob-cta{color:var(--accent);font-weight:700;border-bottom:none}
-#mob-panel.open{display:block}
-#lang-toggle-mob{background:rgba(255,255,255,.06);border:1px solid rgba(255,255,255,.12);border-radius:4px;padding:3px 8px;cursor:pointer;display:flex;align-items:center}
-
-@media(max-width:720px){
-  .shell{width:calc(100% - 32px)}
-  .nav-links,.nav-cta{display:none}
-  #mob-menu{display:flex}
-  .footer-links{flex-wrap:wrap;gap:12px}
-  section{padding:56px 0}
-  .services-grid,.vgrid,.photo-strip{grid-template-columns:1fr 1fr}
-  .needs-grid,.process{grid-template-columns:1fr}
-  .hero-stats{grid-template-columns:1fr 1fr}
-  .hero-stats .stat:last-child{grid-column:1/-1}
-  .logos-grid{grid-template-columns:repeat(3,1fr)}
-}
-@media(max-width:480px){
-  .vgrid,.services-grid,.photo-strip{grid-template-columns:1fr}
-  .logos-grid{grid-template-columns:repeat(3,1fr)}
-}
-
-/* ── CONTACT NEW ── */
 .contact-new{display:grid;grid-template-columns:1fr 1fr;gap:56px;margin-top:48px;align-items:stretch}
-
 .contact-lead-text{font-size:16px;color:var(--muted);font-weight:300;line-height:1.7;margin-bottom:28px}
 .contact-direct{display:flex;flex-direction:column;gap:12px;margin-bottom:28px}
 .contact-btn-main{display:flex;align-items:center;gap:12px;padding:15px 22px;border-radius:12px;background:var(--accent);color:#03080f;font-size:15px;font-weight:700;transition:.2s;text-decoration:none}
@@ -257,9 +171,52 @@ footer{padding:28px 0 40px;border-top:1px solid var(--line);background:#000}
 .contact-project-box{background:linear-gradient(135deg,rgba(0,210,255,.08),rgba(255,107,53,.06));border:1px solid rgba(255,255,255,.08);border-radius:var(--rad);padding:32px;display:flex;flex-direction:column;justify-content:center;height:100%;box-sizing:border-box}
 .contact-project-box h3{font-size:24px;font-weight:800;color:#fff;margin-bottom:14px;letter-spacing:-.01em}
 .contact-project-box p{font-size:15px;color:var(--muted);font-weight:300;line-height:1.7;margin-bottom:24px}
-.contact-response-time{display:inline-flex;align-items:center;gap:8px;font-family:'Share Tech Mono',monospace;font-size:11px;letter-spacing:.12em;text-transform:uppercase;color:var(--accent3)}
-.rt-dot{width:7px;height:7px;border-radius:50%;background:var(--accent3);box-shadow:0 0 8px var(--accent3);animation:blink 2s ease-in-out infinite;flex-shrink:0}
-@media(max-width:1040px){.contact-new{grid-template-columns:1fr;gap:36px}}
+
+/* ── FOOTER ── */
+footer{padding:28px 0 40px;border-top:1px solid var(--line);background:#000}
+.footer-inner{display:flex;align-items:center;justify-content:space-between;gap:20px;flex-wrap:wrap}
+.footer-brand img{height:26px;width:auto;opacity:.6}
+.footer-links{display:flex;gap:18px;font-size:12px;color:var(--dim)}
+.footer-links a:hover{color:var(--accent)}
+.footer-copy{font-family:'Share Tech Mono',monospace;font-size:11px;color:var(--dim);letter-spacing:.07em}
+
+/* ── MOBILE NAV ── */
+#mob-menu{display:none;flex-direction:column;justify-content:center;gap:5px;width:36px;height:36px;background:rgba(255,255,255,.06);border:1px solid rgba(255,255,255,.12);border-radius:6px;cursor:pointer;padding:8px;flex-shrink:0}
+#mob-menu span{display:block;width:100%;height:2px;background:#e8eefb;border-radius:2px}
+#mob-panel{display:none;position:fixed;top:62px;left:0;right:0;background:#000;border-bottom:1px solid rgba(255,255,255,.08);z-index:199}
+#mob-panel a{display:block;padding:13px 20px;font-size:15px;color:var(--muted);border-bottom:1px solid rgba(255,255,255,.05);text-decoration:none}
+#mob-panel a:hover{color:#fff;background:rgba(255,255,255,.04)}
+#mob-panel .mob-bottom{display:flex;align-items:center;justify-content:space-between;padding:12px 20px;border-top:1px solid rgba(255,255,255,.08)}
+#mob-panel .mob-cta{color:var(--accent);font-weight:700;border-bottom:none}
+#mob-panel.open{display:block}
+#lang-toggle-mob{background:rgba(255,255,255,.06);border:1px solid rgba(255,255,255,.12);border-radius:4px;padding:3px 8px;cursor:pointer;display:flex;align-items:center}
+
+/* ── RESPONSIVE ── */
+@media(max-width:1040px){
+  .origine-grid,.contact-new{grid-template-columns:1fr;gap:36px}
+  .services-grid,.needs-grid{grid-template-columns:1fr 1fr}
+  #featured .vgrid{grid-template-columns:repeat(3,1fr)}
+  .logos-grid{grid-template-columns:repeat(4,1fr)}
+  .photo-strip{grid-template-columns:1fr 1fr}
+}
+@media(max-width:720px){
+  .shell{width:calc(100% - 32px)}
+  .nav-links,.nav-cta{display:none}
+  #mob-menu{display:flex}
+  .footer-links{flex-wrap:wrap;gap:12px}
+  section{padding:56px 0}
+  .services-grid,.photo-strip{grid-template-columns:1fr 1fr}
+  .needs-grid{grid-template-columns:1fr}
+  .hero-stats{grid-template-columns:1fr 1fr}
+  .hero-stats .stat:last-child{grid-column:1/-1}
+  .logos-grid{grid-template-columns:repeat(3,1fr)}
+  #featured .vgrid{grid-template-columns:1fr 1fr}
+}
+@media(max-width:480px){
+  .services-grid,.photo-strip,.logos-grid{grid-template-columns:1fr}
+  .logos-grid{grid-template-columns:repeat(3,1fr)}
+  #featured .vgrid{grid-template-columns:1fr}
+}
 </style>
 </head>
 <body>
@@ -272,10 +229,9 @@ footer{padding:28px 0 40px;border-top:1px solid var(--line);background:#000}
     </a>
     <div class="nav-links">
       <a href="#corporate" data-i18n="nav_prestations">Prestations</a>
-      <a href="#clients" data-i18n="nav_clients">Clients</a>
-      <a href="#valise" data-i18n="nav_valise">La valise</a>
-      <a href="#realisations" data-i18n="nav_realisations">Réalisations</a>
-      <a href="#origine" data-i18n="nav_about">À propos</a>
+      <a href="realisations.html" data-i18n="nav_realisations">Réalisations</a>
+      <a href="page_valise/valise.html" data-i18n="nav_valise">La régie</a>
+      <a href="visio/alkoda_visio.html" data-i18n="nav_visio">Visio</a>
       <a href="#contact" data-i18n="nav_contact">Contact</a>
       <span class="nav-sep">|</span>
       <button id="lang-toggle" onclick="toggleLang()" title="Change language / Changer de langue"><span id="lang-flag"></span></button>
@@ -286,10 +242,9 @@ footer{padding:28px 0 40px;border-top:1px solid var(--line);background:#000}
 </nav>
 <div id="mob-panel">
   <a href="#corporate" data-i18n="nav_prestations" onclick="closeMobMenu()">Prestations</a>
-  <a href="#clients" data-i18n="nav_clients" onclick="closeMobMenu()">Clients</a>
-  <a href="#valise" data-i18n="nav_valise" onclick="closeMobMenu()">La valise</a>
-  <a href="#realisations" data-i18n="nav_realisations" onclick="closeMobMenu()">Réalisations</a>
-  <a href="#origine" data-i18n="nav_about" onclick="closeMobMenu()">À propos</a>
+  <a href="realisations.html" data-i18n="nav_realisations" onclick="closeMobMenu()">Réalisations</a>
+  <a href="page_valise/valise.html" data-i18n="nav_valise" onclick="closeMobMenu()">La régie</a>
+  <a href="visio/alkoda_visio.html" data-i18n="nav_visio" onclick="closeMobMenu()">Visio</a>
   <a href="#contact" data-i18n="nav_contact" onclick="closeMobMenu()">Contact</a>
   <div class="mob-bottom">
     <a href="#contact" class="mob-cta" data-i18n="nav_cta" onclick="closeMobMenu()">Nous contacter</a>
@@ -299,7 +254,10 @@ footer{padding:28px 0 40px;border-top:1px solid var(--line);background:#000}
 
 <!-- HERO -->
 <section class="hero" id="accueil">
-  <div class="hero-bg-img"></div>
+  <video class="hero-bg-video" autoplay muted loop playsinline>
+    <source src="demo.mp4" type="video/mp4">
+    <source src="demo.webm" type="video/webm">
+  </video>
   <div class="hero-overlay"></div>
   <div class="shell hero-content">
     <img class="hero-logo" src="logo-alkoda-transparent.avif" alt="Alkoda On Air"
@@ -312,7 +270,7 @@ footer{padding:28px 0 40px;border-top:1px solid var(--line);background:#000}
     <p class="hero-sub" data-i18n="hero_sub">Captation multicaméra, live streaming, habillage graphique, post-production. Meetups, conférences, concerts — 30 ans d'expertise au service de votre image.</p>
     <div class="cta-row">
       <a href="#corporate" class="btn btn-primary" data-i18n="hero_cta1">Découvrir nos prestations</a>
-      <a href="#realisations" class="btn btn-secondary" data-i18n="hero_cta2">Voir les réalisations</a>
+      <a href="realisations.html" class="btn btn-secondary" data-i18n="hero_cta2">Voir les réalisations</a>
     </div>
     <div class="hero-stats">
       <div class="stat"><strong>30<span>+</span></strong><small data-i18n="stat1">Ans d'expérience broadcast</small></div>
@@ -321,8 +279,21 @@ footer{padding:28px 0 40px;border-top:1px solid var(--line);background:#000}
     </div>
   </div>
 </section>
-
-<!-- CORPORATE -->
+<!-- DEMO VIDEO -->
+<section id="demo">
+  <div class="shell">
+    <div class="section-kicker" data-i18n="demo_kicker">Nos productions</div>
+    <h2 data-i18n="demo_h2">Alkoda On Air<br><em>en action</em></h2>
+    <p class="lead" data-i18n="demo_lead">Voici à quoi ressemble une production en direct depuis notre régie mobile. Captation multi-caméras, fenêtrage animés, incrustations graphiques en temps réel, streaming.</p>
+    <div class="demo-video-wrap">
+      <video autoplay muted loop playsinline preload="metadata">
+        <source src="demo.mp4" type="video/mp4">
+        <source src="demo.webm" type="video/webm">
+      </video>
+    </div>
+  </div>
+</section>
+<!-- PRESTATIONS -->
 <section id="corporate">
   <div class="shell">
     <div class="section-kicker" data-i18n="corp_kicker">Prestations</div>
@@ -359,7 +330,7 @@ footer{padding:28px 0 40px;border-top:1px solid var(--line);background:#000}
       <div class="srv">
         <div class="srv-icon">🎥</div>
         <h3 data-i18n="card_multi">Captation multicaméra</h3>
-        <p data-i18n="card_multi_p">Plusieurs caméras, plusieurs angles, réalisation en temps réel. L'écran du speaker intégré proprement dans le plan large — pas filmé directement avec un rendu très fade ou mal défini</p>
+        <p data-i18n="card_multi_p">Plusieurs caméras, plusieurs angles, réalisation en temps réel. L'écran du speaker intégré proprement dans le plan large — pas filmé directement avec un rendu très fade ou mal défini.</p>
         <div class="srv-tags"><span class="srv-tag">Multi-cam</span><span class="srv-tag">Écran speaker</span><span class="srv-tag">Réalisation live</span></div>
       </div>
       <div class="srv">
@@ -395,7 +366,6 @@ footer{padding:28px 0 40px;border-top:1px solid var(--line);background:#000}
     </div>
   </div>
 </section>
-
 <!-- CLIENTS -->
 <section id="clients">
   <div class="shell">
@@ -422,143 +392,18 @@ footer{padding:28px 0 40px;border-top:1px solid var(--line);background:#000}
     </div>
   </div>
 </section>
-
-<!-- VALISE -->
-<section id="valise">
+<!-- FEATURED VIDEOS -->
+<section id="featured">
   <div class="shell">
-    <div class="section-kicker" data-i18n="valise_kicker">Notre solution technique</div>
-    <h2 data-i18n="valise_h2">Une régie mobile<br><em>broadcast compacte.</em></h2>
-    <p class="lead" data-i18n="valise_body1">Pour tenir nos engagements sur chaque événement, nous avons conçu une régie mobile broadcast déployable en moins de deux heures — architecture pensée brique par brique, pas un assemblage grand public.</p>
-
-    <div class="valise-grid">
-      <div class="valise-text">
-        <p data-i18n="valise_body2">Chaque composant a un rôle précis : mélange vidéo, composition, graphique, playback, monitoring, audio, réseau. Cette séparation des fonctions donne une <strong>qualité d'image plus propre et une stabilité supérieure</strong> à tout ce que peut offrir un logiciel tout-en-un.</p>
-        <p data-i18n="valise_body3">Nous adaptons les moyens humains et matériels à chaque projet pour <strong>maximiser la qualité tout en maîtrisant votre budget</strong>. Un technicien ou une équipe complète — selon vos besoins.</p>
-        <div class="feat-list">
-          <div class="feat">
-            <div class="feat-icon">🔀</div>
-            <div><strong>ATEM Mini Extreme ISO</strong><span data-i18n="feat_atem">Mélange, programme final, enregistrement ISO de chaque source</span></div>
-          </div>
-          <div class="feat">
-            <div class="feat-icon">🖥️</div>
-            <div><strong>OBS Studio + PC MSI</strong><span data-i18n="feat_obs">Intégration propre de l'écran speaker dans le plan large</span></div>
-          </div>
-          <div class="feat">
-            <div class="feat-icon">✨</div>
-            <div><strong>H2R Graphics</strong><span data-i18n="feat_h2r">Habillage graphique, titrages animés, compositions</span></div>
-          </div>
-          <div class="feat">
-            <div class="feat-icon">▶️</div>
-            <div><strong>PlayoutBee</strong><span data-i18n="feat_playout">Magnéto broadcast : clips, jingles, triggers en logique régie TV</span></div>
-          </div>
-        </div>
-        <div class="valise-links">
-          <a href="page_valise/valise.html" class="valise-link">
-            <div class="vl-icon">📋</div>
-            <div><strong data-i18n="valise_link1_title">Présentation complète de la valise</strong><span data-i18n="valise_link1_sub">Architecture, workflow, équipements détaillés</span></div>
-            <span class="vl-arr">→</span>
-          </a>
-          <a href="visio/alkoda_visio.html" class="valise-link">
-            <div class="vl-icon">🔌</div>
-            <div><strong data-i18n="valise_link2_title">Signal Flow interactif</strong><span data-i18n="valise_link2_sub">Diagramme de câblage complet de la régie</span></div>
-            <span class="vl-arr">→</span>
-          </a>
-        </div>
-      </div>
-      <div>
-        <div class="valise-img">
-          <img src="hero-valise-meetup.avif" alt="Valise Alkoda On Air en situation" onerror="this.style.display='none'">
-        </div>
-        <div class="valise-rack" style="margin-top:12px">
-          <img src="interview-elasticon-2026.avif" alt="Rack ATEM Alkoda On Air" onerror="this.style.display='none'">
-        </div>
-      </div>
+    <div class="section-kicker" data-i18n="featured_kicker">Réalisations récentes</div>
+    <h2 data-i18n="featured_h2">Quelques réalisations<br><em>récentes</em></h2>
+    <p class="lead" data-i18n="featured_lead">Trois productions récentes, trois ambiances différentes — une seule exigence.</p>
+    <div class="vgrid" id="featured-grid" style="margin-top:40px"></div>
+    <div class="featured-cta-row">
+      <a href="realisations.html" class="btn btn-secondary" data-i18n="featured_cta">Voir toutes les réalisations →</a>
     </div>
   </div>
 </section>
-
-<!-- WORKFLOW -->
-<section id="workflow">
-  <div class="shell">
-    <div class="section-kicker" data-i18n="workflow_kicker">Comment ça se passe</div>
-    <h2 data-i18n="workflow_h2">De la demande<br><em>à la livraison.</em></h2>
-    <div class="process">
-      <div class="step">
-        <div class="step-num">01</div>
-        <h4 data-i18n="wf1_title">Cadrage & devis</h4>
-        <p data-i18n="wf1_desc">Vous décrivez votre projet. Nous établissons un devis détaillé et transparent, adapté à vos besoins réels.</p>
-      </div>
-      <div class="step">
-        <div class="step-num">02</div>
-        <h4 data-i18n="wf2_title">Préparation</h4>
-        <p data-i18n="wf2_desc">Repérage du lieu, setup technique défini, charte graphique intégrée dans nos outils. Rien n'est laissé au hasard.</p>
-      </div>
-      <div class="step">
-        <div class="step-num">03</div>
-        <h4 data-i18n="wf3_title">Tournage live</h4>
-        <p data-i18n="wf3_desc">Déploiement de la régie, réalisation multicaméra, streaming en direct, enregistrement ISO de toutes les sources.</p>
-      </div>
-      <div class="step">
-        <div class="step-num">04</div>
-        <h4 data-i18n="wf4_title">Post-production</h4>
-        <p data-i18n="wf4_desc">Montage, mixage audio, compositing. Livraison dans tous les formats : web, TV, réseaux sociaux, DVD.</p>
-      </div>
-    </div>
-  </div>
-</section>
-
-<!-- RÉALISATIONS -->
-<section id="realisations">
-  <div class="shell">
-    <div class="section-kicker" data-i18n="real_kicker">Réalisations</div>
-    <h2 data-i18n="real_h2">24 projets,<br><em>un seul niveau d'exigence.</em></h2>
-    <p class="lead" data-i18n="real_lead">Cliquez sur une vidéo pour la visionner directement.</p>
-    <div class="filters">
-      <button class="f-btn active" data-f="all">Tout</button>
-      <button class="f-btn" data-f="corporate">Corporate & Meetup</button>
-      <button class="f-btn" data-f="concert">Concert</button>
-      <button class="f-btn" data-f="tv">TV</button>
-      <button class="f-btn" data-f="clip">Clip & Création</button>
-    </div>
-    <div class="vgrid" id="vgrid"></div>
-  </div>
-</section>
-
-<!-- À L'ORIGINE -->
-<section id="origine">
-  <div class="shell">
-    <div class="section-kicker" data-i18n="orig_kicker">À l'origine</div>
-    <h2 data-i18n="orig_h2">Alkoda —<br><em>la musique</em> avant tout.</h2>
-    <div class="origine-grid">
-      <div class="origine-text">
-        <p data-i18n="orig_intro"><strong>« Al Coda »</strong>, notation de solfège, est à l'origine du nom de notre société. Une vocation première : la captation de concerts de musique classique.</p>
-        <p data-i18n="orig_body1">Alkoda On Air c'est <strong>plus de 30 ans dans l'audiovisuel broadcast</strong>, une expertise qui s'est naturellement étendue au monde de l'entreprise. Nous nous entourons des <strong>meilleurs techniciens selon vos besoins</strong> — réalisateurs, cadreurs, ingénieurs du son, opérateurs grue, pilotes de drone.</p>
-        <p data-i18n="orig_body2">Nous disposons d'un matériel constamment renouvelé et savons nous adapter à toutes les productions. Réactifs, nous intégrons également vos projets existants si besoin.</p>
-        <div class="coda-quote">
-          <p data-i18n="coda_quote">« La notation musicale "al coda" indique le retour à l'essentiel. C'est exactement ce que nous faisons : ramener chaque événement à ce qui compte — l'image, le son, le live. »</p>
-          <small data-i18n="coda_author">— Christophe Koclejda, fondateur Alkoda On Air</small>
-        </div>
-        <div class="pills">
-          <span class="pill hi" data-i18n="pill_corporate">Corporate & meetups</span>
-          <span class="pill hi" data-i18n="pill_music">Musique classique</span>
-          <span class="pill hi">Live streaming</span>
-          <span class="pill" data-i18n="pill_years">30+ ans broadcast</span>
-          <span class="pill" data-i18n="pill_location">Paris & déplacement</span>
-          <span class="pill" data-i18n="pill_cameras">9 caméras Sony FX6</span>
-        </div>
-      </div>
-      <div>
-        <div class="equipe-img">
-          <img src="concert-orchestre-camera.avif" alt="Captation concert orchestre" style="width:100%;object-fit:cover" onerror="this.style.display='none'">
-        </div>
-        <div class="equipe-img" style="margin-top:14px">
-          <img src="concert-regie-boisee.avif" alt="Régie concert salle boisée" style="width:100%;object-fit:cover" onerror="this.style.display='none'">
-        </div>
-      </div>
-    </div>
-  </div>
-</section>
-
 <!-- CONTACT -->
 <section id="contact">
   <div class="shell">
@@ -573,7 +418,7 @@ footer{padding:28px 0 40px;border-top:1px solid var(--line);background:#000}
           </a>
           <a href="#" onclick="this.href='mai'+'lto:contact@alkoda-onair.com';return true;" class="contact-btn-main contact-btn-outline">
             <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"/><polyline points="22,6 12,12 2,6"/></svg>
-            <span class="__cf_email__" data-cfemail="7d1e1213091c1e093d1c111612191c5012131c140f531e1210">[email&#160;protected]</span>
+            contact@alkoda-onair.com
           </a>
         </div>
         <div class="contact-socials">
@@ -612,18 +457,20 @@ footer{padding:28px 0 40px;border-top:1px solid var(--line);background:#000}
     </div>
     <div class="footer-links">
       <a href="#corporate" data-i18n="nav_prestations">Prestations</a>
-      <a href="#realisations" data-i18n="nav_realisations">Réalisations</a>
+      <a href="realisations.html" data-i18n="nav_realisations">Réalisations</a>
+      <a href="page_valise/valise.html" data-i18n="nav_valise">La régie</a>
+      <a href="visio/alkoda_visio.html" data-i18n="nav_visio">Visio</a>
       <a href="#origine" data-i18n="nav_about">À propos</a>
       <a href="#contact">Contact</a>
       <a href="https://www.youtube.com/@alkoda" target="_blank" rel="noopener">YouTube</a>
       <a href="https://www.linkedin.com/company/alkoda-onair/" target="_blank" rel="noopener">LinkedIn</a>
-<a href="legal.html" data-i18n="legal">Mentions légales</a>
+      <a href="legal.html" data-i18n="legal">Mentions légales</a>
     </div>
     <div class="footer-copy" data-i18n="footer_copy">© 2026 Alkoda On Air · Paris</div>
   </div>
 </footer>
 
-<!-- MODAL i18n -->
+<!-- MODAL -->
 <div class="modal" id="modal" onclick="closeMod(event)">
   <div class="modal-box">
     <div class="modal-x" onclick="closeModDir()">✕</div>
@@ -632,62 +479,35 @@ footer{padding:28px 0 40px;border-top:1px solid var(--line);background:#000}
   </div>
 </div>
 
-
-<script data-cfasync="false" src="/cdn-cgi/scripts/5c5dd728/cloudflare-static/email-decode.min.js"></script><script>
-const VIDEOS=[
-  {id:'oTBYBw6Vz78',title:'Meetup Elastic FR — 100ème édition',desc:'DJI Ronin · Sony Alpha 7 IV',cat:'corporate',year:2026},
+<script>
+// ── FEATURED VIDEOS ──
+const FEAT_VIDS=[
   {id:'1y6aHvDyMYM',title:'ElasticON Paris 2026 — Résumé',desc:'DJI Ronin · Sony Alpha 7 IV',cat:'corporate',year:2026},
-  {id:'nGJSY3vWtWc',title:'On enlève un cadreur d\'un plan',desc:'Adobe After Effects · VFX',cat:'corporate',year:2025},
-  {id:'g7GBrblwJNU',title:'ElasticON Paris 2025 — Résumé',desc:'DJI Ronin · Sony Alpha 7 IV',cat:'corporate',year:2025},
-  {id:'bM-3EXEaVYI',title:'Gabriel Fauré — Élégie, Op. 24',desc:'9 caméras Sony FX6 · 24 micros · Direction J.-P. Loré',cat:'concert',year:2025},
-  {id:'kHg7qR_DZAo',title:'KTO — Veillée des athlètes olympiques',desc:'Basilique Saint-Denis · Régie Tricaster · PTZ Panasonic',cat:'tv',year:2024},
-  {id:'SRYjMOCHOCw',title:'Saint-Gobain × Elastic — Partnership',desc:'Production corporate · Observabilité',cat:'corporate',year:2024},
-  {id:'SVk4WXX0Qcg',title:'Gabriel Fauré — Pavane, Op. 50',desc:'9 caméras Sony FX6 · 24 micros · Direction J.-P. Loré',cat:'concert',year:2024},
   {id:'h8XIj55jPPY',title:'Elastic Meetup #88 — Jeanne Le Garrec',desc:'Meetup ElasticFR · Paris',cat:'corporate',year:2023},
-  {id:'WvUI2giyqSE',title:'LeBonCoin — LBC² 2022',desc:'Sony FS7 · ATEM Mini Extreme · OBS',cat:'corporate',year:2023},
-  {id:'aI60dUn1T2I',title:'Orange / Liferay — Symposium 2020',desc:'C300 · 5D · GoPro',cat:'corporate',year:2020},
-  {id:'SqkjgzqobEE',title:'Grand Requiem Beethoven — Sanctus',desc:'7 caméras Sony FS7 · 18 micros · Direction J.-P. Loré',cat:'concert',year:2020},
-  {id:'z5akIn4KqS0',title:'Beethoven — Symphony No.5 · Requiem live',desc:'Direction J.-P. Loré · DVD commercial',cat:'concert',year:2020},
-  {id:'PlWEWOxelFM',title:'Temperly for GoCardless',desc:'Film corporate',cat:'corporate',year:2020},
-  {id:'w0mtxWlLRNQ',title:'Grand Requiem Beethoven — Recordare',desc:'7 caméras Sony FS7 · Direction J.-P. Loré',cat:'concert',year:2020},
-  {id:'1RFpK1x3FJI',title:'Casio — Projet pédagogique · Benjamin Grosvenor',desc:'5D Mark III · DJI Ronin · Canon C300',cat:'corporate',year:2020},
-  {id:'w8Gp0_8pm3k',title:'Covid3D.fr — Masques de protection',desc:'Participation bénévole · Personnel soignant',cat:'corporate',year:2020},
-  {id:'PIS6OpbECOA',title:'Liferay Symposium France 2019',desc:'2× Canon C300 · Canon 1D',cat:'corporate',year:2019},
-  {id:'n9ZbKyhw3pE',title:'Elastic Meetup — David Pilato',desc:'Sony FS7 · Alpha 7 · ATEM Mini Extreme ISO',cat:'corporate',year:2017},
-  {id:'YOyLhv7ezGQ',title:'Architectes de l\'Urgence 2006',desc:'Reportage documentaire',cat:'corporate',year:2016},
-  {id:'A5IYGxl0FbM',title:'Animation Alkoda On Air — Logo animé',desc:'Motion design · Identité visuelle',cat:'clip',year:2016},
-  {id:'qyh9gvVwrDk',title:'Marie-Magdeleine — Condensé',desc:'7 caméras EX1 · Régie Fly · 24 micros · Direction J.-P. Loré',cat:'concert',year:2016},
-  {id:'U--Avm3zmmA',title:'Intro de Légende — Kin Kartell',desc:'5D Mark III · Tilt-Shift · Slider · Clip musical',cat:'clip',year:2016},
-  {id:'ccqfZsQtWac',title:'Marie-Magdeleine — Version complète',desc:'7 caméras EX1 · 24 micros · DVD · Direction J.-P. Loré',cat:'concert',year:2016},
+  {id:'SVk4WXX0Qcg',title:'Gabriel Fauré — Pavane, Op. 50',desc:'9 caméras Sony FX6 · 24 micros · Direction J.-P. Loré',cat:'concert',year:2024},
 ];
 const CC={concert:'#00d2ff',corporate:'#ff6b35',tv:'#7cff8a',clip:'#c084fc'};
-const CL={concert:'Concert',corporate:'Corporate',tv:'TV',clip:'Clip'};
+const CL_FR={concert:'Concert',corporate:'Corporate',tv:'TV',clip:'Clip'};
+const CL_EN={concert:'Concert',corporate:'Corporate',tv:'TV',clip:'Clip'};
 
-function renderVideos(f){
-  const g=document.getElementById('vgrid');
-  g.innerHTML='';
-  (f==='all'?VIDEOS:VIDEOS.filter(v=>v.cat===f)).forEach(v=>{
+(function buildFeatured(){
+  const g=document.getElementById('featured-grid');
+  if(!g) return;
+  FEAT_VIDS.forEach(v=>{
     const d=document.createElement('div');
     d.className='vcard';
     d.innerHTML=`<div class="vthumb">
       <img src="https://img.youtube.com/vi/${v.id}/hqdefault.jpg" alt="${v.title}">
       <div class="vplay"><div class="vplay-btn"></div></div>
-      <div class="vcat-badge" style="color:${CC[v.cat]}">${CL[v.cat]} · ${v.year}</div>
+      <div class="vcat-badge" style="color:${CC[v.cat]}">${CL_FR[v.cat]} · ${v.year}</div>
     </div>
     <div class="vinfo"><h4>${v.title}</h4><p>${v.desc.split('·')[0].trim()}</p></div>`;
     d.onclick=()=>openMod(v);
     g.appendChild(d);
   });
-}
-document.querySelectorAll('.f-btn').forEach(b=>{
-  b.addEventListener('click',()=>{
-    document.querySelectorAll('.f-btn').forEach(x=>x.classList.remove('active'));
-    b.classList.add('active');
-    renderVideos(b.dataset.f);
-  });
-});
-if(document.readyState==='loading'){document.addEventListener('DOMContentLoaded',()=>renderVideos('all'));} else {renderVideos('all');}
+})();
 
+// ── MODAL ──
 function openMod(v){
   document.getElementById('mtitle').textContent=v.title;
   document.getElementById('mdesc').textContent=v.desc;
@@ -702,10 +522,11 @@ function closeModDir(){
   document.body.style.overflow='';
 }
 document.addEventListener('keydown',e=>{if(e.key==='Escape')closeModDir();});
+
 // ── SYSTÈME DE LANGUE ──
 const STRINGS={
   fr:{
-    nav_prestations:'Prestations', nav_clients:'Clients', nav_valise:'La valise',
+    nav_prestations:'Prestations', nav_valise:'La régie', nav_visio:'Visio',
     nav_realisations:'Réalisations', nav_about:'À propos', nav_contact:'Contact',
     nav_cta:'Nous contacter',
     hero_badge:'Production audiovisuelle broadcast · Paris',
@@ -722,74 +543,46 @@ const STRINGS={
     need2_p:'Slides intégrées proprement, habillage à votre charte, son soigné — pas une webcam sur un trépied. Un événement qui reflète votre image.',
     need3_h4:'Vous voulez des vidéos réutilisables',
     need3_p:'Replays YouTube, extraits réseaux sociaux, montage final pour la communication interne — on anticipe tous vos usages dès le tournage.',
+    card_live:'Live streaming & diffusion',
     card_live_p:'Diffusion en direct sur YouTube, LinkedIn, Twitch ou toute plateforme. Habillage graphique temps réel, titrages, transitions — qualité broadcast.',
+    card_multi:'Captation multicaméra',
     card_multi_p:'Plusieurs caméras, plusieurs angles, réalisation en temps réel. L\'écran du speaker intégré proprement dans le plan large — pas filmé directement avec un rendu très fade ou mal défini.',
+    card_graphic:'Habillage graphique',
     card_graphic_p:'Votre identité visuelle s\'affiche à l\'écran comme à la télévision : noms des intervenants, titres animés, jingles — propre, net, sans aucun effet de bord ni transparence ratée.',
-    card_meetup_p:'Format éprouvé sur plus de 100 événements. Déploiement rapide, setup discret. Elastic, Liferay, LeBonCoin, Criteo — nous connaissons votre terrain.',
+    card_meetup:'Meetups & conférences tech',
+    card_meetup_p:'Format éprouvé sur plus de 100 événements. Déploiement rapide, setup discret. Elastic, Liferay, LeBonCoin, Confluent — nous connaissons votre terrain.',
+    card_film:'Films & post-production',
     card_film_p:'Films institutionnels, couverture et résumé d\'events, clips, interviews, reportages… nous couvrons toute votre communication interne et externe.',
+    card_concert:'Concerts & musique classique',
     card_concert_p:'Notre ADN. Jusqu\'à 9 caméras Sony FX6, régie fibre optique, 24 micros, production DVD commercial. Un savoir-faire rare au service de la musique vivante.',
-    orig_intro:'<strong>« Al Coda »</strong>, notation de solfège, est à l\'origine du nom de notre société. Une vocation première : la captation de concerts de musique classique.',
-    orig_body2:'Nous disposons d\'un matériel constamment renouvelé et savons nous adapter à toutes les productions. Réactifs, nous intégrons également vos projets existants si besoin.',
-    feat_atem:'Mélange, programme final, enregistrement ISO de chaque source',
-    feat_obs:'Intégration propre de l\'écran speaker dans le plan large',
-    feat_h2r:'Habillage graphique, titrages animés, compositions',
-    feat_playout:'Magnéto broadcast : clips, jingles, triggers en logique régie TV',
-    coda_quote:'« La notation musicale "al coda" indique le retour à l\'essentiel. C\'est exactement ce que nous faisons : ramener chaque événement à ce qui compte — l\'image, le son, le live. »',
-    coda_author:'— Christophe Koclejda, fondateur Alkoda On Air',
-    pill_corporate:'Corporate & meetups',
-    pill_music:'Musique classique',
-    pill_years:'30+ ans broadcast',
-    pill_location:'Paris & déplacement',
-    pill_cameras:'9 caméras Sony FX6',
     clients_kicker:'Clients & partenaires',
     clients_h2:'Ils nous ont<br><em>fait confiance.</em>',
     clients_lead:'Des startups tech aux grandes entreprises, des associations culturelles aux chaînes TV. Nous nous adaptons à chaque contexte avec le même niveau d\'exigence.',
-    valise_kicker:'Notre solution technique',
-    valise_h2:'Une régie mobile<br><em>broadcast compacte.</em>',
-    valise_lead:'Pour tenir nos engagements sur chaque événement, nous avons conçu une régie mobile broadcast déployable en moins de deux heures.',
-    valise_link1_title:'Présentation complète de la valise',
-    valise_link1_sub:'Architecture, workflow, équipements détaillés',
-    valise_link2_title:'Signal Flow interactif',
-    valise_link2_sub:'Diagramme de câblage complet de la régie',
-    workflow_kicker:'Comment ça se passe',
-    workflow_h2:'De la demande<br><em>à la livraison.</em>',
-    real_kicker:'Réalisations',
-    real_h2:'24 projets,<br><em>un seul niveau d\'exigence.</em>',
-    real_lead:'Cliquez sur une vidéo pour la visionner directement.',
-    filter_all:'Tout', filter_corp:'Corporate & Meetup', filter_concert:'Concert', filter_tv:'TV', filter_clip:'Clip & Création',
+    demo_kicker:'Nos productions',
+    demo_h2:'Alkoda On Air<br><em>en action</em>',
+    demo_lead:'Voici à quoi ressemble une production en direct depuis notre régie mobile. Captation multi-caméras, fenêtrage animés, incrustations graphiques en temps réel, streaming.',
+    featured_kicker:'Réalisations récentes',
+    featured_h2:'Quelques réalisations<br><em>récentes</em>',
+    featured_lead:'Trois productions récentes, trois ambiances différentes — une seule exigence.',
+    featured_cta:'Voir toutes les réalisations →',
     orig_kicker:'À l\'origine',
     orig_h2:'Alkoda —<br><em>la musique</em> avant tout.',
+    orig_intro:'<strong>« Al Coda »</strong>, notation de solfège, est à l\'origine du nom de notre société. Une vocation première : la captation de concerts de musique classique.',
+    orig_body1:'Alkoda On Air c\'est <strong>plus de 30 ans dans l\'audiovisuel broadcast</strong>, une expertise qui s\'est naturellement étendue au monde de l\'entreprise. Nous nous entourons des <strong>meilleurs techniciens selon vos besoins</strong> — réalisateurs, cadreurs, ingénieurs du son, opérateurs grue, pilotes de drone.',
+    orig_body2:'Nous disposons d\'un matériel constamment renouvelé et savons nous adapter à toutes les productions. Réactifs, nous intégrons également vos projets existants si besoin.',
+    coda_quote:'« La notation musicale "al coda" indique le retour à l\'essentiel. C\'est exactement ce que nous faisons : ramener chaque événement à ce qui compte — l\'image, le son, le live. »',
+    coda_author:'— Christophe Koclejda, fondateur Alkoda On Air',
+    pill_corporate:'Corporate & meetups', pill_music:'Musique classique',
+    pill_years:'30+ ans broadcast', pill_location:'Paris & déplacement', pill_cameras:'9 caméras Sony FX6',
     contact_kicker:'Nous contacter',
     contact_h2:'Parlons de<br><em>votre projet.</em>',
-    contact_lead:'Vous avez un événement à filmer, un live à diffuser, un concert à capter ? Contactez-nous directement — nous répondons rapidement avec un devis détaillé.',
     contact_cta_title:'Un projet en tête ?',
     contact_cta_body:'Décrivez-nous votre événement, la date, le lieu, vos besoins — par email ou par téléphone. Nous revenons vers vous sous 24h avec une proposition adaptée.',
-    email_btn:'Envoyer un email →',
     footer_copy:'© 2026 Alkoda On Air · Paris',
-    legal:'Mentions légales',
-    card_live:'Live streaming & diffusion',
-    card_multi:'Captation multicaméra',
-    card_graphic:'Habillage graphique',
-    card_meetup:'Meetups & conférences tech',
-    card_film:'Films & post-production',
-    card_concert:'Concerts & musique classique',
-    card_live_desc:'Pas d\'équipe vidéo en interne ? Nous intervenons comme votre prestataire broadcast clé en main, de la prise de vue au replay.',
-    card_graphic_desc:'Slides intégrées proprement, habillage à votre charte, son soigné — pas une webcam sur un trépied. Un rendu professionnel dès la première image.',
-    card_film_desc:'Replays YouTube, extraits réseaux sociaux, montage final pour la communication interne — on anticipe la post-production dès le tournage.',
-    card_multi_desc:'Diffusion en direct sur YouTube, LinkedIn, Twitch ou toute plateforme. Habillage graphique temps réel, monitoring audio, encodage HD.',
-    valise_body1:'Pour tenir nos engagements sur chaque événement, nous avons conçu une régie mobile broadcast déployable en moins de deux heures — architecture pensée brique par brique, pas un assemblage grand public.',
-    valise_body2:'Chaque composant a un rôle précis : mélange vidéo, composition, graphique, playback, monitoring, audio, réseau. Cette séparation des fonctions donne une <strong>qualité d\'image plus propre et une stabilité supérieure</strong> à tout ce que peut offrir un logiciel tout-en-un.',
-    valise_body3:'Nous adaptons les moyens humains et matériels à chaque projet pour <strong>maximiser la qualité tout en maîtrisant votre budget</strong>. Un technicien ou une équipe complète — selon vos besoins.',
-    wf1_title:'Cadrage & devis',wf2_title:'Préparation',wf3_title:'Tournage live',wf4_title:'Post-production',
-    wf1_desc:'Vous décrivez votre projet. Nous établissons un devis détaillé et transparent, adapté à vos besoins réels.',
-    wf2_desc:'Repérage du lieu, setup technique défini, charte graphique intégrée dans nos outils. Rien n\'est laissé au hasard.',
-    wf3_desc:'Déploiement de la régie, réalisation multicaméra, streaming en direct, enregistrement ISO de toutes les sources.',
-    wf4_desc:'Montage, mixage audio, compositing. Livraison dans tous les formats : web, TV, réseaux sociaux, DVD.',
-    orig_body1:'Alkoda On Air c\'est <strong>plus de 30 ans dans l\'audiovisuel broadcast</strong>, une expertise qui s\'est naturellement étendue au monde de l\'entreprise. Nous nous entourons des <strong>meilleurs techniciens selon vos besoins</strong> — réalisateurs, cadreurs, ingénieurs du son, opérateurs grue, pilotes de drone.',
-    footer_lang:'English'
+    legal:'Mentions légales'
   },
   en:{
-    nav_prestations:'Services', nav_clients:'Clients', nav_valise:'The case',
+    nav_prestations:'Services', nav_valise:'The studio', nav_visio:'Live Stream',
     nav_realisations:'Portfolio', nav_about:'About', nav_contact:'Contact',
     nav_cta:'Contact us',
     hero_badge:'Broadcast video production · Paris',
@@ -806,71 +599,43 @@ const STRINGS={
     need2_p:'Slides integrated cleanly, branded graphics, quality sound — not a webcam on a tripod. An event that reflects your image.',
     need3_h4:'You want reusable videos',
     need3_p:'YouTube replays, social media clips, final edit for internal communications — we anticipate all your uses from the start of the shoot.',
+    card_live:'Live streaming & broadcast',
     card_live_p:'Live broadcast on YouTube, LinkedIn, Twitch or any platform. Real-time graphics, lower thirds, transitions — broadcast quality.',
+    card_multi:'Multi-camera capture',
     card_multi_p:'Multiple cameras, multiple angles, live direction. Speaker\'s screen integrated cleanly into the wide shot — not filmed directly with a dull or blurry result.',
+    card_graphic:'Broadcast graphics',
     card_graphic_p:'Your brand displayed on screen exactly as on TV: speaker names, animated titles, jingles — crisp, clean, with no fringing or bleed artefacts.',
-    card_meetup_p:'A proven format across 100+ events. Fast deployment, discreet setup. Elastic, Liferay, LeBonCoin, Criteo — we know your world.',
+    card_meetup:'Meetups & tech conferences',
+    card_meetup_p:'A proven format across 100+ events. Fast deployment, discreet setup. Elastic, Liferay, LeBonCoin, Confluent — we know your world.',
+    card_film:'Film & post-production',
     card_film_p:'Corporate films, event coverage and highlights, clips, interviews, reports… we handle all your internal and external communications.',
+    card_concert:'Concerts & classical music',
     card_concert_p:'Our DNA. Up to 9 Sony FX6 cameras, fibre optic control room, 24 microphones, commercial DVD production. A rare expertise in live music.',
-    orig_intro:'<strong>"Al Coda"</strong>, a musical notation, is the origin of our company name. A founding purpose: capturing classical music concerts.',
-    orig_body2:'Our equipment is constantly renewed and we adapt to all types of productions. Responsive, we can also integrate into your existing projects when needed.',
-    feat_atem:'Mixing, final programme, ISO recording of every source',
-    feat_obs:'Clean integration of the speaker screen into the wide shot',
-    feat_h2r:'Broadcast key/fill graphics, lower thirds, animated compositions',
-    feat_playout:'Broadcast playout: clips, jingles, triggers in TV control room logic',
-    coda_quote:'"The musical notation \'al coda\' signals a return to the essential. That\'s exactly what we do: bring every event back to what matters — image, sound, live."',
-    coda_author:'— Christophe Koclejda, founder of Alkoda On Air',
-    pill_corporate:'Corporate & meetups',
-    pill_music:'Classical music',
-    pill_years:'30+ yrs broadcast',
-    pill_location:'Paris & on location',
-    pill_cameras:'9 Sony FX6 cameras',
     clients_kicker:'Clients & partners',
     clients_h2:'They trusted<br><em>us.</em>',
     clients_lead:'From tech startups to large corporations, cultural associations to TV channels. We adapt to every context with the same level of excellence.',
-    valise_kicker:'Our technical solution',
-    valise_h2:'A compact mobile<br><em>broadcast control room.</em>',
-    valise_lead:'To deliver on our quality commitments at every event, we designed a mobile broadcast control room deployable in under two hours.',
-    valise_link1_title:'Full broadcast case presentation',
-    valise_link1_sub:'Architecture, workflow, detailed equipment list',
-    valise_link2_title:'Interactive Signal Flow',
-    valise_link2_sub:'Complete wiring diagram of the control room',
-    workflow_kicker:'How it works',
-    workflow_h2:'From request<br><em>to delivery.</em>',
-    real_kicker:'Portfolio',
-    real_h2:'24 projects,<br><em>one standard of excellence.</em>',
-    real_lead:'Click on a video to watch it directly.',
-    filter_all:'All', filter_corp:'Corporate & Meetup', filter_concert:'Concert', filter_tv:'TV', filter_clip:'Clip & Creation',
+    demo_kicker:'Our productions',
+    demo_h2:'Alkoda On Air<br><em>in action</em>',
+    demo_lead:'Here is what a live production from our mobile control room looks like. Multi-camera capture, animated windows, real-time graphics, streaming.',
+    featured_kicker:'Recent productions',
+    featured_h2:'A few recent<br><em>productions</em>',
+    featured_lead:'Three recent productions, three different vibes — one single standard.',
+    featured_cta:'See all productions →',
     orig_kicker:'Origins',
     orig_h2:'Alkoda —<br><em>music</em> first.',
+    orig_intro:'<strong>"Al Coda"</strong>, a musical notation, is the origin of our company name. A founding purpose: capturing classical music concerts.',
+    orig_body1:'Alkoda On Air brings <strong>over 30 years in broadcast</strong>, an expertise that has naturally expanded into the corporate world. We work with the <strong>best technicians for your needs</strong> — directors, camera operators, sound engineers, crane operators, drone pilots.',
+    orig_body2:'Our equipment is constantly renewed and we adapt to all types of productions. Responsive, we can also integrate into your existing projects when needed.',
+    coda_quote:'"The musical notation \'al coda\' signals a return to the essential. That\'s exactly what we do: bring every event back to what matters — image, sound, live."',
+    coda_author:'— Christophe Koclejda, founder of Alkoda On Air',
+    pill_corporate:'Corporate & meetups', pill_music:'Classical music',
+    pill_years:'30+ yrs broadcast', pill_location:'Paris & on location', pill_cameras:'9 Sony FX6 cameras',
     contact_kicker:'Contact us',
     contact_h2:'Let\'s talk about<br><em>your project.</em>',
-    contact_lead:'Have an event to film, a live to broadcast, a concert to capture? Contact us directly — we respond quickly with a detailed, transparent quote.',
     contact_cta_title:'Have a project in mind?',
     contact_cta_body:'Tell us about your event, the date, the venue, your needs — by email or phone. We\'ll get back to you within 24h with a tailored proposal.',
-    email_btn:'Send an email →',
     footer_copy:'© 2026 Alkoda On Air · Paris',
-    legal:'Legal notice',
-    card_live:'Live streaming & broadcast',
-    card_multi:'Multi-camera capture',
-    card_graphic:'Broadcast graphics',
-    card_meetup:'Meetups & tech conferences',
-    card_film:'Film & post-production',
-    card_concert:'Concerts & classical music',
-    card_live_desc:'No in-house video team? We step in as your turnkey broadcast provider, from shooting to replay delivery.',
-    card_graphic_desc:'Clean slide integration, branded graphics, quality sound — not a webcam on a tripod. Professional output from the very first frame.',
-    card_film_desc:'YouTube replays, social media clips, final edit for internal communications — we plan post-production from the shoot.',
-    card_multi_desc:'Live broadcast on YouTube, LinkedIn, Twitch or any platform. Real-time graphics, audio monitoring, HD encoding.',
-    valise_body1:'To deliver on our quality commitments at every event, we designed a mobile broadcast control room deployable in under two hours — built component by component, not an off-the-shelf assembly.',
-    valise_body2:'Each component has a precise role: video mixing, compositing, graphics, playback, monitoring, audio, network. This separation of functions delivers <strong>cleaner image quality and superior stability</strong> compared to any all-in-one software solution.',
-    valise_body3:'We adapt our human and technical resources to each project to <strong>maximise quality while keeping your budget in check</strong>. One technician or a full crew — depending on your needs.',
-    wf1_title:'Scoping & quote',wf2_title:'Preparation',wf3_title:'Live shoot',wf4_title:'Post-production',
-    wf1_desc:'You describe your project. We provide a detailed, transparent quote tailored to your actual needs.',
-    wf2_desc:'Venue scouting, technical setup defined, your branding integrated into our tools. Nothing left to chance.',
-    wf3_desc:'Control room deployment, multi-camera direction, live streaming, ISO recording of all sources.',
-    wf4_desc:'Editing, audio mixing, compositing. Delivery in all formats: web, TV, social media, DVD.',
-    orig_body1:'Alkoda On Air brings <strong>over 30 years in broadcast</strong>, an expertise that has naturally expanded into the corporate world. We work with the <strong>best technicians for your needs</strong> — directors, camera operators, sound engineers, crane operators, drone pilots.',
-    footer_lang:'Français'
+    legal:'Legal notice'
   }
 };
 
@@ -884,26 +649,15 @@ function setLang(lang){
   _lang=lang;
   try{localStorage.setItem('alkoda_lang',lang);}catch(e){}
   const fl=document.getElementById('lang-flag');
-  if(fl)fl.innerHTML=lang==='fr'?_svgFR:_svgUK;
+  if(fl) fl.innerHTML=lang==='fr'?_svgFR:_svgUK;
   const flm=document.getElementById('lang-flag-mob');
-  if(flm)flm.innerHTML=lang==='fr'?_svgFR:_svgUK;
+  if(flm) flm.innerHTML=lang==='fr'?_svgFR:_svgUK;
   document.documentElement.lang=lang;
-  // Mettre à jour tous les éléments data-i18n
   document.querySelectorAll('[data-i18n]').forEach(el=>{
     const key=el.getAttribute('data-i18n');
     const val=t(key);
     if(el.tagName==='INPUT'||el.tagName==='TEXTAREA') el.placeholder=val;
     else el.innerHTML=val;
-  });
-  // Filtres vidéo
-  const fbtns=document.querySelectorAll('.f-btn');
-  fbtns.forEach(b=>{
-    const f=b.dataset.f;
-    if(f==='all') b.textContent=t('filter_all');
-    else if(f==='corporate') b.textContent=t('filter_corp');
-    else if(f==='concert') b.textContent=t('filter_concert');
-    else if(f==='tv') b.textContent=t('filter_tv');
-    else if(f==='clip') b.textContent=t('filter_clip');
   });
 }
 
@@ -911,7 +665,6 @@ function toggleLang(){setLang(_lang==='fr'?'en':'fr');}
 function toggleMobMenu(){document.getElementById('mob-panel').classList.toggle('open');}
 function closeMobMenu(){document.getElementById('mob-panel').classList.remove('open');}
 
-// Init langue
 (function(){
   let lang='fr';
   try{lang=localStorage.getItem('alkoda_lang')||'fr';}catch(e){}

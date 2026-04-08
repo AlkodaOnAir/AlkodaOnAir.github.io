@@ -219,17 +219,17 @@
 
   <header class="nav">
     <div class="shell nav-inner">
-      <div class="brand">
+      <a href="../index.html" class="brand" style="text-decoration:none">
         <img class="brand-logo" src="Alkoda_on_Air_transparent.png" alt="Alkoda On Air">
         <div>Alkoda On Air</div>
-      </div>
+      </a>
       <nav class="nav-links">
+        <a href="../realisations.html" style="font-size:13px;font-weight:500;color:var(--muted);transition:color .2s" onmouseover="this.style.color='#fff'" onmouseout="this.style.color='var(--muted)'">Réalisations</a>
         <button onclick="history.back()" style="background:rgba(255,255,255,.06);border:1px solid rgba(255,255,255,.12);color:#9db0d0;border-radius:4px;padding:4px 12px;font-family:inherit;font-size:13px;cursor:pointer;display:flex;align-items:center;gap:6px;transition:.2s" onmouseover="this.style.borderColor='#00d2ff';this.style.color='#00d2ff'" onmouseout="this.style.borderColor='rgba(255,255,255,.12)';this.style.color='#9db0d0'">← <span id="back-label" data-i18n="back_btn">Retour</span></button>
         <a href="#missions" data-i18n="v_nav1">Possibilités</a>
         <a href="#workflow" data-i18n="v_nav2">Comment ça marche</a>
         <a href="#broadcast" data-i18n="v_nav3">Pourquoi c'est différent</a>
         <a href="#playout" data-i18n="v_nav4">Playback</a>
-        <a href="#tech" data-i18n="v_nav5">Partie technique</a>
         <a href="#visio" data-i18n="v_nav6">Vue graphique</a>
         <button id="lang-toggle-v" onclick="toggleLangV()" style="background:rgba(255,255,255,.06);border:1px solid rgba(255,255,255,.12);border-radius:4px;padding:3px 8px;cursor:pointer;opacity:.85;display:flex;align-items:center" title="Change language"><span id="lang-flag-v"></span></button>
       </nav>
@@ -249,7 +249,6 @@
           <div class="cta-row">
             <a class="btn btn-primary" href="#missions" data-i18n="v_cta1">Découvrir les possibilités</a>
             <a class="btn btn-secondary" href="../visio/alkoda_visio.html" data-i18n="v_cta2">Voir la vue graphique</a>
-            <a class="btn btn-ghost" href="#tech" data-i18n="v_cta3">Lecture technique</a>
           </div>
           <div class="hero-stats">
             <div class="stat"><strong>Multicam</strong><span data-i18n="v_stat1">Caméras, écrans, playback, habillage et monitoring dans un système cohérent.</span></div>
@@ -480,128 +479,29 @@
       </div>
     </section>
 
-
-    <section class="section" id="tech">
-      <div class="shell">
-        <div class="section-head">
-          <div>
-            <div class="section-kicker" data-i18n="v_kicker7">Partie technique — pour les pros et les geeks</div>
-            <h2 data-i18n="v_h2_7">Lecture détaillée des flux, des outils et des choix techniques.</h2>
+    <section class="section" id="layouts">
+      <div class="shell split">
+        <div class="media-card">
+          <div class="media-frame video-frame">
+            <video autoplay muted loop playsinline preload="metadata" style="width:100%;height:100%;object-fit:contain;display:block;background:#07111f">
+              <source src="h2r.layouts.mp4" type="video/mp4">
+              <source src="h2r.layouts.webm" type="video/webm">
+            </video>
           </div>
-          <p data-i18n="vp19">
-            Cette deuxième partie est volontairement plus détaillée. Elle explique non seulement quels outils sont utilisés, mais surtout pourquoi ils sont organisés de cette façon et ce qu’ils apportent concrètement dans la chaîne de production.
-          </p>
-        </div>
-
-        <div class="deep-grid">
-          <div class="deep-card">
-            <h3 data-i18n="v_h3_4">Chaînes de signal emblématiques</h3>
-            <p data-i18n="vp20">Quelques chemins clés suffisent à comprendre la philosophie de la valise : qualité d’image, flexibilité de réalisation, habillage graphique propre et réexploitabilité en postproduction.</p>
-            <div class="flow-list">
-              <div class="flow-item">
-                <strong>1. Plan large OBS → ATEM 1</strong>
-                <div class="flow-path">Caméra plan large + écran speaker
-→ capture dédiée
-→ recomposition dans OBS
-→ sortie HDMI du PC
-→ retour vers ATEM entrée 1</div>
-              </div>
-              <div class="flow-item">
-                <strong>2. Écran speaker plein écran → ATEM 3</strong>
-                <div class="flow-path">Ordinateur du speaker
-→ transport PWAY
-→ Magewell 4K
-→ chaîne PC / restitution dédiée
-→ entrée 3 de l’ATEM</div>
-              </div>
-              <div class="flow-item">
-                <strong>3. Key / Fill → ATEM 5 & 8</strong>
-                <div class="flow-path">H2R Graphics
-→ StarTech USB → HDMI
-→ voie KEY vers entrée 5
-→ voie FILL vers entrée 8</div>
-              </div>
-              <div class="flow-item">
-                <strong>4. Super Source rebouclée → ATEM 4</strong>
-                <div class="flow-path">ATEM sortie HDMI 2
-(configurée en Super Source)
-→ rebouclage interne
-→ ATEM entrée 4</div>
-              </div>
-              <div class="flow-item">
-                <strong>5. Playback / magnéto → ATEM 7</strong>
-                <div class="flow-path">Raspberry Pi + PlayoutBee
-→ Splitter
-→ entrée 7 de l’ATEM
-→ sortie parallèle possible vers prévisualisation</div>
-              </div>
-            </div>
-          </div>
-
-          <div class="deep-card">
-            <h3 data-i18n="v_h3_5">Pourquoi ces outils</h3>
-            <p>La page ne se contente pas de lister des marques : elle explique le rôle de chaque brique dans l’ensemble.</p>
-            <div class="gear-grid">
-              <div class="gear">
-                <h4><a class="inline-link" href="https://www.blackmagicdesign.com/fr/products/atemmini" target="_blank" rel="noopener noreferrer">Blackmagic Design ATEM Mini Extreme ISO</a></h4>
-                <p>Le mélangeur central : il gère les entrées, le programme, l’enregistrement ISO et les bascules en direct. C’est le point de convergence de la régie.</p>
-              </div>
-              <div class="gear">
-                <h4>OBS sur PC MSI</h4>
-                <p>Utilisé ici pour une mission précise : fabriquer un plan large enrichi de l’écran speaker, plus lisible et plus propre qu’une simple captation d’écran projeté.</p>
-              </div>
-              <div class="gear">
-                <h4>H2R Graphics</h4>
-                <p>Génère les lower thirds et graphiques en key/fill, ce qui évite le chromakey et offre un rendu beaucoup plus propre et plus libre.</p>
-              </div>
-              <div class="gear">
-                <h4>H2R Layouts</h4>
-                <p>Gère les super sources et les transitions entre compositions, avec une logique proche d’un système de mix effect, mais pensée pour cette régie compacte.</p>
-              </div>
-              <div class="gear">
-                <h4>Magewell</h4>
-                <p>Assure la capture fiable de signaux vidéo vers le PC, pour que certaines sources puissent être recomposées, exploitées ou réintégrées proprement.</p>
-              </div>
-              <div class="gear">
-                <h4>PlayoutBee</h4>
-                <p>Remplace un HyperDeck pour tout ce qui relève de la logique magnéto : clips, jingles, triggers et lecture média en direct.</p>
-              </div>
-              <div class="gear">
-                <h4>MOTU M6</h4>
-                <p>Permet de contrôler et régler les niveaux micros avant d’envoyer l’audio dans l’ATEM. Le son est traité comme un vrai maillon de production.</p>
-              </div>
-              <div class="gear">
-                <h4>StarTech, splitters, réseau</h4>
-                <p>Ce sont les outils de transport, de conversion et de duplication des signaux. Ils rendent possible une architecture compacte mais très flexible.</p>
-              </div>
-            </div>
+          <div class="media-caption">
+            <strong>H2R Layouts en mouvement</strong>
+            <span>Animation des transitions entre compositions et super sources.</span>
           </div>
         </div>
-
-        <div class="split" style="margin-top:34px">
-          <div class="media-card">
-            <div class="media-frame">
-              <video autoplay muted loop playsinline controls preload="metadata" style="width:100%;height:100%;object-fit:cover;display:block;background:#07111f" onerror="this.outerHTML='&lt;div class=&quot;img-placeholder&quot;&gt;&lt;strong&gt;h2r.layouts.webm&lt;/strong&gt;&lt;span&gt;Animation WebM montrant les transitions entre compositions de H2R Layouts.&lt;/span&gt;&lt;/div&gt;'">
-                <source src="h2r.layouts.webm" type="video/webm">
-              </video>
-            </div>
-            <div class="media-caption">
-              <strong>H2R Layouts en mouvement</strong>
-              <span>Animation WebM des transitions entre compositions et super sources, optimisée pour le web.</span>
-            </div>
-          </div>
-          <div class="narrative">
-            <div class="section-kicker" data-i18n="v_kicker8">Super sources animées</div>
-            <h2 data-i18n="v_h2_8"><a class="inline-link" href="https://layouts.heretorecord.com/" target="_blank" rel="noopener noreferrer">H2R Layouts</a> permet de construire des compositions avancées, avec transitions visuelles entre plusieurs dispositions.</h2>
-            <p>
-              Cette brique donne une vraie souplesse de réalisation : passages d’une composition à l’autre, variations de layouts, mises en avant successives de plusieurs sources et rendu plus vivant qu’une simple succession de cuts.
-            </p>
-            <p>
-              Cette section utilise maintenant une animation WebM légère, mieux adaptée au web qu’un GIF pour montrer les transitions.
-            </p>
-</div>
-              </div>
+        <div class="narrative">
+          <div class="section-kicker" data-i18n="v_kicker8">Super sources animées</div>
+          <h2 data-i18n="v_h2_8"><a class="inline-link" href="https://layouts.heretorecord.com/" target="_blank" rel="noopener noreferrer">H2R Layouts</a> permet de construire des compositions avancées, avec transitions visuelles.</h2>
+          <p>Cette brique donne une vraie souplesse de réalisation : passages d'une composition à l'autre, variations de layouts, mises en avant successives de plusieurs sources et un rendu plus vivant qu'une simple succession de cuts.</p>
+        </div>
+      </div>
     </section>
+
+
 
 
     <section class="section" id="playout">
@@ -621,7 +521,8 @@
 </div>
         <div class="media-card">
           <div class="media-frame video-frame">
-            <video autoplay muted loop playsinline controls preload="metadata" style="width:100%;height:100%;object-fit:cover;display:block;background:#07111f" onerror="this.outerHTML='&lt;div class=&quot;img-placeholder&quot;&gt;&lt;strong&gt;playoutbee.webm&lt;/strong&gt;&lt;span&gt;Animation de l’interface PlayoutBee et de la logique de playback.&lt;/span&gt;&lt;/div&gt;'">
+            <video autoplay muted loop playsinline controls preload="metadata" style="width:100%;height:100%;object-fit:contain;display:block;background:#07111f" onerror="this.outerHTML='&lt;div class=&quot;img-placeholder&quot;&gt;&lt;strong&gt;playoutbee.webm&lt;/strong&gt;&lt;span&gt;Animation de l’interface PlayoutBee et de la logique de playback.&lt;/span&gt;&lt;/div&gt;'">
+              <source src="playoutbee.mp4" type="video/mp4">
               <source src="playoutbee.webm" type="video/webm">
             </video>
           </div>
@@ -707,7 +608,6 @@
           </p>
           <div class="cta-row" style="margin-top:20px">
             <a class="btn btn-primary" href="../visio/alkoda_visio.html" data-i18n="v_cta_visio">Voir le schéma interactif</a>
-            <a class="btn btn-secondary" href="#tech">Revenir à la partie technique</a>
           </div>
         </div>
         <div class="cta-box">
@@ -730,7 +630,6 @@
         <a href="#workflow" data-i18n="v_nav2">Comment ça marche</a>
         <a href="#broadcast" data-i18n="v_nav3">Pourquoi c'est différent</a>
         <a href="#playout" data-i18n="v_nav4">Playback</a>
-        <a href="#tech" data-i18n="v_nav5">Partie technique</a>
         <a href="#visio" data-i18n="v_nav6">Vue graphique</a>
       </nav>
       <div class="copyright-note">Les marques citées appartiennent à leurs propriétaires respectifs, notamment Blackmagic Design, OBS Studio, H2R Graphics, H2R Layouts, PlayoutBee, Magewell, StarTech et MOTU. Cette page les cite à titre descriptif pour expliquer le workflow utilisé par Alkoda On Air.</div>
@@ -781,7 +680,6 @@ const STRINGS_V={
     v_h1:'Une vraie régie télévision,<br>dans un format compact.',
     v_cta1:'Découvrir les possibilités',
     v_cta2:'Voir la vue graphique',
-    v_cta3:'Lecture technique',
     v_stat1:'Caméras, écrans, playback, habillage et monitoring dans un système cohérent.',
     v_stat2:'Logique de régie TV avec key/fill, magnétos et enregistrement ISO.',
     v_stat3:'Une architecture pensée pour être déployée vite, sans renoncer aux fonctions avancées.',
@@ -804,7 +702,6 @@ const STRINGS_V={
     v_nav2:'Comment ça marche',
     v_nav3:'Pourquoi c\'est différent',
     v_nav4:'Playback',
-    v_nav5:'Partie technique',
     v_nav6:'Vue graphique',
   },
   en:{
@@ -849,7 +746,6 @@ const STRINGS_V={
     v_h1:'A real TV control room,<br>in a compact format.',
     v_cta1:'Discover the capabilities',
     v_cta2:'See the visual diagram',
-    v_cta3:'Technical deep-dive',
     v_stat1:'Cameras, screens, playback, graphics and monitoring in a coherent system.',
     v_stat2:'TV control room logic with key/fill, playout and ISO recording.',
     v_stat3:'An architecture designed for fast deployment, without sacrificing advanced features.',
@@ -872,7 +768,6 @@ const STRINGS_V={
     v_nav2:'How it works',
     v_nav3:'Why it\'s different',
     v_nav4:'Playout',
-    v_nav5:'Technical',
     v_nav6:'Visual diagram',
   }
 };

@@ -102,6 +102,7 @@
     .feature-box{display:grid;gap:12px}
     .feature{display:grid;grid-template-columns:auto 1fr;gap:14px;padding:18px;border-radius:20px;background:rgba(255,255,255,.04);border:1px solid rgba(255,255,255,.06)}
     .feature-icon{width:46px;height:46px;border-radius:14px;display:grid;place-items:center;background:linear-gradient(135deg,rgba(0,210,255,.16),rgba(255,107,53,.14));font-size:20px}
+    .feature-icon img{width:30px;height:30px;object-fit:contain}
     .media-card{background:linear-gradient(180deg,#101b2e,#0a1322);border:1px solid rgba(255,255,255,.08);border-radius:28px;padding:18px;box-shadow:var(--shadow)}
     .media-frame{aspect-ratio:16/10;border-radius:22px;overflow:hidden;background:#07111f;border:1px solid rgba(255,255,255,.08)}
 
@@ -355,21 +356,21 @@
           </p>
           <div class="feature-box">
             <div class="feature">
-              <div class="feature-icon">🎥</div>
+              <div class="feature-icon"><img src="blackmagic.svg" alt="Blackmagic Design"></div>
               <div>
                 <strong><a class="inline-link" href="https://www.blackmagicdesign.com/fr/products/atemmini" target="_blank" rel="noopener noreferrer">Blackmagic Design ATEM Mini Extreme ISO</a></strong><br>
                 <span data-i18n="v_feat1">Le cœur du mélange, du programme final et de l’enregistrement.</span>
               </div>
             </div>
             <div class="feature">
-              <div class="feature-icon">🖥️</div>
+              <div class="feature-icon"><img src="obs.png" alt="OBS Studio"></div>
               <div>
                 <strong><span data-i18n="v_pc_label">PC MSI</span> + <a class="inline-link" href="https://obsproject.com/" target="_blank" rel="noopener noreferrer">OBS Studio</a></strong><br>
                 <span data-i18n="v_feat2">La brique qui recompose le plan large avec l’écran speaker pour un rendu beaucoup plus lisible.</span>
               </div>
             </div>
             <div class="feature">
-              <div class="feature-icon">✨</div>
+              <div class="feature-icon"><img src="h2r_graphics.png" alt="H2R Graphics"></div>
               <div>
                 <strong><a class="inline-link" href="https://h2r.graphics/" target="_blank" rel="noopener noreferrer">H2R Graphics</a> & <a class="inline-link" href="https://layouts.heretorecord.com/" target="_blank" rel="noopener noreferrer">H2R Layouts</a></strong><br>
                 <span data-i18n="v_feat3">Les lower thirds, le key/fill et les compositions animées pour enrichir la réalisation.</span>
@@ -772,7 +773,7 @@ const STRINGS_V={
     nav_prestations:'Prestations', nav_realisations:'Réalisations', nav_valise:'La régie',
     nav_visio:'Broadcast System', nav_contact:'Contact', nav_cta:'Nous contacter',
     v_pill_conf:'Conférences', v_pill_speaker:'Écran speaker', v_pill_pgm:'Programme final',
-    v_pc_label:'PC MSI', v_official_site:'Site officiel',
+    v_pc_label:'Ordinateur', v_official_site:'Site officiel',
   },
   en:{
     v_h2_1:'A versatile solution for directing, graphics, broadcasting and recording.',
@@ -882,7 +883,7 @@ const STRINGS_V={
     nav_prestations:'Services', nav_realisations:'Portfolio', nav_valise:'The studio',
     nav_visio:'Broadcast System', nav_contact:'Contact', nav_cta:'Contact us',
     v_pill_conf:'Conferences', v_pill_speaker:'Speaker screen', v_pill_pgm:'Final programme',
-    v_pc_label:'Windows PC', v_official_site:'Official website',
+    v_pc_label:'PC', v_official_site:'Official website',
   }
 };
 

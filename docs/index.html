@@ -287,9 +287,9 @@ footer{padding:28px 0 40px;border-top:1px solid var(--line);background:#000}
     <h2 data-i18n="demo_h2">Alkoda On Air<br><em>en action</em></h2>
     <p class="lead" data-i18n="demo_lead">Voici à quoi ressemble une production en direct depuis notre régie mobile. Captation multi-caméras, fenêtrage animés, incrustations graphiques en temps réel, streaming.</p>
     <div class="demo-video-wrap">
-      <video autoplay muted loop playsinline preload="metadata">
-        <source src="demo.mp4" type="video/mp4">
-        <source src="demo.webm" type="video/webm">
+      <video id="demo-vid" autoplay muted loop playsinline preload="metadata">
+        <source id="demo-src-mp4" src="demo.mp4" type="video/mp4">
+        <source id="demo-src-webm" src="demo.webm" type="video/webm">
       </video>
     </div>
   </div>
@@ -660,6 +660,20 @@ function setLang(lang){
     if(el.tagName==='INPUT'||el.tagName==='TEXTAREA') el.placeholder=val;
     else el.innerHTML=val;
   });
+  // swap demo video
+  const dv=document.getElementById('demo-vid');
+  if(dv){
+    const mp4=document.getElementById('demo-src-mp4');
+    const webm=document.getElementById('demo-src-webm');
+    if(lang==='en'){
+      mp4.src='demo-en.mp4';
+      if(webm) webm.src='demo-en.webm';
+    } else {
+      mp4.src='demo.mp4';
+      if(webm) webm.src='demo.webm';
+    }
+    dv.load();
+  }
 }
 
 function toggleLang(){setLang(_lang==='fr'?'en':'fr');}
@@ -667,8 +681,9 @@ function toggleMobMenu(){document.getElementById('mob-panel').classList.toggle('
 function closeMobMenu(){document.getElementById('mob-panel').classList.remove('open');}
 
 (function(){
-  let lang='fr';
-  try{lang=localStorage.getItem('alkoda_lang')||'fr';}catch(e){}
+  let lang;
+  try{lang=localStorage.getItem('alkoda_lang');}catch(e){}
+  if(!lang) lang=navigator.language?.startsWith('fr')?'fr':'en';
   setLang(lang);
 })();
 </script>

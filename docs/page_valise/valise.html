@@ -777,7 +777,8 @@ const _svgUKv='<svg width="22" height="15" viewBox="0 0 60 30" xmlns="http://www
 let _langV='fr';
 
 // Sync avec la langue du site principal
-try{_langV=localStorage.getItem('alkoda_lang')||'fr';}catch(e){}
+try{_langV=localStorage.getItem('alkoda_lang');}catch(e){}
+if(!_langV) _langV=navigator.language?.startsWith('fr')?'fr':'en';
 
 function setLangV(lang){
   _langV=lang;

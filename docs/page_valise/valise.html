@@ -143,7 +143,8 @@
     .inline-link:hover{color:#fff;text-decoration-color:rgba(255,255,255,.55)}
     .vendor-grid{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:16px}
     .vendor-card{padding:18px;border-radius:20px;background:rgba(255,255,255,.04);border:1px solid rgba(255,255,255,.07);box-shadow:var(--shadow)}
-    .vendor-card h4{margin:0 0 8px;font-size:18px}
+    .vendor-card h4{margin:0 0 8px;font-size:18px;display:flex;align-items:center;gap:10px}
+    .vendor-logo{height:24px;width:auto;flex-shrink:0}
     .vendor-card p{margin:0;color:var(--muted);font-size:15px}
     .vendor-card a{display:inline-block;margin-top:10px;font-weight:700;color:#d9f9ff;text-decoration:underline;text-underline-offset:3px}
     .media-frame video{width:100%;height:100%;object-fit:cover;display:block;background:#07111f}
@@ -197,7 +198,7 @@
     }
     @media (max-width: 1040px){
       .hero-grid,.split,.deep-grid,.cta-panel{grid-template-columns:1fr}
-      .grid-3,.process{grid-template-columns:1fr 1fr}
+      .vendor-grid,.grid-3,.process{grid-template-columns:1fr 1fr}
       .section-head{display:block}
       .section-head p{margin-top:16px}
     }
@@ -404,7 +405,7 @@
       <div class="shell split">
         <div class="narrative">
           <div class="section-kicker" data-i18n="v_kicker4">Habillage graphique</div>
-          <h2 data-i18n="v_h2_4">Des lower thirds et habillages propres grâce à H2R Graphics.</h2>
+          <h2 data-i18n="v_h2_4">Des lower thirds et habillages propres grâce à <a class="inline-link" href="https://h2r.graphics/" target="_blank" rel="noopener noreferrer">H2R Graphics</a>.</h2>
           <p data-i18n="vp13">
             Les habillages ne sont pas ajoutés à l’ancienne avec un fond vert approximatif. Alkoda On Air utilise une logique Key / Fill pour obtenir une incrustation plus propre, plus souple et plus professionnelle.
           </p>
@@ -591,7 +592,7 @@
           </div>
           <div class="narrative">
             <div class="section-kicker" data-i18n="v_kicker8">Super sources animées</div>
-            <h2 data-i18n="v_h2_8">H2R Layouts permet de construire des compositions avancées, avec transitions visuelles entre plusieurs dispositions.</h2>
+            <h2 data-i18n="v_h2_8"><a class="inline-link" href="https://layouts.heretorecord.com/" target="_blank" rel="noopener noreferrer">H2R Layouts</a> permet de construire des compositions avancées, avec transitions visuelles entre plusieurs dispositions.</h2>
             <p>
               Cette brique donne une vraie souplesse de réalisation : passages d’une composition à l’autre, variations de layouts, mises en avant successives de plusieurs sources et rendu plus vivant qu’une simple succession de cuts.
             </p>
@@ -647,47 +648,47 @@
         </div>
         <div class="vendor-grid">
           <article class="vendor-card">
-            <h4>Blackmagic Design</h4>
+            <h4><img class="vendor-logo" src="blackmagic.svg" alt="Blackmagic Design">Blackmagic Design</h4>
             <p>L’ATEM Mini Extreme ISO sert de cœur de régie : mélange, multiview, programme final, streaming et enregistrement ISO.</p>
             <a href="https://www.blackmagicdesign.com/fr/products/atemmini" target="_blank" rel="noopener noreferrer">Site officiel</a>
           </article>
           <article class="vendor-card">
-            <h4>OBS Studio</h4>
+            <h4><img class="vendor-logo" src="obs.png" alt="OBS Studio">OBS Studio</h4>
             <p>Utilisé pour recomposer le plan large avec l’écran du speaker, quand une simple captation directe ne suffit pas à garder un résultat propre et lisible.</p>
             <a href="https://obsproject.com/" target="_blank" rel="noopener noreferrer">Site officiel</a>
           </article>
           <article class="vendor-card">
-            <h4>H2R Graphics</h4>
+            <h4><img class="vendor-logo" src="h2r_graphics.png" alt="H2R Graphics">H2R Graphics</h4>
             <p>Génère les lower thirds et habillages en logique key/fill, pour obtenir une incrustation plus propre qu’un chromakey classique.</p>
             <a href="https://h2r.graphics/" target="_blank" rel="noopener noreferrer">Site officiel</a>
           </article>
           <article class="vendor-card">
-            <h4>H2R Layouts</h4>
+            <h4><img class="vendor-logo" src="h2r_layouts.png" alt="H2R Layouts">H2R Layouts</h4>
             <p>Permet de construire et d’animer des compositions complexes, notamment autour des super sources, avec une logique de transition fluide entre layouts.</p>
             <a href="https://layouts.heretorecord.com/" target="_blank" rel="noopener noreferrer">Site officiel</a>
           </article>
           <article class="vendor-card">
-            <h4>PlayoutBee</h4>
+            <h4><img class="vendor-logo" src="playoutbee.png" alt="PlayoutBee">PlayoutBee</h4>
             <p>Joue le rôle d’un magnéto broadcast moderne et sert aussi de lecteur de contenus, jingles et vidéos pilotables dans la réalisation.</p>
             <a href="https://playoutbee.com/" target="_blank" rel="noopener noreferrer">Site officiel</a>
           </article>
           <article class="vendor-card">
-            <h4>Magewell</h4>
+            <h4><img class="vendor-logo" src="magewell.png" alt="Magewell">Magewell</h4>
             <p>Les cartes de capture Magewell servent à faire entrer proprement certaines sources HDMI dans le PC pour les recomposer ou les exploiter dans OBS.</p>
             <a href="https://www.magewell.com/capture/usb-capture" target="_blank" rel="noopener noreferrer">Site officiel</a>
           </article>
           <article class="vendor-card">
-            <h4>StarTech</h4>
+            <h4><img class="vendor-logo" src="startech.png" alt="StarTech">StarTech</h4>
             <p>L’adaptateur USB vers double HDMI permet de transformer la sortie du PC en vrais signaux vidéo exploitables par la régie, notamment pour le key/fill.</p>
             <a href="https://www.startech.com/en-eu/display-video-adapters/usb32hd2" target="_blank" rel="noopener noreferrer">Site officiel</a>
           </article>
           <article class="vendor-card">
-            <h4>MOTU</h4>
+            <h4><img class="vendor-logo" src="motu.png" alt="MOTU">MOTU</h4>
             <p>Le MOTU M6 sert à régler et contrôler les niveaux micro avant l’entrée dans l’ATEM, pour garder une vraie maîtrise audio en amont du direct.</p>
             <a href="https://motu.com/products/m-series/m6" target="_blank" rel="noopener noreferrer">Site officiel</a>
           </article>
           <article class="vendor-card">
-            <h4>PWAY / HDMI Extender</h4>
+            <h4><img class="vendor-logo" src="https://pwaytek.com/cdn/shop/files/20250606173648558.jpg?v=1749202634&width=280" alt="PWAY">PWAY / HDMI Extender</h4>
             <p>Le couple émetteur/récepteur HDMI sur RJ45 permet de récupérer l’écran du speaker à distance et de l’intégrer dans le workflow de composition.</p>
             <a href="https://www.pwaytek.com/" target="_blank" rel="noopener noreferrer">Fabricant</a>
           </article>
@@ -742,11 +743,11 @@ const STRINGS_V={
     v_h2_1:'Une solution polyvalente pour piloter, habiller, diffuser et enregistrer.',
     v_h2_2:"Une architecture pensée comme une vraie régie, pas comme un simple assemblage d'outils.",
     v_h2_3:"Pourquoi cette valise est plus polyvalente qu'un simple mélangeur compact.",
-    v_h2_4:'Des lower thirds et habillages propres grâce à H2R Graphics.',
+    v_h2_4:'Des lower thirds et habillages propres grâce à <a class="inline-link" href="https://h2r.graphics/" target="_blank" rel="noopener noreferrer">H2R Graphics</a>.',
     v_h2_5:'Une vision globale du système, indispensable pour une réalisation sereine.',
     v_h2_6:"Une régie Blackmagic pensée comme le cœur d'un workflow plus large.",
     v_h2_7:'Lecture détaillée des flux, des outils et des choix techniques.',
-    v_h2_8:'H2R Layouts permet de construire des compositions avancées, avec transitions visuelles.',
+    v_h2_8:'<a class="inline-link" href="https://layouts.heretorecord.com/" target="_blank" rel="noopener noreferrer">H2R Layouts</a> permet de construire des compositions avancées, avec transitions visuelles.',
     v_h2_9:'Un écosystème volontairement choisi, chaque brique ayant un rôle précis.',
     v_h2_10:'Voir le système comme un schéma vivant.',
     v_h3_1:'Captation multicaméra lisible',
@@ -810,11 +811,11 @@ const STRINGS_V={
     v_h2_1:'A versatile solution for directing, graphics, broadcasting and recording.',
     v_h2_2:'An architecture designed as a real control room, not a simple tool assembly.',
     v_h2_3:'Why this case is more versatile than a simple compact mixer.',
-    v_h2_4:'Clean lower thirds and graphics with H2R Graphics.',
+    v_h2_4:'Clean lower thirds and graphics with <a class="inline-link" href="https://h2r.graphics/" target="_blank" rel="noopener noreferrer">H2R Graphics</a>.',
     v_h2_5:'A global view of the system, essential for confident live direction.',
     v_h2_6:'A Blackmagic control room designed as the heart of a broader workflow.',
     v_h2_7:'Detailed analysis of signal flows, tools and technical choices.',
-    v_h2_8:'H2R Layouts enables advanced compositions with visual transitions.',
+    v_h2_8:'<a class="inline-link" href="https://layouts.heretorecord.com/" target="_blank" rel="noopener noreferrer">H2R Layouts</a> enables advanced compositions with visual transitions.',
     v_h2_9:'A deliberately chosen ecosystem, each component with a precise role.',
     v_h2_10:'See the system as a living diagram.',
     v_h3_1:'Readable multi-camera capture',

@@ -58,7 +58,7 @@
     .hero::before,.hero::after{content:"";position:absolute;inset:auto;width:420px;height:420px;border-radius:999px;filter:blur(80px);opacity:.22;pointer-events:none}
     .hero::before{top:-100px;left:-80px;background:var(--accent)}
     .hero::after{right:-120px;top:40px;background:var(--accent2)}
-    .hero-grid{display:grid;grid-template-columns:1.15fr .85fr;gap:34px;align-items:center}
+    .hero-grid{display:grid;grid-template-columns:1.15fr .85fr;gap:34px;align-items:center;position:relative;z-index:1}
     .eyebrow{display:inline-flex;align-items:center;gap:10px;padding:8px 14px;border:1px solid rgba(0,210,255,.18);background:rgba(0,210,255,.08);border-radius:999px;font-size:12px;font-weight:700;letter-spacing:.12em;text-transform:uppercase;color:#c8f6ff}
     .eyebrow::before{content:"";width:8px;height:8px;border-radius:999px;background:var(--accent3);box-shadow:0 0 12px var(--accent3)}
     h1{font-size:clamp(38px,6vw,72px);line-height:.98;margin:18px 0 18px;font-weight:900;letter-spacing:-.03em;color:#fff}

@@ -62,6 +62,7 @@
     .eyebrow{display:inline-flex;align-items:center;gap:10px;padding:8px 14px;border:1px solid rgba(0,210,255,.18);background:rgba(0,210,255,.08);border-radius:999px;font-size:12px;font-weight:700;letter-spacing:.12em;text-transform:uppercase;color:#c8f6ff}
     .eyebrow::before{content:"";width:8px;height:8px;border-radius:999px;background:var(--accent3);box-shadow:0 0 12px var(--accent3)}
     h1{font-size:clamp(38px,6vw,72px);line-height:.98;margin:18px 0 18px;font-weight:900;letter-spacing:-.03em}
+    h1 em{font-style:normal;color:var(--accent)}
     .hero p{font-size:clamp(17px,2.2vw,22px);color:var(--muted);max-width:780px;margin:0 0 28px}
     .cta-row{display:flex;flex-wrap:wrap;gap:14px;margin-bottom:26px}
     .btn{display:inline-flex;align-items:center;gap:10px;padding:14px 22px;border-radius:999px;font-weight:800;letter-spacing:.02em;transition:.2s transform,.2s opacity,.2s background,.2s border-color;border:1px solid transparent}
@@ -280,7 +281,7 @@
       <div class="shell hero-grid">
         <div>
           <div class="eyebrow" data-i18n="v_eyebrow">Régie mobile • Captation • Streaming • Habillage broadcast</div>
-          <h1 data-i18n="v_h1">Une vraie régie télévision,<br>dans un format compact.</h1>
+          <h1 data-i18n="v_h1">Une vraie régie télévision,<br><em>dans un format compact.</em></h1>
           <p data-i18n="vp1">
             Alkoda On Air conçoit et exploite une valise de réalisation capable de prendre en charge un événement de A à Z : captation multicaméra, intégration des écrans intervenants, habillage graphique, playback, livestreaming et enregistrement ISO pour la postproduction.
           </p>
@@ -717,7 +718,7 @@ const STRINGS_V={
     back_btn:'Retour',
     v_cta_visio:'Voir le schéma interactif',
     v_eyebrow:'Régie mobile • Captation • Streaming • Habillage broadcast',
-    v_h1:'Une vraie régie télévision,<br>dans un format compact.',
+    v_h1:'Une vraie régie télévision,<br><em>dans un format compact.</em>',
     v_cta1:'Découvrir les possibilités',
     v_cta2:'Voir la vue graphique',
     v_stat1:'Caméras, écrans, playback, habillage et monitoring dans un système cohérent.',
@@ -827,7 +828,7 @@ const STRINGS_V={
     back_btn:'Back',
     v_cta_visio:'See the interactive diagram',
     v_eyebrow:'Mobile control room • Capture • Streaming • Broadcast graphics',
-    v_h1:'A real TV control room,<br>in a compact format.',
+    v_h1:'A real TV control room,<br><em>in a compact format.</em>',
     v_cta1:'Discover the capabilities',
     v_cta2:'See the visual diagram',
     v_stat1:'Cameras, screens, playback, graphics and monitoring in a coherent system.',

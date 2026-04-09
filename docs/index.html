@@ -721,18 +721,26 @@ function closeMobMenu(){document.getElementById('mob-panel').classList.remove('o
   setLang(lang);
 })();
 
-// Fix boucle vidéo iOS/Safari : fallback ended + reprise après visibilitychange
+// Watchdog boucle vidéo iOS/Chrome iOS (WebKit) : ended + pause inattendu + frame gelée
 (function(){
-  function fixLoop(v){
+  function watchVideo(v){
+    v.removeAttribute('loop');
     v.addEventListener('ended',function(){v.currentTime=0;v.play().catch(function(){});});
+    v.addEventListener('pause',function(){
+      setTimeout(function(){if(v.paused&&!v.ended)v.play().catch(function(){});},500);
+    });
+    var last=-1;
+    setInterval(function(){
+      if(!v.paused&&v.currentTime===last){v.currentTime=0;v.play().catch(function(){});}
+      last=v.currentTime;
+    },3000);
   }
-  document.querySelectorAll('video[autoplay][muted]').forEach(fixLoop);
+  document.querySelectorAll('video[autoplay][muted]').forEach(watchVideo);
   document.addEventListener('visibilitychange',function(){
-    if(!document.hidden){
+    if(!document.hidden)
       document.querySelectorAll('video[autoplay][muted]').forEach(function(v){
-        if(v.paused) v.play().catch(function(){});
+        if(v.paused)v.play().catch(function(){});
       });
-    }
   });
 })();
 </script>

@@ -734,8 +734,8 @@ function closeMobMenu(){document.getElementById('mob-panel').classList.remove('o
     });
     setInterval(function(){
       if(justLooped){justLooped=false;last=v.currentTime;return;}
-      if(!v.paused&&last>=0&&v.currentTime===last){
-        // Vraiment gelé : resume sans repartir de 0
+      if(last>=0&&v.currentTime===last){
+        // Gelé (paused ou frozen) : resume sans repartir de 0
         v.play().catch(function(){});
       }
       last=v.currentTime;

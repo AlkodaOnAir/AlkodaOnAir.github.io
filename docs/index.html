@@ -721,17 +721,23 @@ function closeMobMenu(){document.getElementById('mob-panel').classList.remove('o
   setLang(lang);
 })();
 
-// Watchdog boucle vidéo iOS/Chrome iOS (WebKit) : ended + pause inattendu + frame gelée
+// Watchdog boucle vidéo iOS/Chrome iOS (WebKit)
 (function(){
   function watchVideo(v){
     v.removeAttribute('loop');
-    v.addEventListener('ended',function(){v.currentTime=0;v.play().catch(function(){});});
-    v.addEventListener('pause',function(){
-      setTimeout(function(){if(v.paused&&!v.ended)v.play().catch(function(){});},500);
+    var last=-1, justLooped=false;
+    v.addEventListener('ended',function(){
+      justLooped=true;
+      last=-1;
+      v.currentTime=0;
+      v.play().catch(function(){});
     });
-    var last=-1;
     setInterval(function(){
-      if(!v.paused&&v.currentTime===last){v.currentTime=0;v.play().catch(function(){});}
+      if(justLooped){justLooped=false;last=v.currentTime;return;}
+      if(!v.paused&&last>=0&&v.currentTime===last){
+        // Vraiment gelé : resume sans repartir de 0
+        v.play().catch(function(){});
+      }
       last=v.currentTime;
     },3000);
   }

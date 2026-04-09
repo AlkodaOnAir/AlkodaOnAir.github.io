@@ -185,6 +185,10 @@ footer{padding:28px 0 40px;border-top:1px solid var(--line);background:#000}
 .equipe-img{border-radius:var(--rad);overflow:hidden;border:1px solid var(--line);box-shadow:var(--shadow)}
 .equipe-img img{width:100%;object-fit:cover}
 @media(max-width:1040px){#origine .origine-grid{grid-template-columns:1fr;gap:36px}}
+@media(hover:hover){.valise-img,.valise-rack,.equipe-img{cursor:zoom-in}}
+#lightbox{display:none;position:fixed;inset:0;background:rgba(0,0,0,.92);z-index:2000;align-items:center;justify-content:center;padding:24px;cursor:zoom-out}
+#lightbox.open{display:flex}
+#lightbox img{max-width:100%;max-height:100%;object-fit:contain;border-radius:12px;box-shadow:0 24px 80px rgba(0,0,0,.7)}
 </style>
 </head>
 <body>
@@ -292,10 +296,10 @@ footer{padding:28px 0 40px;border-top:1px solid var(--line);background:#000}
         </div>
       </div>
       <div>
-        <div class="valise-img">
+        <div class="valise-img" onclick="lbOpen(this)">
           <img src="hero-valise-meetup.avif" alt="Valise Alkoda On Air en situation" onerror="this.style.display='none'">
         </div>
-        <div class="valise-rack">
+        <div class="valise-rack" onclick="lbOpen(this)">
           <img src="interview-elasticon-2026.avif" alt="Régie ATEM Alkoda On Air" onerror="this.style.display='none'">
         </div>
       </div>
@@ -357,12 +361,23 @@ footer{padding:28px 0 40px;border-top:1px solid var(--line);background:#000}
         </div>
       </div>
       <div>
-        <div class="equipe-img">
+        <div class="equipe-img" onclick="lbOpen(this)">
           <img src="concert-orchestre-camera.avif" alt="Captation concert orchestre" style="width:100%;object-fit:cover" onerror="this.style.display='none'">
         </div>
-        <div class="equipe-img" style="margin-top:14px">
-          <img src="concert-regie-boisee.avif" alt="Régie concert salle boisée" style="width:100%;object-fit:cover" onerror="this.style.display='none'">
+      </div>
+    </div>
+    <div style="display:grid;grid-template-columns:1fr 1fr 1fr;gap:12px;margin-top:12px">
+      <div class="equipe-img" style="aspect-ratio:16/9" onclick="lbOpen(this)">
+        <img src="concert-regie-boisee.avif" alt="Régie concert salle boisée" style="width:100%;height:100%;object-fit:cover" onerror="this.style.display='none'">
+      </div>
+      <div class="vcard" style="aspect-ratio:16/9" onclick="openMod({id:'SVk4WXX0Qcg',title:'Captation concert live',desc:''})">
+        <div class="vthumb" style="height:100%">
+          <img src="https://img.youtube.com/vi/SVk4WXX0Qcg/maxresdefault.jpg" alt="Captation concert live" style="width:100%;height:100%;object-fit:cover">
+          <div class="vplay"><div class="vplay-btn"></div></div>
         </div>
+      </div>
+      <div class="equipe-img" style="aspect-ratio:16/9" onclick="lbOpen(this)">
+        <img src="camera-concert.avif" alt="Caméra concert" style="width:100%;height:100%;object-fit:cover" onerror="this.style.display='none'">
       </div>
     </div>
   </div>
@@ -625,6 +640,17 @@ function closeMobMenu(){document.getElementById('mob-panel').classList.remove('o
   if(!lang) lang=navigator.language?.startsWith('fr')?'fr':'en';
   setLang(lang);
 })();
+function lbOpen(el){
+  if(window.matchMedia('(hover:none)').matches)return;
+  var img=el.tagName==='IMG'?el:el.querySelector('img');
+  if(!img||!img.src)return;
+  document.getElementById('lb-img').src=img.src;
+  document.getElementById('lb-img').alt=img.alt||'';
+  document.getElementById('lightbox').classList.add('open');
+}
+document.getElementById('lightbox').addEventListener('click',function(){this.classList.remove('open');});
+document.addEventListener('keydown',function(e){if(e.key==='Escape')document.getElementById('lightbox').classList.remove('open');});
 </script>
+<div id="lightbox" onclick="this.classList.remove('open')"><img id="lb-img" src="" alt=""></div>
 </body>
 </html>

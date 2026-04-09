@@ -235,6 +235,10 @@
       .media-caption{display:block}
       .media-caption span{display:block;margin-top:6px}
     }
+    @media(hover:hover){.media-frame:not(.video-frame){cursor:zoom-in}}
+    #lightbox{display:none;position:fixed;inset:0;background:rgba(0,0,0,.92);z-index:2000;align-items:center;justify-content:center;padding:24px;cursor:zoom-out}
+    #lightbox.open{display:flex}
+    #lightbox img{max-width:100%;max-height:100%;object-fit:contain;border-radius:12px;box-shadow:0 24px 80px rgba(0,0,0,.7)}
   </style>
 </head>
 <body>
@@ -299,7 +303,7 @@
           <div class="broadcast-top">
             <span>Valise broadcast interactive</span>
           </div>
-          <div class="media-frame" style="aspect-ratio:16/11; margin-top:10px;">
+          <div class="media-frame" style="aspect-ratio:16/11; margin-top:10px;" onclick="lbOpen(this)">
             <img src="IMG_0232.avif" alt="Valise Alkoda On Air en situation" onerror="this.outerHTML='&lt;div class=&quot;img-placeholder&quot;&gt;&lt;strong&gt;IMG_0232.avif&lt;/strong&gt;&lt;span&gt;Ce visuel apparaîtra ici lorsque le média correspondant sera présent dans le même dossier que la page.&lt;/span&gt;&lt;/div&gt;'">
           </div>
           <div class="media-caption" style="padding-top:14px">
@@ -390,7 +394,7 @@
           </div>
         </div>
         <div class="media-card">
-          <div class="media-frame">
+          <div class="media-frame" onclick="lbOpen(this)">
             <img src="plan.large.avif" alt="Plan large recomposé avec écran speaker" onerror="this.outerHTML='&lt;div class=&quot;img-placeholder&quot;&gt;&lt;strong&gt;plan.large.avif&lt;/strong&gt;&lt;span&gt;Visuel du plan large recomposé avec l’écran speaker.&lt;/span&gt;&lt;/div&gt;'">
           </div>
           <div class="media-caption">
@@ -468,7 +472,7 @@
     <section class="section alt">
       <div class="shell split">
         <div class="media-card">
-          <div class="media-frame">
+          <div class="media-frame" onclick="lbOpen(this)">
             <img src="alkoda_multiview.avif" alt="Vue multiview de la régie Alkoda On Air" onerror="this.outerHTML='&lt;div class=&quot;img-placeholder&quot;&gt;&lt;strong&gt;alkoda_multiview.avif&lt;/strong&gt;&lt;span&gt;Visuel du multiview réel de la régie.&lt;/span&gt;&lt;/div&gt;'">
           </div>
           <div class="media-caption">
@@ -496,7 +500,7 @@
     <section class="section">
       <div class="shell split">
         <div class="media-card">
-          <div class="media-frame contain-frame">
+          <div class="media-frame contain-frame" onclick="lbOpen(this)">
             <img src="ATEM-Mini-Extreme.avif" alt="Blackmagic Design ATEM Mini Extreme ISO" onerror="this.outerHTML='&lt;div class=&quot;img-placeholder&quot;&gt;&lt;strong&gt;ATEM-Mini-Extreme.avif&lt;/strong&gt;&lt;span&gt;Visuel de la régie Blackmagic au cœur du système.&lt;/span&gt;&lt;/div&gt;'">
           </div>
           <div class="media-caption">
@@ -943,6 +947,17 @@ document.addEventListener('click',function(e){if(!e.target.closest('#lang-select
 function toggleMobMenuV(){document.getElementById('mob-panel').classList.toggle('open');}
 function closeMobMenuV(){document.getElementById('mob-panel').classList.remove('open');}
 setLangV(_langV);
+function lbOpen(frame){
+  if(window.matchMedia('(hover:none)').matches)return;
+  var img=frame.querySelector('img');
+  if(!img||!img.src)return;
+  document.getElementById('lb-img').src=img.src;
+  document.getElementById('lb-img').alt=img.alt||'';
+  document.getElementById('lightbox').classList.add('open');
+}
+document.getElementById('lightbox').addEventListener('click',function(){this.classList.remove('open');});
+document.addEventListener('keydown',function(e){if(e.key==='Escape')document.getElementById('lightbox').classList.remove('open');});
 </script>
+<div id="lightbox" onclick="this.classList.remove('open')"><img id="lb-img" src="" alt=""></div>
 </body>
 </html>

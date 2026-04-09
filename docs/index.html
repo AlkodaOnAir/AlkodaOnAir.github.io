@@ -224,6 +224,10 @@ footer{padding:28px 0 40px;border-top:1px solid var(--line);background:#000}
   .logos-grid{grid-template-columns:repeat(3,1fr)}
   #featured .vgrid{grid-template-columns:1fr}
 }
+@media(hover:hover){.corporate-hero-img,.photo-strip img{cursor:zoom-in}}
+#lightbox{display:none;position:fixed;inset:0;background:rgba(0,0,0,.92);z-index:2000;align-items:center;justify-content:center;padding:24px;cursor:zoom-out}
+#lightbox.open{display:flex}
+#lightbox img{max-width:100%;max-height:100%;object-fit:contain;border-radius:12px;box-shadow:0 24px 80px rgba(0,0,0,.7)}
 </style>
 </head>
 <body>
@@ -313,7 +317,7 @@ footer{padding:28px 0 40px;border-top:1px solid var(--line);background:#000}
     <h2 data-i18n="corp_h2">Votre événement mérite<br><em>une régie professionelle.</em></h2>
     <p class="lead" data-i18n="corp_lead">Meetup, conférence, séminaire, concert — vous voulez le filmer, le diffuser en live, le garder en vidéo de qualité. Alkoda On Air s'occupe de tout, de A à Z.</p>
 
-    <img class="corporate-hero-img"
+    <img class="corporate-hero-img" onclick="lbOpen(this)"
          src="corporate-regie-meetup-elastic-deezer.avif"
          alt="Régie Alkoda On Air en situation lors d'un meetup"
          onerror="this.style.display='none'">
@@ -373,9 +377,9 @@ footer{padding:28px 0 40px;border-top:1px solid var(--line);background:#000}
     </div>
 
     <div class="photo-strip" style="margin-top:32px">
-      <img src="regie-concert-jean-francaix.avif" alt="Régie LeBonCoin live" onerror="this.style.display='none'">
-      <img src="corporate-meetup-leboncoin.avif" alt="Interview Elastic" onerror="this.style.display='none'">
-      <img src="concert-eglise-grue.avif" alt="Captation concert église" onerror="this.style.display='none'">
+      <img src="regie-concert-jean-francaix.avif" alt="Régie LeBonCoin live" onclick="lbOpen(this)" onerror="this.style.display='none'">
+      <img src="corporate-meetup-leboncoin.avif" alt="Interview Elastic" onclick="lbOpen(this)" onerror="this.style.display='none'">
+      <img src="concert-eglise-grue.avif" alt="Captation concert église" onclick="lbOpen(this)" onerror="this.style.display='none'">
     </div>
   </div>
 </section>
@@ -749,6 +753,17 @@ function closeMobMenu(){document.getElementById('mob-panel').classList.remove('o
       });
   });
 })();
+function lbOpen(el){
+  if(window.matchMedia('(hover:none)').matches)return;
+  var img=el.tagName==='IMG'?el:el.querySelector('img');
+  if(!img||!img.src)return;
+  document.getElementById('lb-img').src=img.src;
+  document.getElementById('lb-img').alt=img.alt||'';
+  document.getElementById('lightbox').classList.add('open');
+}
+document.getElementById('lightbox').addEventListener('click',function(){this.classList.remove('open');});
+document.addEventListener('keydown',function(e){if(e.key==='Escape')document.getElementById('lightbox').classList.remove('open');});
 </script>
+<div id="lightbox" onclick="this.classList.remove('open')"><img id="lb-img" src="" alt=""></div>
 </body>
 </html>

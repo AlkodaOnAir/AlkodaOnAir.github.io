@@ -35,8 +35,14 @@
     .nav-links{display:flex;align-items:center;gap:24px;font-size:13px;font-weight:500;color:var(--muted)}
     .nav-links a{transition:color .2s}.nav-links a:hover{color:#fff}.nav-links a.active{color:#fff}
     .nav-sep{color:var(--line2)}
-    #lang-toggle-v{background:rgba(255,255,255,.06);border:1px solid var(--line2);border-radius:4px;font-size:18px;cursor:pointer;padding:3px 8px;opacity:.85;transition:opacity .15s,border-color .15s;flex-shrink:0;line-height:1;display:flex;align-items:center}
+    #lang-selector{position:relative;flex-shrink:0}
+    #lang-toggle-v{background:rgba(255,255,255,.06);border:1px solid var(--line2);border-radius:6px;font-size:13px;font-weight:500;cursor:pointer;padding:5px 10px;opacity:.85;transition:.15s;display:flex;align-items:center;gap:7px;color:var(--text)}
     #lang-toggle-v:hover{opacity:1;border-color:var(--accent)}
+    #lang-drop{display:none;position:absolute;top:calc(100% + 6px);right:0;background:#0d1627;border:1px solid rgba(255,255,255,.14);border-radius:8px;padding:4px;z-index:200;min-width:130px;box-shadow:0 8px 24px rgba(0,0,0,.5)}
+    #lang-drop.open{display:block}
+    .lang-opt{display:flex;align-items:center;gap:8px;width:100%;padding:8px 12px;background:none;border:none;color:var(--text);font-size:13px;cursor:pointer;border-radius:6px;white-space:nowrap}
+    .lang-opt:hover{background:rgba(255,255,255,.08)}
+    .lang-arrow{font-size:10px;opacity:.5;margin-left:2px}
     .nav-cta{padding:8px 20px;border-radius:999px;background:var(--accent);color:#03080f;font-size:13px;font-weight:700;transition:.2s;white-space:nowrap;text-decoration:none}
     .nav-cta:hover{background:#fff}
     #mob-menu{display:none;flex-direction:column;justify-content:center;gap:5px;width:36px;height:36px;background:rgba(255,255,255,.06);border:1px solid rgba(255,255,255,.12);border-radius:6px;cursor:pointer;padding:8px;flex-shrink:0}
@@ -47,7 +53,7 @@
     #mob-panel .mob-bottom{display:flex;align-items:center;justify-content:space-between;padding:12px 20px;border-top:1px solid rgba(255,255,255,.08)}
     #mob-panel .mob-cta{color:var(--accent);font-weight:700;border-bottom:none}
     #mob-panel.open{display:block}
-    #lang-toggle-mob{background:rgba(255,255,255,.06);border:1px solid rgba(255,255,255,.12);border-radius:4px;padding:3px 8px;cursor:pointer;display:flex;align-items:center}
+    #lang-toggle-mob{background:rgba(255,255,255,.06);border:1px solid rgba(255,255,255,.12);border-radius:6px;padding:5px 10px;cursor:pointer;display:flex;align-items:center;gap:7px;font-size:13px;font-weight:500;color:var(--text)}
     .hero{padding:84px 0 52px;position:relative;overflow:hidden}
     .hero::before,.hero::after{content:"";position:absolute;inset:auto;width:420px;height:420px;border-radius:999px;filter:blur(80px);opacity:.22;pointer-events:none}
     .hero::before{top:-100px;left:-80px;background:var(--accent)}
@@ -108,7 +114,7 @@
 
     .brand-logo{height:42px;width:auto;display:block;filter:drop-shadow(0 10px 30px rgba(0,0,0,.35))}
     .hero-logo{height:72px;width:auto;display:block;margin-bottom:18px;filter:drop-shadow(0 10px 30px rgba(0,0,0,.45))}
-    .media-frame img{width:100%;height:100%;object-fit:cover;display:block}
+    .media-frame img{width:100%;height:100%;object-fit:contain;display:block}
     .img-placeholder{height:100%;display:flex;align-items:center;justify-content:center;flex-direction:column;gap:8px;padding:24px;text-align:center;background:linear-gradient(180deg,#081423,#0d1a2c);color:#9db6d7;font-family:Inter,system-ui,sans-serif}
     .img-placeholder strong{font-size:16px;color:#fff}
     .img-placeholder span{font-size:13px;opacity:.9}
@@ -161,7 +167,7 @@
     .vendor-logo{height:24px;width:auto;flex-shrink:0}
     .vendor-card p{margin:0;color:var(--muted);font-size:15px}
     .vendor-card a{display:inline-block;margin-top:10px;font-weight:700;color:#d9f9ff;text-decoration:underline;text-underline-offset:3px}
-    .media-frame video{width:100%;height:100%;object-fit:cover;display:block;background:#07111f}
+    .media-frame video{width:100%;height:100%;object-fit:contain;display:block;background:#07111f}
     .copyright-note{margin-top:14px;padding-top:14px;border-top:1px solid rgba(255,255,255,.08);font-size:12px;color:var(--muted)}
 
     .media-frame.contain-frame{
@@ -220,7 +226,7 @@
     }
     @media (max-width: 720px){
       .shell{width:min(var(--max),calc(100% - 26px))}
-      .nav-inner{align-items:flex-start;flex-direction:column}
+      .nav-inner{align-items:center;flex-direction:row}
       .nav-links{gap:12px}
       .hero{padding-top:54px}
       .hero-stats,.grid-3,.process,.gear-grid,.vendor-grid{grid-template-columns:1fr}
@@ -239,27 +245,33 @@
         <img src="../logo-alkoda-long.avif" alt="Alkoda On Air" onerror="this.src='Alkoda_on_Air_transparent.png'">
       </a>
       <div class="nav-links">
-        <a href="../index.html#corporate" data-i18n="nav_prestations">Prestations</a>
+        <a href="../index.html" data-i18n="nav_prestations">Prestations</a>
         <a href="../realisations.html" data-i18n="nav_realisations">Réalisations</a>
         <a href="../page_valise/valise.html" class="active" data-i18n="nav_valise">La régie</a>
         <a href="../visio/alkoda_visio.html" data-i18n="nav_visio">Visio</a>
         <a href="../index.html#contact" data-i18n="nav_contact">Contact</a>
         <span class="nav-sep">|</span>
-        <button id="lang-toggle-v" onclick="toggleLangV()" title="Change language / Changer de langue"><span id="lang-flag-v"></span></button>
+        <div id="lang-selector">
+          <button id="lang-toggle-v" onclick="toggleLangDrop()" title="Change language / Changer de langue"><span id="lang-flag-v"></span><span id="lang-name"></span><span class="lang-arrow">▾</span></button>
+          <div id="lang-drop">
+            <button class="lang-opt" id="lang-opt-fr" onclick="setLangV('fr');closeLangDrop()"><span id="drop-flag-fr"></span><span>Français</span></button>
+            <button class="lang-opt" id="lang-opt-en" onclick="setLangV('en');closeLangDrop()"><span id="drop-flag-en"></span><span>English</span></button>
+          </div>
+        </div>
       </div>
       <a href="../index.html#contact" class="btn btn-primary nav-cta" data-i18n="nav_cta">Nous contacter</a>
       <button id="mob-menu" onclick="toggleMobMenuV()" aria-label="Menu"><span></span><span></span><span></span></button>
     </div>
   </nav>
   <div id="mob-panel">
-    <a href="../index.html#corporate" data-i18n="nav_prestations" onclick="closeMobMenuV()">Prestations</a>
+    <a href="../index.html" data-i18n="nav_prestations" onclick="closeMobMenuV()">Prestations</a>
     <a href="../realisations.html" data-i18n="nav_realisations" onclick="closeMobMenuV()">Réalisations</a>
     <a href="../page_valise/valise.html" data-i18n="nav_valise" onclick="closeMobMenuV()">La régie</a>
     <a href="../visio/alkoda_visio.html" data-i18n="nav_visio" onclick="closeMobMenuV()">Visio</a>
     <a href="../index.html#contact" data-i18n="nav_contact" onclick="closeMobMenuV()">Contact</a>
     <div class="mob-bottom">
       <a href="../index.html#contact" class="mob-cta" data-i18n="nav_cta" onclick="closeMobMenuV()">Nous contacter</a>
-      <button id="lang-toggle-mob" onclick="toggleLangV()" title="Changer de langue"><span id="lang-flag-mob"></span></button>
+      <button id="lang-toggle-mob" onclick="toggleLangV()" title="Changer de langue"><span id="lang-flag-mob"></span><span id="lang-name-mob"></span></button>
     </div>
   </div>
 
@@ -267,7 +279,6 @@
     <section class="hero">
       <div class="shell hero-grid">
         <div>
-          <img class="hero-logo" src="Alkoda_on_Air_transparent.png" alt="Alkoda On Air">
           <div class="eyebrow" data-i18n="v_eyebrow">Régie mobile • Captation • Streaming • Habillage broadcast</div>
           <h1 data-i18n="v_h1">Une vraie régie télévision,<br>dans un format compact.</h1>
           <p data-i18n="vp1">
@@ -286,7 +297,6 @@
         <aside class="hero-card">
           <div class="broadcast-top">
             <span>Valise broadcast interactive</span>
-            <span>IMG_0232.avif</span>
           </div>
           <div class="media-frame" style="aspect-ratio:16/11; margin-top:10px;">
             <img src="IMG_0232.avif" alt="Valise Alkoda On Air en situation" onerror="this.outerHTML='&lt;div class=&quot;img-placeholder&quot;&gt;&lt;strong&gt;IMG_0232.avif&lt;/strong&gt;&lt;span&gt;Ce visuel apparaîtra ici lorsque le média correspondant sera présent dans le même dossier que la page.&lt;/span&gt;&lt;/div&gt;'">
@@ -773,7 +783,7 @@ const STRINGS_V={
     v_cta_box_p1:'Cette valise n\'est pas qu\'un assemblage de matériel. C\'est une petite régie complète, conçue pour absorber un événement réel : live, captation, habillage, playback et postproduction.',
     v_cta_box_p2:'En d\'autres termes : Alkoda On Air peut prendre en charge votre événement avec une logique de télévision, dans un format beaucoup plus agile.',
     v_copyright:'Les marques citées appartiennent à leurs propriétaires respectifs, notamment Blackmagic Design, OBS Studio, H2R Graphics, H2R Layouts, PlayoutBee, Magewell, StarTech et MOTU. Cette page les cite à titre descriptif pour expliquer le workflow utilisé par Alkoda On Air.',
-    nav_prestations:'Prestations', nav_realisations:'Réalisations', nav_valise:'La régie',
+    nav_prestations:'Accueil', nav_realisations:'Réalisations', nav_valise:'La régie',
     nav_visio:'Broadcast System', nav_contact:'Contact', nav_cta:'Nous contacter',
     v_pill_conf:'Conférences', v_pill_speaker:'Écran speaker', v_pill_pgm:'Programme final',
     v_pc_label:'Ordinateur', v_official_site:'Site officiel',
@@ -883,7 +893,7 @@ const STRINGS_V={
     v_cta_box_p1:'This case is not just an assembly of equipment. It is a complete compact control room, designed to absorb a real event: live streaming, capture, graphics, playout and post-production.',
     v_cta_box_p2:'In other words: Alkoda On Air can handle your event with television-grade logic, in a far more agile format.',
     v_copyright:'Trademarks mentioned belong to their respective owners, including Blackmagic Design, OBS Studio, H2R Graphics, H2R Layouts, PlayoutBee, Magewell, StarTech and MOTU. This page references them descriptively to explain the workflow used by Alkoda On Air.',
-    nav_prestations:'Services', nav_realisations:'Portfolio', nav_valise:'The studio',
+    nav_prestations:'Home', nav_realisations:'Portfolio', nav_valise:'The studio',
     nav_visio:'Broadcast System', nav_contact:'Contact', nav_cta:'Contact us',
     v_pill_conf:'Conferences', v_pill_speaker:'Speaker screen', v_pill_pgm:'Final programme',
     v_pc_label:'PC', v_official_site:'Official website',
@@ -905,6 +915,18 @@ function setLangV(lang){
   if(fl)fl.innerHTML=lang==='fr'?_svgFRv:_svgUKv;
   const flm=document.getElementById('lang-flag-mob');
   if(flm)flm.innerHTML=lang==='fr'?_svgFRv:_svgUKv;
+  const ln=document.getElementById('lang-name');
+  if(ln) ln.textContent=lang==='fr'?'Français':'English';
+  const lnm=document.getElementById('lang-name-mob');
+  if(lnm) lnm.textContent=lang==='fr'?'Français':'English';
+  const dff=document.getElementById('drop-flag-fr');
+  if(dff) dff.innerHTML=_svgFRv;
+  const dfe=document.getElementById('drop-flag-en');
+  if(dfe) dfe.innerHTML=_svgUKv;
+  const fo=document.getElementById('lang-opt-fr');
+  if(fo) fo.style.display=lang==='fr'?'none':'flex';
+  const eo=document.getElementById('lang-opt-en');
+  if(eo) eo.style.display=lang==='en'?'none':'flex';
   document.documentElement.lang=lang;
   document.querySelectorAll('[data-i18n]').forEach(el=>{
     const key=el.getAttribute('data-i18n');
@@ -914,6 +936,9 @@ function setLangV(lang){
   document.title=lang==='fr'?'Alkoda On Air — La régie mobile':'Alkoda On Air — Mobile broadcast control room';
 }
 function toggleLangV(){setLangV(_langV==='fr'?'en':'fr');}
+function toggleLangDrop(){document.getElementById('lang-drop').classList.toggle('open');}
+function closeLangDrop(){document.getElementById('lang-drop').classList.remove('open');}
+document.addEventListener('click',function(e){if(!e.target.closest('#lang-selector'))closeLangDrop();});
 function toggleMobMenuV(){document.getElementById('mob-panel').classList.toggle('open');}
 function closeMobMenuV(){document.getElementById('mob-panel').classList.remove('open');}
 setLangV(_langV);

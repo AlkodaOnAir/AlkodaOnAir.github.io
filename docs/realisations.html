@@ -36,8 +36,14 @@ img{max-width:100%;display:block}
 .nav-links a{transition:color .2s}.nav-links a:hover{color:#fff}
 .nav-links a.active{color:#fff}
 .nav-sep{color:var(--line2)}
-#lang-toggle{background:rgba(255,255,255,.06);border:1px solid var(--line2);border-radius:4px;font-size:18px;cursor:pointer;padding:3px 8px;opacity:.85;transition:opacity .15s,border-color .15s;flex-shrink:0;line-height:1;display:flex;align-items:center}
+#lang-selector{position:relative;flex-shrink:0}
+#lang-toggle{background:rgba(255,255,255,.06);border:1px solid var(--line2);border-radius:6px;font-size:13px;font-weight:500;cursor:pointer;padding:5px 10px;opacity:.85;transition:.15s;display:flex;align-items:center;gap:7px;color:var(--text)}
 #lang-toggle:hover{opacity:1;border-color:var(--accent)}
+#lang-drop{display:none;position:absolute;top:calc(100% + 6px);right:0;background:#0d1627;border:1px solid rgba(255,255,255,.14);border-radius:8px;padding:4px;z-index:200;min-width:130px;box-shadow:0 8px 24px rgba(0,0,0,.5)}
+#lang-drop.open{display:block}
+.lang-opt{display:flex;align-items:center;gap:8px;width:100%;padding:8px 12px;background:none;border:none;color:var(--text);font-size:13px;cursor:pointer;border-radius:6px;white-space:nowrap}
+.lang-opt:hover{background:rgba(255,255,255,.08)}
+.lang-arrow{font-size:10px;opacity:.5;margin-left:2px}
 .btn{display:inline-flex;align-items:center;gap:8px;padding:13px 26px;border-radius:999px;font-weight:700;font-size:14px;transition:.2s;border:1px solid transparent}
 .btn:hover{transform:translateY(-2px)}
 .btn-primary{background:linear-gradient(135deg,var(--accent),#0ba3ff);color:#03101d;box-shadow:0 10px 28px rgba(0,210,255,.22)}
@@ -143,7 +149,7 @@ footer{padding:28px 0 40px;border-top:1px solid var(--line);background:#000}
 #mob-panel .mob-bottom{display:flex;align-items:center;justify-content:space-between;padding:12px 20px;border-top:1px solid rgba(255,255,255,.08)}
 #mob-panel .mob-cta{color:var(--accent);font-weight:700;border-bottom:none}
 #mob-panel.open{display:block}
-#lang-toggle-mob{background:rgba(255,255,255,.06);border:1px solid rgba(255,255,255,.12);border-radius:4px;padding:3px 8px;cursor:pointer;display:flex;align-items:center}
+#lang-toggle-mob{background:rgba(255,255,255,.06);border:1px solid rgba(255,255,255,.12);border-radius:6px;padding:5px 10px;cursor:pointer;display:flex;align-items:center;gap:7px;font-size:13px;font-weight:500;color:var(--text)}
 
 /* ── RESPONSIVE ── */
 @media(max-width:1040px){
@@ -190,27 +196,33 @@ footer{padding:28px 0 40px;border-top:1px solid var(--line);background:#000}
            onerror="this.src='logo_letttre_Alkoda_On_Air-centré-Long.jpg'">
     </a>
     <div class="nav-links">
-      <a href="index.html#corporate" data-i18n="nav_prestations">Prestations</a>
+      <a href="index.html" data-i18n="nav_prestations">Prestations</a>
       <a href="realisations.html" class="active" data-i18n="nav_realisations">Réalisations</a>
       <a href="page_valise/valise.html" data-i18n="nav_valise">La régie</a>
       <a href="visio/alkoda_visio.html" data-i18n="nav_visio">Visio</a>
       <a href="index.html#contact" data-i18n="nav_contact">Contact</a>
       <span class="nav-sep">|</span>
-      <button id="lang-toggle" onclick="toggleLang()" title="Change language / Changer de langue"><span id="lang-flag"></span></button>
+      <div id="lang-selector">
+        <button id="lang-toggle" onclick="toggleLangDrop()" title="Change language / Changer de langue"><span id="lang-flag"></span><span id="lang-name"></span><span class="lang-arrow">▾</span></button>
+        <div id="lang-drop">
+          <button class="lang-opt" id="lang-opt-fr" onclick="setLang('fr');closeLangDrop()"><span id="drop-flag-fr"></span><span>Français</span></button>
+          <button class="lang-opt" id="lang-opt-en" onclick="setLang('en');closeLangDrop()"><span id="drop-flag-en"></span><span>English</span></button>
+        </div>
+      </div>
     </div>
     <a href="index.html#contact" class="btn btn-primary nav-cta" data-i18n="nav_cta">Nous contacter</a>
     <button id="mob-menu" onclick="toggleMobMenu()" aria-label="Menu"><span></span><span></span><span></span></button>
   </div>
 </nav>
 <div id="mob-panel">
-  <a href="index.html#corporate" data-i18n="nav_prestations" onclick="closeMobMenu()">Prestations</a>
+  <a href="index.html" data-i18n="nav_prestations" onclick="closeMobMenu()">Prestations</a>
   <a href="realisations.html" data-i18n="nav_realisations" onclick="closeMobMenu()">Réalisations</a>
   <a href="page_valise/valise.html" data-i18n="nav_valise" onclick="closeMobMenu()">La régie</a>
   <a href="visio/alkoda_visio.html" data-i18n="nav_visio" onclick="closeMobMenu()">Visio</a>
   <a href="index.html#contact" data-i18n="nav_contact" onclick="closeMobMenu()">Contact</a>
   <div class="mob-bottom">
     <a href="index.html#contact" class="mob-cta" data-i18n="nav_cta" onclick="closeMobMenu()">Nous contacter</a>
-    <button id="lang-toggle-mob" onclick="toggleLang()" title="Changer de langue"><span id="lang-flag-mob"></span></button>
+    <button id="lang-toggle-mob" onclick="toggleLang()" title="Changer de langue"><span id="lang-flag-mob"></span><span id="lang-name-mob"></span></button>
   </div>
 </div>
 
@@ -363,7 +375,7 @@ footer{padding:28px 0 40px;border-top:1px solid var(--line);background:#000}
       <img src="logo-alkoda-long.avif" alt="Alkoda On Air" onerror="this.style.display='none'">
     </div>
     <div class="footer-links">
-      <a href="index.html#corporate" data-i18n="nav_prestations">Prestations</a>
+      <a href="index.html" data-i18n="nav_prestations">Prestations</a>
       <a href="realisations.html" data-i18n="nav_realisations">Réalisations</a>
       <a href="page_valise/valise.html" data-i18n="nav_valise">La régie</a>
       <a href="visio/alkoda_visio.html" data-i18n="nav_visio">Visio</a>
@@ -466,7 +478,7 @@ document.addEventListener('keydown',e=>{if(e.key==='Escape')closeModDir();});
 // ── SYSTÈME DE LANGUE ──
 const STRINGS={
   fr:{
-    nav_prestations:'Prestations', nav_valise:'La régie', nav_visio:'Broadcast System',
+    nav_prestations:'Accueil', nav_valise:'La régie', nav_visio:'Broadcast System',
     nav_realisations:'Réalisations', nav_about:'À propos', nav_contact:'Contact',
     nav_cta:'Nous contacter',
     real_kicker:'Réalisations',
@@ -508,7 +520,7 @@ const STRINGS={
     legal:'Mentions légales'
   },
   en:{
-    nav_prestations:'Services', nav_valise:'The studio', nav_visio:'Broadcast System',
+    nav_prestations:'Home', nav_valise:'The studio', nav_visio:'Broadcast System',
     nav_realisations:'Portfolio', nav_about:'About', nav_contact:'Contact',
     nav_cta:'Contact us',
     real_kicker:'Portfolio',
@@ -564,6 +576,18 @@ function setLang(lang){
   if(fl) fl.innerHTML=lang==='fr'?_svgFR:_svgUK;
   const flm=document.getElementById('lang-flag-mob');
   if(flm) flm.innerHTML=lang==='fr'?_svgFR:_svgUK;
+  const ln=document.getElementById('lang-name');
+  if(ln) ln.textContent=lang==='fr'?'Français':'English';
+  const lnm=document.getElementById('lang-name-mob');
+  if(lnm) lnm.textContent=lang==='fr'?'Français':'English';
+  const dff=document.getElementById('drop-flag-fr');
+  if(dff) dff.innerHTML=_svgFR;
+  const dfe=document.getElementById('drop-flag-en');
+  if(dfe) dfe.innerHTML=_svgUK;
+  const fo=document.getElementById('lang-opt-fr');
+  if(fo) fo.style.display=lang==='fr'?'none':'flex';
+  const eo=document.getElementById('lang-opt-en');
+  if(eo) eo.style.display=lang==='en'?'none':'flex';
   document.documentElement.lang=lang;
   document.querySelectorAll('[data-i18n]').forEach(el=>{
     const key=el.getAttribute('data-i18n');
@@ -589,6 +613,9 @@ function setLang(lang){
 }
 
 function toggleLang(){setLang(_lang==='fr'?'en':'fr');}
+function toggleLangDrop(){document.getElementById('lang-drop').classList.toggle('open');}
+function closeLangDrop(){document.getElementById('lang-drop').classList.remove('open');}
+document.addEventListener('click',function(e){if(!e.target.closest('#lang-selector'))closeLangDrop();});
 function toggleMobMenu(){document.getElementById('mob-panel').classList.toggle('open');}
 function closeMobMenu(){document.getElementById('mob-panel').classList.remove('open');}
 

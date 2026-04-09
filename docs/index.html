@@ -729,8 +729,8 @@ function closeMobMenu(){document.getElementById('mob-panel').classList.remove('o
     v.addEventListener('ended',function(){
       justLooped=true;
       last=-1;
-      v.currentTime=0;
-      v.play().catch(function(){});
+      v.addEventListener('canplay',function(){v.play().catch(function(){});},{once:true});
+      v.load();
     });
     setInterval(function(){
       if(justLooped){justLooped=false;last=v.currentTime;return;}

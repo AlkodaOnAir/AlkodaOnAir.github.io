@@ -233,6 +233,9 @@ footer{padding:28px 0 40px;border-top:1px solid var(--line);background:#000}
   .logos-grid{grid-template-columns:repeat(3,1fr)}
   #featured .vgrid{grid-template-columns:1fr}
 }
+.tournage-grid{columns:4 180px;gap:10px;margin-top:32px}
+.tournage-grid img{width:100%;margin-bottom:10px;border-radius:10px;display:block;object-fit:cover;break-inside:avoid;cursor:zoom-in}
+@media(max-width:600px){.tournage-grid{columns:2}}
 @media(hover:hover){.corporate-hero-img,.photo-strip img{cursor:zoom-in}}
 #lightbox{display:none;position:fixed;inset:0;background:rgba(0,0,0,.92);z-index:2000;align-items:center;justify-content:center;padding:24px;cursor:zoom-out}
 #lightbox.open{display:flex}
@@ -430,6 +433,23 @@ footer{padding:28px 0 40px;border-top:1px solid var(--line);background:#000}
     </div>
   </div>
 </section>
+<!-- TOURNAGE -->
+<section id="tournage">
+  <div class="shell">
+    <div class="section-kicker" data-i18n="tournage_kicker">En tournage</div>
+    <h2 data-i18n="tournage_h2">Alkoda<br><em>en tournage.</em></h2>
+    <p class="lead" data-i18n="tournage_lead">Nous adaptons les moyens humains et matériels à chaque projet pour maximiser la qualité tout en maîtrisant votre budget. Un technicien ou une équipe complète — selon vos besoins.</p>
+    <div class="tournage-grid">
+      <img src="photos/Cam3.avif" alt="Caméra tournage" onclick="lbOpen(this)">
+      <img src="photos/Christophe_K1.avif" alt="Christophe en tournage" onclick="lbOpen(this)">
+      <img src="photos/Camepaul2.avif" alt="Cadreur en action" onclick="lbOpen(this)">
+      <img src="photos/Cam1BW.avif" alt="Caméra noir et blanc" onclick="lbOpen(this)">
+      <img src="photos/Regiepodium1.avif" alt="Régie podium" onclick="lbOpen(this)">
+      <img src="photos/Dodo.avif" alt="Tournage" onclick="lbOpen(this)">
+      <img src="photos/Camepaul1.avif" alt="Cadreur" onclick="lbOpen(this)">
+    </div>
+  </div>
+</section>
 <!-- CONTACT -->
 <section id="contact">
   <div class="shell">
@@ -581,6 +601,9 @@ const STRINGS={
     card_film_p:'Films institutionnels, couverture et résumé d\'events, clips, interviews, reportages… nous couvrons toute votre communication interne et externe.',
     card_concert:'Concerts & musique classique',
     card_concert_p:'Notre ADN. Jusqu\'à 9 caméras Sony FX6, régie fibre optique, 24 micros, production DVD commercial. Un savoir-faire rare au service de la musique vivante.',
+    tournage_kicker:'En tournage',
+    tournage_h2:'Alkoda<br><em>en tournage.</em>',
+    tournage_lead:'Nous adaptons les moyens humains et matériels à chaque projet pour maximiser la qualité tout en maîtrisant votre budget. Un technicien ou une équipe complète — selon vos besoins.',
     clients_kicker:'Clients & partenaires',
     clients_h2:'Ils nous ont<br><em>fait confiance.</em>',
     clients_lead:'Des startups tech aux grandes entreprises, des associations culturelles aux chaînes TV. Nous nous adaptons à chaque contexte avec le même niveau d\'exigence.',
@@ -640,6 +663,9 @@ const STRINGS={
     card_film_p:'Corporate films, event coverage and highlights, clips, interviews, reports… we handle all your internal and external communications.',
     card_concert:'Concerts & classical music',
     card_concert_p:'Our DNA. Up to 9 Sony FX6 cameras, fibre optic control room, 24 microphones, commercial DVD production. A rare expertise in live music.',
+    tournage_kicker:'On Set',
+    tournage_h2:'Alkoda<br><em>on set.</em>',
+    tournage_lead:'We adapt our team and equipment to each project to maximise quality while keeping your budget in check. One technician or a full crew — whatever you need.',
     clients_kicker:'Clients & partners',
     clients_h2:'They trusted<br><em>us.</em>',
     clients_lead:'From tech startups to large corporations, cultural associations to TV channels. We adapt to every context with the same level of excellence.',

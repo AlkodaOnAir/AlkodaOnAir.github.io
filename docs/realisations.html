@@ -256,7 +256,8 @@ footer{padding:28px 0 40px;border-top:1px solid var(--line);background:#000}
       <button class="f-btn" data-f="corporate" data-i18n-filter="filter_corp">Corporate & Meetup</button>
       <button class="f-btn" data-f="concert" data-i18n-filter="filter_concert">Concert</button>
       <button class="f-btn" data-f="tv" data-i18n-filter="filter_tv">TV</button>
-      <button class="f-btn" data-f="clip" data-i18n-filter="filter_clip">Clip & Création</button>
+      <button class="f-btn" data-f="clip" data-i18n-filter="filter_clip">Clip</button>
+      <button class="f-btn" data-f="creation" data-i18n-filter="filter_creation">Creation</button>
     </div>
     <div class="vgrid" id="vgrid"></div>
   </div>
@@ -430,7 +431,7 @@ const VIDEOS=[
   {id:'bM-3EXEaVYI',title:'Gabriel Fauré — Élégie, Op. 24',desc:'9 caméras Sony FX6 · 24 micros · Direction J.-P. Loré',cat:'concert',year:2025},
   {id:'kHg7qR_DZAo',title:'KTO — Veillée des athlètes olympiques',desc:'Basilique Saint-Denis · Régie Tricaster · PTZ Panasonic',cat:'tv',year:2024},
   {id:'SRYjMOCHOCw',title:'Saint-Gobain - Elastic — Partnership',desc:'Production corporate · Observabilité',cat:'corporate',year:2024},
-{id:'nGJSY3vWtWc',title:'On enlève un cadreur d\'un plan',desc:'Adobe After Effects · VFX',cat:'concert',year:2025},
+{id:'nGJSY3vWtWc',title:'On enlève un cadreur d\'un plan',desc:'Adobe After Effects · VFX',cat:'creation',year:2025},
   {id:'h8XIj55jPPY',title:'Elastic Meetup — David Pilato',desc:'Meetup ElasticFR · Paris',cat:'corporate',year:2023},
   {id:'WvUI2giyqSE',title:'LeBonCoin — LBC² 2022',desc:'Sony FS7 · ATEM Mini Extreme · OBS',cat:'corporate',year:2023},
   {id:'aI60dUn1T2I',title:'Orange / Liferay — Table ronde 2020',desc:'C300 · 5D · GoPro',cat:'corporate',year:2020},
@@ -443,13 +444,13 @@ const VIDEOS=[
   {id:'PIS6OpbECOA',title:'Liferay Symposium France 2019',desc:'2× Canon C300 · Canon 1D',cat:'corporate',year:2019},
   {id:'n9ZbKyhw3pE',title:'Elastic Meetup #88 — Jeanne Le Garrec',desc:'Sony FS7 · Alpha 7 · ATEM Mini Extreme ISO',cat:'corporate',year:2017},
   {id:'YOyLhv7ezGQ',title:'Architectes de l\'Urgence 2006',desc:'Reportage documentaire',cat:'corporate',year:2016},
-  {id:'A5IYGxl0FbM',title:'Animation Alkoda On Air — Logo animé',desc:'Motion design · Identité visuelle',cat:'clip',year:2016},
+  {id:'A5IYGxl0FbM',title:'Animation Alkoda On Air — Logo animé',desc:'Motion design · Identité visuelle',cat:'creation',year:2016},
   {id:'u8JElserouI',title:'Grand Requiem d\'après Beethoven',desc:'7 caméras EX1',cat:'concert',year:2020},
   {id:'U--Avm3zmmA',title:'Intro de Légende — Kin Kartell',desc:'5D Mark III · Tilt-Shift · Slider · Clip musical',cat:'clip',year:2016},
   {id:'ccqfZsQtWac',title:'Marie-Magdeleine — Jules Massenet',desc:'7 caméras EX1 · 24 micros · DVD · Direction J.-P. Loré',cat:'concert',year:2016},
 ];
-const CC={concert:'#00d2ff',corporate:'#ff6b35',tv:'#7cff8a',clip:'#c084fc'};
-let _CL={concert:'Concert',corporate:'Corporate',tv:'TV',clip:'Clip'};
+const CC={concert:'#00d2ff',corporate:'#ff6b35',tv:'#7cff8a',clip:'#c084fc' ,creation:'#c084fc'};
+let _CL={concert:'Concert',corporate:'Corporate',tv:'TV',clip:'Clip',creation:'Creation'};
 
 function renderVideos(f){
   const g=document.getElementById('vgrid');
@@ -508,7 +509,7 @@ const STRINGS={
     real_h2:'24 projets,<br><em>un seul niveau d\'exigence.</em>',
     real_lead:'Cliquez sur une vidéo pour la visionner directement.',
     filter_all:'Tout', filter_corp:'Corporate & Meetup', filter_concert:'Concert',
-    filter_tv:'TV', filter_clip:'Clip & Création',
+    filter_tv:'TV', filter_clip:'Clip', filter_creation:'Creation',
     valise_kicker:'Notre solution technique',
     valise_h2:'Une régie mobile<br><em>broadcast compacte.</em>',
     valise_body1:'Pour tenir nos engagements sur chaque événement, nous avons conçu une régie mobile broadcast déployable en moins de deux heures — architecture pensée brique par brique, pas un assemblage grand public.',
@@ -550,7 +551,7 @@ const STRINGS={
     real_h2:'24 projects,<br><em>one standard of excellence.</em>',
     real_lead:'Click on a video to watch it directly.',
     filter_all:'All', filter_corp:'Corporate & Meetup', filter_concert:'Concert',
-    filter_tv:'TV', filter_clip:'Clip & Creation',
+    filter_tv:'TV', filter_clip:'Clip', filter_creation:'Creation',
     valise_kicker:'Our technical solution',
     valise_h2:'A compact mobile<br><em>broadcast control room.</em>',
     valise_body1:'To deliver on our quality commitments at every event, we designed a mobile broadcast control room deployable in under two hours — built component by component, not an off-the-shelf assembly.',
@@ -620,8 +621,8 @@ function setLang(lang){
   });
   // Filtres
   _CL=lang==='fr'
-    ?{concert:'Concert',corporate:'Corporate',tv:'TV',clip:'Clip'}
-    :{concert:'Concert',corporate:'Corporate',tv:'TV',clip:'Clip'};
+    ?{concert:'Concert',corporate:'Corporate',tv:'TV',clip:'Clip',creation:'Creation'}
+    :{concert:'Concert',corporate:'Corporate',tv:'TV',clip:'Clip',creation:'Creation'};
   document.querySelectorAll('.f-btn[data-i18n-filter]').forEach(b=>{
     const key=b.getAttribute('data-i18n-filter');
     b.textContent=t(key);

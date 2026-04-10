@@ -460,7 +460,7 @@ function renderVideos(f){
     d.innerHTML=`<div class="vthumb">
       <img src="https://img.youtube.com/vi/${v.id}/hqdefault.jpg" alt="${v.title}" loading="lazy">
       <div class="vplay"><div class="vplay-btn"></div></div>
-      <div class="vcat-badge" style="color:${CC[v.cat]}">${_CL[v.cat]} · ${v.year}</div>
+      <div class="vcat-badge" style="color:${CC[v.cat]}">${_CL[v.cat]}</div>
     </div>
     <div class="vinfo"><h4>${v.title}</h4><p>${v.desc.split('·')[0].trim()}</p></div>`;
     d.onclick=()=>openMod(v);

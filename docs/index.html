@@ -295,7 +295,7 @@ footer{padding:28px 0 40px;border-top:1px solid var(--line);background:#000}
       <span class="eyebrow-dot"></span>
       <span data-i18n="hero_badge">Production audiovisuelle broadcast · Paris</span>
     </div>
-    <h1 data-i18n="hero_h1">Votre événement,<br><em>filmé et diffusé</em> avec précision.</h1>
+    <h1 data-i18n="hero_h1">Votre événement,<br><em>filmé</em> sans compromis.</h1>
     <p class="hero-sub" data-i18n="hero_sub">Captation multicaméra, live streaming, habillage graphique, post-production. Meetups, conférences, concerts — 30 ans d'expertise au service de votre image.</p>
     <div class="cta-row">
       <a href="#corporate" class="btn btn-primary" data-i18n="hero_cta1">Découvrir nos prestations</a>
@@ -545,7 +545,7 @@ const CL_EN={concert:'Concert',corporate:'Corporate',tv:'TV',clip:'Clip'};
     d.innerHTML=`<div class="vthumb">
       <img src="https://img.youtube.com/vi/${v.id}/hqdefault.jpg" alt="${v.title}">
       <div class="vplay"><div class="vplay-btn"></div></div>
-      <div class="vcat-badge" style="color:${CC[v.cat]}">${CL_FR[v.cat]} · ${v.year}</div>
+      <div class="vcat-badge" style="color:${CC[v.cat]}">${CL_FR[v.cat]}</div>
     </div>
     <div class="vinfo"><h4>${v.title}</h4><p>${v.desc.split('·')[0].trim()}</p></div>`;
     d.onclick=()=>openMod(v);
@@ -576,7 +576,7 @@ const STRINGS={
     nav_realisations:'Réalisations', nav_about:'À propos', nav_contact:'Contact',
     nav_cta:'Nous contacter',
     hero_badge:'Production audiovisuelle broadcast · Paris',
-    hero_h1:'Votre événement,<br><em>filmé et diffusé</em> avec précision.',
+    hero_h1:'Votre événement,<br><em>filmé</em> sans compromis.',
     hero_sub:'Captation multicaméra, live streaming, habillage graphique, post-production. Meetups, conférences, concerts — 30 ans d\'expertise au service de votre image.',
     hero_cta1:'Découvrir nos prestations', hero_cta2:'Voir les réalisations',
     stat1:'Ans d\'expérience broadcast', stat2:'Événements produits', stat3:'Captation multicaméra max',
@@ -638,7 +638,7 @@ const STRINGS={
     nav_realisations:'Portfolio', nav_about:'About', nav_contact:'Contact',
     nav_cta:'Contact us',
     hero_badge:'Broadcast video production · Paris',
-    hero_h1:'Your event,<br><em>filmed and broadcast</em> with precision.',
+    hero_h1:'Your event,<em> captured</em><br>without compromise.',
     hero_sub:'Multi-camera capture, live streaming, broadcast graphics, post-production. Meetups, conferences, concerts — 30 years of expertise at the service of your image.',
     hero_cta1:'Discover our services', hero_cta2:'See our work',
     stat1:'Years of broadcast experience', stat2:'Events produced', stat3:'Max multi-camera capture',

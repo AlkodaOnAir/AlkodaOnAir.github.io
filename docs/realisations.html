@@ -470,7 +470,7 @@ function renderVideos(f){
       <div class="vplay"><div class="vplay-btn"></div></div>
       <div class="vcat-badge" style="color:${CC[v.cat]}">${_CL[v.cat]}</div>
     </div>
-    <div class="vinfo"><h4>${v.title}</h4><p>${v.desc.split('·')[0].trim()}</p></div>`;
+    <div class="vinfo"><h4>${v.title}</h4><p>${v.desc.split('·').slice(0,2).join(' · ')}</p></div>`;
     d.onclick=()=>openMod(v);
     g.appendChild(d);
   });

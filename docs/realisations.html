@@ -291,8 +291,11 @@ footer{padding:28px 0 40px;border-top:1px solid var(--line);background:#000}
             <div><strong>PlayoutBee</strong><span data-i18n="feat_playout">Magnéto broadcast : clips, jingles, triggers en logique régie TV</span></div>
           </div>
           <div class="feat">
-            <div class="feat-icon"><img src="page_valise/Companion-logo.png" alt="Companion"></div>
-            <div><strong>Companion</strong><span data-i18n="feat_gpi">Pilotage de la régie : déclenchement des actions et automatisation</span></div>
+            <div style="display:flex;flex-direction:column;gap:1px">
+              <div class="feat-icon"><img src="page_valise/Companion-logo.png" alt="Companion"></div>
+              <div class="feat-icon"><img src="page_valise/Elgato-logo.png" alt="Elgato"></div>
+            </div>
+            <div><strong>Companion + Stream Deck XL</strong><span data-i18n="feat_gpi">Pilotage de la régie : déclenchement des actions et automatisations</span></div>
           </div>
         </div>
         <div class="valise-links">
@@ -523,7 +526,7 @@ const STRINGS={
     feat_obs:'Intégration propre de l\'écran speaker dans le plan large',
     feat_h2r:'Habillage graphique, titrages animés, compositions',
     feat_playout:'Magnéto broadcast : clips, jingles, triggers en logique régie TV',
-    feat_gpi:'Pilotage de la régie : déclenchement des actions et automatisation',
+    feat_gpi:'Pilotage de la régie : déclenchement des actions et automatisations<br>piloté par le Stream Deck XL',
     valise_link1_title:'Présentation complète de la régie',
     valise_link1_sub:'Architecture, workflow, équipements détaillés',
     valise_link2_title:'Signal Flow interactif',
@@ -566,7 +569,7 @@ const STRINGS={
     feat_obs:'Clean integration of the speaker screen into the wide shot',
     feat_h2r:'Broadcast key/fill graphics, lower thirds, animated compositions',
     feat_playout:'Broadcast playout: clips, jingles, triggers in TV control room logic',
-    feat_gpi:'Broadcast control: actions, triggers, automation in TV control room logic',
+    feat_gpi:'Broadcast control: actions, triggers, automations in TV control room logic<br>controlled via Stream Deck XL',
     valise_link1_title:'Full broadcast studio presentation',
     valise_link1_sub:'Architecture, workflow, detailed equipment list',
     valise_link2_title:'Interactive Signal Flow',

@@ -1,0 +1,644 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Mes 18 Printemps — Présences</title>
+  <style>
+    :root{
+      --bg:#f1e2f1;
+      --bg-2:#f7eef8;
+      --card:#fff9fdcc;
+      --text:#7d5a75;
+      --muted:#ab82a0;
+      --rose:#e6a3c7;
+      --rose-2:#f3bfd8;
+      --lavender:#b9a8d8;
+      --lavender-2:#d8c7ec;
+      --sage:#90a991;
+      --sage-2:#b7caaf;
+      --glow:#ffd48f;
+      --line:#ecd6e9;
+      --shadow:0 18px 45px rgba(160, 110, 155, 0.14);
+      --radius:22px;
+    }
+
+    *{box-sizing:border-box}
+    html{scroll-behavior:smooth}
+    body{
+      margin:0;
+      min-height:100vh;
+      color:var(--text);
+      font-family: Georgia, "Times New Roman", serif;
+      background:
+        radial-gradient(circle at 15% 10%, rgba(255,255,255,.55), transparent 20%),
+        radial-gradient(circle at 85% 18%, rgba(255,255,255,.35), transparent 18%),
+        linear-gradient(180deg, #f4e8f4 0%, #efe0f0 100%);
+      overflow-x:hidden;
+    }
+
+    body::before,
+    body::after{
+      content:"";
+      position:fixed;
+      inset:0;
+      pointer-events:none;
+      z-index:0;
+    }
+
+    body::before{
+      background:
+        url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 380 380'><g opacity='0.96'><ellipse cx='110' cy='95' rx='30' ry='58' fill='%23c7b5e4' transform='rotate(-35 110 95)'/><ellipse cx='155' cy='82' rx='30' ry='58' fill='%23d7c6ee' transform='rotate(8 155 82)'/><ellipse cx='192' cy='108' rx='30' ry='58' fill='%23c1aedf' transform='rotate(48 192 108)'/><ellipse cx='175' cy='152' rx='30' ry='58' fill='%23d7c6ee' transform='rotate(92 175 152)'/><ellipse cx='126' cy='155' rx='30' ry='58' fill='%23cab7e6' transform='rotate(140 126 155)'/><circle cx='150' cy='119' r='26' fill='%23b39ad2'/><ellipse cx='253' cy='176' rx='20' ry='52' fill='%2398b497' transform='rotate(28 253 176)'/><ellipse cx='280' cy='212' rx='18' ry='46' fill='%23a9c0a5' transform='rotate(-12 280 212)'/><ellipse cx='231' cy='221' rx='18' ry='46' fill='%2389a58c' transform='rotate(62 231 221)'/><path d='M214 211 C194 244 183 274 176 315' stroke='%238ba08a' stroke-width='8' fill='none' stroke-linecap='round'/><path d='M145 174 C127 208 110 241 89 283' stroke='%239db09b' stroke-width='7' fill='none' stroke-linecap='round'/><g fill='%23b8a7d6'><ellipse cx='64' cy='258' rx='10' ry='24' transform='rotate(-33 64 258)'/><ellipse cx='86' cy='245' rx='9' ry='22' transform='rotate(12 86 245)'/><ellipse cx='106' cy='260' rx='10' ry='24' transform='rotate(42 106 260)'/><ellipse cx='88' cy='278' rx='10' ry='24' transform='rotate(90 88 278)'/></g></g></svg>") left top / 330px 330px no-repeat,
+        url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 380 380'><g opacity='0.96'><ellipse cx='110' cy='95' rx='30' ry='58' fill='%23c7b5e4' transform='rotate(-35 110 95)'/><ellipse cx='155' cy='82' rx='30' ry='58' fill='%23d7c6ee' transform='rotate(8 155 82)'/><ellipse cx='192' cy='108' rx='30' ry='58' fill='%23c1aedf' transform='rotate(48 192 108)'/><ellipse cx='175' cy='152' rx='30' ry='58' fill='%23d7c6ee' transform='rotate(92 175 152)'/><ellipse cx='126' cy='155' rx='30' ry='58' fill='%23cab7e6' transform='rotate(140 126 155)'/><circle cx='150' cy='119' r='26' fill='%23b39ad2'/><ellipse cx='253' cy='176' rx='20' ry='52' fill='%2398b497' transform='rotate(28 253 176)'/><ellipse cx='280' cy='212' rx='18' ry='46' fill='%23a9c0a5' transform='rotate(-12 280 212)'/><ellipse cx='231' cy='221' rx='18' ry='46' fill='%2389a58c' transform='rotate(62 231 221)'/><path d='M214 211 C194 244 183 274 176 315' stroke='%238ba08a' stroke-width='8' fill='none' stroke-linecap='round'/><path d='M145 174 C127 208 110 241 89 283' stroke='%239db09b' stroke-width='7' fill='none' stroke-linecap='round'/><g fill='%23b8a7d6'><ellipse cx='64' cy='258' rx='10' ry='24' transform='rotate(-33 64 258)'/><ellipse cx='86' cy='245' rx='9' ry='22' transform='rotate(12 86 245)'/><ellipse cx='106' cy='260' rx='10' ry='24' transform='rotate(42 106 260)'/><ellipse cx='88' cy='278' rx='10' ry='24' transform='rotate(90 88 278)'/></g></g></svg>") right top / 330px 330px no-repeat,
+        url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 380 380'><g opacity='0.96'><ellipse cx='110' cy='95' rx='30' ry='58' fill='%23c7b5e4' transform='rotate(-35 110 95)'/><ellipse cx='155' cy='82' rx='30' ry='58' fill='%23d7c6ee' transform='rotate(8 155 82)'/><ellipse cx='192' cy='108' rx='30' ry='58' fill='%23c1aedf' transform='rotate(48 192 108)'/><ellipse cx='175' cy='152' rx='30' ry='58' fill='%23d7c6ee' transform='rotate(92 175 152)'/><ellipse cx='126' cy='155' rx='30' ry='58' fill='%23cab7e6' transform='rotate(140 126 155)'/><circle cx='150' cy='119' r='26' fill='%23b39ad2'/><ellipse cx='253' cy='176' rx='20' ry='52' fill='%2398b497' transform='rotate(28 253 176)'/><ellipse cx='280' cy='212' rx='18' ry='46' fill='%23a9c0a5' transform='rotate(-12 280 212)'/><ellipse cx='231' cy='221' rx='18' ry='46' fill='%2389a58c' transform='rotate(62 231 221)'/><path d='M214 211 C194 244 183 274 176 315' stroke='%238ba08a' stroke-width='8' fill='none' stroke-linecap='round'/><path d='M145 174 C127 208 110 241 89 283' stroke='%239db09b' stroke-width='7' fill='none' stroke-linecap='round'/><g fill='%23b8a7d6'><ellipse cx='64' cy='258' rx='10' ry='24' transform='rotate(-33 64 258)'/><ellipse cx='86' cy='245' rx='9' ry='22' transform='rotate(12 86 245)'/><ellipse cx='106' cy='260' rx='10' ry='24' transform='rotate(42 106 260)'/><ellipse cx='88' cy='278' rx='10' ry='24' transform='rotate(90 88 278)'/></g></g></svg>") left bottom / 330px 330px no-repeat,
+        url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 380 380'><g opacity='0.96'><ellipse cx='110' cy='95' rx='30' ry='58' fill='%23c7b5e4' transform='rotate(-35 110 95)'/><ellipse cx='155' cy='82' rx='30' ry='58' fill='%23d7c6ee' transform='rotate(8 155 82)'/><ellipse cx='192' cy='108' rx='30' ry='58' fill='%23c1aedf' transform='rotate(48 192 108)'/><ellipse cx='175' cy='152' rx='30' ry='58' fill='%23d7c6ee' transform='rotate(92 175 152)'/><ellipse cx='126' cy='155' rx='30' ry='58' fill='%23cab7e6' transform='rotate(140 126 155)'/><circle cx='150' cy='119' r='26' fill='%23b39ad2'/><ellipse cx='253' cy='176' rx='20' ry='52' fill='%2398b497' transform='rotate(28 253 176)'/><ellipse cx='280' cy='212' rx='18' ry='46' fill='%23a9c0a5' transform='rotate(-12 280 212)'/><ellipse cx='231' cy='221' rx='18' ry='46' fill='%2389a58c' transform='rotate(62 231 221)'/><path d='M214 211 C194 244 183 274 176 315' stroke='%238ba08a' stroke-width='8' fill='none' stroke-linecap='round'/><path d='M145 174 C127 208 110 241 89 283' stroke='%239db09b' stroke-width='7' fill='none' stroke-linecap='round'/><g fill='%23b8a7d6'><ellipse cx='64' cy='258' rx='10' ry='24' transform='rotate(-33 64 258)'/><ellipse cx='86' cy='245' rx='9' ry='22' transform='rotate(12 86 245)'/><ellipse cx='106' cy='260' rx='10' ry='24' transform='rotate(42 106 260)'/><ellipse cx='88' cy='278' rx='10' ry='24' transform='rotate(90 88 278)'/></g></g></svg>") right bottom / 330px 330px no-repeat;
+      opacity:.92;
+    }
+
+    body::after{
+      background:
+        radial-gradient(circle at 4.5% 10.5%, rgba(255, 191, 87, .86) 0 .6rem, rgba(255,143,62,.82) .66rem 1rem, transparent 1.06rem),
+        radial-gradient(circle at 95.3% 12%, rgba(255, 191, 87, .86) 0 .6rem, rgba(255,143,62,.82) .66rem 1rem, transparent 1.06rem),
+        radial-gradient(circle at 5.2% 88%, rgba(255, 191, 87, .82) 0 .6rem, rgba(255,143,62,.8) .66rem 1rem, transparent 1.06rem),
+        radial-gradient(circle at 95% 86.5%, rgba(255, 191, 87, .82) 0 .6rem, rgba(255,143,62,.8) .66rem 1rem, transparent 1.06rem);
+      filter: blur(.15px);
+      opacity:.72;
+    }
+
+    .page{
+      position:relative;
+      z-index:1;
+      width:min(1120px, calc(100% - 28px));
+      margin:0 auto;
+      padding:26px 0 80px;
+    }
+
+    .hero{
+      position:relative;
+      overflow:hidden;
+      padding:52px 24px 38px;
+      text-align:center;
+      border-radius:32px;
+      background:linear-gradient(180deg, rgba(255,250,254,.72), rgba(255,247,252,.64));
+      border:1px solid rgba(236,214,233,.95);
+      box-shadow:var(--shadow);
+      backdrop-filter: blur(3px);
+    }
+
+    .hero::before,
+    .hero::after{
+      content:"";
+      position:absolute;
+      width:240px;
+      height:240px;
+      background:url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 260 260'><g opacity='0.9'><path d='M135 150 C120 168 112 189 106 216' stroke='%2397ad96' stroke-width='6' fill='none' stroke-linecap='round'/><path d='M95 118 C79 144 63 172 45 204' stroke='%23a8baa5' stroke-width='5' fill='none' stroke-linecap='round'/><ellipse cx='96' cy='88' rx='20' ry='38' fill='%23cfbee9' transform='rotate(-34 96 88)'/><ellipse cx='129' cy='77' rx='20' ry='38' fill='%23decff0' transform='rotate(10 129 77)'/><ellipse cx='158' cy='96' rx='20' ry='38' fill='%23cab6e4' transform='rotate(46 158 96)'/><ellipse cx='147' cy='129' rx='20' ry='38' fill='%23ddcdf0' transform='rotate(92 147 129)'/><ellipse cx='113' cy='131' rx='20' ry='38' fill='%23c9b4e3' transform='rotate(142 113 131)'/><circle cx='128' cy='104' r='18' fill='%23bda8da'/><ellipse cx='177' cy='154' rx='13' ry='30' fill='%2391ad90' transform='rotate(30 177 154)'/><ellipse cx='198' cy='177' rx='12' ry='27' fill='%23afc2ab' transform='rotate(-18 198 177)'/><ellipse cx='157' cy='182' rx='12' ry='27' fill='%2395ac93' transform='rotate(62 157 182)'/></g></svg>") center/contain no-repeat;
+      opacity:.8;
+      pointer-events:none;
+    }
+
+    .hero::before{left:-68px; top:-74px}
+    .hero::after{right:-72px; bottom:-88px; transform:rotate(18deg)}
+
+    .eyebrow{
+      margin:0;
+      color:var(--muted);
+      font-size:.92rem;
+      letter-spacing:.24em;
+      text-transform:uppercase;
+    }
+
+    h1{
+      margin:14px 0 8px;
+      color:var(--rose);
+      font-size:clamp(2.5rem, 6vw, 4.7rem);
+      font-weight:400;
+      line-height:1;
+      font-family: "Brush Script MT", "Segoe Script", cursive;
+    }
+
+    .subtitle{
+      max-width:700px;
+      margin:0 auto 18px;
+      color:var(--muted);
+      font-size:1.05rem;
+      line-height:1.7;
+    }
+
+    .date-pill{
+      display:inline-flex;
+      gap:10px;
+      align-items:center;
+      padding:12px 18px;
+      border-radius:999px;
+      background:rgba(255,255,255,.65);
+      border:1px solid rgba(230,163,199,.32);
+      color:var(--text);
+      font-size:1rem;
+      box-shadow:0 10px 25px rgba(160,110,155,.08);
+    }
+
+    .date-pill strong{
+      color:var(--rose);
+      font-weight:normal;
+    }
+
+    .summary{
+      display:grid;
+      grid-template-columns:repeat(4, minmax(0,1fr));
+      gap:16px;
+      margin:26px 0 28px;
+    }
+
+    .summary-card{
+      background:var(--card);
+      border:1px solid var(--line);
+      border-radius:var(--radius);
+      padding:18px 16px;
+      box-shadow:var(--shadow);
+      text-align:center;
+    }
+
+    .summary-card .label{
+      color:var(--muted);
+      font-size:.95rem;
+      margin-bottom:8px;
+    }
+
+    .summary-card .count{
+      font-size:2rem;
+      color:var(--rose);
+      line-height:1;
+      margin-bottom:4px;
+    }
+
+    .summary-card .small{
+      font-size:.88rem;
+      color:var(--text);
+      opacity:.78;
+    }
+
+    .panel{
+      background:var(--card);
+      border:1px solid var(--line);
+      border-radius:30px;
+      box-shadow:var(--shadow);
+      overflow:hidden;
+    }
+
+    .panel-top{
+      display:flex;
+      align-items:center;
+      justify-content:space-between;
+      gap:20px;
+      padding:22px 22px 16px;
+      border-bottom:1px solid rgba(236,214,233,.9);
+      flex-wrap:wrap;
+    }
+
+    .panel-title h2{
+      margin:0 0 6px;
+      font-size:1.7rem;
+      color:var(--rose);
+      font-weight:400;
+    }
+
+    .panel-title p{
+      margin:0;
+      color:var(--muted);
+      line-height:1.5;
+    }
+
+    .status-chip{
+      padding:12px 16px;
+      border-radius:999px;
+      background:rgba(255,255,255,.72);
+      border:1px solid rgba(230,163,199,.25);
+      color:var(--text);
+      font-size:.95rem;
+      white-space:nowrap;
+    }
+
+    .table-wrap{
+      padding:10px 14px 18px;
+      overflow-x:auto;
+    }
+
+    table{
+      width:100%;
+      border-collapse:separate;
+      border-spacing:0 10px;
+      min-width:760px;
+    }
+
+    thead th{
+      position:sticky;
+      top:0;
+      z-index:1;
+      background:transparent;
+      color:var(--muted);
+      font-weight:normal;
+      font-size:.92rem;
+      letter-spacing:.06em;
+      text-transform:uppercase;
+      padding:0 10px 6px;
+      text-align:center;
+    }
+
+    thead th:first-child{
+      text-align:left;
+      padding-left:18px;
+    }
+
+    tbody tr{
+      background:rgba(255,255,255,.56);
+      box-shadow:0 8px 20px rgba(160,110,155,.07);
+    }
+
+    tbody tr td:first-child{
+      border-top-left-radius:18px;
+      border-bottom-left-radius:18px;
+    }
+
+    tbody tr td:last-child{
+      border-top-right-radius:18px;
+      border-bottom-right-radius:18px;
+    }
+
+    td{
+      padding:14px 10px;
+      border-top:1px solid rgba(236,214,233,.95);
+      border-bottom:1px solid rgba(236,214,233,.95);
+      text-align:center;
+    }
+
+    td:first-child{
+      text-align:left;
+      border-left:1px solid rgba(236,214,233,.95);
+      padding-left:18px;
+      min-width:210px;
+    }
+
+    td:last-child{
+      border-right:1px solid rgba(236,214,233,.95);
+    }
+
+    .guest-name{
+      display:flex;
+      align-items:center;
+      gap:12px;
+      font-size:1.05rem;
+    }
+
+    .guest-bullet{
+      width:11px;
+      height:11px;
+      border-radius:50%;
+      background:linear-gradient(180deg, var(--rose), var(--lavender));
+      box-shadow:0 0 0 5px rgba(243,191,216,.18);
+      flex:none;
+    }
+
+    .choice{
+      display:inline-flex;
+      align-items:center;
+      justify-content:center;
+      width:34px;
+      height:34px;
+      border-radius:12px;
+      border:1px solid rgba(230,163,199,.42);
+      background:rgba(255,255,255,.72);
+      transition:transform .12s ease, border-color .12s ease, box-shadow .12s ease, background .12s ease;
+      cursor:pointer;
+      position:relative;
+    }
+
+    .choice:hover{
+      transform:translateY(-1px);
+      box-shadow:0 8px 16px rgba(160,110,155,.12);
+      border-color:rgba(230,163,199,.8);
+    }
+
+    .choice input{
+      position:absolute;
+      inset:0;
+      opacity:0;
+      cursor:pointer;
+      margin:0;
+    }
+
+    .choice span{
+      width:16px;
+      height:16px;
+      border-radius:5px;
+      border:1.5px solid rgba(171,130,160,.7);
+      display:block;
+      position:relative;
+      transition:all .14s ease;
+      background:rgba(255,255,255,.84);
+    }
+
+    .choice input:checked + span{
+      background:linear-gradient(180deg, var(--rose), #dfa0c4);
+      border-color:var(--rose);
+      box-shadow:0 0 0 5px rgba(243,191,216,.22);
+    }
+
+    .choice input:checked + span::after{
+      content:"";
+      position:absolute;
+      left:4px;
+      top:1px;
+      width:5px;
+      height:9px;
+      border:solid white;
+      border-width:0 2px 2px 0;
+      transform:rotate(45deg);
+    }
+
+    .footer-note{
+      padding:0 22px 24px;
+      color:var(--muted);
+      line-height:1.6;
+      font-size:.96rem;
+    }
+
+    .footer-note strong{color:var(--text); font-weight:normal}
+
+    @media (max-width: 920px){
+      .summary{grid-template-columns:repeat(2, minmax(0,1fr));}
+    }
+
+    @media (max-width: 700px){
+      .page{width:min(100% - 16px, 1120px); padding-top:14px}
+      .hero{padding:42px 18px 30px; border-radius:26px}
+      .panel{border-radius:24px}
+      .panel-top{padding:18px 18px 14px}
+      .summary{grid-template-columns:1fr; gap:12px;}
+      table{min-width:680px}
+      h1{font-size:3rem}
+      .subtitle{font-size:1rem}
+    }
+  </style>
+</head>
+<body>
+  <main class="page">
+    <section class="hero">
+      <p class="eyebrow">Mes 18 Printemps</p>
+      <h1>Présences aux repas</h1>
+      <p class="subtitle">
+        Merci d’indiquer les repas où vous serez présents pour la fête du <br><strong>samedi 4 juillet 2026 à Feneu</strong>.
+      </p>
+      <div class="date-pill"><strong>Repas concernés :</strong> vendredi soir · samedi midi · samedi soir · dimanche midi</div>
+    </section>
+
+    <section class="summary" aria-label="Résumé des présences">
+      <article class="summary-card">
+        <div class="label">Vendredi soir</div>
+        <div class="count" data-count="vendredi">0</div>
+        <div class="small">présents</div>
+      </article>
+      <article class="summary-card">
+        <div class="label">Samedi midi</div>
+        <div class="count" data-count="samediMidi">0</div>
+        <div class="small">présents</div>
+      </article>
+      <article class="summary-card">
+        <div class="label">Samedi soir</div>
+        <div class="count" data-count="samediSoir">0</div>
+        <div class="small">présents</div>
+      </article>
+      <article class="summary-card">
+        <div class="label">Dimanche midi</div>
+        <div class="count" data-count="dimanche">0</div>
+        <div class="small">présents</div>
+      </article>
+    </section>
+
+    <section class="panel">
+      <div class="panel-top">
+        <div class="panel-title">
+          <h2>Liste des invités</h2>
+        </div>
+      </div>
+
+      <div class="table-wrap">
+        <table>
+          <thead>
+            <tr>
+              <th>Invité</th>
+              <th>Vendredi soir</th>
+              <th>Samedi midi</th>
+              <th>Samedi soir</th>
+              <th>Dimanche midi</th>
+            </tr>
+          </thead>
+          <tbody id="guestTableBody"></tbody>
+        </table>
+      </div>
+
+      <div class="footer-note">
+        <strong>Note :</strong> Merci à tous!
+      </div>
+    </section>
+  </main>
+
+  
+
+<script>
+const URL = "https://script.google.com/macros/s/AKfycbxWxM97eZbM4B7Qo0bWOwqbj-ZMyrum_NImVwCUlefu5BP4Ri2OCYhss_hPtjvHYUoueg/exec";
+
+let state = {};
+const tbody = document.getElementById('guestTableBody');
+const statusEl = document.getElementById('answeredStatus');
+
+const meals = [
+  { key: 'vendredi' },
+  { key: 'samediMidi' },
+  { key: 'samediSoir' },
+  { key: 'dimanche' }
+];
+
+function buildNoCacheUrl() {
+  const url = new URL(URL);
+  url.searchParams.set("_ts", Date.now().toString());
+  return url.toString();
+}
+
+function parseCheckboxValue(value) {
+  if (typeof value === "boolean") return value;
+  if (typeof value === "number") return value === 1;
+  if (value == null) return false;
+
+  const normalized = String(value).trim().toLowerCase();
+  return normalized === "true" || normalized === "vrai" || normalized === "1" || normalized === "yes" || normalized === "oui";
+}
+
+async function loadData() {
+  try {
+    const res = await fetch(buildNoCacheUrl(), { cache: "no-store" });
+    if (!res.ok) {
+      throw new Error("GET " + res.status);
+    }
+
+    const payload = await res.json();
+    const rows = Array.isArray(payload) ? payload.slice(1) : (payload.data || []);
+
+    state = {};
+
+    rows.forEach((row) => {
+      let nom;
+      let vendredi;
+      let samediMidi;
+      let samediSoir;
+      let dimanche;
+
+      if (Array.isArray(row)) {
+        [nom, vendredi, samediMidi, samediSoir, dimanche] = row;
+        if (!nom || String(nom).trim().toLowerCase() === "nom") {
+          return;
+        }
+      } else {
+        nom = row.nom;
+        vendredi = row.vendredi;
+        samediMidi = row.samediMidi;
+        samediSoir = row.samediSoir;
+        dimanche = row.dimanche;
+      }
+
+      state[String(nom).trim()] = {
+        vendredi: parseCheckboxValue(vendredi),
+        samediMidi: parseCheckboxValue(samediMidi),
+        samediSoir: parseCheckboxValue(samediSoir),
+        dimanche: parseCheckboxValue(dimanche)
+      };
+    });
+
+    render();
+  } catch (err) {
+    console.error("Erreur chargement:", err);
+  }
+}
+
+function render(){
+  tbody.innerHTML = "";
+
+  const guests = Object.keys(state).sort((a,b)=>a.localeCompare(b,'fr',{sensitivity:'base'}));
+
+  guests.forEach(guest=>{
+    const tr = document.createElement('tr');
+
+    tr.innerHTML = `
+      <td><div class="guest-name"><span class="guest-bullet"></span>${guest}</div></td>
+      ${meals.map(m=>`
+        <td>
+          <label class="choice">
+            <input type="checkbox" data-guest="${guest}" data-meal="${m.key}" ${state[guest][m.key]?'checked':''}>
+            <span></span>
+          </label>
+        </td>
+      `).join("")}
+    `;
+
+    tbody.appendChild(tr);
+  });
+
+  refreshSummary();
+}
+
+function updateSummary() {
+  const totals = { vendredi:0, samediMidi:0, samediSoir:0, dimanche:0 };
+  let answered = 0;
+
+  Object.keys(state).forEach((guest) => {
+    let has = false;
+    meals.forEach(({ key }) => {
+      if (state[guest][key]) {
+        totals[key] += 1;
+        has = true;
+      }
+    });
+    if (has) {
+      answered += 1;
+    }
+  });
+
+  document.querySelector('[data-count="vendredi"]').textContent = totals.vendredi;
+  document.querySelector('[data-count="samediMidi"]').textContent = totals.samediMidi;
+  document.querySelector('[data-count="samediSoir"]').textContent = totals.samediSoir;
+  document.querySelector('[data-count="dimanche"]').textContent = totals.dimanche;
+  statusEl.textContent = answered + " invités ont au moins un repas coché";
+}
+
+function refreshSummary() {
+  const totals = { vendredi: 0, samediMidi: 0, samediSoir: 0, dimanche: 0 };
+  let answered = 0;
+
+  Object.keys(state).forEach((guest) => {
+    let has = false;
+    meals.forEach(({ key }) => {
+      if (state[guest][key]) {
+        totals[key] += 1;
+        has = true;
+      }
+    });
+    if (has) {
+      answered += 1;
+    }
+  });
+
+  document.querySelector('[data-count="vendredi"]').textContent = totals.vendredi;
+  document.querySelector('[data-count="samediMidi"]').textContent = totals.samediMidi;
+  document.querySelector('[data-count="samediSoir"]').textContent = totals.samediSoir;
+  document.querySelector('[data-count="dimanche"]').textContent = totals.dimanche;
+  if (statusEl) {
+    statusEl.textContent = answered + " invitÃ©s ont au moins un repas cochÃ©";
+  }
+}
+
+document.addEventListener('change', async (e) => {
+  if (e.target.type !== "checkbox") {
+    return;
+  }
+
+  const g = e.target.dataset.guest;
+  const m = e.target.dataset.meal;
+  const previousValue = state[g][m];
+
+  state[g][m] = e.target.checked;
+  refreshSummary();
+  e.target.disabled = true;
+
+  try {
+    const res = await fetch(buildNoCacheUrl(), {
+      method: "POST",
+      cache: "no-store",
+      body: JSON.stringify({
+        nom: g,
+        vendredi: state[g].vendredi,
+        samediMidi: state[g].samediMidi,
+        samediSoir: state[g].samediSoir,
+        dimanche: state[g].dimanche
+      })
+    });
+
+    if (!res.ok) {
+      throw new Error("POST " + res.status);
+    }
+
+    await loadData();
+  } catch (err) {
+    state[g][m] = previousValue;
+    e.target.checked = previousValue;
+    refreshSummary();
+    console.error("Erreur POST:", err);
+  } finally {
+    e.target.disabled = false;
+  }
+});
+
+loadData();
+</script>
+
+
+</body>
+</html>

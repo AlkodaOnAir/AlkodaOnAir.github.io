@@ -445,7 +445,7 @@
   
 
 <script>
-const URL = "https://script.google.com/macros/s/AKfycbxWxM97eZbM4B7Qo0bWOwqbj-ZMyrum_NImVwCUlefu5BP4Ri2OCYhss_hPtjvHYUoueg/exec";
+const API_URL = "https://script.google.com/macros/s/AKfycbxWxM97eZbM4B7Qo0bWOwqbj-ZMyrum_NImVwCUlefu5BP4Ri2OCYhss_hPtjvHYUoueg/exec";
 
 let state = {};
 const tbody = document.getElementById('guestTableBody');
@@ -459,7 +459,7 @@ const meals = [
 ];
 
 function buildNoCacheUrl() {
-  const url = new URL(URL);
+  const url = new URL(API_URL);
   url.searchParams.set("_ts", Date.now().toString());
   return url.toString();
 }

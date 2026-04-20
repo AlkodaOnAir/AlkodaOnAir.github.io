@@ -498,8 +498,11 @@
     <section class="section alt">
       <div class="shell split">
         <div class="media-card">
-          <div class="media-frame" onclick="lbOpen(this)">
-            <img src="alkoda_multiview.avif" alt="Vue multiview de la régie Alkoda On Air" onerror="this.outerHTML='&lt;div class=&quot;img-placeholder&quot;&gt;&lt;strong&gt;alkoda_multiview.avif&lt;/strong&gt;&lt;span&gt;Visuel du multiview réel de la régie.&lt;/span&gt;&lt;/div&gt;'">
+          <div class="media-frame video-frame">
+            <video autoplay muted loop playsinline preload="metadata" style="width:100%;height:100%;object-fit:contain;display:block;background:#07111f">
+              <source src="multiview.mp4" type="video/mp4">
+              <source src="multiview.webm" type="video/webm">
+            </video>
           </div>
           <div class="media-caption">
             <strong data-i18n="v_cap4_strong">Multiview réel de la régie</strong>

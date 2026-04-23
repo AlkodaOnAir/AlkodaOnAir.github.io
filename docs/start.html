@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Alkoda Start Page v2.2</title>
+  <title>start.html</title>
   <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
   <style>
     :root {
@@ -185,7 +185,7 @@
       border: none;
       box-shadow: none;
       color: rgba(255,255,255,.25);
-      font-size: 30px;
+      font-size: calc(var(--tile-size) * .35);
       cursor: pointer;
     }
 
@@ -197,8 +197,8 @@
     }
 
     .tile.favicon img {
-      width: 58px;
-      height: 58px;
+      width: calc(var(--tile-size) * .67);
+      height: calc(var(--tile-size) * .67);
       object-fit: contain;
     }
 
@@ -210,7 +210,7 @@
       padding: 4px 5px 5px;
       min-height: 21px;
       color: #fff;
-      font-size: 11px;
+      font-size: clamp(10px, calc(var(--tile-size) * .125), 13px);
       line-height: 1.05;
       text-align: center;
       background: linear-gradient(to top, rgba(0,0,0,.78), rgba(0,0,0,.12));
@@ -222,7 +222,7 @@
 
     .text-only {
       padding: 8px;
-      font-size: 13px;
+      font-size: clamp(11px, calc(var(--tile-size) * .15), 15px);
       line-height: 1.15;
       color: inherit;
       overflow: hidden;
@@ -271,10 +271,7 @@
       box-shadow: 0 25px 90px rgba(0,0,0,.5);
     }
 
-    .size-card {
-      width: min(430px, 100%);
-    }
-
+    .size-card { width: min(460px, 100%); }
     .card h1, .card h2 { margin: 0 0 16px; }
     .card p { color: var(--muted); margin: 0 0 16px; line-height: 1.4; }
 
@@ -379,7 +376,7 @@
 
     .size-panel {
       display: grid;
-      grid-template-columns: 1fr 120px 1fr;
+      grid-template-columns: 1fr 130px 1fr;
       gap: 18px;
       align-items: center;
       margin: 18px 0;
@@ -414,15 +411,18 @@
     .round-btn:hover { background: #303038; }
 
     .size-display {
-      width: 120px;
-      height: 92px;
+      width: 130px;
+      min-height: 96px;
       border-radius: 14px;
       background: #d7d7d7;
       color: #333;
       display: grid;
       place-items: center;
-      font-size: 22px;
+      text-align: center;
+      font-size: 20px;
       font-weight: 700;
+      padding: 10px;
+      line-height: 1.35;
     }
 
     .size-note {
@@ -430,6 +430,14 @@
       color: var(--muted);
       text-align: center;
       margin-top: 8px;
+    }
+
+    .range-row {
+      margin: 12px 0 16px;
+    }
+
+    .range-row input[type="range"] {
+      width: 100%;
     }
 
     @media (max-width: 650px) {
@@ -492,7 +500,7 @@
   <div id="sizeModal" class="modal-backdrop">
     <div class="card size-card">
       <h2>Taille du webmix</h2>
-      <p>Choisis le nombre de colonnes et de lignes. Les cases vides complètent automatiquement la grille.</p>
+      <p>Choisis les colonnes, les lignes et la taille des tuiles. Les tuiles restent toujours carrées.</p>
 
       <div class="size-panel">
         <div class="size-control">
@@ -501,7 +509,7 @@
           <button id="colsMinusBtn" class="round-btn" type="button">−</button>
         </div>
 
-        <div id="sizeDisplay" class="size-display">11×5</div>
+        <div id="sizeDisplay" class="size-display">11×5<br>86 px</div>
 
         <div class="size-control">
           <div class="size-control-title">Lignes</div>
@@ -521,7 +529,15 @@
         </div>
       </div>
 
-      <div class="size-note">Valeur actuelle sauvegardée dans Supabase : visible sur tous tes appareils.</div>
+      <div class="field">
+        <label for="tileSizeInput">Taille des tuiles en pixels</label>
+        <input id="tileSizeInput" type="number" min="50" max="150" value="86" />
+      </div>
+      <div class="range-row">
+        <input id="tileSizeRange" type="range" min="50" max="150" value="86" />
+      </div>
+
+      <div class="size-note">La taille est sauvegardée dans Supabase et appliquée sur tous tes appareils.</div>
       <div id="sizeStatus" class="status"></div>
 
       <div class="modal-actions">
@@ -660,7 +676,7 @@
 
     const el = id => document.getElementById(id);
     const loginScreen = el("loginScreen"), webmix = el("webmix"), searchInput = el("searchInput"), debugBox = el("debugBox");
-    const sizeModal = el("sizeModal"), sizeDisplay = el("sizeDisplay"), colsInput = el("colsInput"), rowsInput = el("rowsInput"), sizeStatus = el("sizeStatus");
+    const sizeModal = el("sizeModal"), sizeDisplay = el("sizeDisplay"), colsInput = el("colsInput"), rowsInput = el("rowsInput"), tileSizeInput = el("tileSizeInput"), tileSizeRange = el("tileSizeRange"), sizeStatus = el("sizeStatus");
     const tileModal = el("tileModal"), modalTitle = el("modalTitle"), modalStatus = el("modalStatus");
     const tileTitle = el("tileTitle"), tileUrl = el("tileUrl"), tileImage = el("tileImage"), tileColor = el("tileColor"), tileUpload = el("tileUpload");
     const tileShowTitle = el("tileShowTitle"), tileOpenNewTab = el("tileOpenNewTab"), preview = el("preview");
@@ -669,7 +685,7 @@
 
     let tiles = [];
     let configRow = null;
-    let webmixConfig = { columns: 11, rows: 5 };
+    let webmixConfig = { columns: 11, rows: 5, tileSize: 86 };
     let editingTile = null;
     let imageMode = "color";
     let uploadedImageUrl = "";
@@ -713,29 +729,50 @@
     }
 
     function applyGridConfig() {
+      webmixConfig = {
+        columns: clampNumber(webmixConfig.columns, 1, 30, 11),
+        rows: clampNumber(webmixConfig.rows, 1, 30, 5),
+        tileSize: clampNumber(webmixConfig.tileSize, 50, 150, 86)
+      };
+      document.documentElement.style.setProperty("--tile-size", `${webmixConfig.tileSize}px`);
       webmix.style.gridTemplateColumns = `repeat(${webmixConfig.columns}, var(--tile-size))`;
       colsInput.value = webmixConfig.columns;
       rowsInput.value = webmixConfig.rows;
-      sizeDisplay.textContent = `${webmixConfig.columns}×${webmixConfig.rows}`;
+      tileSizeInput.value = webmixConfig.tileSize;
+      tileSizeRange.value = webmixConfig.tileSize;
+      sizeDisplay.innerHTML = `${webmixConfig.columns}×${webmixConfig.rows}<br>${webmixConfig.tileSize} px`;
+    }
+
+    function updateSizeDisplayFromInputs() {
+      const c = clampNumber(colsInput.value, 1, 30, 11);
+      const r = clampNumber(rowsInput.value, 1, 30, 5);
+      const s = clampNumber(tileSizeInput.value, 50, 150, 86);
+      colsInput.value = c;
+      rowsInput.value = r;
+      tileSizeInput.value = s;
+      tileSizeRange.value = s;
+      sizeDisplay.innerHTML = `${c}×${r}<br>${s} px`;
     }
 
     function parseConfigRow(row) {
-      if (!row || !row.url) return { columns: 11, rows: 5 };
+      if (!row || !row.url) return { columns: 11, rows: 5, tileSize: 86 };
       try {
         const parsed = JSON.parse(row.url);
         return {
           columns: clampNumber(parsed.columns, 1, 30, 11),
-          rows: clampNumber(parsed.rows, 1, 30, 5)
+          rows: clampNumber(parsed.rows, 1, 30, 5),
+          tileSize: clampNumber(parsed.tileSize, 50, 150, 86)
         };
       } catch {
-        return { columns: 11, rows: 5 };
+        return { columns: 11, rows: 5, tileSize: 86 };
       }
     }
 
     async function saveWebmixConfig() {
       webmixConfig = {
         columns: clampNumber(colsInput.value, 1, 30, 11),
-        rows: clampNumber(rowsInput.value, 1, 30, 5)
+        rows: clampNumber(rowsInput.value, 1, 30, 5),
+        tileSize: clampNumber(tileSizeInput.value, 50, 150, 86)
       };
       applyGridConfig();
       renderTiles();
@@ -751,18 +788,18 @@
         position: 0
       };
 
-      const result = configRow
-        ? await sbClient.from("tiles").update(payload).eq("id", configRow.id)
-        : await sbClient.from("tiles").insert(payload).select().single();
+      try {
+        const result = configRow
+          ? await sbClient.from("tiles").update(payload).eq("id", configRow.id).select().single()
+          : await sbClient.from("tiles").insert(payload).select().single();
 
-      if (result.error) {
-        status(sizeStatus, result.error.message, "error");
-        return;
+        if (result.error) throw result.error;
+        if (result.data) configRow = result.data;
+        status(sizeStatus, "Sauvegardé.", "ok");
+        setTimeout(closeSizeModal, 400);
+      } catch (e) {
+        status(sizeStatus, e.message || "Erreur de sauvegarde.", "error");
       }
-
-      if (result.data) configRow = result.data;
-      status(sizeStatus, "Taille sauvegardée.", "ok");
-      setTimeout(closeSizeModal, 350);
     }
 
     function openSizeModal() {
@@ -778,7 +815,7 @@
     function nudgeSize(kind, delta) {
       if (kind === "columns") colsInput.value = clampNumber(Number(colsInput.value) + delta, 1, 30, 11);
       if (kind === "rows") rowsInput.value = clampNumber(Number(rowsInput.value) + delta, 1, 30, 5);
-      sizeDisplay.textContent = `${colsInput.value}×${rowsInput.value}`;
+      updateSizeDisplayFromInputs();
     }
 
     function setImageMode(mode) {
@@ -1035,19 +1072,21 @@
         open_new_tab: tileOpenNewTab.checked
       };
 
-      status(modalStatus, "Sauvegarde...");
+      status(modalStatus, "Sauvegarde...", "");
 
-      const result = editingTile
-        ? await sbClient.from("tiles").update(payload).eq("id", editingTile.id)
-        : await sbClient.from("tiles").insert({ ...payload, position: tiles.length + 1 });
+      try {
+        const result = editingTile
+          ? await sbClient.from("tiles").update(payload).eq("id", editingTile.id).select().single()
+          : await sbClient.from("tiles").insert({ ...payload, position: tiles.length + 1 }).select().single();
 
-      if (result.error) {
-        status(modalStatus, result.error.message, "error");
-        return;
+        if (result.error) throw result.error;
+
+        status(modalStatus, "Sauvegardé.", "ok");
+        await loadTiles();
+        setTimeout(closeModal, 350);
+      } catch (e) {
+        status(modalStatus, e.message || "Erreur de sauvegarde.", "error");
       }
-
-      closeModal();
-      await loadTiles();
     }
 
     async function deleteTile() {
@@ -1073,8 +1112,19 @@
     el("colsMinusBtn").onclick = () => nudgeSize("columns", -1);
     el("rowsPlusBtn").onclick = () => nudgeSize("rows", 1);
     el("rowsMinusBtn").onclick = () => nudgeSize("rows", -1);
-    colsInput.oninput = () => { colsInput.value = clampNumber(colsInput.value, 1, 30, 11); sizeDisplay.textContent = `${colsInput.value}×${rowsInput.value}`; };
-    rowsInput.oninput = () => { rowsInput.value = clampNumber(rowsInput.value, 1, 30, 5); sizeDisplay.textContent = `${colsInput.value}×${rowsInput.value}`; };
+
+    colsInput.oninput = updateSizeDisplayFromInputs;
+    rowsInput.oninput = updateSizeDisplayFromInputs;
+    tileSizeInput.oninput = () => {
+      tileSizeInput.value = clampNumber(tileSizeInput.value, 50, 150, 86);
+      tileSizeRange.value = tileSizeInput.value;
+      updateSizeDisplayFromInputs();
+    };
+    tileSizeRange.oninput = () => {
+      tileSizeInput.value = tileSizeRange.value;
+      updateSizeDisplayFromInputs();
+    };
+
     el("cancelTileBtn").onclick = closeModal;
     el("saveTileBtn").onclick = saveTile;
     el("deleteTileBtn").onclick = deleteTile;

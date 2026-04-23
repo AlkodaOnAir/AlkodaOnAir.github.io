@@ -1,0 +1,765 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Alkoda Start Page v2</title>
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+  <style>
+    :root {
+      --bg: #000;
+      --panel: #17171b;
+      --panel-2: #222228;
+      --text: #f5f5f5;
+      --muted: #a1a1aa;
+      --border: #34343b;
+      --accent: #f4b000;
+      --blue: #3b82f6;
+      --danger: #e5484d;
+      --tile-size: 86px;
+      --tile-gap: 12px;
+      --tile-radius: 10px;
+    }
+
+    * { box-sizing: border-box; }
+
+    body {
+      margin: 0;
+      background: var(--bg);
+      color: var(--text);
+      font-family: Arial, Helvetica, sans-serif;
+      min-height: 100vh;
+    }
+
+    button, input, select { font-family: inherit; }
+
+    .topbar {
+      height: 70px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 0 24px;
+      background: #000;
+      border-bottom: 1px solid rgba(255,255,255,0.08);
+      position: sticky;
+      top: 0;
+      z-index: 30;
+    }
+
+    .brand {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      font-size: 30px;
+      font-weight: 700;
+      letter-spacing: -0.04em;
+    }
+
+    .brand-icon {
+      width: 39px;
+      height: 39px;
+      border-radius: 50%;
+      border: 3px solid #fff;
+      display: grid;
+      place-items: center;
+      font-size: 19px;
+      line-height: 1;
+    }
+
+    .mix-tabs {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      margin-left: 22px;
+    }
+
+    .tab {
+      height: 33px;
+      padding: 0 20px;
+      border-radius: 18px;
+      border: none;
+      background: #e8e8e8;
+      color: #444;
+      display: inline-flex;
+      align-items: center;
+      font-size: 14px;
+    }
+
+    .tab.active {
+      background: var(--accent);
+      color: white;
+      font-weight: 700;
+    }
+
+    .left-head {
+      display: flex;
+      align-items: center;
+    }
+
+    .top-actions {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+
+    .btn {
+      min-height: 34px;
+      border: 1px solid var(--border);
+      color: var(--text);
+      background: var(--panel);
+      padding: 8px 13px;
+      border-radius: 10px;
+      cursor: pointer;
+      font-size: 14px;
+    }
+
+    .btn:hover { background: var(--panel-2); }
+    .btn.primary { background: var(--accent); border-color: var(--accent); color: #111; font-weight: 700; }
+    .btn.blue { background: var(--blue); border-color: var(--blue); color: #fff; }
+    .btn.danger { background: rgba(229,72,77,.14); border-color: rgba(229,72,77,.6); color: #ffb3b6; }
+    .btn.ghost { background: transparent; }
+
+    .search-row {
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      gap: 24px;
+      padding: 28px 16px 30px;
+    }
+
+    .searchbox {
+      width: min(560px, 90vw);
+      height: 48px;
+      border-radius: 28px;
+      background: #fff;
+      color: #111;
+      display: flex;
+      align-items: center;
+      padding: 0 17px;
+      box-shadow: inset 0 0 0 2px #d7d7d7;
+    }
+
+    .searchbox input {
+      width: 100%;
+      border: 0;
+      outline: 0;
+      font-size: 17px;
+      color: #222;
+    }
+
+    .page { padding: 0 18px 70px; }
+
+    .webmix {
+      max-width: 840px;
+      margin: 0 auto;
+      display: grid;
+      grid-template-columns: repeat(auto-fill, var(--tile-size));
+      gap: var(--tile-gap);
+      justify-content: center;
+      align-content: start;
+    }
+
+    .tile {
+      width: var(--tile-size);
+      height: var(--tile-size);
+      border-radius: var(--tile-radius);
+      background: #fff;
+      color: #202020;
+      border: 1px solid rgba(255,255,255,0.12);
+      overflow: hidden;
+      position: relative;
+      cursor: grab;
+      user-select: none;
+      box-shadow: 0 6px 18px rgba(0,0,0,.35);
+      display: grid;
+      place-items: center;
+      text-align: center;
+    }
+
+    .tile.dragging { opacity: .45; outline: 2px dashed #fff; }
+
+    .tile.empty {
+      background: #3f3f3f;
+      border: none;
+      box-shadow: none;
+      color: rgba(255,255,255,.25);
+      font-size: 30px;
+      cursor: pointer;
+    }
+
+    .tile img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      display: block;
+    }
+
+    .tile.favicon img {
+      width: 58px;
+      height: 58px;
+      object-fit: contain;
+    }
+
+    .tile-title {
+      position: absolute;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      padding: 4px 5px 5px;
+      min-height: 21px;
+      color: #fff;
+      font-size: 11px;
+      line-height: 1.05;
+      text-align: center;
+      background: linear-gradient(to top, rgba(0,0,0,.78), rgba(0,0,0,.12));
+      text-shadow: 0 1px 2px rgba(0,0,0,.85);
+      overflow: hidden;
+      text-overflow: ellipsis;
+      white-space: nowrap;
+    }
+
+    .text-only {
+      padding: 8px;
+      font-size: 13px;
+      line-height: 1.15;
+      color: inherit;
+      overflow: hidden;
+      word-break: break-word;
+    }
+
+    .tile-menu {
+      position: absolute;
+      top: 5px;
+      right: 5px;
+      width: 22px;
+      height: 22px;
+      border: 1px solid rgba(255,255,255,.25);
+      border-radius: 6px;
+      background: rgba(0,0,0,.62);
+      color: #fff;
+      display: grid;
+      place-items: center;
+      opacity: 0;
+      cursor: pointer;
+      z-index: 4;
+    }
+
+    .tile:hover .tile-menu { opacity: 1; }
+
+    .modal-backdrop, .login-screen {
+      position: fixed;
+      inset: 0;
+      background: rgba(0,0,0,.72);
+      display: none;
+      place-items: center;
+      z-index: 100;
+      padding: 18px;
+    }
+
+    .login-screen.open, .modal-backdrop.open { display: grid; }
+
+    .card {
+      width: min(520px, 100%);
+      max-height: 92vh;
+      overflow: auto;
+      background: #17171b;
+      border: 1px solid rgba(255,255,255,.13);
+      border-radius: 18px;
+      padding: 22px;
+      box-shadow: 0 25px 90px rgba(0,0,0,.5);
+    }
+
+    .card h1, .card h2 { margin: 0 0 16px; }
+    .card p { color: var(--muted); margin: 0 0 16px; line-height: 1.4; }
+
+    .field { margin-bottom: 13px; }
+    .field label { display: block; color: #d4d4d8; font-size: 13px; margin-bottom: 6px; }
+
+    .field input, .field select {
+      width: 100%;
+      height: 40px;
+      border-radius: 10px;
+      border: 1px solid var(--border);
+      background: #0e0e12;
+      color: #fff;
+      padding: 0 11px;
+      outline: none;
+    }
+
+    .field input[type="color"] { padding: 3px; }
+
+    .row { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
+
+    .checkbox-row {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      margin: 10px 0;
+      font-size: 14px;
+      color: #ddd;
+    }
+
+    .image-panel {
+      border: 1px solid var(--border);
+      border-radius: 14px;
+      padding: 12px;
+      margin: 15px 0;
+      background: rgba(255,255,255,.03);
+    }
+
+    .image-mode {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 8px;
+      margin-bottom: 12px;
+    }
+
+    .mode-btn {
+      border: 1px solid var(--border);
+      background: #101014;
+      color: #ddd;
+      padding: 8px;
+      border-radius: 10px;
+      cursor: pointer;
+      font-size: 13px;
+    }
+
+    .mode-btn.active { background: var(--accent); border-color: var(--accent); color: #111; font-weight: 700; }
+
+    .preview {
+      width: 86px;
+      height: 86px;
+      border-radius: 10px;
+      overflow: hidden;
+      background: #222;
+      display: grid;
+      place-items: center;
+      margin-top: 8px;
+      border: 1px solid rgba(255,255,255,.12);
+      font-size: 11px;
+      text-align: center;
+    }
+
+    .preview img { width: 100%; height: 100%; object-fit: cover; }
+    .preview.contain img { width: 62px; height: 62px; object-fit: contain; }
+
+    .modal-actions {
+      display: flex;
+      justify-content: flex-end;
+      gap: 10px;
+      flex-wrap: wrap;
+      margin-top: 16px;
+    }
+
+    .status { min-height: 18px; margin-top: 10px; font-size: 13px; color: var(--muted); }
+    .error { color: #ffb3b6; }
+    .ok { color: #a7f3d0; }
+    .hidden { display: none !important; }
+
+    @media (max-width: 650px) {
+      :root { --tile-size: 76px; --tile-gap: 10px; }
+      .topbar { height: auto; flex-direction: column; align-items: flex-start; padding: 14px; gap: 12px; }
+      .left-head { flex-wrap: wrap; gap: 8px; }
+      .brand { font-size: 25px; }
+      .top-actions { width: 100%; justify-content: space-between; }
+      .row, .image-mode { grid-template-columns: 1fr; }
+    }
+  </style>
+</head>
+<body>
+  <div id="loginScreen" class="login-screen">
+    <div class="card">
+      <h1>Login</h1>
+      <p>Connexion avec ton email et ton mot de passe Supabase. La session reste mémorisée sur cet appareil.</p>
+      <div class="field">
+        <label for="loginEmail">Login / email</label>
+        <input id="loginEmail" type="email" autocomplete="email" placeholder="ton@email.com" />
+      </div>
+      <div class="field">
+        <label for="loginPassword">Mot de passe</label>
+        <input id="loginPassword" type="password" autocomplete="current-password" placeholder="Mot de passe" />
+      </div>
+      <button id="loginBtn" class="btn primary" type="button">Login</button>
+      <button id="forgotBtn" class="btn ghost" type="button">Mot de passe oublié</button>
+      <div id="loginStatus" class="status"></div>
+    </div>
+  </div>
+
+  <header class="topbar">
+    <div class="left-head">
+      <div class="brand"><div class="brand-icon">▦</div><span>alkoda start</span></div>
+      <div class="mix-tabs">
+        <div class="tab active">★ bureau</div>
+        <div class="tab">Achat en ligne</div>
+      </div>
+    </div>
+    <div class="top-actions">
+      <button id="addTileBtn" class="btn primary" type="button">+ Ajouter</button>
+      <button id="seedBtn" class="btn" type="button">Préremplir</button>
+      <button id="logoutBtn" class="btn" type="button">Déconnexion</button>
+    </div>
+  </header>
+
+  <div class="search-row">
+    <div class="searchbox"><input id="searchInput" type="search" placeholder="Recherche" /></div>
+  </div>
+
+  <main class="page">
+    <section id="webmix" class="webmix" aria-label="Webmix"></section>
+  </main>
+
+  <div id="tileModal" class="modal-backdrop">
+    <div class="card">
+      <h2 id="modalTitle">Tuile</h2>
+
+      <div class="field">
+        <label for="tileTitle">Nom</label>
+        <input id="tileTitle" type="text" placeholder="Prime Video" />
+      </div>
+
+      <div class="field">
+        <label for="tileUrl">Lien</label>
+        <input id="tileUrl" type="url" placeholder="https://www.primevideo.com" />
+      </div>
+
+      <div class="image-panel">
+        <label style="display:block;margin-bottom:9px;color:#d4d4d8;font-size:13px;">Image de la tuile</label>
+        <div class="image-mode">
+          <button class="mode-btn active" id="modeColor" type="button">Couleur</button>
+          <button class="mode-btn" id="modeUpload" type="button">Image importée</button>
+          <button class="mode-btn" id="modeWeb" type="button">Image du net</button>
+        </div>
+
+        <div id="colorOptions">
+          <div class="field">
+            <label for="tileColor">Couleur de fond</label>
+            <input id="tileColor" type="color" value="#ffffff" />
+          </div>
+        </div>
+
+        <div id="uploadOptions" class="hidden">
+          <div class="field">
+            <label for="tileUpload">Importer une image depuis l’ordinateur</label>
+            <input id="tileUpload" type="file" accept="image/*" />
+          </div>
+          <p style="font-size:12px;margin:0;color:#a1a1aa;">Nécessite un bucket Supabase Storage nommé <strong>tile-images</strong>.</p>
+        </div>
+
+        <div id="webOptions" class="hidden">
+          <div class="field">
+            <label for="tileImage">URL d’image</label>
+            <input id="tileImage" type="url" placeholder="https://.../image.png" />
+          </div>
+          <button id="autoLogoBtn" class="btn blue" type="button">Logo automatique depuis l’URL</button>
+        </div>
+
+        <div id="preview" class="preview">Aperçu</div>
+      </div>
+
+      <div class="row">
+        <label class="checkbox-row"><input id="tileShowTitle" type="checkbox" checked />Afficher le nom</label>
+        <label class="checkbox-row"><input id="tileOpenNewTab" type="checkbox" checked />Nouvel onglet</label>
+      </div>
+
+      <div id="modalStatus" class="status"></div>
+
+      <div class="modal-actions">
+        <button id="deleteTileBtn" class="btn danger" type="button">Supprimer</button>
+        <button id="cancelTileBtn" class="btn" type="button">Annuler</button>
+        <button id="saveTileBtn" class="btn primary" type="button">Sauvegarder</button>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    const SUPABASE_URL = "https://ejblebseqggezptuvqfj.supabase.co";
+    const SUPABASE_KEY = "sb_publishable_5JCL-teaTWmLPfDM5UrRoQ_xTFm4yrb";
+
+    const supabase = window.supabase.createClient(SUPABASE_URL, SUPABASE_KEY, {
+      auth: { persistSession: true, autoRefreshToken: true, detectSessionInUrl: true }
+    });
+
+    const defaultTiles = [
+      ["Google", "https://www.google.com", "https://www.google.com/s2/favicons?domain=google.com&sz=128"],
+      ["Google AdSense", "https://adsense.google.com", "https://www.google.com/s2/favicons?domain=adsense.google.com&sz=128"],
+      ["Audiens", "https://www.audiens.org", "https://www.google.com/s2/favicons?domain=audiens.org&sz=128"],
+      ["Congés Spectacles", "https://www.audiens.org", "https://www.google.com/s2/favicons?domain=audiens.org&sz=128"],
+      ["Crédit Mutuel", "https://www.creditmutuel.fr", "https://www.google.com/s2/favicons?domain=creditmutuel.fr&sz=128"],
+      ["Fortuneo", "https://www.fortuneo.fr", "https://www.google.com/s2/favicons?domain=fortuneo.fr&sz=128"],
+      ["Stripe", "https://dashboard.stripe.com", "https://www.google.com/s2/favicons?domain=stripe.com&sz=128"],
+      ["Indy", "https://app.indy.fr", "https://www.google.com/s2/favicons?domain=indy.fr&sz=128"],
+      ["France Travail", "https://www.francetravail.fr", "https://www.google.com/s2/favicons?domain=francetravail.fr&sz=128"],
+      ["ameli.fr", "https://www.ameli.fr", "https://www.google.com/s2/favicons?domain=ameli.fr&sz=128"],
+      ["Mutuelle des motards", "https://www.mutuelledesmotards.fr", "https://www.google.com/s2/favicons?domain=mutuelledesmotards.fr&sz=128"],
+      ["Digiposte", "https://www.digiposte.fr", "https://www.google.com/s2/favicons?domain=digiposte.fr&sz=128"],
+      ["Zoho", "https://www.zoho.com", "https://www.google.com/s2/favicons?domain=zoho.com&sz=128"],
+      ["Google Photos", "https://photos.google.com", "https://www.google.com/s2/favicons?domain=photos.google.com&sz=128"],
+      ["Urssaf", "https://www.urssaf.fr", "https://www.google.com/s2/favicons?domain=urssaf.fr&sz=128"],
+      ["Allociné", "https://www.allocine.fr", "https://www.google.com/s2/favicons?domain=allocine.fr&sz=128"],
+      ["airbnb", "https://www.airbnb.fr", "https://www.google.com/s2/favicons?domain=airbnb.fr&sz=128"],
+      ["IMDb", "https://www.imdb.com", "https://www.google.com/s2/favicons?domain=imdb.com&sz=128"],
+      ["tvdb", "https://thetvdb.com", "https://www.google.com/s2/favicons?domain=thetvdb.com&sz=128"],
+      ["MAIF", "https://www.maif.fr", "https://www.google.com/s2/favicons?domain=maif.fr&sz=128"],
+      ["Gras Savoye", "https://www.wtwco.com/fr-fr", "https://www.google.com/s2/favicons?domain=wtwco.com&sz=128"],
+      ["Paris Habitat", "https://www.parishabitat.fr", "https://www.google.com/s2/favicons?domain=parishabitat.fr&sz=128"],
+      ["WeTransfer", "https://wetransfer.com", "https://www.google.com/s2/favicons?domain=wetransfer.com&sz=128"],
+      ["Filme", "", ""],
+      ["Lightyshare", "", ""],
+      ["LibreELEC", "https://libreelec.tv", "https://www.google.com/s2/favicons?domain=libreelec.tv&sz=128"],
+      ["Reverso", "https://www.reverso.net", "https://www.google.com/s2/favicons?domain=reverso.net&sz=128"],
+      ["LinkedIn", "https://www.linkedin.com", "https://www.google.com/s2/favicons?domain=linkedin.com&sz=128"],
+      ["Ooviz", "", ""],
+      ["Tipeee", "https://fr.tipeee.com", "https://www.google.com/s2/favicons?domain=tipeee.com&sz=128"],
+      ["YouTube", "https://www.youtube.com", "https://www.google.com/s2/favicons?domain=youtube.com&sz=128"],
+      ["YouTube Studio", "https://studio.youtube.com", "https://www.google.com/s2/favicons?domain=studio.youtube.com&sz=128"],
+      ["GrosFichiers", "https://www.grosfichiers.com", "https://www.google.com/s2/favicons?domain=grosfichiers.com&sz=128"],
+      ["SwissTransfer", "https://www.swisstransfer.com", "https://www.google.com/s2/favicons?domain=swisstransfer.com&sz=128"],
+      ["LogMeIn", "https://www.logmein.com", "https://www.google.com/s2/favicons?domain=logmein.com&sz=128"],
+      ["Prime Video", "https://www.primevideo.com", "https://www.google.com/s2/favicons?domain=primevideo.com&sz=128"],
+      ["Orange.fr", "https://www.orange.fr", "https://www.google.com/s2/favicons?domain=orange.fr&sz=128"],
+      ["Squarespace", "https://www.squarespace.com", "https://www.google.com/s2/favicons?domain=squarespace.com&sz=128"],
+      ["Free", "https://www.free.fr", "https://www.google.com/s2/favicons?domain=free.fr&sz=128"],
+      ["rebrickable", "https://rebrickable.com", "https://www.google.com/s2/favicons?domain=rebrickable.com&sz=128"],
+      ["Bricklink", "https://www.bricklink.com", "https://www.google.com/s2/favicons?domain=bricklink.com&sz=128"],
+      ["ChatGPT", "https://chat.openai.com", "https://www.google.com/s2/favicons?domain=openai.com&sz=128"],
+      ["Claude", "https://claude.ai", "https://www.google.com/s2/favicons?domain=claude.ai&sz=128"],
+      ["diakov.net", "", ""],
+      ["Wawacity", "", ""],
+      ["xtrem-download", "", ""],
+      ["Torlock", "", ""],
+      ["EXT.TO", "", ""],
+      ["Sous-titres.eu", "", ""],
+      ["Addic7ed", "https://www.addic7ed.com", "https://www.google.com/s2/favicons?domain=addic7ed.com&sz=128"],
+      ["opensubtitles.org", "https://www.opensubtitles.org", "https://www.google.com/s2/favicons?domain=opensubtitles.org&sz=128"]
+    ];
+
+    const el = id => document.getElementById(id);
+    const loginScreen = el("loginScreen"), webmix = el("webmix"), searchInput = el("searchInput");
+    const tileModal = el("tileModal"), modalTitle = el("modalTitle"), modalStatus = el("modalStatus");
+    const tileTitle = el("tileTitle"), tileUrl = el("tileUrl"), tileImage = el("tileImage"), tileColor = el("tileColor"), tileUpload = el("tileUpload");
+    const tileShowTitle = el("tileShowTitle"), tileOpenNewTab = el("tileOpenNewTab"), preview = el("preview");
+    const modeColor = el("modeColor"), modeUpload = el("modeUpload"), modeWeb = el("modeWeb");
+    const colorOptions = el("colorOptions"), uploadOptions = el("uploadOptions"), webOptions = el("webOptions");
+
+    let tiles = [];
+    let editingTile = null;
+    let imageMode = "color";
+    let uploadedImageUrl = "";
+    let draggedTileId = null;
+
+    function status(node, msg, type="") { node.textContent = msg || ""; node.className = `status ${type}`.trim(); }
+    function normalizeUrl(url) { const u=(url||"").trim(); if(!u) return ""; return /^https?:\/\//i.test(u) ? u : "https://" + u; }
+    function faviconFor(url) { try { const u = new URL(normalizeUrl(url)); return `https://www.google.com/s2/favicons?domain=${u.hostname}&sz=128`; } catch { return ""; } }
+
+    function setImageMode(mode) {
+      imageMode = mode;
+      modeColor.classList.toggle("active", mode === "color");
+      modeUpload.classList.toggle("active", mode === "upload");
+      modeWeb.classList.toggle("active", mode === "web");
+      colorOptions.classList.toggle("hidden", mode !== "color");
+      uploadOptions.classList.toggle("hidden", mode !== "upload");
+      webOptions.classList.toggle("hidden", mode !== "web");
+      updatePreview();
+    }
+
+    function updatePreview() {
+      const img = imageMode === "upload" ? uploadedImageUrl : (imageMode === "web" ? normalizeUrl(tileImage.value) : "");
+      preview.className = "preview" + (img && img.includes("google.com/s2/favicons") ? " contain" : "");
+      preview.style.background = tileColor.value || "#fff";
+      preview.innerHTML = img ? `<img src="${img}" alt="aperçu">` : `<span>${tileTitle.value || "Aperçu"}</span>`;
+    }
+
+    async function init() {
+      const { data } = await supabase.auth.getSession();
+      if (data.session) {
+        loginScreen.classList.remove("open");
+        await loadTiles();
+      } else {
+        loginScreen.classList.add("open");
+      }
+      supabase.auth.onAuthStateChange(async (_event, session) => {
+        if (session) { loginScreen.classList.remove("open"); await loadTiles(); }
+        else { loginScreen.classList.add("open"); webmix.innerHTML = ""; }
+      });
+    }
+
+    async function login() {
+      status(el("loginStatus"), "Connexion...");
+      const email = el("loginEmail").value.trim();
+      const password = el("loginPassword").value;
+      const { error } = await supabase.auth.signInWithPassword({ email, password });
+      if (error) status(el("loginStatus"), error.message, "error");
+      else status(el("loginStatus"), "Connecté.", "ok");
+    }
+
+    async function forgotPassword() {
+      const email = el("loginEmail").value.trim();
+      if (!email) { status(el("loginStatus"), "Entre ton email d’abord.", "error"); return; }
+      const { error } = await supabase.auth.resetPasswordForEmail(email, { redirectTo: location.origin + location.pathname });
+      status(el("loginStatus"), error ? error.message : "Email de réinitialisation envoyé si le compte existe.", error ? "error" : "ok");
+    }
+
+    async function seedTiles(force=false) {
+      const { data } = await supabase.from("tiles").select("id");
+      if ((data && data.length > 0) && !force) return;
+      if (force && !confirm("Préremplir va ajouter les tuiles de référence. Continuer ?")) return;
+      const rows = defaultTiles.map((t, i) => ({ title:t[0], url:t[1], image:t[2] || null, color:"#ffffff", show_title:true, open_new_tab:true, position:i+1 }));
+      const { error } = await supabase.from("tiles").insert(rows);
+      if (error) alert(error.message);
+      await loadTiles();
+    }
+
+    async function loadTiles() {
+      const { data, error } = await supabase.from("tiles").select("*").order("position", { ascending:true });
+      if (error) { webmix.innerHTML = `<p style="color:#ffb3b6">${error.message}</p>`; return; }
+      tiles = data || [];
+      if (tiles.length === 0) await seedTiles(false);
+      else renderTiles();
+    }
+
+    function renderTiles() {
+      const q = searchInput.value.trim().toLowerCase();
+      webmix.innerHTML = "";
+      tiles.filter(t => !q || (t.title||"").toLowerCase().includes(q)).forEach(tile => {
+        const d = document.createElement("div");
+        d.className = "tile" + (tile.image && tile.image.includes("google.com/s2/favicons") ? " favicon" : "");
+        d.draggable = true;
+        d.dataset.id = tile.id;
+        d.style.background = tile.color || "#ffffff";
+
+        if (tile.image) d.innerHTML = `<img src="${tile.image}" alt="${tile.title || ""}">`;
+        else d.innerHTML = `<div class="text-only">${tile.title || "Sans titre"}</div>`;
+
+        if (tile.show_title && tile.image) {
+          const title = document.createElement("div");
+          title.className = "tile-title";
+          title.textContent = tile.title || "Sans titre";
+          d.appendChild(title);
+        }
+
+        const menu = document.createElement("button");
+        menu.className = "tile-menu";
+        menu.type = "button";
+        menu.textContent = "⋯";
+        menu.onclick = e => { e.stopPropagation(); openModal(tile); };
+        d.appendChild(menu);
+
+        d.onclick = () => {
+          const url = normalizeUrl(tile.url);
+          if (!url) { openModal(tile); return; }
+          if (tile.open_new_tab) window.open(url, "_blank", "noopener,noreferrer");
+          else location.href = url;
+        };
+
+        d.ondragstart = ev => { draggedTileId = tile.id; d.classList.add("dragging"); ev.dataTransfer.effectAllowed = "move"; };
+        d.ondragend = () => { draggedTileId = null; d.classList.remove("dragging"); };
+        d.ondragover = ev => ev.preventDefault();
+        d.ondrop = async ev => { ev.preventDefault(); if (draggedTileId && draggedTileId !== tile.id) await reorderTiles(draggedTileId, tile.id); };
+
+        webmix.appendChild(d);
+      });
+
+      const emptyCount = Math.max(12, 54 - tiles.length);
+      for (let i=0;i<emptyCount;i++) {
+        const e = document.createElement("div");
+        e.className = "tile empty";
+        e.textContent = "+";
+        e.onclick = () => openModal(null);
+        webmix.appendChild(e);
+      }
+    }
+
+    async function reorderTiles(sourceId, targetId) {
+      const a = tiles.findIndex(t => t.id === sourceId), b = tiles.findIndex(t => t.id === targetId);
+      if (a < 0 || b < 0) return;
+      const [moved] = tiles.splice(a, 1);
+      tiles.splice(b, 0, moved);
+      tiles = tiles.map((t,i)=>({ ...t, position:i+1 }));
+      renderTiles();
+      for (const t of tiles) await supabase.from("tiles").update({ position:t.position }).eq("id", t.id);
+    }
+
+    function openModal(tile) {
+      editingTile = tile;
+      modalTitle.textContent = tile ? "Modifier la tuile" : "Ajouter une tuile";
+      el("deleteTileBtn").classList.toggle("hidden", !tile);
+      status(modalStatus, "");
+      uploadedImageUrl = "";
+      tileTitle.value = tile?.title || "";
+      tileUrl.value = tile?.url || "";
+      tileImage.value = tile?.image || "";
+      tileColor.value = tile?.color || "#ffffff";
+      tileShowTitle.checked = tile?.show_title ?? true;
+      tileOpenNewTab.checked = tile?.open_new_tab ?? true;
+      setImageMode(tile?.image ? "web" : "color");
+      tileModal.classList.add("open");
+      setTimeout(()=>tileTitle.focus(),50);
+    }
+
+    function closeModal(){ tileModal.classList.remove("open"); editingTile = null; }
+
+    async function uploadImage(file) {
+      const ext = (file.name.split(".").pop() || "png").toLowerCase();
+      const path = `tile-${Date.now()}-${Math.random().toString(16).slice(2)}.${ext}`;
+      const { error } = await supabase.storage.from("tile-images").upload(path, file, { upsert:false });
+      if (error) throw error;
+      const { data } = supabase.storage.from("tile-images").getPublicUrl(path);
+      return data.publicUrl;
+    }
+
+    async function saveTile() {
+      const title = tileTitle.value.trim();
+      const url = normalizeUrl(tileUrl.value);
+      if (!url) { status(modalStatus, "Le lien est obligatoire.", "error"); return; }
+
+      let image = null;
+      if (imageMode === "web") image = normalizeUrl(tileImage.value) || null;
+      if (imageMode === "upload") image = uploadedImageUrl || normalizeUrl(tileImage.value) || null;
+
+      const payload = { title, url, image, color: tileColor.value || "#ffffff", show_title: tileShowTitle.checked, open_new_tab: tileOpenNewTab.checked };
+      status(modalStatus, "Sauvegarde...");
+
+      const result = editingTile
+        ? await supabase.from("tiles").update(payload).eq("id", editingTile.id)
+        : await supabase.from("tiles").insert({ ...payload, position: tiles.length + 1 });
+
+      if (result.error) { status(modalStatus, result.error.message, "error"); return; }
+      closeModal();
+      await loadTiles();
+    }
+
+    async function deleteTile() {
+      if (!editingTile || !confirm("Supprimer cette tuile ?")) return;
+      const { error } = await supabase.from("tiles").delete().eq("id", editingTile.id);
+      if (error) { status(modalStatus, error.message, "error"); return; }
+      closeModal(); await loadTiles();
+    }
+
+    el("loginBtn").onclick = login;
+    el("forgotBtn").onclick = forgotPassword;
+    el("logoutBtn").onclick = () => supabase.auth.signOut();
+    el("addTileBtn").onclick = () => openModal(null);
+    el("seedBtn").onclick = () => seedTiles(true);
+    el("cancelTileBtn").onclick = closeModal;
+    el("saveTileBtn").onclick = saveTile;
+    el("deleteTileBtn").onclick = deleteTile;
+    modeColor.onclick = () => setImageMode("color");
+    modeUpload.onclick = () => setImageMode("upload");
+    modeWeb.onclick = () => setImageMode("web");
+    el("autoLogoBtn").onclick = () => { tileImage.value = faviconFor(tileUrl.value); setImageMode("web"); updatePreview(); };
+    searchInput.oninput = renderTiles;
+    [tileTitle, tileImage, tileColor].forEach(n => n.addEventListener("input", updatePreview));
+    tileUpload.onchange = async () => {
+      const file = tileUpload.files?.[0];
+      if (!file) return;
+      status(modalStatus, "Import de l’image...");
+      try { uploadedImageUrl = await uploadImage(file); tileImage.value = uploadedImageUrl; status(modalStatus, "Image importée.", "ok"); updatePreview(); }
+      catch (e) { status(modalStatus, "Erreur upload : " + e.message, "error"); }
+    };
+    el("loginPassword").addEventListener("keydown", e => { if(e.key === "Enter") login(); });
+    tileModal.addEventListener("click", e => { if(e.target === tileModal) closeModal(); });
+
+    init();
+  </script>
+</body>
+</html>

@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Alkoda Start Page v2.1</title>
+  <title>Alkoda Start Page v2.2</title>
   <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
   <style>
     :root {
@@ -152,10 +152,10 @@
     .page { padding: 0 18px 70px; }
 
     .webmix {
-      max-width: 840px;
+      max-width: none;
       margin: 0 auto;
       display: grid;
-      grid-template-columns: repeat(auto-fill, var(--tile-size));
+      grid-template-columns: repeat(11, var(--tile-size));
       gap: var(--tile-gap);
       justify-content: center;
       align-content: start;
@@ -271,6 +271,10 @@
       box-shadow: 0 25px 90px rgba(0,0,0,.5);
     }
 
+    .size-card {
+      width: min(430px, 100%);
+    }
+
     .card h1, .card h2 { margin: 0 0 16px; }
     .card p { color: var(--muted); margin: 0 0 16px; line-height: 1.4; }
 
@@ -373,6 +377,61 @@
 
     .debug-box.open { display: block; }
 
+    .size-panel {
+      display: grid;
+      grid-template-columns: 1fr 120px 1fr;
+      gap: 18px;
+      align-items: center;
+      margin: 18px 0;
+    }
+
+    .size-control {
+      display: grid;
+      gap: 10px;
+      justify-items: center;
+    }
+
+    .size-control-title {
+      font-size: 13px;
+      color: var(--muted);
+      text-align: center;
+    }
+
+    .round-btn {
+      width: 38px;
+      height: 38px;
+      border-radius: 50%;
+      border: 1px solid var(--border);
+      background: #24242a;
+      color: #fff;
+      cursor: pointer;
+      font-size: 22px;
+      line-height: 1;
+      display: grid;
+      place-items: center;
+    }
+
+    .round-btn:hover { background: #303038; }
+
+    .size-display {
+      width: 120px;
+      height: 92px;
+      border-radius: 14px;
+      background: #d7d7d7;
+      color: #333;
+      display: grid;
+      place-items: center;
+      font-size: 22px;
+      font-weight: 700;
+    }
+
+    .size-note {
+      font-size: 13px;
+      color: var(--muted);
+      text-align: center;
+      margin-top: 8px;
+    }
+
     @media (max-width: 650px) {
       :root { --tile-size: 76px; --tile-gap: 10px; }
       .topbar { height: auto; flex-direction: column; align-items: flex-start; padding: 14px; gap: 12px; }
@@ -380,6 +439,9 @@
       .brand { font-size: 25px; }
       .top-actions { width: 100%; justify-content: space-between; flex-wrap: wrap; }
       .row, .image-mode { grid-template-columns: 1fr; }
+      .webmix { overflow-x: auto; justify-content: start; padding-bottom: 20px; }
+      .size-panel { grid-template-columns: 1fr; }
+      .size-display { margin: 0 auto; }
     }
   </style>
 </head>
@@ -411,6 +473,7 @@
       </div>
     </div>
     <div class="top-actions">
+      <button id="sizeBtn" class="btn" type="button">Taille</button>
       <button id="addTileBtn" class="btn primary" type="button">+ Ajouter</button>
       <button id="seedBtn" class="btn" type="button">Préremplir</button>
       <button id="logoutBtn" class="btn" type="button">Déconnexion</button>
@@ -425,6 +488,48 @@
     <div id="debugBox" class="debug-box"></div>
     <section id="webmix" class="webmix" aria-label="Webmix"></section>
   </main>
+
+  <div id="sizeModal" class="modal-backdrop">
+    <div class="card size-card">
+      <h2>Taille du webmix</h2>
+      <p>Choisis le nombre de colonnes et de lignes. Les cases vides complètent automatiquement la grille.</p>
+
+      <div class="size-panel">
+        <div class="size-control">
+          <div class="size-control-title">Colonnes</div>
+          <button id="colsPlusBtn" class="round-btn" type="button">+</button>
+          <button id="colsMinusBtn" class="round-btn" type="button">−</button>
+        </div>
+
+        <div id="sizeDisplay" class="size-display">11×5</div>
+
+        <div class="size-control">
+          <div class="size-control-title">Lignes</div>
+          <button id="rowsPlusBtn" class="round-btn" type="button">+</button>
+          <button id="rowsMinusBtn" class="round-btn" type="button">−</button>
+        </div>
+      </div>
+
+      <div class="row">
+        <div class="field">
+          <label for="colsInput">Colonnes</label>
+          <input id="colsInput" type="number" min="1" max="30" value="11" />
+        </div>
+        <div class="field">
+          <label for="rowsInput">Lignes</label>
+          <input id="rowsInput" type="number" min="1" max="30" value="5" />
+        </div>
+      </div>
+
+      <div class="size-note">Valeur actuelle sauvegardée dans Supabase : visible sur tous tes appareils.</div>
+      <div id="sizeStatus" class="status"></div>
+
+      <div class="modal-actions">
+        <button id="cancelSizeBtn" class="btn" type="button">Annuler</button>
+        <button id="saveSizeBtn" class="btn primary" type="button">Sauvegarder</button>
+      </div>
+    </div>
+  </div>
 
   <div id="tileModal" class="modal-backdrop">
     <div class="card">
@@ -497,6 +602,8 @@
       auth: { persistSession: true, autoRefreshToken: true, detectSessionInUrl: true }
     });
 
+    const CONFIG_TITLE = "__WEBMIX_CONFIG__";
+
     const defaultTiles = [
       ["Google", "https://www.google.com", "https://www.google.com/s2/favicons?domain=google.com&sz=128"],
       ["Google AdSense", "https://adsense.google.com", "https://www.google.com/s2/favicons?domain=adsense.google.com&sz=128"],
@@ -553,6 +660,7 @@
 
     const el = id => document.getElementById(id);
     const loginScreen = el("loginScreen"), webmix = el("webmix"), searchInput = el("searchInput"), debugBox = el("debugBox");
+    const sizeModal = el("sizeModal"), sizeDisplay = el("sizeDisplay"), colsInput = el("colsInput"), rowsInput = el("rowsInput"), sizeStatus = el("sizeStatus");
     const tileModal = el("tileModal"), modalTitle = el("modalTitle"), modalStatus = el("modalStatus");
     const tileTitle = el("tileTitle"), tileUrl = el("tileUrl"), tileImage = el("tileImage"), tileColor = el("tileColor"), tileUpload = el("tileUpload");
     const tileShowTitle = el("tileShowTitle"), tileOpenNewTab = el("tileOpenNewTab"), preview = el("preview");
@@ -560,6 +668,8 @@
     const colorOptions = el("colorOptions"), uploadOptions = el("uploadOptions"), webOptions = el("webOptions");
 
     let tiles = [];
+    let configRow = null;
+    let webmixConfig = { columns: 11, rows: 5 };
     let editingTile = null;
     let imageMode = "color";
     let uploadedImageUrl = "";
@@ -594,6 +704,81 @@
       } catch {
         return "";
       }
+    }
+
+    function clampNumber(value, min, max, fallback) {
+      const n = Number(value);
+      if (!Number.isFinite(n)) return fallback;
+      return Math.max(min, Math.min(max, Math.round(n)));
+    }
+
+    function applyGridConfig() {
+      webmix.style.gridTemplateColumns = `repeat(${webmixConfig.columns}, var(--tile-size))`;
+      colsInput.value = webmixConfig.columns;
+      rowsInput.value = webmixConfig.rows;
+      sizeDisplay.textContent = `${webmixConfig.columns}×${webmixConfig.rows}`;
+    }
+
+    function parseConfigRow(row) {
+      if (!row || !row.url) return { columns: 11, rows: 5 };
+      try {
+        const parsed = JSON.parse(row.url);
+        return {
+          columns: clampNumber(parsed.columns, 1, 30, 11),
+          rows: clampNumber(parsed.rows, 1, 30, 5)
+        };
+      } catch {
+        return { columns: 11, rows: 5 };
+      }
+    }
+
+    async function saveWebmixConfig() {
+      webmixConfig = {
+        columns: clampNumber(colsInput.value, 1, 30, 11),
+        rows: clampNumber(rowsInput.value, 1, 30, 5)
+      };
+      applyGridConfig();
+      renderTiles();
+      status(sizeStatus, "Sauvegarde...", "");
+
+      const payload = {
+        title: CONFIG_TITLE,
+        url: JSON.stringify(webmixConfig),
+        image: null,
+        color: "#000000",
+        show_title: false,
+        open_new_tab: false,
+        position: 0
+      };
+
+      const result = configRow
+        ? await sbClient.from("tiles").update(payload).eq("id", configRow.id)
+        : await sbClient.from("tiles").insert(payload).select().single();
+
+      if (result.error) {
+        status(sizeStatus, result.error.message, "error");
+        return;
+      }
+
+      if (result.data) configRow = result.data;
+      status(sizeStatus, "Taille sauvegardée.", "ok");
+      setTimeout(closeSizeModal, 350);
+    }
+
+    function openSizeModal() {
+      status(sizeStatus, "");
+      applyGridConfig();
+      sizeModal.classList.add("open");
+    }
+
+    function closeSizeModal() {
+      sizeModal.classList.remove("open");
+    }
+
+    function nudgeSize(kind, delta) {
+      if (kind === "columns") colsInput.value = clampNumber(Number(colsInput.value) + delta, 1, 30, 11);
+      if (kind === "rows") rowsInput.value = clampNumber(Number(rowsInput.value) + delta, 1, 30, 5);
+      sizeDisplay.textContent = `${colsInput.value}×${rowsInput.value}`;
     }
 
     function setImageMode(mode) {
@@ -661,13 +846,14 @@
     }
 
     async function seedTiles(force=false) {
-      const { data, error: selectError } = await sbClient.from("tiles").select("id");
+      const { data, error: selectError } = await sbClient.from("tiles").select("id,title");
       if (selectError) {
         showDebug("Erreur lecture tiles : " + selectError.message);
         return;
       }
 
-      if ((data && data.length > 0) && !force) return;
+      const realTiles = (data || []).filter(row => row.title !== CONFIG_TITLE);
+      if (realTiles.length > 0 && !force) return;
       if (force && !confirm("Préremplir va ajouter les tuiles de référence. Continuer ?")) return;
 
       const rows = defaultTiles.map((t, i) => ({
@@ -696,7 +882,12 @@
         return;
       }
 
-      tiles = data || [];
+      const allRows = data || [];
+      configRow = allRows.find(row => row.title === CONFIG_TITLE) || null;
+      webmixConfig = parseConfigRow(configRow);
+      applyGridConfig();
+
+      tiles = allRows.filter(row => row.title !== CONFIG_TITLE);
       if (tiles.length === 0) await seedTiles(false);
       else renderTiles();
     }
@@ -705,67 +896,70 @@
       const q = searchInput.value.trim().toLowerCase();
       webmix.innerHTML = "";
 
-      tiles
-        .filter(t => !q || (t.title || "").toLowerCase().includes(q))
-        .forEach(tile => {
-          const d = document.createElement("div");
-          d.className = "tile" + (tile.image && tile.image.includes("google.com/s2/favicons") ? " favicon" : "");
-          d.draggable = true;
-          d.dataset.id = tile.id;
-          d.style.background = tile.color || "#ffffff";
+      const displayedTiles = tiles.filter(t => !q || (t.title || "").toLowerCase().includes(q));
 
-          if (tile.image) d.innerHTML = `<img src="${tile.image}" alt="${tile.title || ""}">`;
-          else d.innerHTML = `<div class="text-only">${tile.title || "Sans titre"}</div>`;
+      displayedTiles.forEach(tile => {
+        const d = document.createElement("div");
+        d.className = "tile" + (tile.image && tile.image.includes("google.com/s2/favicons") ? " favicon" : "");
+        d.draggable = true;
+        d.dataset.id = tile.id;
+        d.style.background = tile.color || "#ffffff";
 
-          if (tile.show_title && tile.image) {
-            const title = document.createElement("div");
-            title.className = "tile-title";
-            title.textContent = tile.title || "Sans titre";
-            d.appendChild(title);
+        if (tile.image) d.innerHTML = `<img src="${tile.image}" alt="${tile.title || ""}">`;
+        else d.innerHTML = `<div class="text-only">${tile.title || "Sans titre"}</div>`;
+
+        if (tile.show_title && tile.image) {
+          const title = document.createElement("div");
+          title.className = "tile-title";
+          title.textContent = tile.title || "Sans titre";
+          d.appendChild(title);
+        }
+
+        const menu = document.createElement("button");
+        menu.className = "tile-menu";
+        menu.type = "button";
+        menu.textContent = "⋯";
+        menu.onclick = e => { e.stopPropagation(); openModal(tile); };
+        d.appendChild(menu);
+
+        d.onclick = () => {
+          const url = normalizeUrl(tile.url);
+          if (!url) {
+            openModal(tile);
+            return;
           }
+          if (tile.open_new_tab) window.open(url, "_blank", "noopener,noreferrer");
+          else location.href = url;
+        };
 
-          const menu = document.createElement("button");
-          menu.className = "tile-menu";
-          menu.type = "button";
-          menu.textContent = "⋯";
-          menu.onclick = e => { e.stopPropagation(); openModal(tile); };
-          d.appendChild(menu);
+        d.ondragstart = ev => {
+          draggedTileId = tile.id;
+          d.classList.add("dragging");
+          ev.dataTransfer.effectAllowed = "move";
+        };
+        d.ondragend = () => {
+          draggedTileId = null;
+          d.classList.remove("dragging");
+        };
+        d.ondragover = ev => ev.preventDefault();
+        d.ondrop = async ev => {
+          ev.preventDefault();
+          if (draggedTileId && draggedTileId !== tile.id) await reorderTiles(draggedTileId, tile.id);
+        };
 
-          d.onclick = () => {
-            const url = normalizeUrl(tile.url);
-            if (!url) {
-              openModal(tile);
-              return;
-            }
-            if (tile.open_new_tab) window.open(url, "_blank", "noopener,noreferrer");
-            else location.href = url;
-          };
+        webmix.appendChild(d);
+      });
 
-          d.ondragstart = ev => {
-            draggedTileId = tile.id;
-            d.classList.add("dragging");
-            ev.dataTransfer.effectAllowed = "move";
-          };
-          d.ondragend = () => {
-            draggedTileId = null;
-            d.classList.remove("dragging");
-          };
-          d.ondragover = ev => ev.preventDefault();
-          d.ondrop = async ev => {
-            ev.preventDefault();
-            if (draggedTileId && draggedTileId !== tile.id) await reorderTiles(draggedTileId, tile.id);
-          };
-
-          webmix.appendChild(d);
-        });
-
-      const emptyCount = Math.max(12, 54 - tiles.length);
-      for (let i = 0; i < emptyCount; i++) {
-        const e = document.createElement("div");
-        e.className = "tile empty";
-        e.textContent = "+";
-        e.onclick = () => openModal(null);
-        webmix.appendChild(e);
+      if (!q) {
+        const targetCells = webmixConfig.columns * webmixConfig.rows;
+        const emptyCount = Math.max(0, targetCells - tiles.length);
+        for (let i = 0; i < emptyCount; i++) {
+          const e = document.createElement("div");
+          e.className = "tile empty";
+          e.textContent = "+";
+          e.onclick = () => openModal(null);
+          webmix.appendChild(e);
+        }
       }
     }
 
@@ -872,6 +1066,15 @@
     el("logoutBtn").onclick = () => sbClient.auth.signOut();
     el("addTileBtn").onclick = () => openModal(null);
     el("seedBtn").onclick = () => seedTiles(true);
+    el("sizeBtn").onclick = openSizeModal;
+    el("cancelSizeBtn").onclick = closeSizeModal;
+    el("saveSizeBtn").onclick = saveWebmixConfig;
+    el("colsPlusBtn").onclick = () => nudgeSize("columns", 1);
+    el("colsMinusBtn").onclick = () => nudgeSize("columns", -1);
+    el("rowsPlusBtn").onclick = () => nudgeSize("rows", 1);
+    el("rowsMinusBtn").onclick = () => nudgeSize("rows", -1);
+    colsInput.oninput = () => { colsInput.value = clampNumber(colsInput.value, 1, 30, 11); sizeDisplay.textContent = `${colsInput.value}×${rowsInput.value}`; };
+    rowsInput.oninput = () => { rowsInput.value = clampNumber(rowsInput.value, 1, 30, 5); sizeDisplay.textContent = `${colsInput.value}×${rowsInput.value}`; };
     el("cancelTileBtn").onclick = closeModal;
     el("saveTileBtn").onclick = saveTile;
     el("deleteTileBtn").onclick = deleteTile;
@@ -900,6 +1103,7 @@
     };
     el("loginPassword").addEventListener("keydown", e => { if (e.key === "Enter") login(); });
     tileModal.addEventListener("click", e => { if (e.target === tileModal) closeModal(); });
+    sizeModal.addEventListener("click", e => { if (e.target === sizeModal) closeSizeModal(); });
 
     init();
   </script>

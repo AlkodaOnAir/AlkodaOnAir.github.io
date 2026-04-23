@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Alkoda Start Page v2</title>
+  <title>Alkoda Start Page v2.1</title>
   <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
   <style>
     :root {
@@ -46,6 +46,12 @@
       z-index: 30;
     }
 
+    .left-head {
+      display: flex;
+      align-items: center;
+      gap: 22px;
+    }
+
     .brand {
       display: flex;
       align-items: center;
@@ -53,6 +59,7 @@
       font-size: 30px;
       font-weight: 700;
       letter-spacing: -0.04em;
+      white-space: nowrap;
     }
 
     .brand-icon {
@@ -70,7 +77,6 @@
       display: flex;
       align-items: center;
       gap: 8px;
-      margin-left: 22px;
     }
 
     .tab {
@@ -83,17 +89,13 @@
       display: inline-flex;
       align-items: center;
       font-size: 14px;
+      white-space: nowrap;
     }
 
     .tab.active {
       background: var(--accent);
       color: white;
       font-weight: 700;
-    }
-
-    .left-head {
-      display: flex;
-      align-items: center;
     }
 
     .top-actions {
@@ -356,12 +358,27 @@
     .ok { color: #a7f3d0; }
     .hidden { display: none !important; }
 
+    .debug-box {
+      max-width: 840px;
+      margin: 0 auto 20px;
+      color: #ffb3b6;
+      font-size: 13px;
+      white-space: pre-wrap;
+      display: none;
+      border: 1px solid rgba(229,72,77,.5);
+      border-radius: 10px;
+      padding: 12px;
+      background: rgba(229,72,77,.08);
+    }
+
+    .debug-box.open { display: block; }
+
     @media (max-width: 650px) {
       :root { --tile-size: 76px; --tile-gap: 10px; }
       .topbar { height: auto; flex-direction: column; align-items: flex-start; padding: 14px; gap: 12px; }
       .left-head { flex-wrap: wrap; gap: 8px; }
       .brand { font-size: 25px; }
-      .top-actions { width: 100%; justify-content: space-between; }
+      .top-actions { width: 100%; justify-content: space-between; flex-wrap: wrap; }
       .row, .image-mode { grid-template-columns: 1fr; }
     }
   </style>
@@ -405,6 +422,7 @@
   </div>
 
   <main class="page">
+    <div id="debugBox" class="debug-box"></div>
     <section id="webmix" class="webmix" aria-label="Webmix"></section>
   </main>
 
@@ -475,7 +493,7 @@
     const SUPABASE_URL = "https://ejblebseqggezptuvqfj.supabase.co";
     const SUPABASE_KEY = "sb_publishable_5JCL-teaTWmLPfDM5UrRoQ_xTFm4yrb";
 
-    const supabase = window.supabase.createClient(SUPABASE_URL, SUPABASE_KEY, {
+    const sbClient = window.supabase.createClient(SUPABASE_URL, SUPABASE_KEY, {
       auth: { persistSession: true, autoRefreshToken: true, detectSessionInUrl: true }
     });
 
@@ -534,7 +552,7 @@
     ];
 
     const el = id => document.getElementById(id);
-    const loginScreen = el("loginScreen"), webmix = el("webmix"), searchInput = el("searchInput");
+    const loginScreen = el("loginScreen"), webmix = el("webmix"), searchInput = el("searchInput"), debugBox = el("debugBox");
     const tileModal = el("tileModal"), modalTitle = el("modalTitle"), modalStatus = el("modalStatus");
     const tileTitle = el("tileTitle"), tileUrl = el("tileUrl"), tileImage = el("tileImage"), tileColor = el("tileColor"), tileUpload = el("tileUpload");
     const tileShowTitle = el("tileShowTitle"), tileOpenNewTab = el("tileOpenNewTab"), preview = el("preview");
@@ -547,9 +565,36 @@
     let uploadedImageUrl = "";
     let draggedTileId = null;
 
-    function status(node, msg, type="") { node.textContent = msg || ""; node.className = `status ${type}`.trim(); }
-    function normalizeUrl(url) { const u=(url||"").trim(); if(!u) return ""; return /^https?:\/\//i.test(u) ? u : "https://" + u; }
-    function faviconFor(url) { try { const u = new URL(normalizeUrl(url)); return `https://www.google.com/s2/favicons?domain=${u.hostname}&sz=128`; } catch { return ""; } }
+    function showDebug(message) {
+      debugBox.textContent = message;
+      debugBox.classList.add("open");
+      console.error(message);
+    }
+
+    function clearDebug() {
+      debugBox.textContent = "";
+      debugBox.classList.remove("open");
+    }
+
+    function status(node, msg, type="") {
+      node.textContent = msg || "";
+      node.className = `status ${type}`.trim();
+    }
+
+    function normalizeUrl(url) {
+      const u = (url || "").trim();
+      if (!u) return "";
+      return /^https?:\/\//i.test(u) ? u : "https://" + u;
+    }
+
+    function faviconFor(url) {
+      try {
+        const u = new URL(normalizeUrl(url));
+        return `https://www.google.com/s2/favicons?domain=${u.hostname}&sz=128`;
+      } catch {
+        return "";
+      }
+    }
 
     function setImageMode(mode) {
       imageMode = mode;
@@ -570,48 +615,87 @@
     }
 
     async function init() {
-      const { data } = await supabase.auth.getSession();
-      if (data.session) {
-        loginScreen.classList.remove("open");
-        await loadTiles();
-      } else {
-        loginScreen.classList.add("open");
+      try {
+        clearDebug();
+        const { data, error } = await sbClient.auth.getSession();
+        if (error) throw error;
+
+        if (data.session) {
+          loginScreen.classList.remove("open");
+          await loadTiles();
+        } else {
+          loginScreen.classList.add("open");
+        }
+
+        sbClient.auth.onAuthStateChange(async (_event, session) => {
+          if (session) {
+            loginScreen.classList.remove("open");
+            await loadTiles();
+          } else {
+            loginScreen.classList.add("open");
+            webmix.innerHTML = "";
+          }
+        });
+      } catch (e) {
+        showDebug("Erreur initialisation : " + e.message);
       }
-      supabase.auth.onAuthStateChange(async (_event, session) => {
-        if (session) { loginScreen.classList.remove("open"); await loadTiles(); }
-        else { loginScreen.classList.add("open"); webmix.innerHTML = ""; }
-      });
     }
 
     async function login() {
       status(el("loginStatus"), "Connexion...");
       const email = el("loginEmail").value.trim();
       const password = el("loginPassword").value;
-      const { error } = await supabase.auth.signInWithPassword({ email, password });
+      const { error } = await sbClient.auth.signInWithPassword({ email, password });
       if (error) status(el("loginStatus"), error.message, "error");
       else status(el("loginStatus"), "Connecté.", "ok");
     }
 
     async function forgotPassword() {
       const email = el("loginEmail").value.trim();
-      if (!email) { status(el("loginStatus"), "Entre ton email d’abord.", "error"); return; }
-      const { error } = await supabase.auth.resetPasswordForEmail(email, { redirectTo: location.origin + location.pathname });
+      if (!email) {
+        status(el("loginStatus"), "Entre ton email d’abord.", "error");
+        return;
+      }
+      const { error } = await sbClient.auth.resetPasswordForEmail(email, { redirectTo: location.origin + location.pathname });
       status(el("loginStatus"), error ? error.message : "Email de réinitialisation envoyé si le compte existe.", error ? "error" : "ok");
     }
 
     async function seedTiles(force=false) {
-      const { data } = await supabase.from("tiles").select("id");
+      const { data, error: selectError } = await sbClient.from("tiles").select("id");
+      if (selectError) {
+        showDebug("Erreur lecture tiles : " + selectError.message);
+        return;
+      }
+
       if ((data && data.length > 0) && !force) return;
       if (force && !confirm("Préremplir va ajouter les tuiles de référence. Continuer ?")) return;
-      const rows = defaultTiles.map((t, i) => ({ title:t[0], url:t[1], image:t[2] || null, color:"#ffffff", show_title:true, open_new_tab:true, position:i+1 }));
-      const { error } = await supabase.from("tiles").insert(rows);
-      if (error) alert(error.message);
+
+      const rows = defaultTiles.map((t, i) => ({
+        title: t[0],
+        url: t[1],
+        image: t[2] || null,
+        color: "#ffffff",
+        show_title: true,
+        open_new_tab: true,
+        position: i + 1
+      }));
+
+      const { error } = await sbClient.from("tiles").insert(rows);
+      if (error) {
+        showDebug("Erreur préremplissage : " + error.message);
+        return;
+      }
       await loadTiles();
     }
 
     async function loadTiles() {
-      const { data, error } = await supabase.from("tiles").select("*").order("position", { ascending:true });
-      if (error) { webmix.innerHTML = `<p style="color:#ffb3b6">${error.message}</p>`; return; }
+      clearDebug();
+      const { data, error } = await sbClient.from("tiles").select("*").order("position", { ascending: true });
+      if (error) {
+        showDebug("Erreur Supabase : " + error.message);
+        return;
+      }
+
       tiles = data || [];
       if (tiles.length === 0) await seedTiles(false);
       else renderTiles();
@@ -620,47 +704,63 @@
     function renderTiles() {
       const q = searchInput.value.trim().toLowerCase();
       webmix.innerHTML = "";
-      tiles.filter(t => !q || (t.title||"").toLowerCase().includes(q)).forEach(tile => {
-        const d = document.createElement("div");
-        d.className = "tile" + (tile.image && tile.image.includes("google.com/s2/favicons") ? " favicon" : "");
-        d.draggable = true;
-        d.dataset.id = tile.id;
-        d.style.background = tile.color || "#ffffff";
 
-        if (tile.image) d.innerHTML = `<img src="${tile.image}" alt="${tile.title || ""}">`;
-        else d.innerHTML = `<div class="text-only">${tile.title || "Sans titre"}</div>`;
+      tiles
+        .filter(t => !q || (t.title || "").toLowerCase().includes(q))
+        .forEach(tile => {
+          const d = document.createElement("div");
+          d.className = "tile" + (tile.image && tile.image.includes("google.com/s2/favicons") ? " favicon" : "");
+          d.draggable = true;
+          d.dataset.id = tile.id;
+          d.style.background = tile.color || "#ffffff";
 
-        if (tile.show_title && tile.image) {
-          const title = document.createElement("div");
-          title.className = "tile-title";
-          title.textContent = tile.title || "Sans titre";
-          d.appendChild(title);
-        }
+          if (tile.image) d.innerHTML = `<img src="${tile.image}" alt="${tile.title || ""}">`;
+          else d.innerHTML = `<div class="text-only">${tile.title || "Sans titre"}</div>`;
 
-        const menu = document.createElement("button");
-        menu.className = "tile-menu";
-        menu.type = "button";
-        menu.textContent = "⋯";
-        menu.onclick = e => { e.stopPropagation(); openModal(tile); };
-        d.appendChild(menu);
+          if (tile.show_title && tile.image) {
+            const title = document.createElement("div");
+            title.className = "tile-title";
+            title.textContent = tile.title || "Sans titre";
+            d.appendChild(title);
+          }
 
-        d.onclick = () => {
-          const url = normalizeUrl(tile.url);
-          if (!url) { openModal(tile); return; }
-          if (tile.open_new_tab) window.open(url, "_blank", "noopener,noreferrer");
-          else location.href = url;
-        };
+          const menu = document.createElement("button");
+          menu.className = "tile-menu";
+          menu.type = "button";
+          menu.textContent = "⋯";
+          menu.onclick = e => { e.stopPropagation(); openModal(tile); };
+          d.appendChild(menu);
 
-        d.ondragstart = ev => { draggedTileId = tile.id; d.classList.add("dragging"); ev.dataTransfer.effectAllowed = "move"; };
-        d.ondragend = () => { draggedTileId = null; d.classList.remove("dragging"); };
-        d.ondragover = ev => ev.preventDefault();
-        d.ondrop = async ev => { ev.preventDefault(); if (draggedTileId && draggedTileId !== tile.id) await reorderTiles(draggedTileId, tile.id); };
+          d.onclick = () => {
+            const url = normalizeUrl(tile.url);
+            if (!url) {
+              openModal(tile);
+              return;
+            }
+            if (tile.open_new_tab) window.open(url, "_blank", "noopener,noreferrer");
+            else location.href = url;
+          };
 
-        webmix.appendChild(d);
-      });
+          d.ondragstart = ev => {
+            draggedTileId = tile.id;
+            d.classList.add("dragging");
+            ev.dataTransfer.effectAllowed = "move";
+          };
+          d.ondragend = () => {
+            draggedTileId = null;
+            d.classList.remove("dragging");
+          };
+          d.ondragover = ev => ev.preventDefault();
+          d.ondrop = async ev => {
+            ev.preventDefault();
+            if (draggedTileId && draggedTileId !== tile.id) await reorderTiles(draggedTileId, tile.id);
+          };
+
+          webmix.appendChild(d);
+        });
 
       const emptyCount = Math.max(12, 54 - tiles.length);
-      for (let i=0;i<emptyCount;i++) {
+      for (let i = 0; i < emptyCount; i++) {
         const e = document.createElement("div");
         e.className = "tile empty";
         e.textContent = "+";
@@ -670,13 +770,23 @@
     }
 
     async function reorderTiles(sourceId, targetId) {
-      const a = tiles.findIndex(t => t.id === sourceId), b = tiles.findIndex(t => t.id === targetId);
+      const a = tiles.findIndex(t => t.id === sourceId);
+      const b = tiles.findIndex(t => t.id === targetId);
       if (a < 0 || b < 0) return;
+
       const [moved] = tiles.splice(a, 1);
       tiles.splice(b, 0, moved);
-      tiles = tiles.map((t,i)=>({ ...t, position:i+1 }));
+      tiles = tiles.map((t, i) => ({ ...t, position: i + 1 }));
       renderTiles();
-      for (const t of tiles) await supabase.from("tiles").update({ position:t.position }).eq("id", t.id);
+
+      for (const t of tiles) {
+        const { error } = await sbClient.from("tiles").update({ position: t.position }).eq("id", t.id);
+        if (error) {
+          showDebug("Erreur sauvegarde ordre : " + error.message);
+          await loadTiles();
+          break;
+        }
+      }
     }
 
     function openModal(tile) {
@@ -693,51 +803,73 @@
       tileOpenNewTab.checked = tile?.open_new_tab ?? true;
       setImageMode(tile?.image ? "web" : "color");
       tileModal.classList.add("open");
-      setTimeout(()=>tileTitle.focus(),50);
+      setTimeout(() => tileTitle.focus(), 50);
     }
 
-    function closeModal(){ tileModal.classList.remove("open"); editingTile = null; }
+    function closeModal() {
+      tileModal.classList.remove("open");
+      editingTile = null;
+    }
 
     async function uploadImage(file) {
       const ext = (file.name.split(".").pop() || "png").toLowerCase();
       const path = `tile-${Date.now()}-${Math.random().toString(16).slice(2)}.${ext}`;
-      const { error } = await supabase.storage.from("tile-images").upload(path, file, { upsert:false });
+      const { error } = await sbClient.storage.from("tile-images").upload(path, file, { upsert: false });
       if (error) throw error;
-      const { data } = supabase.storage.from("tile-images").getPublicUrl(path);
+      const { data } = sbClient.storage.from("tile-images").getPublicUrl(path);
       return data.publicUrl;
     }
 
     async function saveTile() {
       const title = tileTitle.value.trim();
       const url = normalizeUrl(tileUrl.value);
-      if (!url) { status(modalStatus, "Le lien est obligatoire.", "error"); return; }
+      if (!url) {
+        status(modalStatus, "Le lien est obligatoire.", "error");
+        return;
+      }
 
       let image = null;
       if (imageMode === "web") image = normalizeUrl(tileImage.value) || null;
       if (imageMode === "upload") image = uploadedImageUrl || normalizeUrl(tileImage.value) || null;
 
-      const payload = { title, url, image, color: tileColor.value || "#ffffff", show_title: tileShowTitle.checked, open_new_tab: tileOpenNewTab.checked };
+      const payload = {
+        title,
+        url,
+        image,
+        color: tileColor.value || "#ffffff",
+        show_title: tileShowTitle.checked,
+        open_new_tab: tileOpenNewTab.checked
+      };
+
       status(modalStatus, "Sauvegarde...");
 
       const result = editingTile
-        ? await supabase.from("tiles").update(payload).eq("id", editingTile.id)
-        : await supabase.from("tiles").insert({ ...payload, position: tiles.length + 1 });
+        ? await sbClient.from("tiles").update(payload).eq("id", editingTile.id)
+        : await sbClient.from("tiles").insert({ ...payload, position: tiles.length + 1 });
 
-      if (result.error) { status(modalStatus, result.error.message, "error"); return; }
+      if (result.error) {
+        status(modalStatus, result.error.message, "error");
+        return;
+      }
+
       closeModal();
       await loadTiles();
     }
 
     async function deleteTile() {
       if (!editingTile || !confirm("Supprimer cette tuile ?")) return;
-      const { error } = await supabase.from("tiles").delete().eq("id", editingTile.id);
-      if (error) { status(modalStatus, error.message, "error"); return; }
-      closeModal(); await loadTiles();
+      const { error } = await sbClient.from("tiles").delete().eq("id", editingTile.id);
+      if (error) {
+        status(modalStatus, error.message, "error");
+        return;
+      }
+      closeModal();
+      await loadTiles();
     }
 
     el("loginBtn").onclick = login;
     el("forgotBtn").onclick = forgotPassword;
-    el("logoutBtn").onclick = () => supabase.auth.signOut();
+    el("logoutBtn").onclick = () => sbClient.auth.signOut();
     el("addTileBtn").onclick = () => openModal(null);
     el("seedBtn").onclick = () => seedTiles(true);
     el("cancelTileBtn").onclick = closeModal;
@@ -746,18 +878,28 @@
     modeColor.onclick = () => setImageMode("color");
     modeUpload.onclick = () => setImageMode("upload");
     modeWeb.onclick = () => setImageMode("web");
-    el("autoLogoBtn").onclick = () => { tileImage.value = faviconFor(tileUrl.value); setImageMode("web"); updatePreview(); };
+    el("autoLogoBtn").onclick = () => {
+      tileImage.value = faviconFor(tileUrl.value);
+      setImageMode("web");
+      updatePreview();
+    };
     searchInput.oninput = renderTiles;
     [tileTitle, tileImage, tileColor].forEach(n => n.addEventListener("input", updatePreview));
     tileUpload.onchange = async () => {
       const file = tileUpload.files?.[0];
       if (!file) return;
       status(modalStatus, "Import de l’image...");
-      try { uploadedImageUrl = await uploadImage(file); tileImage.value = uploadedImageUrl; status(modalStatus, "Image importée.", "ok"); updatePreview(); }
-      catch (e) { status(modalStatus, "Erreur upload : " + e.message, "error"); }
+      try {
+        uploadedImageUrl = await uploadImage(file);
+        tileImage.value = uploadedImageUrl;
+        status(modalStatus, "Image importée.", "ok");
+        updatePreview();
+      } catch (e) {
+        status(modalStatus, "Erreur upload : " + e.message, "error");
+      }
     };
-    el("loginPassword").addEventListener("keydown", e => { if(e.key === "Enter") login(); });
-    tileModal.addEventListener("click", e => { if(e.target === tileModal) closeModal(); });
+    el("loginPassword").addEventListener("keydown", e => { if (e.key === "Enter") login(); });
+    tileModal.addEventListener("click", e => { if (e.target === tileModal) closeModal(); });
 
     init();
   </script>

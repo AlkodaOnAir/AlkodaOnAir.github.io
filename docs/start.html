@@ -2475,8 +2475,8 @@
     }
 
     function updateBookmarksAvailability() {
-      const available = emptyTileCount();
-      ui.bookmarksAvailable.textContent = availableTilesText(available);
+      const remaining = Math.max(0, emptyTileCount() - selectedBookmarksCount());
+      ui.bookmarksAvailable.textContent = availableTilesText(remaining);
     }
 
     function selectedBookmarksCount() {
@@ -2563,9 +2563,9 @@
       const text = await file.text();
       const parsed = parseBookmarksHtml(text);
       const available = emptyTileCount();
-      state.importedBookmarks = parsed.map((item, index) => ({
+      state.importedBookmarks = parsed.map(item => ({
         ...item,
-        selected: index < available
+        selected: false
       }));
       renderImportedBookmarks();
       setStatus(ui.bookmarksStatus, parsed.length ? "" : t("bookmarks_none_found"), parsed.length ? "" : "error");

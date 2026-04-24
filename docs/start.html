@@ -1351,12 +1351,19 @@
       const droppedUrl = extractImageUrl(uriList) || imageUrlFromHtml(html) || extractImageUrl(text);
 
       if (droppedUrl) {
-        ui.tileImage.value = "";
-        ui.tileImage.value = droppedUrl;
-        ui.tileImageEnabled.checked = true;
-        setImageMode("web");
-        setStatus(ui.tileStatus, "");
+        applyDroppedWebImageUrl(droppedUrl);
       }
+    }
+
+    function applyDroppedWebImageUrl(url) {
+      const cleanUrl = extractImageUrl(url);
+      if (!cleanUrl) {
+        return;
+      }
+      ui.tileImage.value = cleanUrl;
+      ui.tileImageEnabled.checked = true;
+      setImageMode("web");
+      setStatus(ui.tileStatus, "");
     }
 
     function logoCandidatesFor(url) {
@@ -2315,6 +2322,12 @@
       });
     });
 
+    ["dragenter", "dragover"].forEach(eventName => {
+      ui.tileImage.addEventListener(eventName, event => {
+        event.preventDefault();
+      });
+    });
+
     ["dragleave", "dragend", "drop"].forEach(eventName => {
       ui.tileDropZone.addEventListener(eventName, () => {
         ui.tileDropZone.classList.remove("active");
@@ -2323,6 +2336,16 @@
 
     ui.tileDropZone.addEventListener("drop", async event => {
       event.preventDefault();
+      try {
+        await handleDroppedData(event.dataTransfer);
+      } catch (error) {
+        setStatus(ui.tileStatus, error.message || "Erreur de glisser-deposer.", "error");
+      }
+    });
+
+    ui.tileImage.addEventListener("drop", async event => {
+      event.preventDefault();
+      event.stopPropagation();
       try {
         await handleDroppedData(event.dataTransfer);
       } catch (error) {

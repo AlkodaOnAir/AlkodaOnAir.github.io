@@ -1889,6 +1889,7 @@
     ui.tileImageEnabled.addEventListener("input", updatePreview);
     ui.tileImageFull.addEventListener("input", updatePreview);
     ui.tileImageScale.addEventListener("input", updatePreview);
+    ui.tileShowTitle.addEventListener("input", updatePreview);
     ui.autoLogoBtn.addEventListener("click", () => {
       ui.tileImage.value = faviconFor(ui.tileUrl.value);
       ui.tileImageEnabled.checked = true;

@@ -1544,6 +1544,11 @@
       ui.uploadOptions.classList.toggle("hidden", state.imageTab !== "upload");
       ui.webOptions.classList.toggle("hidden", state.imageTab !== "web");
       ui.imageSettings.classList.toggle("hidden", !((state.imageMode === "upload" || state.imageMode === "web")));
+      if (state.imageMode === "web") {
+        ui.tileImageEnabled.checked = Boolean(normalizeUrl(ui.tileImage.value));
+      } else if (state.imageMode === "upload") {
+        ui.tileImageEnabled.checked = Boolean(state.uploadedImageUrl);
+      }
       updatePreview();
     }
 
@@ -1552,7 +1557,7 @@
         return normalizeUrl(ui.tileImage.value);
       }
       if (state.imageMode === "upload") {
-        return state.uploadedImageUrl || normalizeUrl(ui.tileImage.value);
+        return state.uploadedImageUrl;
       }
       return "";
     }
@@ -1682,15 +1687,15 @@
     function openTileModal(tile) {
       clearTimeout(state.saveTileCloseTimer);
       state.editingTile = tile;
-      state.uploadedImageUrl = "";
       state.imageTab = "color";
       ui.tileUpload.value = "";
       const imageData = parseTileImageData(tile?.image);
+      state.uploadedImageUrl = imageData.mode === "upload" ? imageData.src : "";
       ui.tileModalTitle.textContent = tile ? "Modifier la tuile" : "Ajouter une tuile";
       ui.deleteTileBtn.classList.toggle("hidden", !tile);
       ui.tileTitle.value = tile?.title || "";
       ui.tileUrl.value = tile?.url || "";
-      ui.tileImage.value = imageData.src || "";
+      ui.tileImage.value = imageData.mode === "web" ? (imageData.src || "") : "";
       ui.tileColor.value = tile?.color || "#ffffff";
       ui.tileImageEnabled.checked = imageData.enabled;
       ui.tileImageFull.checked = imageData.full;
@@ -1733,7 +1738,7 @@
       let image = null;
       if (state.imageMode === "web" || state.imageMode === "upload") {
         const src = state.imageMode === "upload"
-          ? (state.uploadedImageUrl || normalizeUrl(ui.tileImage.value))
+          ? state.uploadedImageUrl
           : normalizeUrl(ui.tileImage.value);
         image = serializeTileImageData({
           src,
@@ -2069,7 +2074,12 @@
     });
     ui.tileTitle.addEventListener("input", updatePreview);
     ui.tileUrl.addEventListener("input", updatePreview);
-    ui.tileImage.addEventListener("input", updatePreview);
+    ui.tileImage.addEventListener("input", () => {
+      if (state.imageMode === "web") {
+        ui.tileImageEnabled.checked = Boolean(normalizeUrl(ui.tileImage.value));
+      }
+      updatePreview();
+    });
     ui.tileColor.addEventListener("input", updatePreview);
     ui.colorSwatches.forEach(button => {
       button.addEventListener("click", () => {

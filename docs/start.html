@@ -517,13 +517,13 @@
     }
 
     .password-field input {
-      padding-right: 52px;
+      padding-right: 92px;
     }
 
     .password-toggle {
       position: absolute;
       top: 50%;
-      right: 10px;
+      right: 46px;
       transform: translateY(-50%);
       width: 34px;
       min-width: 34px;
@@ -1091,7 +1091,14 @@
         </div>
         <div class="field">
           <label for="loginPassword">Mot de passe</label>
-          <input id="loginPassword" type="password" autocomplete="current-password" placeholder="Mot de passe" />
+          <div class="password-field">
+            <input id="loginPassword" type="password" autocomplete="current-password" placeholder="Mot de passe" />
+            <button id="loginPasswordToggle" class="btn password-toggle" type="button" aria-label="Afficher le mot de passe">
+              <svg viewBox="0 0 24 24" aria-hidden="true">
+                <path d="m2.71 3.72 17.57 17.57-1.41 1.41-3.02-3.02A11.84 11.84 0 0 1 12 19c-5.23 0-9.27-3.11-11-7a12.48 12.48 0 0 1 4.29-4.95L1.29 5.13l1.42-1.41ZM7 8.76A9.74 9.74 0 0 0 3.2 12c1.63 2.88 4.82 5 8.8 5 .93 0 1.81-.11 2.63-.32l-2.06-2.06A3.5 3.5 0 0 1 9.38 11.43L7 8.76Zm5-3.76c5.23 0 9.27 3.11 11 7a12.39 12.39 0 0 1-3.45 4.31l-1.44-1.44A9.87 9.87 0 0 0 20.8 12c-1.63-2.88-4.82-5-8.8-5-1.36 0-2.63.25-3.77.7L6.68 6.15A11.92 11.92 0 0 1 12 5Zm-.46 3.52a3.5 3.5 0 0 1 3.94 3.94l-3.94-3.94Z"/>
+              </svg>
+            </button>
+          </div>
         </div>
         <div class="auth-actions">
           <div class="auth-main-actions">
@@ -1450,6 +1457,7 @@
       signupCard: $("signupCard"),
       loginEmail: $("loginEmail"),
       loginPassword: $("loginPassword"),
+      loginPasswordToggle: $("loginPasswordToggle"),
       loginStatus: $("loginStatus"),
       loginBtn: $("loginBtn"),
       signupBtn: $("signupBtn"),

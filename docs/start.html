@@ -1253,21 +1253,17 @@
       ]);
     }
 
-    async function getRestHeaders(prefer = "return=representation") {
-      const { data, error } = await sbClient.auth.getSession();
-      if (error) {
-        throw error;
-      }
+    function getRestHeaders(prefer = "return=representation") {
       return {
         apikey: SUPABASE_KEY,
-        Authorization: `Bearer ${data.session?.access_token || SUPABASE_KEY}`,
+        Authorization: `Bearer ${SUPABASE_KEY}`,
         "Content-Type": "application/json",
         Prefer: prefer
       };
     }
 
     async function restTilesRequest({ method = "GET", query = "", body, prefer = "return=representation", timeoutMs = 12000 }) {
-      const headers = await getRestHeaders(prefer);
+      const headers = getRestHeaders(prefer);
       const controller = new AbortController();
       const timer = window.setTimeout(() => controller.abort(), timeoutMs);
 
@@ -1888,17 +1884,10 @@
       showDebug("");
 
       try {
-        const { data, error } = await sbClient
-          .from("tiles")
-          .select("*")
-          .order("position", { ascending: true })
-          .order("created_at", { ascending: true });
-
-        if (error) {
-          throw error;
-        }
-
-        const rows = data || [];
+        const rows = await restTilesRequest({
+          method: "GET",
+          query: "?select=*&order=position.asc,created_at.asc"
+        }) || [];
         state.configRow = rows.find(row => row.title === CONFIG_TITLE) || null;
         state.config = parseConfigRow(state.configRow);
         applyGridConfig(state.config);

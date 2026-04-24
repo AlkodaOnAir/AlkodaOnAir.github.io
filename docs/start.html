@@ -666,6 +666,28 @@
       line-height: 1.4;
     }
 
+    .drop-zone {
+      display: grid;
+      place-items: center;
+      min-height: 56px;
+      margin-top: 10px;
+      padding: 8px 10px;
+      border-radius: 12px;
+      border: 1px dashed rgba(255, 255, 255, 0.16);
+      background: rgba(255, 255, 255, 0.02);
+      color: var(--muted);
+      text-align: center;
+      font-size: 0.84rem;
+      line-height: 1.35;
+      transition: border-color 0.14s ease, background 0.14s ease, color 0.14s ease;
+    }
+
+    .drop-zone.active {
+      border-color: rgba(240, 180, 26, 0.6);
+      background: rgba(240, 180, 26, 0.08);
+      color: #ececf0;
+    }
+
     .image-settings {
       display: grid;
       gap: 8px;
@@ -1070,6 +1092,7 @@
                 <label for="tileUpload">Importer une image</label>
                 <input id="tileUpload" type="file" accept="image/*" />
               </div>
+              <div id="tileDropZone" class="drop-zone">Glisse une image ici depuis ton bureau ou un navigateur.</div>
             </div>
 
             <div id="webOptions" class="hidden">
@@ -1196,6 +1219,7 @@
       tileImage: $("tileImage"),
       tileColor: $("tileColor"),
       tileUpload: $("tileUpload"),
+      tileDropZone: $("tileDropZone"),
       tileImageEnabled: $("tileImageEnabled"),
       tileImageFull: $("tileImageFull"),
       tileImageScale: $("tileImageScale"),
@@ -1277,6 +1301,42 @@
         return `https://www.google.com/s2/favicons?domain=${parsed.hostname}&sz=128`;
       } catch {
         return "";
+      }
+    }
+
+    function imageUrlFromHtml(html) {
+      if (!html) {
+        return "";
+      }
+      const match = html.match(/<img[^>]+src=["']([^"']+)["']/i);
+      return normalizeUrl(match?.[1] || "");
+    }
+
+    async function handleDroppedData(dataTransfer) {
+      if (!dataTransfer) {
+        return;
+      }
+
+      const imageFile = Array.from(dataTransfer.files || []).find(file => file.type && file.type.startsWith("image/"));
+      if (imageFile) {
+        setStatus(ui.tileStatus, "Import de l'image...");
+        state.uploadedImageUrl = await uploadImage(imageFile);
+        ui.tileImageEnabled.checked = true;
+        setImageMode("upload");
+        setStatus(ui.tileStatus, "Image importee.", "ok");
+        return;
+      }
+
+      const uriList = dataTransfer.getData("text/uri-list");
+      const html = dataTransfer.getData("text/html");
+      const text = dataTransfer.getData("text/plain");
+      const droppedUrl = normalizeUrl(uriList) || imageUrlFromHtml(html) || normalizeUrl(text);
+
+      if (droppedUrl) {
+        ui.tileImage.value = droppedUrl;
+        ui.tileImageEnabled.checked = true;
+        setImageMode("web");
+        setStatus(ui.tileStatus, "");
       }
     }
 
@@ -2221,6 +2281,28 @@
         setStatus(ui.tileStatus, "Image importee.", "ok");
       } catch (error) {
         setStatus(ui.tileStatus, `Erreur upload : ${error.message || error}`, "error");
+      }
+    });
+
+    ["dragenter", "dragover"].forEach(eventName => {
+      ui.tileDropZone.addEventListener(eventName, event => {
+        event.preventDefault();
+        ui.tileDropZone.classList.add("active");
+      });
+    });
+
+    ["dragleave", "dragend", "drop"].forEach(eventName => {
+      ui.tileDropZone.addEventListener(eventName, () => {
+        ui.tileDropZone.classList.remove("active");
+      });
+    });
+
+    ui.tileDropZone.addEventListener("drop", async event => {
+      event.preventDefault();
+      try {
+        await handleDroppedData(event.dataTransfer);
+      } catch (error) {
+        setStatus(ui.tileStatus, error.message || "Erreur de glisser-deposer.", "error");
       }
     });
 

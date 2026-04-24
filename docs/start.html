@@ -2128,17 +2128,6 @@
         return;
       }
 
-      if (state.imageMode === "upload" && state.uploadImageEnabled && state.uploadedImagePath && !state.uploadedImageUrl) {
-        try {
-          state.uploadedImageUrl = await signedUploadUrl(state.uploadedImagePath);
-          ui.tileUploadUrl.value = state.uploadedImageUrl;
-        } catch (error) {
-          setStatus(ui.tileStatus, `Erreur image importee : ${error.message || error}`, "error");
-          ui.saveTileBtn.disabled = false;
-          return;
-        }
-      }
-
       let image = null;
       if (state.imageMode === "web" || state.imageMode === "upload") {
         const src = state.imageMode === "upload"
@@ -2207,7 +2196,7 @@
           state.initialTileSnapshot = buildTileDraftSnapshot();
           renderTiles();
         }
-        refreshSaveTileButtonState();
+        ui.saveTileBtn.disabled = true;
         setStatus(ui.tileStatus, "");
         loadTiles().catch(() => {});
       } catch (error) {

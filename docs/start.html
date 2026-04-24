@@ -1570,11 +1570,6 @@
       const title = ui.tileTitle.value.trim();
       const url = normalizeUrl(ui.tileUrl.value);
 
-      if (!url) {
-        setStatus(ui.tileStatus, "Le lien est obligatoire.", "error");
-        return;
-      }
-
       let image = null;
       if (state.imageMode === "web" || state.imageMode === "upload") {
         const src = state.imageMode === "upload"

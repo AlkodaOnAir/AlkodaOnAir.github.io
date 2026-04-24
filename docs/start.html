@@ -285,9 +285,9 @@
       min-height: 0;
       position: relative;
       isolation: isolate;
-      display: grid;
-      grid-template-rows: auto minmax(0, 1fr);
-      padding: 28px 18px 60px;
+      display: flex;
+      flex-direction: column;
+      padding: 28px 18px;
       background: #060606;
     }
 
@@ -309,13 +309,12 @@
     }
 
     .webmix-wrap {
-      grid-row: 2;
+      flex: 1;
       min-height: 0;
       width: 100%;
       display: grid;
       place-items: center;
       overflow: auto;
-      padding-bottom: 10px;
       position: relative;
       z-index: 1;
     }
@@ -4472,32 +4471,40 @@
 
     function makeDraggable(titlebar) {
       const card = titlebar.closest(".card");
-      let active = false, startX, startY, startL, startT;
+      const overlay = card.closest(".overlay");
+      let active = false, dragged = false, offsetX = 0, offsetY = 0;
 
       function pointerDown(e) {
         if (e.target.closest("button, input, select, textarea, a")) return;
-        active = true;
         const p = e.touches ? e.touches[0] : e;
-        startX = p.clientX;
-        startY = p.clientY;
         const r = card.getBoundingClientRect();
+        offsetX = p.clientX - r.left;
+        offsetY = p.clientY - r.top;
         card.style.left = r.left + "px";
         card.style.top = r.top + "px";
         card.style.transform = "";
-        startL = r.left;
-        startT = r.top;
+        active = true;
+        dragged = false;
         e.preventDefault();
       }
 
       function pointerMove(e) {
         if (!active) return;
         const p = e.touches ? e.touches[0] : e;
-        card.style.left = Math.max(0, Math.min(window.innerWidth - card.offsetWidth, startL + p.clientX - startX)) + "px";
-        card.style.top = Math.max(0, Math.min(window.innerHeight - card.offsetHeight, startT + p.clientY - startY)) + "px";
+        card.style.left = Math.max(0, Math.min(window.innerWidth - card.offsetWidth, p.clientX - offsetX)) + "px";
+        card.style.top = Math.max(0, Math.min(window.innerHeight - card.offsetHeight, p.clientY - offsetY)) + "px";
+        dragged = true;
         e.preventDefault();
       }
 
       function pointerUp() { active = false; }
+
+      overlay.addEventListener("click", e => {
+        if (dragged) {
+          e.stopImmediatePropagation();
+          dragged = false;
+        }
+      });
 
       titlebar.addEventListener("mousedown", pointerDown);
       titlebar.addEventListener("touchstart", pointerDown, { passive: false });

@@ -1912,6 +1912,7 @@
     function refreshSaveTileButtonState() {
       const isDirty = buildTileDraftSnapshot() !== state.initialTileSnapshot;
       ui.saveTileBtn.disabled = !isDirty || Boolean(state.uploadPending);
+      ui.saveTileBtn.textContent = isDirty ? "Sauvegarder" : "Sauvegardé";
     }
 
     function syncImageControls() {
@@ -2080,6 +2081,7 @@
       clearTimeout(state.saveTileCloseTimer);
       ui.tileModal.classList.remove("open");
       ui.saveTileBtn.disabled = false;
+      ui.saveTileBtn.textContent = "Sauvegarder";
       state.editingTile = null;
       state.uploadedImageUrl = "";
       revokeUploadPreviewUrl();
@@ -2177,6 +2179,7 @@
 
       setStatus(ui.tileStatus, "Sauvegarde...");
       ui.saveTileBtn.disabled = true;
+      ui.saveTileBtn.textContent = "Sauvegarde...";
 
       try {
         let savedTile = null;
@@ -2209,11 +2212,13 @@
           renderTiles();
         }
         ui.saveTileBtn.disabled = true;
+        ui.saveTileBtn.textContent = "Sauvegardé";
         setStatus(ui.tileStatus, "");
         loadTiles().catch(() => {});
       } catch (error) {
         setStatus(ui.tileStatus, error.message || "Erreur de sauvegarde.", "error");
         ui.saveTileBtn.disabled = false;
+        ui.saveTileBtn.textContent = "Sauvegarder";
       }
     }
 

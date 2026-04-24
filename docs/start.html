@@ -1314,20 +1314,44 @@
     }
 
     function extractImageUrl(rawUrl) {
-      const normalized = normalizeUrl(rawUrl);
-      if (!normalized) {
+      const source = String(rawUrl || "").trim();
+      if (!source) {
         return "";
       }
 
-      try {
-        const parsed = new URL(normalized);
-        if (/google\./i.test(parsed.hostname) && parsed.pathname.includes("/imgres")) {
-          return normalizeUrl(parsed.searchParams.get("imgurl") || "");
+      const candidates = source
+        .split(/[\s\r\n]+/)
+        .map(part => part.trim())
+        .filter(Boolean);
+
+      for (const candidate of candidates) {
+        const normalized = normalizeUrl(candidate);
+        if (!normalized) {
+          continue;
         }
-        return normalized;
-      } catch {
-        return normalized;
+
+        try {
+          const parsed = new URL(normalized);
+          if (/google\./i.test(parsed.hostname) && parsed.pathname.includes("/imgres")) {
+            const inner = parsed.searchParams.get("imgurl") || "";
+            const cleanInner = normalizeUrl(decodeURIComponent(inner));
+            if (cleanInner) {
+              return cleanInner;
+            }
+          }
+          if (/\.(png|jpg|jpeg|webp|gif|svg|ico)(\?|#|$)/i.test(parsed.pathname)) {
+            return normalized;
+          }
+          if (!/google\./i.test(parsed.hostname)) {
+            return normalized;
+          }
+        } catch {
+          continue;
+        }
       }
+
+      const directMatch = source.match(/https?:\/\/[^\s"'<>]+/i);
+      return directMatch ? normalizeUrl(directMatch[0]) : "";
     }
 
     async function handleDroppedData(dataTransfer) {

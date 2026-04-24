@@ -1324,7 +1324,7 @@
 
         if (hasImage) {
           media.innerHTML = `<img src="${escapeHtml(imageData.src)}" alt="${escapeHtml(tile.title || "")}">`;
-        } else {
+        } else if (!tile.show_title) {
           media.innerHTML = `<div class="tile-text">${escapeHtml(tile.title || "Sans titre")}</div>`;
         }
 
@@ -1339,7 +1339,7 @@
 
         element.appendChild(media);
 
-        if (tile.show_title && hasImage) {
+        if (tile.show_title) {
           const label = document.createElement("div");
           label.className = "tile-title";
           label.textContent = tile.title || "Sans titre";

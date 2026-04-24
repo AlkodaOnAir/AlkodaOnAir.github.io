@@ -223,19 +223,11 @@
       align-items: center;
       justify-content: center;
       text-align: center;
-      transition: transform 0.14s ease, box-shadow 0.14s ease, opacity 0.14s ease;
-    }
-
-    .tile:hover {
-      transform: translateY(-2px);
+      transition: box-shadow 0.14s ease, opacity 0.14s ease;
     }
 
     .tile.surface {
       box-shadow: var(--shadow);
-    }
-
-    .tile.surface:hover {
-      box-shadow: 0 22px 44px rgba(0, 0, 0, 0.42);
     }
 
     .tile.dragging {
@@ -334,32 +326,21 @@
       text-shadow: 0 1px 2px rgba(0, 0, 0, 0.86);
     }
 
-    .tile-menu {
-      position: absolute;
-      top: 6px;
-      right: -62px;
-      min-width: 86px;
-      height: 26px;
-      border-radius: 8px;
-      border: 1px solid rgba(255, 255, 255, 0.18);
-      background: rgba(0, 0, 0, 0.52);
-      color: #fff;
-      display: inline-flex;
-      align-items: center;
-      justify-content: center;
-      padding: 0 10px;
-      white-space: nowrap;
-      opacity: 0;
-      transition: opacity 0.14s ease, background 0.14s ease;
-      z-index: 5;
+    .context-menu {
+      position: fixed;
+      z-index: 140;
+      min-width: 132px;
+      padding: 6px;
+      border-radius: 12px;
+      border: 1px solid rgba(255, 255, 255, 0.08);
+      background: rgba(20, 22, 29, 0.96);
+      box-shadow: 0 16px 40px rgba(0, 0, 0, 0.35);
     }
 
-    .tile:hover .tile-menu {
-      opacity: 1;
-    }
-
-    .tile-menu:hover {
-      background: rgba(0, 0, 0, 0.74);
+    .context-menu .btn {
+      width: 100%;
+      justify-content: flex-start;
+      text-align: left;
     }
 
     .overlay,
@@ -1071,6 +1052,10 @@
     </div>
   </div>
 
+  <div id="tileContextMenu" class="context-menu hidden">
+    <button id="contextEditBtn" class="btn" type="button">Modifier</button>
+  </div>
+
   <script>
     const SUPABASE_URL = "https://ejblebseqggezptuvqfj.supabase.co";
     const SUPABASE_KEY = "sb_publishable_5JCL-teaTWmLPfDM5UrRoQ_xTFm4yrb";
@@ -1169,6 +1154,8 @@
       uploadOptions: $("uploadOptions"),
       webOptions: $("webOptions"),
       autoLogoBtn: $("autoLogoBtn"),
+      tileContextMenu: $("tileContextMenu"),
+      contextEditBtn: $("contextEditBtn"),
       deleteTileBtn: $("deleteTileBtn"),
       cancelTileBtn: $("cancelTileBtn"),
       saveTileBtn: $("saveTileBtn")
@@ -1186,7 +1173,8 @@
       uploadedImageUrl: "",
       draggingTileId: null,
       saveTileCloseTimer: null,
-      saveSizeCloseTimer: null
+      saveSizeCloseTimer: null,
+      contextTile: null
     };
 
     function showDebug(message) {
@@ -1390,17 +1378,6 @@
         fillTileVisual(face, tile);
         element.appendChild(face);
 
-        const menu = document.createElement("button");
-        menu.type = "button";
-        menu.className = "tile-menu";
-        menu.textContent = "Modifier";
-        menu.addEventListener("click", event => {
-          event.stopPropagation();
-          openTileModal(tile);
-        });
-
-        element.appendChild(menu);
-
         element.addEventListener("click", () => {
           if (!url) {
             openTileModal(tile);
@@ -1411,6 +1388,11 @@
           } else {
             window.location.href = url;
           }
+        });
+
+        element.addEventListener("contextmenu", event => {
+          event.preventDefault();
+          showTileContextMenu(event.clientX, event.clientY, tile);
         });
 
         element.addEventListener("dragstart", event => {
@@ -1448,6 +1430,24 @@
         emptyTile.addEventListener("click", () => openTileModal(null));
         ui.webmix.appendChild(emptyTile);
       }
+    }
+
+    function closeTileContextMenu() {
+      state.contextTile = null;
+      ui.tileContextMenu.classList.add("hidden");
+    }
+
+    function showTileContextMenu(x, y, tile) {
+      state.contextTile = tile;
+      ui.tileContextMenu.classList.remove("hidden");
+
+      const menuWidth = ui.tileContextMenu.offsetWidth || 140;
+      const menuHeight = ui.tileContextMenu.offsetHeight || 44;
+      const left = Math.min(x, window.innerWidth - menuWidth - 12);
+      const top = Math.min(y, window.innerHeight - menuHeight - 12);
+
+      ui.tileContextMenu.style.left = `${Math.max(12, left)}px`;
+      ui.tileContextMenu.style.top = `${Math.max(12, top)}px`;
     }
 
     function setImageMode(mode) {
@@ -1939,6 +1939,13 @@
     ui.cancelTileBtn.addEventListener("click", closeTileModal);
     ui.deleteTileBtn.addEventListener("click", deleteTile);
     ui.saveTileBtn.addEventListener("click", saveTile);
+    ui.contextEditBtn.addEventListener("click", () => {
+      const tile = state.contextTile;
+      closeTileContextMenu();
+      if (tile) {
+        openTileModal(tile);
+      }
+    });
     ui.modeColor.addEventListener("click", () => {
       state.imageTab = "color";
       ui.colorOptions.classList.remove("hidden");
@@ -1998,6 +2005,12 @@
       }
     });
 
+    document.addEventListener("click", event => {
+      if (!ui.tileContextMenu.contains(event.target)) {
+        closeTileContextMenu();
+      }
+    });
+
     ui.loginPassword.addEventListener("keydown", event => {
       if (event.key === "Enter") {
         login();
@@ -2015,6 +2028,10 @@
         closeSizeModal(true);
       }
     });
+
+    window.addEventListener("blur", closeTileContextMenu);
+    window.addEventListener("resize", closeTileContextMenu);
+    document.addEventListener("scroll", closeTileContextMenu, true);
 
     init();
   </script>

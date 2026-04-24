@@ -526,7 +526,6 @@
       margin-bottom: 14px;
       padding-bottom: 10px;
       border-bottom: 1px solid rgba(255, 255, 255, 0.07);
-      cursor: move;
       user-select: none;
     }
 
@@ -4482,7 +4481,7 @@
         offsetY = p.clientY - r.top;
         card.style.left = r.left + "px";
         card.style.top = r.top + "px";
-        card.style.transform = "";
+        card.style.transform = "none";
         active = true;
         dragged = false;
         e.preventDefault();

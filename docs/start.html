@@ -925,6 +925,7 @@
         </div>
         <div class="modal-actions" style="justify-content:flex-start;margin-top:10px;">
           <button id="loginBtn" class="btn primary" type="button">Login</button>
+          <button id="signupBtn" class="btn" type="button">Creer un compte</button>
           <button id="forgotBtn" class="btn ghost" type="button">Mot de passe oublie</button>
         </div>
         <div id="loginStatus" class="status"></div>
@@ -1190,6 +1191,7 @@
       loginPassword: $("loginPassword"),
       loginStatus: $("loginStatus"),
       loginBtn: $("loginBtn"),
+      signupBtn: $("signupBtn"),
       forgotBtn: $("forgotBtn"),
       logoutBtn: $("logoutBtn"),
       debugBox: $("debugBox"),
@@ -2366,6 +2368,7 @@
     async function login() {
       setStatus(ui.loginStatus, "Connexion...");
       ui.loginBtn.disabled = true;
+      ui.signupBtn.disabled = true;
 
       try {
         const email = ui.loginEmail.value.trim();
@@ -2379,6 +2382,51 @@
         setStatus(ui.loginStatus, error.message || "Erreur de connexion.", "error");
       } finally {
         ui.loginBtn.disabled = false;
+        ui.signupBtn.disabled = false;
+      }
+    }
+
+    async function signUp() {
+      const email = ui.loginEmail.value.trim();
+      const password = ui.loginPassword.value;
+
+      if (!email) {
+        setStatus(ui.loginStatus, "Entre ton email d'abord.", "error");
+        return;
+      }
+
+      if (!password || password.length < 6) {
+        setStatus(ui.loginStatus, "Entre un mot de passe d'au moins 6 caracteres.", "error");
+        return;
+      }
+
+      setStatus(ui.loginStatus, "Creation du compte...");
+      ui.loginBtn.disabled = true;
+      ui.signupBtn.disabled = true;
+
+      try {
+        const { data, error } = await sbClient.auth.signUp({
+          email,
+          password,
+          options: {
+            emailRedirectTo: window.location.href
+          }
+        });
+        if (error) {
+          throw error;
+        }
+
+        if (data.session) {
+          setStatus(ui.loginStatus, "Compte cree et connecte.", "ok");
+          return;
+        }
+
+        setStatus(ui.loginStatus, "Compte cree. Verifie ton email pour confirmer l'inscription.", "ok");
+      } catch (error) {
+        setStatus(ui.loginStatus, error.message || "Erreur de creation du compte.", "error");
+      } finally {
+        ui.loginBtn.disabled = false;
+        ui.signupBtn.disabled = false;
       }
     }
 
@@ -2454,6 +2502,7 @@
     }
 
     ui.loginBtn.addEventListener("click", login);
+    ui.signupBtn.addEventListener("click", signUp);
     ui.forgotBtn.addEventListener("click", forgotPassword);
     ui.logoutBtn.addEventListener("click", () => sbClient.auth.signOut());
     ui.sizeBtn.addEventListener("click", openSizeModal);

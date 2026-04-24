@@ -2163,12 +2163,13 @@
         open_new_tab: ui.tileOpenNewTab.checked
       };
 
-      setStatus(ui.tileStatus, "Sauvegarde...");
+      setStatus(ui.tileStatus, `DEBUG save start | mode=${state.imageMode} | uploadPending=${Boolean(state.uploadPending)} | uploadPath=${Boolean(state.uploadedImagePath)} | uploadUrl=${Boolean(state.uploadedImageUrl)} | showTitle=${ui.tileShowTitle.checked}`);
       ui.saveTileBtn.disabled = true;
 
       try {
         let savedTile = null;
         if (state.editingTile) {
+          setStatus(ui.tileStatus, `DEBUG patch existing | id=${state.editingTile.id} | mode=${state.imageMode} | imageLength=${image ? String(image).length : 0}`);
           await restTilesRequest({
             method: "PATCH",
             query: `?id=eq.${encodeURIComponent(state.editingTile.id)}`,
@@ -2177,6 +2178,7 @@
           });
           savedTile = { ...state.editingTile, ...payload };
         } else {
+          setStatus(ui.tileStatus, `DEBUG create tile | position=${state.pendingTilePosition || firstAvailablePosition()} | mode=${state.imageMode} | imageLength=${image ? String(image).length : 0}`);
           const data = await restTilesRequest({
             method: "POST",
             query: "?select=*",
@@ -2197,10 +2199,19 @@
           renderTiles();
         }
         ui.saveTileBtn.disabled = true;
-        setStatus(ui.tileStatus, "");
+        setStatus(ui.tileStatus, `DEBUG save ok | mode=${state.imageMode} | tile=${savedTile?.id || "new"}`, "ok");
         loadTiles().catch(() => {});
       } catch (error) {
-        setStatus(ui.tileStatus, error.message || "Erreur de sauvegarde.", "error");
+        const details = [
+          `DEBUG save error`,
+          `message=${error?.message || error}`,
+          `mode=${state.imageMode}`,
+          `uploadPending=${Boolean(state.uploadPending)}`,
+          `uploadPath=${Boolean(state.uploadedImagePath)}`,
+          `uploadUrl=${Boolean(state.uploadedImageUrl)}`,
+          `showTitle=${ui.tileShowTitle.checked}`
+        ].join(" | ");
+        setStatus(ui.tileStatus, details, "error");
         ui.saveTileBtn.disabled = false;
       }
     }

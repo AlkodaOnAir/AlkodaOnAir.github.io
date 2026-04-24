@@ -1256,6 +1256,7 @@
       uploadedImagePreviewUrl: "",
       uploadedImagePath: "",
       uploadPending: null,
+      initialTileSnapshot: "",
       webImageEnabled: false,
       uploadImageEnabled: false,
       webImageFull: false,
@@ -1860,6 +1861,47 @@
       return state.imageMode === "upload" ? state.uploadImageScale : state.webImageScale;
     }
 
+    function currentImageEnabled() {
+      return state.imageMode === "upload" ? state.uploadImageEnabled : state.webImageEnabled;
+    }
+
+    function buildTileDraftSnapshot() {
+      const image = (state.imageMode === "web" || state.imageMode === "upload")
+        ? serializeTileImageData({
+          src: state.imageMode === "upload" ? state.uploadedImageUrl : normalizeUrl(ui.tileImage.value),
+          storagePath: state.imageMode === "upload" ? state.uploadedImagePath : "",
+          enabled: currentImageEnabled(),
+          full: currentImageFull(),
+          scale: currentImageScale(),
+          surface: ui.tileSurface.checked,
+          mode: state.imageMode
+        })
+        : serializeTileImageData({
+          src: "",
+          enabled: false,
+          full: false,
+          scale: currentImageScale(),
+          surface: ui.tileSurface.checked,
+          mode: "color",
+          persistWithoutSrc: ui.tileSurface.checked
+        });
+
+      return JSON.stringify({
+        title: ui.tileTitle.value.trim(),
+        url: normalizeUrl(ui.tileUrl.value),
+        color: ui.tileColor.value || "#ffffff",
+        show_title: ui.tileShowTitle.checked,
+        open_new_tab: ui.tileOpenNewTab.checked,
+        image,
+        position: state.pendingTilePosition || null
+      });
+    }
+
+    function refreshSaveTileButtonState() {
+      const isDirty = buildTileDraftSnapshot() !== state.initialTileSnapshot;
+      ui.saveTileBtn.disabled = !isDirty || Boolean(state.uploadPending);
+    }
+
     function syncImageControls() {
       const scale = clampNumber(currentImageScale(), 10, 200, 90);
       ui.tileImageScale.value = scale;
@@ -1878,7 +1920,7 @@
         color: ui.tileColor.value || "#ffffff",
         image: (state.imageMode === "web" || state.imageMode === "upload") ? serializeTileImageData({
           src: imageUrl,
-          enabled: ui.tileImageEnabled.checked,
+          enabled: currentImageEnabled(),
           full: currentImageFull(),
           scale: currentImageScale(),
           surface: ui.tileSurface.checked,
@@ -1895,6 +1937,7 @@
         show_title: ui.tileShowTitle.checked
       });
       syncColorSwatches();
+      refreshSaveTileButtonState();
     }
 
     function openSizeModal() {
@@ -1976,7 +2019,7 @@
 
     function detectImageMode(tile) {
       const imageData = parseTileImageData(tile?.image);
-      if (!imageData.src) {
+      if (!imageData.src && !imageData.storagePath) {
         return "color";
       }
       return imageData.mode;
@@ -2013,6 +2056,8 @@
       ui.tileSurface.checked = imageData.surface;
       setStatus(ui.tileStatus, "");
       setImageMode(detectImageMode(tile));
+      state.initialTileSnapshot = buildTileDraftSnapshot();
+      refreshSaveTileButtonState();
       syncColorSwatches();
       ui.tileModal.classList.add("open");
       renderWebSuggestions();
@@ -2030,6 +2075,7 @@
       state.uploadedImagePath = "";
       state.uploadPending = null;
       state.pendingTilePosition = null;
+      state.initialTileSnapshot = "";
       state.webImageEnabled = false;
       state.uploadImageEnabled = false;
       state.webImageFull = false;
@@ -2158,9 +2204,10 @@
             state.editingTile = savedTile;
             ui.deleteTileBtn.classList.remove("hidden");
           }
+          state.initialTileSnapshot = buildTileDraftSnapshot();
           renderTiles();
         }
-        ui.saveTileBtn.disabled = false;
+        refreshSaveTileButtonState();
         setStatus(ui.tileStatus, "");
         loadTiles().catch(() => {});
       } catch (error) {

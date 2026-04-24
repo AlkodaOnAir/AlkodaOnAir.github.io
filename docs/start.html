@@ -657,6 +657,22 @@
       display: block;
     }
 
+    .preview-title {
+      position: absolute;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      padding: 4px 5px 5px;
+      color: #fff;
+      font-size: 10px;
+      line-height: 1.1;
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+      background: linear-gradient(180deg, rgba(0, 0, 0, 0) 0%, rgba(0, 0, 0, 0.76) 100%);
+      text-shadow: 0 1px 2px rgba(0, 0, 0, 0.8);
+    }
+
     .preview.favicon img {
       width: 62px;
       height: 62px;
@@ -1126,6 +1142,7 @@
       sizeModalSnapshot: null,
       editingTile: null,
       imageMode: "color",
+      imageTab: "color",
       uploadedImageUrl: "",
       draggingTileId: null,
       saveTileCloseTimer: null,
@@ -1382,13 +1399,14 @@
 
     function setImageMode(mode) {
       state.imageMode = mode;
-      ui.modeColor.classList.toggle("active", mode === "color");
-      ui.modeUpload.classList.toggle("active", mode === "upload");
-      ui.modeWeb.classList.toggle("active", mode === "web");
+      state.imageTab = mode;
+      ui.modeColor.classList.toggle("active", state.imageTab === "color");
+      ui.modeUpload.classList.toggle("active", state.imageTab === "upload");
+      ui.modeWeb.classList.toggle("active", state.imageTab === "web");
       ui.colorOptions.classList.remove("hidden");
-      ui.uploadOptions.classList.toggle("hidden", mode !== "upload");
-      ui.webOptions.classList.toggle("hidden", mode !== "web");
-      ui.imageSettings.classList.toggle("hidden", !((mode === "upload" || mode === "web")));
+      ui.uploadOptions.classList.toggle("hidden", state.imageTab !== "upload");
+      ui.webOptions.classList.toggle("hidden", state.imageTab !== "web");
+      ui.imageSettings.classList.toggle("hidden", !((state.imageMode === "upload" || state.imageMode === "web")));
       updatePreview();
     }
 
@@ -1414,6 +1432,7 @@
       const title = ui.tileTitle.value.trim() || "Aperçu";
       const showImage = state.imageMode !== "color" && ui.tileImageEnabled.checked && Boolean(imageUrl);
       const isFavicon = showImage && /google\.com\/s2\/favicons/i.test(imageUrl);
+      const showTitle = ui.tileShowTitle.checked && Boolean(title);
 
       syncImageControls();
       ui.preview.className = `preview${isFavicon ? " favicon" : ""}`;
@@ -1423,9 +1442,9 @@
         const full = ui.tileImageFull.checked;
         const scale = clampNumber(ui.tileImageScale.value, 10, 200, 100);
         const style = full ? "object-fit:cover;" : `object-fit:contain;transform:scale(${scale / 100});transform-origin:center;`;
-        ui.preview.innerHTML = `<img src="${escapeHtml(imageUrl)}" alt="${escapeHtml(title)}" style="${style}">`;
+        ui.preview.innerHTML = `<img src="${escapeHtml(imageUrl)}" alt="${escapeHtml(title)}" style="${style}">${showTitle ? `<div class="preview-title">${escapeHtml(title)}</div>` : ""}`;
       } else {
-        ui.preview.textContent = title;
+        ui.preview.textContent = showTitle ? title : "";
       }
       syncColorSwatches();
     }
@@ -1514,6 +1533,7 @@
       clearTimeout(state.saveTileCloseTimer);
       state.editingTile = tile;
       state.uploadedImageUrl = "";
+      state.imageTab = "color";
       ui.tileUpload.value = "";
       const imageData = parseTileImageData(tile?.image);
       ui.tileModalTitle.textContent = tile ? "Modifier la tuile" : "Ajouter une tuile";
@@ -1848,14 +1868,14 @@
     ui.deleteTileBtn.addEventListener("click", deleteTile);
     ui.saveTileBtn.addEventListener("click", saveTile);
     ui.modeColor.addEventListener("click", () => {
-      state.imageMode = "color";
+      state.imageTab = "color";
       ui.colorOptions.classList.remove("hidden");
       ui.modeColor.classList.add("active");
       ui.modeUpload.classList.remove("active");
       ui.modeWeb.classList.remove("active");
       ui.uploadOptions.classList.add("hidden");
       ui.webOptions.classList.add("hidden");
-      ui.imageSettings.classList.add("hidden");
+      ui.imageSettings.classList.toggle("hidden", !((state.imageMode === "upload" || state.imageMode === "web")));
       updatePreview();
     });
     ui.modeUpload.addEventListener("click", () => {

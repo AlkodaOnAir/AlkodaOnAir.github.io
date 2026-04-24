@@ -169,6 +169,13 @@
       color: #ffb4bb;
     }
 
+    .field-note {
+      margin-top: 8px;
+      font-size: 0.82rem;
+      line-height: 1.4;
+      color: var(--muted);
+    }
+
     .page {
       padding: 28px 18px 60px;
     }
@@ -912,7 +919,7 @@
 <body>
   <div class="app-shell">
     <div id="loginScreen" class="login-screen">
-      <div class="card">
+      <div id="loginCard" class="card">
         <h1>Connexion</h1>
         <p>Connecte-toi avec ton compte Supabase. La session reste memorisee sur cet appareil.</p>
         <div class="field">
@@ -929,6 +936,29 @@
           <button id="forgotBtn" class="btn ghost" type="button">Mot de passe oublie</button>
         </div>
         <div id="loginStatus" class="status"></div>
+      </div>
+
+      <div id="signupCard" class="card hidden">
+        <h1>Creer un compte</h1>
+        <p>Utilise un nouvel email et cree un nouveau mot de passe. L'acces sera autorise apres validation du mail.</p>
+        <div class="field">
+          <label for="signupEmail">Nouvel email</label>
+          <input id="signupEmail" type="email" autocomplete="off" placeholder="nouveau@email.com" />
+        </div>
+        <div class="field">
+          <label for="signupPassword">Mot de passe a creer</label>
+          <input id="signupPassword" type="password" autocomplete="new-password" placeholder="Minimum 8 caracteres" />
+          <div class="field-note">Minimum 8 caracteres, avec au moins une majuscule et un symbole.</div>
+        </div>
+        <div class="field">
+          <label for="signupPasswordConfirm">Confirmer le mot de passe</label>
+          <input id="signupPasswordConfirm" type="password" autocomplete="new-password" placeholder="Retape le mot de passe" />
+        </div>
+        <div class="modal-actions" style="justify-content:flex-start;margin-top:10px;">
+          <button id="signupSubmitBtn" class="btn primary" type="button">Creer le compte</button>
+          <button id="signupBackBtn" class="btn ghost" type="button">Retour connexion</button>
+        </div>
+        <div id="signupStatus" class="status"></div>
       </div>
     </div>
 
@@ -1187,11 +1217,19 @@
     const ui = {
       brandMarkImage: document.querySelector(".brand-mark img"),
       loginScreen: $("loginScreen"),
+      loginCard: $("loginCard"),
+      signupCard: $("signupCard"),
       loginEmail: $("loginEmail"),
       loginPassword: $("loginPassword"),
       loginStatus: $("loginStatus"),
       loginBtn: $("loginBtn"),
       signupBtn: $("signupBtn"),
+      signupEmail: $("signupEmail"),
+      signupPassword: $("signupPassword"),
+      signupPasswordConfirm: $("signupPasswordConfirm"),
+      signupStatus: $("signupStatus"),
+      signupSubmitBtn: $("signupSubmitBtn"),
+      signupBackBtn: $("signupBackBtn"),
       forgotBtn: $("forgotBtn"),
       logoutBtn: $("logoutBtn"),
       debugBox: $("debugBox"),
@@ -1287,6 +1325,23 @@
       if (tone) {
         node.classList.add(tone);
       }
+    }
+
+    function openSignUpScreen() {
+      ui.loginCard.classList.add("hidden");
+      ui.signupCard.classList.remove("hidden");
+      ui.signupEmail.value = "";
+      ui.signupPassword.value = "";
+      ui.signupPasswordConfirm.value = "";
+      setStatus(ui.signupStatus, "");
+      ui.signupEmail.focus();
+    }
+
+    function closeSignUpScreen() {
+      ui.signupCard.classList.add("hidden");
+      ui.loginCard.classList.remove("hidden");
+      setStatus(ui.signupStatus, "");
+      ui.loginEmail.focus();
     }
 
     function clampNumber(value, min, max, fallback) {
@@ -2387,22 +2442,38 @@
     }
 
     async function signUp() {
-      const email = ui.loginEmail.value.trim();
-      const password = ui.loginPassword.value;
+      const email = ui.signupEmail.value.trim();
+      const password = ui.signupPassword.value;
+      const passwordConfirm = ui.signupPasswordConfirm.value;
 
       if (!email) {
-        setStatus(ui.loginStatus, "Entre ton email d'abord.", "error");
+        setStatus(ui.signupStatus, "Entre ton email d'abord.", "error");
         return;
       }
 
-      if (!password || password.length < 6) {
-        setStatus(ui.loginStatus, "Entre un mot de passe d'au moins 6 caracteres.", "error");
+      if (!password || password.length < 8) {
+        setStatus(ui.signupStatus, "Entre un mot de passe d'au moins 8 caracteres.", "error");
         return;
       }
 
-      setStatus(ui.loginStatus, "Creation du compte...");
-      ui.loginBtn.disabled = true;
-      ui.signupBtn.disabled = true;
+      if (!/[A-Z]/.test(password)) {
+        setStatus(ui.signupStatus, "Le mot de passe doit contenir au moins une majuscule.", "error");
+        return;
+      }
+
+      if (!/[^A-Za-z0-9]/.test(password)) {
+        setStatus(ui.signupStatus, "Le mot de passe doit contenir au moins un symbole.", "error");
+        return;
+      }
+
+      if (password !== passwordConfirm) {
+        setStatus(ui.signupStatus, "Les mots de passe ne correspondent pas.", "error");
+        return;
+      }
+
+      setStatus(ui.signupStatus, "Creation du compte...");
+      ui.signupSubmitBtn.disabled = true;
+      ui.signupBackBtn.disabled = true;
 
       try {
         const { data, error } = await sbClient.auth.signUp({
@@ -2417,16 +2488,16 @@
         }
 
         if (data.session) {
-          setStatus(ui.loginStatus, "Compte cree et connecte.", "ok");
+          setStatus(ui.signupStatus, "Compte cree et connecte.", "ok");
           return;
         }
 
-        setStatus(ui.loginStatus, "Compte cree. Verifie ton email pour confirmer l'inscription.", "ok");
+        setStatus(ui.signupStatus, "Compte cree. Verifie ton email pour confirmer l'inscription.", "ok");
       } catch (error) {
-        setStatus(ui.loginStatus, error.message || "Erreur de creation du compte.", "error");
+        setStatus(ui.signupStatus, error.message || "Erreur de creation du compte.", "error");
       } finally {
-        ui.loginBtn.disabled = false;
-        ui.signupBtn.disabled = false;
+        ui.signupSubmitBtn.disabled = false;
+        ui.signupBackBtn.disabled = false;
       }
     }
 
@@ -2470,6 +2541,7 @@
         if (data.session) {
           state.currentSession = data.session;
           state.currentUserId = data.session.user?.id || "";
+          closeSignUpScreen();
           ui.loginScreen.classList.remove("open");
           await loadTiles();
         } else {
@@ -2483,12 +2555,14 @@
           if (session) {
             state.currentSession = session;
             state.currentUserId = session.user?.id || "";
+            closeSignUpScreen();
             ui.loginScreen.classList.remove("open");
             await loadTiles();
           } else {
             state.currentSession = null;
             state.currentUserId = "";
             state.currentWebmix = null;
+            closeSignUpScreen();
             ui.loginScreen.classList.add("open");
             state.tiles = [];
             state.config = { ...DEFAULT_CONFIG };
@@ -2502,7 +2576,9 @@
     }
 
     ui.loginBtn.addEventListener("click", login);
-    ui.signupBtn.addEventListener("click", signUp);
+    ui.signupBtn.addEventListener("click", openSignUpScreen);
+    ui.signupSubmitBtn.addEventListener("click", signUp);
+    ui.signupBackBtn.addEventListener("click", closeSignUpScreen);
     ui.forgotBtn.addEventListener("click", forgotPassword);
     ui.logoutBtn.addEventListener("click", () => sbClient.auth.signOut());
     ui.sizeBtn.addEventListener("click", openSizeModal);
@@ -2661,6 +2737,11 @@
     ui.loginPassword.addEventListener("keydown", event => {
       if (event.key === "Enter") {
         login();
+      }
+    });
+    ui.signupPasswordConfirm.addEventListener("keydown", event => {
+      if (event.key === "Enter") {
+        signUp();
       }
     });
 

@@ -576,6 +576,77 @@
       color: #ffb4bb;
     }
 
+    .bookmarks-meta {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 10px;
+      flex-wrap: wrap;
+      margin-bottom: 12px;
+      color: var(--muted);
+      font-size: 0.92rem;
+    }
+
+    .bookmarks-list {
+      max-height: 300px;
+      overflow: auto;
+      border: 1px solid rgba(255, 255, 255, 0.08);
+      border-radius: 14px;
+      background: rgba(255, 255, 255, 0.02);
+      padding: 8px;
+    }
+
+    .bookmark-item {
+      display: grid;
+      grid-template-columns: auto 1fr;
+      gap: 10px;
+      align-items: start;
+      padding: 9px 8px;
+      border-radius: 10px;
+    }
+
+    .bookmark-item:hover {
+      background: rgba(255, 255, 255, 0.03);
+    }
+
+    .bookmark-item input {
+      margin-top: 2px;
+    }
+
+    .bookmark-label {
+      min-width: 0;
+    }
+
+    .bookmark-title {
+      color: var(--text);
+      font-size: 0.94rem;
+      line-height: 1.35;
+      word-break: break-word;
+    }
+
+    .bookmark-url {
+      color: var(--muted);
+      font-size: 0.8rem;
+      line-height: 1.35;
+      word-break: break-all;
+      margin-top: 2px;
+    }
+
+    .bookmark-actions {
+      display: flex;
+      gap: 10px;
+      flex-wrap: wrap;
+      margin: 10px 0 0;
+    }
+
+    .account-logo {
+      display: block;
+      width: min(100%, 220px);
+      margin: 0 auto 14px;
+      object-fit: contain;
+      filter: drop-shadow(0 10px 24px rgba(0, 0, 0, 0.28));
+    }
+
     .modal-actions {
       display: flex;
       justify-content: flex-end;
@@ -1079,6 +1150,7 @@
       </div>
       <div class="top-actions">
         <button id="sizeBtn" class="btn" type="button">Taille</button>
+        <button id="importBookmarksBtn" class="btn" type="button">Importer favoris</button>
         <button id="accountBtn" class="btn icon-btn" type="button" aria-label="Reglages du compte" title="Reglages du compte">
           <svg viewBox="0 0 24 24" aria-hidden="true">
             <path d="M19.14 12.94a7.99 7.99 0 0 0 .05-.94 7.99 7.99 0 0 0-.05-.94l2.03-1.58a.5.5 0 0 0 .12-.64l-1.92-3.32a.5.5 0 0 0-.6-.22l-2.39.96a7.28 7.28 0 0 0-1.63-.94l-.36-2.54A.49.49 0 0 0 13.9 2h-3.8a.49.49 0 0 0-.49.42l-.36 2.54c-.58.22-1.13.53-1.63.94l-2.39-.96a.5.5 0 0 0-.6.22L2.71 8.48a.5.5 0 0 0 .12.64l2.03 1.58c-.03.31-.05.63-.05.94s.02.63.05.94l-2.03 1.58a.5.5 0 0 0-.12.64l1.92 3.32a.5.5 0 0 0 .6.22l2.39-.96c.5.41 1.05.72 1.63.94l.36 2.54a.49.49 0 0 0 .49.42h3.8a.49.49 0 0 0 .49-.42l.36-2.54c.58-.22 1.13-.53 1.63-.94l2.39.96a.5.5 0 0 0 .6-.22l1.92-3.32a.5.5 0 0 0-.12-.64l-2.03-1.58ZM12 15.5A3.5 3.5 0 1 1 12 8.5a3.5 3.5 0 0 1 0 7Z"/>
@@ -1096,8 +1168,33 @@
     </main>
   </div>
 
+  <div id="bookmarksModal" class="overlay">
+    <div class="card size-card">
+      <h2>Importer des favoris</h2>
+      <div class="bookmarks-meta">
+        <div id="bookmarksAvailable">0 tuiles disponibles dans le webmix</div>
+        <button id="bookmarksSizeBtn" class="btn" type="button">Taille</button>
+      </div>
+      <div class="field">
+        <label for="bookmarksFile">Fichier HTML</label>
+        <input id="bookmarksFile" type="file" accept=".html,text/html" />
+      </div>
+      <div class="bookmark-actions">
+        <button id="bookmarksSelectAllBtn" class="btn" type="button">Tout cocher</button>
+        <button id="bookmarksClearBtn" class="btn" type="button">Tout decocher</button>
+      </div>
+      <div id="bookmarksList" class="bookmarks-list hidden"></div>
+      <div id="bookmarksStatus" class="status"></div>
+      <div class="modal-actions">
+        <button id="cancelBookmarksBtn" class="btn" type="button">Annuler</button>
+        <button id="importBookmarksSubmitBtn" class="btn primary" type="button">Importer</button>
+      </div>
+    </div>
+  </div>
+
   <div id="accountModal" class="overlay">
     <div class="card size-card">
+      <img class="account-logo" src="./alkoda-startpage.png" alt="Alkoda On Air StartPage" />
       <h2>Reglages du compte</h2>
       <div class="field">
         <label for="accountEmail">Email du compte</label>
@@ -1375,6 +1472,17 @@
       changePasswordBtn: $("changePasswordBtn"),
       cancelAccountBtn: $("cancelAccountBtn"),
       deleteAccountBtn: $("deleteAccountBtn"),
+      importBookmarksBtn: $("importBookmarksBtn"),
+      bookmarksModal: $("bookmarksModal"),
+      bookmarksAvailable: $("bookmarksAvailable"),
+      bookmarksFile: $("bookmarksFile"),
+      bookmarksSelectAllBtn: $("bookmarksSelectAllBtn"),
+      bookmarksClearBtn: $("bookmarksClearBtn"),
+      bookmarksList: $("bookmarksList"),
+      bookmarksStatus: $("bookmarksStatus"),
+      bookmarksSizeBtn: $("bookmarksSizeBtn"),
+      cancelBookmarksBtn: $("cancelBookmarksBtn"),
+      importBookmarksSubmitBtn: $("importBookmarksSubmitBtn"),
       sizeBtn: $("sizeBtn"),
       sizeModal: $("sizeModal"),
       sizePreview: $("sizePreview"),
@@ -1449,7 +1557,9 @@
       saveTileCloseTimer: null,
       saveSizeCloseTimer: null,
       contextTile: null,
-      webSuggestionsRequestId: 0
+      webSuggestionsRequestId: 0,
+      bookmarksImportSnapshot: null,
+      importedBookmarks: []
     };
 
     function showDebug(message) {
@@ -1498,6 +1608,107 @@
     function closeAccountModal() {
       ui.accountModal.classList.remove("open");
       setStatus(ui.accountStatus, "");
+    }
+
+    function emptyTileCount() {
+      return Math.max(0, gridCapacity() - state.tiles.length);
+    }
+
+    function updateBookmarksAvailability() {
+      const available = emptyTileCount();
+      ui.bookmarksAvailable.textContent = `${available} tuiles disponibles dans le webmix`;
+    }
+
+    function selectedBookmarksCount() {
+      return state.importedBookmarks.filter(item => item.selected).length;
+    }
+
+    function renderImportedBookmarks() {
+      updateBookmarksAvailability();
+      const available = emptyTileCount();
+      ui.bookmarksList.innerHTML = "";
+
+      if (!state.importedBookmarks.length) {
+        ui.bookmarksList.classList.add("hidden");
+        return;
+      }
+
+      ui.bookmarksList.classList.remove("hidden");
+      state.importedBookmarks.forEach((item, index) => {
+        const row = document.createElement("label");
+        row.className = "bookmark-item";
+
+        const checkbox = document.createElement("input");
+        checkbox.type = "checkbox";
+        checkbox.checked = item.selected;
+        checkbox.disabled = !item.selected && selectedBookmarksCount() >= available;
+        checkbox.addEventListener("change", () => {
+          if (checkbox.checked && selectedBookmarksCount() >= available) {
+            checkbox.checked = false;
+            return;
+          }
+          state.importedBookmarks[index].selected = checkbox.checked;
+          renderImportedBookmarks();
+        });
+
+        const text = document.createElement("div");
+        text.className = "bookmark-label";
+        text.innerHTML = `<div class="bookmark-title">${escapeHtml(item.title || "Sans titre")}</div><div class="bookmark-url">${escapeHtml(item.url)}</div>`;
+
+        row.appendChild(checkbox);
+        row.appendChild(text);
+        ui.bookmarksList.appendChild(row);
+      });
+    }
+
+    function openBookmarksModal() {
+      updateBookmarksAvailability();
+      setStatus(ui.bookmarksStatus, "");
+      ui.bookmarksModal.classList.add("open");
+    }
+
+    function closeBookmarksModal() {
+      ui.bookmarksModal.classList.remove("open");
+      setStatus(ui.bookmarksStatus, "");
+    }
+
+    function parseBookmarksHtml(htmlText) {
+      const doc = new DOMParser().parseFromString(htmlText, "text/html");
+      const links = Array.from(doc.querySelectorAll("a[href]"))
+        .map(link => ({
+          title: (link.textContent || "").trim(),
+          url: normalizeUrl(link.getAttribute("href") || "")
+        }))
+        .filter(item => item.url);
+
+      const unique = [];
+      const seen = new Set();
+      for (const item of links) {
+        const key = `${item.title}|${item.url}`;
+        if (seen.has(key)) {
+          continue;
+        }
+        seen.add(key);
+        unique.push(item);
+      }
+      return unique;
+    }
+
+    async function loadBookmarksFile(file) {
+      if (!file) {
+        state.importedBookmarks = [];
+        renderImportedBookmarks();
+        return;
+      }
+      const text = await file.text();
+      const parsed = parseBookmarksHtml(text);
+      const available = emptyTileCount();
+      state.importedBookmarks = parsed.map((item, index) => ({
+        ...item,
+        selected: index < available
+      }));
+      renderImportedBookmarks();
+      setStatus(ui.bookmarksStatus, parsed.length ? "" : "Aucun favori trouve dans ce fichier.", parsed.length ? "" : "error");
     }
 
     function passwordEyeSvg(isVisible) {
@@ -2242,6 +2453,10 @@
       ui.sizeModal.classList.remove("open");
       setStatus(ui.sizeStatus, "");
       state.sizeModalSnapshot = null;
+      if (state.bookmarksImportSnapshot) {
+        openBookmarksModal();
+        renderImportedBookmarks();
+      }
     }
 
     async function saveConfig() {
@@ -2279,6 +2494,63 @@
         setStatus(ui.sizeStatus, error.message || "Erreur de sauvegarde.", "error");
       } finally {
         ui.saveSizeBtn.disabled = false;
+      }
+    }
+
+    async function importSelectedBookmarks() {
+      const selected = state.importedBookmarks.filter(item => item.selected);
+      if (!selected.length) {
+        setStatus(ui.bookmarksStatus, "Selectionne au moins un favori.", "error");
+        return;
+      }
+
+      const available = emptyTileCount();
+      if (selected.length > available) {
+        setStatus(ui.bookmarksStatus, "Pas assez de tuiles disponibles.", "error");
+        return;
+      }
+
+      ui.importBookmarksSubmitBtn.disabled = true;
+      setStatus(ui.bookmarksStatus, "Import...");
+
+      try {
+        const webmix = state.currentWebmix || await ensureCurrentWebmix();
+        const usedPositions = new Set(state.tiles.map(tile => Number(tile.position) || 0));
+        const rows = [];
+        let nextPosition = 1;
+
+        for (const item of selected) {
+          while (usedPositions.has(nextPosition)) {
+            nextPosition += 1;
+          }
+          usedPositions.add(nextPosition);
+          rows.push({
+            webmix_id: webmix.id,
+            title: item.title || item.url,
+            url: item.url,
+            image: faviconFor(item.url),
+            color: "#ffffff",
+            show_title: true,
+            open_new_tab: true,
+            position: nextPosition
+          });
+        }
+
+        await restTableRequest("tiles", {
+          method: "POST",
+          query: "?select=id",
+          body: rows
+        });
+
+        closeBookmarksModal();
+        state.bookmarksImportSnapshot = null;
+        state.importedBookmarks = [];
+        ui.bookmarksFile.value = "";
+        await loadTiles();
+      } catch (error) {
+        setStatus(ui.bookmarksStatus, error.message || "Erreur d'import.", "error");
+      } finally {
+        ui.importBookmarksSubmitBtn.disabled = false;
       }
     }
 
@@ -2887,6 +3159,32 @@
     ui.deleteAccountBtn.addEventListener("click", deleteAccount);
     ui.logoutBtn.addEventListener("click", logout);
     ui.sizeBtn.addEventListener("click", openSizeModal);
+    ui.importBookmarksBtn.addEventListener("click", () => {
+      state.bookmarksImportSnapshot = true;
+      openBookmarksModal();
+    });
+    ui.bookmarksFile.addEventListener("change", async () => {
+      const file = ui.bookmarksFile.files?.[0];
+      await loadBookmarksFile(file);
+    });
+    ui.bookmarksSelectAllBtn.addEventListener("click", () => {
+      const available = emptyTileCount();
+      state.importedBookmarks = state.importedBookmarks.map((item, index) => ({ ...item, selected: index < available }));
+      renderImportedBookmarks();
+    });
+    ui.bookmarksClearBtn.addEventListener("click", () => {
+      state.importedBookmarks = state.importedBookmarks.map(item => ({ ...item, selected: false }));
+      renderImportedBookmarks();
+    });
+    ui.bookmarksSizeBtn.addEventListener("click", () => {
+      ui.bookmarksModal.classList.remove("open");
+      openSizeModal();
+    });
+    ui.cancelBookmarksBtn.addEventListener("click", () => {
+      state.bookmarksImportSnapshot = null;
+      closeBookmarksModal();
+    });
+    ui.importBookmarksSubmitBtn.addEventListener("click", importSelectedBookmarks);
     ui.cancelSizeBtn.addEventListener("click", () => closeSizeModal(true));
     ui.saveSizeBtn.addEventListener("click", saveConfig);
     ui.colsMinusBtn.addEventListener("click", () => {
@@ -3059,6 +3357,12 @@
     ui.sizeModal.addEventListener("click", event => {
       if (event.target === ui.sizeModal) {
         closeSizeModal(true);
+      }
+    });
+    ui.bookmarksModal.addEventListener("click", event => {
+      if (event.target === ui.bookmarksModal) {
+        state.bookmarksImportSnapshot = null;
+        closeBookmarksModal();
       }
     });
     ui.accountModal.addEventListener("click", event => {

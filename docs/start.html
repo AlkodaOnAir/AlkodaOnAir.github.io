@@ -121,16 +121,6 @@
       font-size: 0.8rem;
     }
 
-    .mix-pill {
-      border-radius: 999px;
-      padding: 8px 14px;
-      background: rgba(240, 180, 26, 0.16);
-      border: 1px solid rgba(240, 180, 26, 0.25);
-      color: #f8d67a;
-      font-size: 0.85rem;
-      white-space: nowrap;
-    }
-
     .top-actions {
       display: flex;
       align-items: center;
@@ -710,11 +700,9 @@
             <div class="brand-subtitle">tableau personnel type Symbaloo</div>
           </div>
         </div>
-        <div class="mix-pill">bureau</div>
       </div>
       <div class="top-actions">
         <button id="sizeBtn" class="btn" type="button">Taille</button>
-        <button id="addTileBtn" class="btn primary" type="button">+ Ajouter</button>
         <button id="seedBtn" class="btn" type="button">Préremplir</button>
         <button id="logoutBtn" class="btn" type="button">Déconnexion</button>
       </div>
@@ -894,7 +882,6 @@
       logoutBtn: $("logoutBtn"),
       debugBox: $("debugBox"),
       webmix: $("webmix"),
-      addTileBtn: $("addTileBtn"),
       seedBtn: $("seedBtn"),
       sizeBtn: $("sizeBtn"),
       sizeModal: $("sizeModal"),
@@ -1544,7 +1531,6 @@
     ui.loginBtn.addEventListener("click", login);
     ui.forgotBtn.addEventListener("click", forgotPassword);
     ui.logoutBtn.addEventListener("click", () => sbClient.auth.signOut());
-    ui.addTileBtn.addEventListener("click", () => openTileModal(null));
     ui.seedBtn.addEventListener("click", () => seedTiles(true));
     ui.sizeBtn.addEventListener("click", openSizeModal);
     ui.cancelSizeBtn.addEventListener("click", () => closeSizeModal(true));

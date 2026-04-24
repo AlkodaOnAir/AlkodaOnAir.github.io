@@ -1137,7 +1137,6 @@
   <script>
     const SUPABASE_URL = "https://ejblebseqggezptuvqfj.supabase.co";
     const SUPABASE_KEY = "sb_publishable_5JCL-teaTWmLPfDM5UrRoQ_xTFm4yrb";
-    const CONFIG_TITLE = "__WEBMIX_CONFIG__";
     const DEFAULT_CONFIG = { columns: 11, rows: 5, tileSize: 86 };
     const TILE_LIMITS = { columns: [1, 30], rows: [1, 30], tileSize: [50, 150] };
 
@@ -1244,7 +1243,9 @@
 
     const state = {
       tiles: [],
-      configRow: null,
+      currentSession: null,
+      currentUserId: "",
+      currentWebmix: null,
       config: { ...DEFAULT_CONFIG },
       draftConfig: { ...DEFAULT_CONFIG },
       sizeModalSnapshot: null,
@@ -1490,22 +1491,23 @@
       ]);
     }
 
-    function getRestHeaders(prefer = "return=representation") {
+    async function getRestHeaders(prefer = "return=representation") {
+      const token = state.currentSession?.access_token || SUPABASE_KEY;
       return {
         apikey: SUPABASE_KEY,
-        Authorization: `Bearer ${SUPABASE_KEY}`,
+        Authorization: `Bearer ${token}`,
         "Content-Type": "application/json",
         Prefer: prefer
       };
     }
 
-    async function restTilesRequest({ method = "GET", query = "", body, prefer = "return=representation", timeoutMs = 12000 }) {
-      const headers = getRestHeaders(prefer);
+    async function restTableRequest(table, { method = "GET", query = "", body, prefer = "return=representation", timeoutMs = 12000 }) {
+      const headers = await getRestHeaders(prefer);
       const controller = new AbortController();
       const timer = window.setTimeout(() => controller.abort(), timeoutMs);
 
       try {
-        const response = await fetch(`${SUPABASE_URL}/rest/v1/tiles${query}`, {
+        const response = await fetch(`${SUPABASE_URL}/rest/v1/${table}${query}`, {
           method,
           headers,
           body: body === undefined ? undefined : JSON.stringify(body),
@@ -1627,16 +1629,15 @@
       });
     }
 
-    function parseConfigRow(row) {
-      if (!row || !row.url) {
+    function parseWebmixRow(row) {
+      if (!row) {
         return { ...DEFAULT_CONFIG };
       }
-      try {
-        const parsed = JSON.parse(row.url);
-        return sanitizeConfig(parsed);
-      } catch {
-        return { ...DEFAULT_CONFIG };
-      }
+      return sanitizeConfig({
+        columns: row.columns,
+        rows: row.rows,
+        tileSize: row.tile_size
+      });
     }
 
     function sanitizeConfig(candidate) {
@@ -1645,6 +1646,39 @@
         rows: clampNumber(candidate?.rows, TILE_LIMITS.rows[0], TILE_LIMITS.rows[1], DEFAULT_CONFIG.rows),
         tileSize: clampNumber(candidate?.tileSize, TILE_LIMITS.tileSize[0], TILE_LIMITS.tileSize[1], DEFAULT_CONFIG.tileSize)
       };
+    }
+
+    async function ensureCurrentWebmix() {
+      if (!state.currentUserId) {
+        throw new Error("Aucun utilisateur connecte.");
+      }
+
+      const query = `?select=*&user_id=eq.${encodeURIComponent(state.currentUserId)}&limit=1`;
+      const rows = await restTableRequest("webmixes", {
+        method: "GET",
+        query
+      }) || [];
+
+      if (rows[0]) {
+        state.currentWebmix = rows[0];
+        state.config = parseWebmixRow(rows[0]);
+        return rows[0];
+      }
+
+      const data = await restTableRequest("webmixes", {
+        method: "POST",
+        query: "?select=*",
+        body: {
+          user_id: state.currentUserId,
+          columns: DEFAULT_CONFIG.columns,
+          rows: DEFAULT_CONFIG.rows,
+          tile_size: DEFAULT_CONFIG.tileSize
+        }
+      });
+      const created = Array.isArray(data) ? data[0] : data;
+      state.currentWebmix = created || null;
+      state.config = parseWebmixRow(created);
+      return created;
     }
 
     function syncSizeInputs(config) {
@@ -1993,30 +2027,20 @@
       ui.saveSizeBtn.disabled = true;
 
       const payload = {
-        title: CONFIG_TITLE,
-        url: JSON.stringify(state.config),
-        show_title: false,
-        color: "#000000",
-        position: 0,
-        image: null,
-        open_new_tab: false
+        columns: state.config.columns,
+        rows: state.config.rows,
+        tile_size: state.config.tileSize
       };
 
       try {
-        const data = state.configRow
-          ? await restTilesRequest({
-            method: "PATCH",
-            query: `?id=eq.${encodeURIComponent(state.configRow.id)}`,
-            body: payload,
-            prefer: "return=minimal"
-          })
-          : await restTilesRequest({
-            method: "POST",
-            query: "?select=*",
-            body: payload
-          });
-
-        state.configRow = Array.isArray(data) ? (data[0] || state.configRow) : (data || state.configRow);
+        const webmix = state.currentWebmix || await ensureCurrentWebmix();
+        await restTableRequest("webmixes", {
+          method: "PATCH",
+          query: `?id=eq.${encodeURIComponent(webmix.id)}`,
+          body: payload,
+          prefer: "return=minimal"
+        });
+        state.currentWebmix = { ...webmix, ...payload };
         setStatus(ui.sizeStatus, "Sauvegarde effectuee.", "ok");
         state.sizeModalSnapshot = { ...state.config };
         state.saveSizeCloseTimer = window.setTimeout(() => {
@@ -2104,15 +2128,11 @@
       const extension = (file.name.split(".").pop() || "png").toLowerCase();
       const path = `tile-${Date.now()}-${Math.random().toString(16).slice(2)}.${extension}`;
       const contentType = file.type || (extension === "svg" ? "image/svg+xml" : "application/octet-stream");
-      const uploadPromise = sbClient.storage.from("tile-images").upload(path, file, {
+      const { error } = await sbClient.storage.from("tile-images").upload(path, file, {
         upsert: false,
         contentType,
         cacheControl: "3600"
       });
-      const timeoutPromise = new Promise((_, reject) => {
-        window.setTimeout(() => reject(new Error("Import trop long. Reessaie.")), 20000);
-      });
-      const { error } = await Promise.race([uploadPromise, timeoutPromise]);
       if (error) {
         throw error;
       }
@@ -2184,7 +2204,7 @@
       try {
         let savedTile = null;
         if (state.editingTile) {
-          await restTilesRequest({
+          await restTableRequest("tiles", {
             method: "PATCH",
             query: `?id=eq.${encodeURIComponent(state.editingTile.id)}`,
             body: payload,
@@ -2192,10 +2212,11 @@
           });
           savedTile = { ...state.editingTile, ...payload };
         } else {
-          const data = await restTilesRequest({
+          const webmix = state.currentWebmix || await ensureCurrentWebmix();
+          const data = await restTableRequest("tiles", {
             method: "POST",
             query: "?select=*",
-            body: { ...payload, position: state.pendingTilePosition || firstAvailablePosition() }
+            body: { ...payload, webmix_id: webmix.id, position: state.pendingTilePosition || firstAvailablePosition() }
           });
           savedTile = Array.isArray(data) ? data[0] : data;
         }
@@ -2233,7 +2254,7 @@
       setStatus(ui.tileStatus, "Suppression...");
 
       try {
-        await restTilesRequest({
+        await restTableRequest("tiles", {
           method: "DELETE",
           query: `?id=eq.${encodeURIComponent(state.editingTile.id)}`,
           prefer: "return=minimal"
@@ -2262,7 +2283,7 @@
       renderTiles();
 
       try {
-        await restTilesRequest({
+        await restTableRequest("tiles", {
           method: "PATCH",
           query: `?id=eq.${encodeURIComponent(sourceId)}`,
           body: { position: normalizedTarget },
@@ -2276,12 +2297,12 @@
 
     async function seedTiles(force) {
       try {
-        const { data, error } = await sbClient.from("tiles").select("id,title");
-        if (error) {
-          throw error;
-        }
-
-        const realTiles = (data || []).filter(row => row.title !== CONFIG_TITLE);
+        const webmix = state.currentWebmix || await ensureCurrentWebmix();
+        const data = await restTableRequest("tiles", {
+          method: "GET",
+          query: `?select=id,title&webmix_id=eq.${encodeURIComponent(webmix.id)}`
+        });
+        const realTiles = data || [];
         if (realTiles.length && !force) {
           return;
         }
@@ -2291,6 +2312,7 @@
         }
 
         const rows = defaultTiles.map(([title, url], index) => ({
+          webmix_id: webmix.id,
           title,
           url,
           image: faviconFor(url),
@@ -2300,10 +2322,11 @@
           position: index + 1
         }));
 
-        const { error: insertError } = await sbClient.from("tiles").insert(rows);
-        if (insertError) {
-          throw insertError;
-        }
+        await restTableRequest("tiles", {
+          method: "POST",
+          query: "?select=id",
+          body: rows
+        });
         await loadTiles();
       } catch (error) {
         showDebug(`Erreur de preremplissage : ${error.message || error}`);
@@ -2314,17 +2337,17 @@
       showDebug("");
 
       try {
-        const rows = await restTilesRequest({
+        const webmix = await ensureCurrentWebmix();
+        const rows = await restTableRequest("tiles", {
           method: "GET",
-          query: "?select=*&order=position.asc,created_at.asc"
+          query: `?select=*&webmix_id=eq.${encodeURIComponent(webmix.id)}&order=position.asc,created_at.asc`
         }) || [];
-        state.configRow = rows.find(row => row.title === CONFIG_TITLE) || null;
-        state.config = parseConfigRow(state.configRow);
+        state.currentWebmix = webmix;
+        state.config = parseWebmixRow(webmix);
         applyGridConfig(state.config);
 
         const contentRows = await Promise.all(
           rows
-            .filter(row => row.title !== CONFIG_TITLE)
             .map(async (row, index) => ({
               ...row,
               image: await hydrateUploadImage(row.image),
@@ -2397,19 +2420,31 @@
         }
 
         if (data.session) {
+          state.currentSession = data.session;
+          state.currentUserId = data.session.user?.id || "";
           ui.loginScreen.classList.remove("open");
           await loadTiles();
         } else {
+          state.currentSession = null;
+          state.currentUserId = "";
+          state.currentWebmix = null;
           ui.loginScreen.classList.add("open");
         }
 
         sbClient.auth.onAuthStateChange(async (_event, session) => {
           if (session) {
+            state.currentSession = session;
+            state.currentUserId = session.user?.id || "";
             ui.loginScreen.classList.remove("open");
             await loadTiles();
           } else {
+            state.currentSession = null;
+            state.currentUserId = "";
+            state.currentWebmix = null;
             ui.loginScreen.classList.add("open");
             state.tiles = [];
+            state.config = { ...DEFAULT_CONFIG };
+            applyGridConfig(state.config);
             ui.webmix.innerHTML = "";
           }
         });

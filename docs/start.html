@@ -1260,7 +1260,8 @@
       draggingTileId: null,
       saveTileCloseTimer: null,
       saveSizeCloseTimer: null,
-      contextTile: null
+      contextTile: null,
+      webSuggestionsRequestId: 0
     };
 
     function showDebug(message) {
@@ -1309,7 +1310,24 @@
         return "";
       }
       const match = html.match(/<img[^>]+src=["']([^"']+)["']/i);
-      return normalizeUrl(match?.[1] || "");
+      return extractImageUrl(match?.[1] || "");
+    }
+
+    function extractImageUrl(rawUrl) {
+      const normalized = normalizeUrl(rawUrl);
+      if (!normalized) {
+        return "";
+      }
+
+      try {
+        const parsed = new URL(normalized);
+        if (/google\./i.test(parsed.hostname) && parsed.pathname.includes("/imgres")) {
+          return normalizeUrl(parsed.searchParams.get("imgurl") || "");
+        }
+        return normalized;
+      } catch {
+        return normalized;
+      }
     }
 
     async function handleDroppedData(dataTransfer) {
@@ -1330,9 +1348,10 @@
       const uriList = dataTransfer.getData("text/uri-list");
       const html = dataTransfer.getData("text/html");
       const text = dataTransfer.getData("text/plain");
-      const droppedUrl = normalizeUrl(uriList) || imageUrlFromHtml(html) || normalizeUrl(text);
+      const droppedUrl = extractImageUrl(uriList) || imageUrlFromHtml(html) || extractImageUrl(text);
 
       if (droppedUrl) {
+        ui.tileImage.value = "";
         ui.tileImage.value = droppedUrl;
         ui.tileImageEnabled.checked = true;
         setImageMode("web");
@@ -1383,6 +1402,7 @@
     }
 
     async function renderWebSuggestions() {
+      const requestId = ++state.webSuggestionsRequestId;
       const candidates = logoCandidatesFor(ui.tileUrl.value);
       ui.webSuggestions.innerHTML = "";
       ui.webSuggestions.classList.toggle("hidden", candidates.length === 0);
@@ -1397,6 +1417,9 @@
       const available = [];
       for (const candidate of uniqueCandidates) {
         const ok = await preloadLogoCandidate(candidate.url);
+        if (requestId !== state.webSuggestionsRequestId) {
+          return;
+        }
         if (ok) {
           available.push(candidate);
         }
@@ -1419,6 +1442,7 @@
         button.addEventListener("click", () => {
           ui.tileImage.value = candidate.url;
           ui.tileImageEnabled.checked = true;
+          ui.webSuggestions.classList.add("hidden");
           setImageMode("web");
           updatePreview();
         });

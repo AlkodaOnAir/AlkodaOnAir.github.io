@@ -534,6 +534,24 @@
       min-height: 0;
     }
 
+    .tile-editor-column.tile-editor-column-left {
+      display: flex;
+      flex-direction: column;
+      gap: 12px;
+      min-height: 462px;
+    }
+
+    .image-panel.fund-panel {
+      min-height: 224px;
+    }
+
+    .image-panel.general-panel {
+      min-height: 226px;
+      display: flex;
+      flex-direction: column;
+      justify-content: flex-start;
+    }
+
     .tile-card-top {
       display: flex;
       align-items: flex-start;
@@ -955,8 +973,8 @@
       </div>
 
       <div class="tile-editor-layout">
-        <div class="tile-editor-column">
-          <div class="image-panel">
+        <div class="tile-editor-column tile-editor-column-left">
+          <div class="image-panel fund-panel">
             <div class="image-panel-title">Fond</div>
             <div id="colorOptions">
               <div class="field">
@@ -993,7 +1011,7 @@
             </div>
           </div>
 
-          <div class="image-panel" style="margin-top:12px;">
+          <div class="image-panel general-panel">
             <div class="image-panel-title">Options generales</div>
             <div class="grid-2">
               <label class="checkbox-row">

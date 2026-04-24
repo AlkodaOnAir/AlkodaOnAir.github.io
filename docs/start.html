@@ -565,6 +565,39 @@
       font-size: 0.9rem;
     }
 
+    .web-suggestions {
+      display: grid;
+      grid-template-columns: repeat(3, minmax(0, 1fr));
+      gap: 8px;
+      margin-top: 10px;
+    }
+
+    .web-suggestion {
+      display: grid;
+      gap: 6px;
+      justify-items: center;
+      padding: 8px 6px;
+      border-radius: 12px;
+      border: 1px solid rgba(255, 255, 255, 0.08);
+      background: rgba(255, 255, 255, 0.03);
+      color: #d9dbe1;
+      cursor: pointer;
+      text-align: center;
+    }
+
+    .web-suggestion img {
+      width: 30px;
+      height: 30px;
+      object-fit: contain;
+      display: block;
+    }
+
+    .web-suggestion-label {
+      font-size: 0.74rem;
+      line-height: 1.2;
+      color: var(--muted);
+    }
+
     .mode-list {
       display: grid;
       grid-template-columns: repeat(3, minmax(0, 1fr));
@@ -1051,7 +1084,8 @@
                 <label for="tileImage">URL d'image</label>
                 <input id="tileImage" type="url" placeholder="https://.../image.png" />
               </div>
-              <button id="autoLogoBtn" class="btn" type="button">Logo automatique depuis l'URL</button>
+              <button id="autoLogoBtn" class="btn" type="button">Proposer des logos</button>
+              <div id="webSuggestions" class="web-suggestions hidden"></div>
             </div>
 
             <div id="imageSettings" class="image-settings hidden">
@@ -1188,6 +1222,7 @@
       uploadOptions: $("uploadOptions"),
       webOptions: $("webOptions"),
       autoLogoBtn: $("autoLogoBtn"),
+      webSuggestions: $("webSuggestions"),
       tileContextMenu: $("tileContextMenu"),
       contextEditBtn: $("contextEditBtn"),
       deleteTileBtn: $("deleteTileBtn"),
@@ -1250,6 +1285,50 @@
       } catch {
         return "";
       }
+    }
+
+    function logoCandidatesFor(url) {
+      try {
+        const parsed = new URL(normalizeUrl(url));
+        const origin = parsed.origin;
+        const hostname = parsed.hostname;
+        return [
+          { label: "Favicon 128", url: `https://www.google.com/s2/favicons?domain=${hostname}&sz=128` },
+          { label: "favicon.ico", url: `${origin}/favicon.ico` },
+          { label: "favicon.png", url: `${origin}/favicon.png` },
+          { label: "apple touch", url: `${origin}/apple-touch-icon.png` },
+          { label: "android 192", url: `${origin}/android-chrome-192x192.png` },
+          { label: "android 512", url: `${origin}/android-chrome-512x512.png` }
+        ];
+      } catch {
+        return [];
+      }
+    }
+
+    function renderWebSuggestions() {
+      const candidates = logoCandidatesFor(ui.tileUrl.value);
+      ui.webSuggestions.innerHTML = "";
+      ui.webSuggestions.classList.toggle("hidden", candidates.length === 0);
+      if (!candidates.length) {
+        return;
+      }
+
+      candidates.forEach(candidate => {
+        const button = document.createElement("button");
+        button.type = "button";
+        button.className = "web-suggestion";
+        button.innerHTML = `
+          <img src="${escapeHtml(candidate.url)}" alt="${escapeHtml(candidate.label)}">
+          <span class="web-suggestion-label">${escapeHtml(candidate.label)}</span>
+        `;
+        button.addEventListener("click", () => {
+          ui.tileImage.value = candidate.url;
+          ui.tileImageEnabled.checked = true;
+          setImageMode("web");
+          updatePreview();
+        });
+        ui.webSuggestions.appendChild(button);
+      });
     }
 
     function escapeHtml(value) {
@@ -1546,6 +1625,7 @@
       ui.imageSettings.classList.toggle("hidden", !((state.imageMode === "upload" || state.imageMode === "web")));
       if (state.imageMode === "web") {
         ui.tileImageEnabled.checked = Boolean(normalizeUrl(ui.tileImage.value));
+        renderWebSuggestions();
       } else if (state.imageMode === "upload") {
         ui.tileImageEnabled.checked = Boolean(state.uploadedImageUrl);
       }
@@ -1707,6 +1787,7 @@
       setImageMode(detectImageMode(tile));
       syncColorSwatches();
       ui.tileModal.classList.add("open");
+      renderWebSuggestions();
       window.setTimeout(() => ui.tileTitle.focus(), 30);
     }
 
@@ -2067,13 +2148,15 @@
     ui.tileShowTitle.addEventListener("input", updatePreview);
     ui.tileSurface.addEventListener("input", updatePreview);
     ui.autoLogoBtn.addEventListener("click", () => {
-      ui.tileImage.value = faviconFor(ui.tileUrl.value);
-      ui.tileImageEnabled.checked = true;
-      setImageMode("web");
-      updatePreview();
+      renderWebSuggestions();
     });
     ui.tileTitle.addEventListener("input", updatePreview);
-    ui.tileUrl.addEventListener("input", updatePreview);
+    ui.tileUrl.addEventListener("input", () => {
+      if (state.imageMode === "web") {
+        renderWebSuggestions();
+      }
+      updatePreview();
+    });
     ui.tileImage.addEventListener("input", () => {
       if (state.imageMode === "web") {
         ui.tileImageEnabled.checked = Boolean(normalizeUrl(ui.tileImage.value));

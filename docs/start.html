@@ -64,6 +64,8 @@
 
     .app-shell {
       min-height: 100vh;
+      display: flex;
+      flex-direction: column;
     }
 
     .topbar {
@@ -267,6 +269,10 @@
     }
 
     .page {
+      flex: 1;
+      min-height: 0;
+      display: flex;
+      flex-direction: column;
       padding: 28px 18px 60px;
     }
 
@@ -288,8 +294,13 @@
     }
 
     .webmix-wrap {
+      flex: 1;
+      min-height: 0;
       width: 100%;
-      overflow-x: auto;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      overflow: auto;
       padding-bottom: 10px;
     }
 

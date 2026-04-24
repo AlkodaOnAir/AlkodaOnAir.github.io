@@ -1302,7 +1302,10 @@
       if (!value) {
         return "";
       }
-      return /^https?:\/\//i.test(value) ? value : `https://${value}`;
+      if (/^[a-z][a-z0-9+.-]*:/i.test(value)) {
+        return value;
+      }
+      return `https://${value}`;
     }
 
     function faviconFor(url) {

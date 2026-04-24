@@ -4,6 +4,7 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Alkoda Start</title>
+  <link rel="icon" type="image/x-icon" href="./logo-carre-Alkoda-On-Air.ico" />
   <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
   <style>
     :root {
@@ -1083,6 +1084,7 @@
     const $ = id => document.getElementById(id);
 
     const ui = {
+      brandMarkImage: document.querySelector(".brand-mark img"),
       loginScreen: $("loginScreen"),
       loginEmail: $("loginEmail"),
       loginPassword: $("loginPassword"),
@@ -1805,6 +1807,10 @@
     }
 
     async function init() {
+      if (ui.brandMarkImage) {
+        ui.brandMarkImage.src = "./logo-carre-Alkoda-On-Air.ico";
+      }
+
       syncSizeInputs(state.config);
       applyGridConfig(state.config);
       renderTiles();

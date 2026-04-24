@@ -234,9 +234,13 @@ footer{padding:28px 0 40px;border-top:1px solid var(--line);background:#000}
   .logos-grid{grid-template-columns:repeat(4,1fr)}
   #featured .vgrid{grid-template-columns:1fr}
 }
-.tournage-grid{columns:4 180px;gap:10px;margin-top:32px}
-.tournage-grid img{width:100%;margin-bottom:10px;border-radius:10px;display:block;object-fit:cover;break-inside:avoid;cursor:zoom-in}
-@media(max-width:600px){.tournage-grid{columns:2}}
+#clients{padding-bottom:40px}
+#featured{padding-top:40px;padding-bottom:40px}
+#tournage{padding-top:40px}
+.tournage-grid{display:grid;grid-template-columns:repeat(3,1fr);grid-auto-rows:240px;gap:10px;margin-top:32px}
+.tournage-grid img{width:100%;height:100%;border-radius:10px;display:block;object-fit:cover;cursor:zoom-in}
+.tournage-bw{grid-row:span 2}
+@media(max-width:600px){.tournage-grid{grid-template-columns:repeat(2,1fr);grid-auto-rows:180px}}
 @media(hover:hover){.corporate-hero-img,.photo-strip img{cursor:zoom-in}}
 #lightbox{display:none;position:fixed;inset:0;background:rgba(0,0,0,.92);z-index:2000;align-items:center;justify-content:center;padding:24px;cursor:zoom-out}
 #lightbox.open{display:flex}
@@ -442,12 +446,13 @@ footer{padding:28px 0 40px;border-top:1px solid var(--line);background:#000}
     <p class="lead" data-i18n="tournage_lead">Nous adaptons les moyens humains et matériels à chaque projet pour maximiser la qualité tout en maîtrisant votre budget. Un technicien ou une équipe complète — selon vos besoins.</p>
     <div class="tournage-grid">
       <img src="photos/Cam3.avif" alt="Caméra tournage" onclick="lbOpen(this)">
-      <img src="photos/Christophe_K1.avif" alt="Christophe en tournage" onclick="lbOpen(this)">
       <img src="photos/Camepaul2.avif" alt="Cadreur en action" onclick="lbOpen(this)">
-      <img src="photos/Cam1BW.avif" alt="Caméra noir et blanc" onclick="lbOpen(this)">
+      <img src="photos/Cam1BW.avif" class="tournage-bw" alt="Staff de dos" onclick="lbOpen(this)">
+      <img src="photos/Christophe_K1.avif" alt="Christophe en tournage" style="object-position:center 8%" onclick="lbOpen(this)">
       <img src="photos/Regiepodium1.avif" alt="Régie podium" onclick="lbOpen(this)">
       <img src="photos/Dodo.avif" alt="Tournage" onclick="lbOpen(this)">
       <img src="photos/Camepaul1.avif" alt="Cadreur" onclick="lbOpen(this)">
+      <img src="photos/concert-07.avif" alt="Concert" onclick="lbOpen(this)">
     </div>
   </div>
 </section>

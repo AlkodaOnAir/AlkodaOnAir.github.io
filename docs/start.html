@@ -145,7 +145,7 @@
 
     .btn:disabled {
       opacity: 0.6;
-      cursor: wait;
+      cursor: default;
     }
 
     .btn.primary {
@@ -1897,6 +1897,18 @@
       });
     }
 
+    function snapshotFromPayload(payload, position) {
+      return JSON.stringify({
+        title: payload.title || "",
+        url: payload.url || "",
+        color: payload.color || "#ffffff",
+        show_title: Boolean(payload.show_title),
+        open_new_tab: Boolean(payload.open_new_tab),
+        image: payload.image || null,
+        position: position || null
+      });
+    }
+
     function refreshSaveTileButtonState() {
       const isDirty = buildTileDraftSnapshot() !== state.initialTileSnapshot;
       ui.saveTileBtn.disabled = !isDirty || Boolean(state.uploadPending);
@@ -2163,13 +2175,12 @@
         open_new_tab: ui.tileOpenNewTab.checked
       };
 
-      setStatus(ui.tileStatus, `DEBUG save start | mode=${state.imageMode} | uploadPending=${Boolean(state.uploadPending)} | uploadPath=${Boolean(state.uploadedImagePath)} | uploadUrl=${Boolean(state.uploadedImageUrl)} | showTitle=${ui.tileShowTitle.checked}`);
+      setStatus(ui.tileStatus, "Sauvegarde...");
       ui.saveTileBtn.disabled = true;
 
       try {
         let savedTile = null;
         if (state.editingTile) {
-          setStatus(ui.tileStatus, `DEBUG patch existing | id=${state.editingTile.id} | mode=${state.imageMode} | imageLength=${image ? String(image).length : 0}`);
           await restTilesRequest({
             method: "PATCH",
             query: `?id=eq.${encodeURIComponent(state.editingTile.id)}`,
@@ -2178,7 +2189,6 @@
           });
           savedTile = { ...state.editingTile, ...payload };
         } else {
-          setStatus(ui.tileStatus, `DEBUG create tile | position=${state.pendingTilePosition || firstAvailablePosition()} | mode=${state.imageMode} | imageLength=${image ? String(image).length : 0}`);
           const data = await restTilesRequest({
             method: "POST",
             query: "?select=*",
@@ -2195,23 +2205,14 @@
             state.editingTile = savedTile;
             ui.deleteTileBtn.classList.remove("hidden");
           }
-          state.initialTileSnapshot = buildTileDraftSnapshot();
+          state.initialTileSnapshot = snapshotFromPayload(payload, state.pendingTilePosition || savedTile.position || null);
           renderTiles();
         }
         ui.saveTileBtn.disabled = true;
-        setStatus(ui.tileStatus, `DEBUG save ok | mode=${state.imageMode} | tile=${savedTile?.id || "new"}`, "ok");
+        setStatus(ui.tileStatus, "");
         loadTiles().catch(() => {});
       } catch (error) {
-        const details = [
-          `DEBUG save error`,
-          `message=${error?.message || error}`,
-          `mode=${state.imageMode}`,
-          `uploadPending=${Boolean(state.uploadPending)}`,
-          `uploadPath=${Boolean(state.uploadedImagePath)}`,
-          `uploadUrl=${Boolean(state.uploadedImageUrl)}`,
-          `showTitle=${ui.tileShowTitle.checked}`
-        ].join(" | ");
-        setStatus(ui.tileStatus, details, "error");
+        setStatus(ui.tileStatus, error.message || "Erreur de sauvegarde.", "error");
         ui.saveTileBtn.disabled = false;
       }
     }

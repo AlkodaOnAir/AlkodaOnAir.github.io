@@ -1264,6 +1264,7 @@
       uploadedImageUrl: "",
       uploadedImagePreviewUrl: "",
       uploadedImagePath: "",
+      uploadPending: null,
       webImageEnabled: false,
       uploadImageEnabled: false,
       draggingTileId: null,
@@ -1332,6 +1333,13 @@
       state.uploadedImagePreviewUrl = next;
     }
 
+    async function waitForPendingUpload() {
+      if (!state.uploadPending) {
+        return;
+      }
+      await state.uploadPending;
+    }
+
     async function handleDroppedData(dataTransfer) {
       if (!dataTransfer) {
         return;
@@ -1343,12 +1351,21 @@
         setUploadedPreviewUrl(URL.createObjectURL(imageFile));
         state.uploadImageEnabled = true;
         setImageMode("upload");
-        const uploaded = await uploadImage(imageFile);
-        state.uploadedImagePath = uploaded.path;
-        state.uploadedImageUrl = uploaded.url;
-        ui.tileUploadUrl.value = state.uploadedImageUrl;
-        setImageMode("upload");
-        setStatus(ui.tileStatus, "Image importee.", "ok");
+        ui.saveTileBtn.disabled = true;
+        state.uploadPending = (async () => {
+          const uploaded = await uploadImage(imageFile);
+          state.uploadedImagePath = uploaded.path;
+          state.uploadedImageUrl = uploaded.url;
+          ui.tileUploadUrl.value = state.uploadedImageUrl;
+        })();
+        try {
+          await state.uploadPending;
+          setImageMode("upload");
+          setStatus(ui.tileStatus, "Image importee.", "ok");
+        } finally {
+          state.uploadPending = null;
+          ui.saveTileBtn.disabled = false;
+        }
         return;
       }
       throw new Error("Glisse un vrai fichier image local.");
@@ -1956,6 +1973,7 @@
       revokeUploadPreviewUrl();
       state.uploadedImagePreviewUrl = "";
       state.uploadedImagePath = "";
+      state.uploadPending = null;
       state.webImageEnabled = false;
       state.uploadImageEnabled = false;
       ui.tileUploadUrl.value = "";
@@ -1983,8 +2001,20 @@
       const title = ui.tileTitle.value.trim();
       const url = normalizeUrl(ui.tileUrl.value);
 
+      if (state.imageMode === "upload" && state.uploadImageEnabled && state.uploadPending) {
+        setStatus(ui.tileStatus, "Finalisation de l'image...");
+        ui.saveTileBtn.disabled = true;
+        try {
+          await waitForPendingUpload();
+        } catch (error) {
+          setStatus(ui.tileStatus, `Erreur upload : ${error.message || error}`, "error");
+          ui.saveTileBtn.disabled = false;
+          return;
+        }
+      }
+
       if (state.imageMode === "upload" && state.uploadImageEnabled && !state.uploadedImageUrl) {
-        setStatus(ui.tileStatus, "L'image importee n'est pas encore prete.", "error");
+        setStatus(ui.tileStatus, "L'image importee n'a pas pu etre enregistree.", "error");
         ui.saveTileBtn.disabled = false;
         return;
       }
@@ -2367,14 +2397,25 @@
         setUploadedPreviewUrl(URL.createObjectURL(file));
         state.uploadImageEnabled = true;
         setImageMode("upload");
-        const uploaded = await uploadImage(file);
-        state.uploadedImagePath = uploaded.path;
-        state.uploadedImageUrl = uploaded.url;
-        ui.tileUploadUrl.value = state.uploadedImageUrl;
-        setImageMode("upload");
-        setStatus(ui.tileStatus, "Image importee.", "ok");
+        ui.saveTileBtn.disabled = true;
+        state.uploadPending = (async () => {
+          const uploaded = await uploadImage(file);
+          state.uploadedImagePath = uploaded.path;
+          state.uploadedImageUrl = uploaded.url;
+          ui.tileUploadUrl.value = state.uploadedImageUrl;
+        })();
+        try {
+          await state.uploadPending;
+          setImageMode("upload");
+          setStatus(ui.tileStatus, "Image importee.", "ok");
+        } finally {
+          state.uploadPending = null;
+          ui.saveTileBtn.disabled = false;
+        }
       } catch (error) {
         setStatus(ui.tileStatus, `Erreur upload : ${error.message || error}`, "error");
+        state.uploadPending = null;
+        ui.saveTileBtn.disabled = false;
       }
     });
 

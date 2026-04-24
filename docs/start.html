@@ -516,6 +516,12 @@
       background: rgba(255, 255, 255, 0.03);
     }
 
+    .image-panel.image-panel-fixed {
+      min-height: 462px;
+      display: flex;
+      flex-direction: column;
+    }
+
     .tile-editor-layout {
       display: grid;
       grid-template-columns: 1.2fr 0.8fr;
@@ -622,6 +628,11 @@
       margin-top: 10px;
       padding-top: 10px;
       border-top: 1px solid rgba(255, 255, 255, 0.08);
+    }
+
+    .image-panel-spacer {
+      flex: 1 1 auto;
+      min-height: 0;
     }
 
     .range-inline {
@@ -1002,7 +1013,7 @@
         </div>
 
         <div class="tile-editor-column">
-          <div class="image-panel">
+          <div class="image-panel image-panel-fixed">
             <div class="image-panel-title">Image</div>
             <div class="mode-list">
               <button id="modeColor" class="mode-btn active" type="button">Couleur</button>
@@ -1043,6 +1054,7 @@
                 <input id="tileImageScale" type="range" min="10" max="200" step="5" value="90" />
               </div>
             </div>
+            <div class="image-panel-spacer"></div>
           </div>
         </div>
       </div>

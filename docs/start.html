@@ -817,7 +817,7 @@
     }
 
     .image-panel.general-panel {
-      min-height: 132px;
+      min-height: 156px;
       display: flex;
       flex-direction: column;
       justify-content: flex-start;
@@ -1452,10 +1452,13 @@
                 <input id="tileOpenNewTab" type="checkbox" checked />
                 <span data-i18n="open_new_tab_label">Ouvrir dans un nouvel onglet</span>
               </label>
-              <label class="checkbox-row">
-                <input id="tileSurface" type="checkbox" />
-                <span data-i18n="surface_effect_label">Effet de surface</span>
+            </div>
+            <div id="tileImageScaleWrap" class="range-inline">
+              <label for="tileImageScale">
+                <span data-i18n="image_scale_label">Taille de l'image</span>
+                <span id="tileImageScaleValue" class="range-value">90%</span>
               </label>
+              <input id="tileImageScale" type="range" min="10" max="200" step="5" value="90" />
             </div>
           </div>
           </div>
@@ -1498,13 +1501,6 @@
                 <input id="tileImageFull" type="checkbox" />
                 <span data-i18n="full_image_label">Image plein cadre</span>
               </label>
-              <div id="tileImageScaleWrap" class="range-inline">
-                <label for="tileImageScale">
-                  <span data-i18n="image_scale_label">Taille de l'image</span>
-                  <span id="tileImageScaleValue" class="range-value">90%</span>
-                </label>
-                <input id="tileImageScale" type="range" min="10" max="200" step="5" value="90" />
-              </div>
             </div>
             </div>
           </div>
@@ -1632,7 +1628,6 @@
         general_options_title: "Options generales",
         show_name_label: "Afficher le nom",
         open_new_tab_label: "Ouvrir dans un nouvel onglet",
-        surface_effect_label: "Effet de surface",
         image_title: "Image",
         mode_color: "Couleur",
         mode_upload: "Image importee",
@@ -1768,7 +1763,6 @@
         general_options_title: "General options",
         show_name_label: "Show name",
         open_new_tab_label: "Open in a new tab",
-        surface_effect_label: "Surface effect",
         image_title: "Image",
         mode_color: "Color",
         mode_upload: "Imported image",
@@ -1945,7 +1939,6 @@
       colorSwatches: Array.from(document.querySelectorAll(".swatch-btn")),
       tileShowTitle: $("tileShowTitle"),
       tileOpenNewTab: $("tileOpenNewTab"),
-      tileSurface: $("tileSurface"),
       tileStatus: $("tileStatus"),
       preview: $("preview"),
       modeColor: $("modeColor"),
@@ -2945,7 +2938,7 @@
           enabled: currentImageEnabled(),
           full: currentImageFull(),
           scale: currentImageScale(),
-          surface: ui.tileSurface.checked,
+          surface: false,
           mode: state.imageMode
         })
         : serializeTileImageData({
@@ -2953,9 +2946,9 @@
           enabled: false,
           full: false,
           scale: currentImageScale(),
-          surface: ui.tileSurface.checked,
+          surface: false,
           mode: "color",
-          persistWithoutSrc: ui.tileSurface.checked
+          persistWithoutSrc: false
         });
 
       return JSON.stringify({
@@ -3008,16 +3001,16 @@
           enabled: currentImageEnabled(),
           full: currentImageFull(),
           scale: currentImageScale(),
-          surface: ui.tileSurface.checked,
+          surface: false,
           mode: state.imageMode
         }) : serializeTileImageData({
           src: "",
           enabled: false,
           full: false,
           scale: currentImageScale(),
-          surface: ui.tileSurface.checked,
+          surface: false,
           mode: "color",
-          persistWithoutSrc: ui.tileSurface.checked
+          persistWithoutSrc: false
         }),
         show_title: ui.tileShowTitle.checked
       });
@@ -3189,7 +3182,6 @@
       ui.tileImageScale.value = imageData.mode === "upload" ? state.uploadImageScale : state.webImageScale;
       ui.tileShowTitle.checked = tile?.show_title ?? true;
       ui.tileOpenNewTab.checked = tile?.open_new_tab ?? true;
-      ui.tileSurface.checked = imageData.surface;
       setStatus(ui.tileStatus, "");
       setImageMode(detectImageMode(tile));
       state.initialTileSnapshot = buildTileDraftSnapshot();
@@ -3272,18 +3264,8 @@
           enabled: state.imageMode === "upload" ? state.uploadImageEnabled : state.webImageEnabled,
           full: currentImageFull(),
           scale: currentImageScale(),
-          surface: ui.tileSurface.checked,
+          surface: false,
           mode: state.imageMode
-        });
-      } else if (ui.tileSurface.checked) {
-        image = serializeTileImageData({
-          src: "",
-          enabled: false,
-          full: false,
-          scale: currentImageScale(),
-          surface: true,
-          mode: "color",
-          persistWithoutSrc: true
         });
       }
 
@@ -3910,7 +3892,6 @@
       updatePreview();
     });
     ui.tileShowTitle.addEventListener("input", updatePreview);
-    ui.tileSurface.addEventListener("input", updatePreview);
     ui.autoLogoBtn.addEventListener("click", () => {
       renderWebSuggestions();
     });

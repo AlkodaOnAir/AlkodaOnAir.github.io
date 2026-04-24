@@ -367,7 +367,10 @@
     }
 
     .size-card {
-      width: min(500px, 100%);
+      width: min(440px, 100%);
+      max-height: none;
+      overflow: hidden;
+      padding: 18px;
     }
 
     .card h1,
@@ -540,49 +543,30 @@
       object-fit: contain;
     }
 
-    .size-grid {
+    .size-panel {
       display: grid;
+      grid-template-columns: 1fr 130px 1fr;
       gap: 14px;
-      margin-top: 18px;
-    }
-
-    .size-preview {
-      display: grid;
-      place-items: center;
-      min-height: 110px;
-      border-radius: 18px;
-      background:
-        radial-gradient(circle at top, rgba(240, 180, 26, 0.16), transparent 50%),
-        linear-gradient(180deg, #21232b 0%, #191b22 100%);
-      border: 1px solid rgba(255, 255, 255, 0.08);
-      text-align: center;
-      padding: 16px;
-    }
-
-    .size-preview strong {
-      font-size: 1.9rem;
-      line-height: 1;
-      letter-spacing: -0.03em;
-    }
-
-    .size-preview span {
-      display: block;
-      margin-top: 8px;
-      color: var(--muted);
-      font-size: 0.92rem;
-    }
-
-    .stepper-row {
-      display: grid;
-      grid-template-columns: 1fr auto auto;
-      gap: 8px;
       align-items: center;
+      margin: 14px 0 10px;
+    }
+
+    .size-control {
+      display: grid;
+      gap: 8px;
+      justify-items: center;
+    }
+
+    .size-control-title {
+      color: var(--muted);
+      font-size: 0.84rem;
+      text-align: center;
     }
 
     .step-btn {
       width: 38px;
       height: 38px;
-      border-radius: 12px;
+      border-radius: 50%;
       background: #20222a;
       border: 1px solid rgba(255, 255, 255, 0.08);
       color: #fff;
@@ -595,9 +579,39 @@
       background: #2a2d36;
     }
 
+    .size-display {
+      width: 130px;
+      min-height: 88px;
+      border-radius: 14px;
+      background: #d7d7d7;
+      color: #333;
+      display: grid;
+      place-items: center;
+      text-align: center;
+      font-size: 20px;
+      font-weight: 700;
+      padding: 8px;
+      line-height: 1.35;
+      box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.45);
+    }
+
+    .size-grid {
+      display: grid;
+      gap: 6px;
+      margin-top: 4px;
+    }
+
+    .size-note {
+      margin-top: 4px;
+      color: var(--muted);
+      font-size: 0.84rem;
+      text-align: center;
+      line-height: 1.35;
+    }
+
     .range-block {
       display: grid;
-      gap: 8px;
+      gap: 6px;
     }
 
     .range-block input[type="range"] {
@@ -637,6 +651,15 @@
       .grid-2,
       .mode-list {
         grid-template-columns: 1fr;
+      }
+
+      .size-panel {
+        grid-template-columns: 1fr;
+        gap: 12px;
+      }
+
+      .size-display {
+        margin: 0 auto;
       }
 
       .topbar {
@@ -701,32 +724,33 @@
   <div id="sizeModal" class="overlay">
     <div class="card size-card">
       <h2>Taille du webmix</h2>
-      <p>Choisis le nombre de colonnes, de lignes et la taille des tuiles. L’aperçu de la grille change immédiatement derrière cette fenêtre.</p>
+      <p>Choisis les colonnes, les lignes et la taille des tuiles. La grille derrière la popup change immédiatement.</p>
 
-      <div id="sizePreview" class="size-preview">
-        <div>
-          <strong>11 × 5</strong>
-          <span>86 px par tuile</span>
+      <div class="size-panel">
+        <div class="size-control">
+          <div class="size-control-title">Colonnes</div>
+          <button id="colsPlusBtn" class="step-btn" type="button">+</button>
+          <button id="colsMinusBtn" class="step-btn" type="button">−</button>
+        </div>
+
+        <div id="sizePreview" class="size-display">11 × 5<br>86 px</div>
+
+        <div class="size-control">
+          <div class="size-control-title">Lignes</div>
+          <button id="rowsPlusBtn" class="step-btn" type="button">+</button>
+          <button id="rowsMinusBtn" class="step-btn" type="button">−</button>
         </div>
       </div>
 
       <div class="size-grid">
         <div class="field">
           <label for="colsInput">Colonnes</label>
-          <div class="stepper-row">
-            <input id="colsInput" type="number" min="1" max="30" value="11" />
-            <button id="colsMinusBtn" class="step-btn" type="button">−</button>
-            <button id="colsPlusBtn" class="step-btn" type="button">+</button>
-          </div>
+          <input id="colsInput" type="number" min="1" max="30" value="11" />
         </div>
 
         <div class="field">
           <label for="rowsInput">Lignes</label>
-          <div class="stepper-row">
-            <input id="rowsInput" type="number" min="1" max="30" value="5" />
-            <button id="rowsMinusBtn" class="step-btn" type="button">−</button>
-            <button id="rowsPlusBtn" class="step-btn" type="button">+</button>
-          </div>
+          <input id="rowsInput" type="number" min="1" max="30" value="5" />
         </div>
 
         <div class="field">
@@ -737,6 +761,8 @@
           </div>
         </div>
       </div>
+
+      <div class="size-note">Les tuiles restent carrées et la configuration est sauvegardée dans Supabase.</div>
 
       <div id="sizeStatus" class="status"></div>
 
@@ -1004,7 +1030,7 @@
       ui.rowsInput.value = config.rows;
       ui.tileSizeInput.value = config.tileSize;
       ui.tileSizeRange.value = config.tileSize;
-      ui.sizePreview.innerHTML = `<div><strong>${config.columns} × ${config.rows}</strong><span>${config.tileSize} px par tuile</span></div>`;
+      ui.sizePreview.innerHTML = `${config.columns} × ${config.rows}<br>${config.tileSize} px`;
     }
 
     function applyGridConfig(config) {

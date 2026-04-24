@@ -2013,6 +2013,17 @@
         }
       }
 
+      if (state.imageMode === "upload" && state.uploadImageEnabled && !state.uploadedImageUrl && state.uploadedImagePath) {
+        try {
+          state.uploadedImageUrl = await signedUploadUrl(state.uploadedImagePath);
+          ui.tileUploadUrl.value = state.uploadedImageUrl;
+        } catch (error) {
+          setStatus(ui.tileStatus, `Erreur image importee : ${error.message || error}`, "error");
+          ui.saveTileBtn.disabled = false;
+          return;
+        }
+      }
+
       if (state.imageMode === "upload" && state.uploadImageEnabled && !state.uploadedImageUrl) {
         setStatus(ui.tileStatus, "L'image importee n'a pas pu etre enregistree.", "error");
         ui.saveTileBtn.disabled = false;

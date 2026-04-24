@@ -567,7 +567,7 @@
 
     .web-suggestions {
       display: grid;
-      grid-template-columns: repeat(3, minmax(0, 1fr));
+      grid-template-columns: repeat(4, minmax(0, 1fr));
       gap: 6px;
       margin-top: 10px;
     }
@@ -575,8 +575,8 @@
     .web-suggestion {
       display: grid;
       place-items: center;
-      padding: 4px;
-      min-height: 42px;
+      padding: 3px;
+      min-height: 34px;
       border-radius: 10px;
       border: 1px solid rgba(255, 255, 255, 0.08);
       background: rgba(255, 255, 255, 0.03);
@@ -585,8 +585,8 @@
     }
 
     .web-suggestion img {
-      width: 20px;
-      height: 20px;
+      width: 16px;
+      height: 16px;
       object-fit: contain;
       display: block;
     }
@@ -1288,17 +1288,41 @@
         return [
           { label: "Favicon 128", url: `https://www.google.com/s2/favicons?domain=${hostname}&sz=128` },
           { label: "favicon.ico", url: `${origin}/favicon.ico` },
+          { label: "favicon 32", url: `${origin}/favicon-32x32.png` },
+          { label: "favicon 16", url: `${origin}/favicon-16x16.png` },
           { label: "icon 192", url: `${origin}/icon-192.png` },
           { label: "apple touch", url: `${origin}/apple-touch-icon.png` },
           { label: "android 192", url: `${origin}/android-chrome-192x192.png` },
-          { label: "logo", url: `${origin}/logo.png` }
+          { label: "android 512", url: `${origin}/android-chrome-512x512.png` },
+          { label: "logo", url: `${origin}/logo.png` },
+          { label: "logo svg", url: `${origin}/logo.svg` },
+          { label: "img logo", url: `${origin}/img/logo.png` },
+          { label: "images logo", url: `${origin}/images/logo.png` },
+          { label: "assets logo", url: `${origin}/assets/logo.png` }
         ];
       } catch {
         return [];
       }
     }
 
-    function renderWebSuggestions() {
+    function preloadLogoCandidate(url, timeoutMs = 3500) {
+      return new Promise(resolve => {
+        const image = new Image();
+        const done = success => {
+          window.clearTimeout(timer);
+          image.onload = null;
+          image.onerror = null;
+          resolve(success);
+        };
+        const timer = window.setTimeout(() => done(false), timeoutMs);
+        image.onload = () => done(true);
+        image.onerror = () => done(false);
+        image.referrerPolicy = "no-referrer";
+        image.src = url;
+      });
+    }
+
+    async function renderWebSuggestions() {
       const candidates = logoCandidatesFor(ui.tileUrl.value);
       ui.webSuggestions.innerHTML = "";
       ui.webSuggestions.classList.toggle("hidden", candidates.length === 0);
@@ -1306,17 +1330,32 @@
         return;
       }
 
-      candidates.forEach(candidate => {
+      const uniqueCandidates = candidates.filter((candidate, index, list) =>
+        list.findIndex(entry => entry.url === candidate.url) === index
+      );
+
+      const available = [];
+      for (const candidate of uniqueCandidates) {
+        const ok = await preloadLogoCandidate(candidate.url);
+        if (ok) {
+          available.push(candidate);
+        }
+        if (available.length >= 8) {
+          break;
+        }
+      }
+
+      ui.webSuggestions.classList.toggle("hidden", available.length === 0);
+      if (!available.length) {
+        return;
+      }
+
+      available.forEach(candidate => {
         const button = document.createElement("button");
         button.type = "button";
         button.className = "web-suggestion";
         button.title = candidate.label;
         button.innerHTML = `<img src="${escapeHtml(candidate.url)}" alt="${escapeHtml(candidate.label)}">`;
-        const previewImage = button.querySelector("img");
-        previewImage.addEventListener("error", () => {
-          button.remove();
-          ui.webSuggestions.classList.toggle("hidden", ui.webSuggestions.children.length === 0);
-        });
         button.addEventListener("click", () => {
           ui.tileImage.value = candidate.url;
           ui.tileImageEnabled.checked = true;

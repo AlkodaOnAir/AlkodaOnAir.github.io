@@ -482,7 +482,13 @@
       text-shadow: 0 1px 2px rgba(0, 0, 0, 0.86);
     }
 
-    .overlay,
+    .overlay {
+      position: fixed;
+      inset: 0;
+      z-index: 100;
+      display: none;
+    }
+
     .login-screen {
       position: fixed;
       inset: 0;
@@ -494,18 +500,46 @@
       backdrop-filter: blur(8px);
     }
 
-    #sizeModal {
-      background: rgba(0, 0, 0, 0.34);
-      backdrop-filter: none;
-    }
-
     #bookmarksModal {
       z-index: 120;
     }
 
-    .overlay.open,
+    .overlay.open {
+      display: block;
+    }
+
     .login-screen.open {
       display: grid;
+    }
+
+    .overlay > .card {
+      position: absolute;
+      pointer-events: all;
+      left: 50%;
+      top: 50%;
+      transform: translate(-50%, -50%);
+    }
+
+    .win-titlebar {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      margin-bottom: 14px;
+      padding-bottom: 10px;
+      border-bottom: 1px solid rgba(255, 255, 255, 0.07);
+      cursor: move;
+      user-select: none;
+    }
+
+    .win-titlebar h1,
+    .win-titlebar h2 {
+      flex: 1;
+      margin: 0;
+    }
+
+    .win-titlebar .modal-close {
+      position: static;
+      flex-shrink: 0;
     }
 
     .login-lang-wrap {
@@ -559,7 +593,7 @@
       overflow: hidden;
       padding: 16px 18px 18px;
       display: grid;
-      grid-template-rows: auto auto minmax(0, 1fr) auto;
+      grid-template-rows: auto auto auto minmax(0, 1fr) auto;
       gap: 10px;
     }
 
@@ -959,10 +993,9 @@
     }
 
     .tile-card-top {
-      display: grid;
-      grid-template-columns: 1fr auto 1fr;
+      display: flex;
+      justify-content: center;
       align-items: flex-start;
-      gap: 16px;
     }
 
     .image-panel-title {
@@ -1442,8 +1475,10 @@
 
   <div id="backgroundModal" class="overlay">
     <div class="card background-modal-card">
-      <button id="closeBackgroundModalBtn" class="modal-close" type="button" aria-label="Fermer">×</button>
-      <h2 data-i18n="background_modal_title">Fond de la grille</h2>
+      <div class="win-titlebar">
+        <h2 data-i18n="background_modal_title">Fond de la grille</h2>
+        <button id="closeBackgroundModalBtn" class="modal-close" type="button" aria-label="Fermer">×</button>
+      </div>
       <div id="backgroundPreview" class="background-preview"></div>
       <div class="segmented-tabs">
         <button id="backgroundModeColor" class="btn" type="button" data-i18n="background_mode_color">Couleur</button>
@@ -1469,8 +1504,10 @@
 
   <div id="bookmarksModal" class="overlay">
     <div class="card size-card">
-      <button id="closeBookmarksModalBtn" class="modal-close" type="button" aria-label="Fermer">×</button>
-      <h2 data-i18n="import_bookmarks_title">Importer des favoris</h2>
+      <div class="win-titlebar">
+        <h2 data-i18n="import_bookmarks_title">Importer des favoris</h2>
+        <button id="closeBookmarksModalBtn" class="modal-close" type="button" aria-label="Fermer">×</button>
+      </div>
       <div class="bookmarks-meta">
         <div id="bookmarksAvailable">0 tuiles disponibles dans la grille</div>
         <button id="bookmarksSizeBtn" class="btn" type="button" data-i18n="size_button">Taille</button>
@@ -1494,9 +1531,11 @@
 
   <div id="accountModal" class="overlay">
     <div class="card size-card">
-      <button id="closeAccountModalBtn" class="modal-close" type="button" aria-label="Fermer">×</button>
+      <div class="win-titlebar">
+        <h2 data-i18n="account_title">Reglages du compte</h2>
+        <button id="closeAccountModalBtn" class="modal-close" type="button" aria-label="Fermer">×</button>
+      </div>
       <img class="account-logo" src="./alkoda-startpage.png" alt="Alkoda On Air StartPage" data-i18n-alt="brand_startpage_alt" />
-      <h2 data-i18n="account_title">Reglages du compte</h2>
       <div class="field">
         <label for="accountEmail" data-i18n="account_email_label">Email du compte</label>
         <input id="accountEmail" type="text" readonly />
@@ -1516,8 +1555,10 @@
 
   <div id="sizeModal" class="overlay">
     <div class="card size-card">
-      <button id="closeSizeModalBtn" class="modal-close" type="button" aria-label="Fermer">×</button>
-      <h2 data-i18n="size_title">Taille de la grille</h2>
+      <div class="win-titlebar">
+        <h2 data-i18n="size_title">Taille de la grille</h2>
+        <button id="closeSizeModalBtn" class="modal-close" type="button" aria-label="Fermer">×</button>
+      </div>
       <p data-i18n="size_intro">Choisis les colonnes, les lignes et la taille des tuiles. La grille derriere la popup change immediatement.</p>
 
       <div class="size-panel">
@@ -1555,10 +1596,11 @@
 
   <div id="tileModal" class="overlay">
     <div class="card tile-card">
-      <button id="closeTileModalBtn" class="modal-close" type="button" aria-label="Fermer">×</button>
-      <div class="tile-card-top">
+      <div class="win-titlebar">
         <h2 id="tileModalTitle">Ajouter une tuile</h2>
-
+        <button id="closeTileModalBtn" class="modal-close" type="button" aria-label="Fermer">×</button>
+      </div>
+      <div class="tile-card-top">
       <div class="preview-wrap">
         <div id="preview" class="preview" data-i18n="preview_label">Apercu</div>
       </div>
@@ -4428,6 +4470,54 @@
       }
     });
 
+    function makeDraggable(titlebar) {
+      const card = titlebar.closest(".card");
+      let active = false, startX, startY, startL, startT;
+
+      function pointerDown(e) {
+        if (e.target.closest("button, input, select, textarea, a")) return;
+        active = true;
+        const p = e.touches ? e.touches[0] : e;
+        startX = p.clientX;
+        startY = p.clientY;
+        if (card.style.transform !== "") {
+          const r = card.getBoundingClientRect();
+          card.style.left = r.left + "px";
+          card.style.top = r.top + "px";
+          card.style.transform = "";
+        }
+        startL = parseFloat(card.style.left) || 0;
+        startT = parseFloat(card.style.top) || 0;
+        e.preventDefault();
+      }
+
+      function pointerMove(e) {
+        if (!active) return;
+        const p = e.touches ? e.touches[0] : e;
+        card.style.left = Math.max(0, Math.min(window.innerWidth - card.offsetWidth, startL + p.clientX - startX)) + "px";
+        card.style.top = Math.max(0, Math.min(window.innerHeight - card.offsetHeight, startT + p.clientY - startY)) + "px";
+        e.preventDefault();
+      }
+
+      function pointerUp() { active = false; }
+
+      titlebar.addEventListener("mousedown", pointerDown);
+      titlebar.addEventListener("touchstart", pointerDown, { passive: false });
+      document.addEventListener("mousemove", pointerMove);
+      document.addEventListener("touchmove", pointerMove, { passive: false });
+      document.addEventListener("mouseup", pointerUp);
+      document.addEventListener("touchend", pointerUp);
+    }
+
+    let winZCounter = 100;
+    document.querySelectorAll(".overlay > .card").forEach(card => {
+      card.addEventListener("mousedown", () => {
+        card.closest(".overlay").style.zIndex = ++winZCounter;
+      }, true);
+    });
+
+    document.querySelectorAll(".overlay .win-titlebar").forEach(makeDraggable);
+
     ui.tileModal.addEventListener("click", event => {
       if (event.target === ui.tileModal) {
         closeTileModal();
@@ -4439,17 +4529,20 @@
         closeSizeModal(true);
       }
     });
+
     ui.bookmarksModal.addEventListener("click", event => {
       if (event.target === ui.bookmarksModal) {
         state.bookmarksImportSnapshot = null;
         closeBookmarksModal();
       }
     });
+
     ui.accountModal.addEventListener("click", event => {
       if (event.target === ui.accountModal) {
         closeAccountModal();
       }
     });
+
     ui.backgroundModal.addEventListener("click", event => {
       if (event.target === ui.backgroundModal) {
         closeBackgroundModal();

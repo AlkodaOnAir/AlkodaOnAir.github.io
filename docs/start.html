@@ -3,203 +3,295 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>start.html</title>
+  <title>Alkoda Start</title>
   <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
   <style>
     :root {
-      --bg: #000;
-      --panel: #17171b;
-      --panel-2: #222228;
-      --text: #f5f5f5;
-      --muted: #a1a1aa;
-      --border: #34343b;
-      --accent: #f4b000;
-      --blue: #3b82f6;
-      --danger: #e5484d;
+      --bg: #060606;
+      --bg-soft: #101014;
+      --panel: #17171c;
+      --panel-2: #1f2026;
+      --panel-3: #2a2c35;
+      --border: rgba(255, 255, 255, 0.1);
+      --text: #f4f4f5;
+      --muted: #a4a8b3;
+      --accent: #f0b41a;
+      --accent-dark: #c7900a;
+      --danger: #d94b58;
+      --ok: #72d79a;
+      --shadow: 0 18px 48px rgba(0, 0, 0, 0.35);
       --tile-size: 86px;
       --tile-gap: 12px;
-      --tile-radius: 10px;
+      --tile-radius: 18px;
+      --columns: 11;
     }
 
-    * { box-sizing: border-box; }
+    * {
+      box-sizing: border-box;
+    }
 
+    html,
     body {
       margin: 0;
-      background: var(--bg);
+      min-height: 100%;
+      background:
+        radial-gradient(circle at top, rgba(240, 180, 26, 0.08), transparent 34%),
+        linear-gradient(180deg, #080808 0%, #0c0c10 100%);
       color: var(--text);
       font-family: Arial, Helvetica, sans-serif;
+    }
+
+    body {
       min-height: 100vh;
     }
 
-    button, input, select { font-family: inherit; }
+    button,
+    input {
+      font: inherit;
+    }
+
+    button {
+      border: 0;
+    }
+
+    .hidden {
+      display: none !important;
+    }
+
+    .app-shell {
+      min-height: 100vh;
+    }
 
     .topbar {
-      height: 70px;
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-      padding: 0 24px;
-      background: #000;
-      border-bottom: 1px solid rgba(255,255,255,0.08);
       position: sticky;
       top: 0;
       z-index: 30;
-    }
-
-    .left-head {
       display: flex;
       align-items: center;
-      gap: 22px;
+      justify-content: space-between;
+      gap: 18px;
+      padding: 18px 24px;
+      background: rgba(6, 6, 6, 0.88);
+      backdrop-filter: blur(12px);
+      border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+    }
+
+    .brand-wrap {
+      display: flex;
+      align-items: center;
+      gap: 18px;
+      min-width: 0;
     }
 
     .brand {
       display: flex;
       align-items: center;
       gap: 12px;
-      font-size: 30px;
-      font-weight: 700;
-      letter-spacing: -0.04em;
-      white-space: nowrap;
+      min-width: 0;
     }
 
-    .brand-icon {
-      width: 39px;
-      height: 39px;
+    .brand-mark {
+      width: 40px;
+      height: 40px;
       border-radius: 50%;
-      border: 3px solid #fff;
+      border: 2px solid rgba(255, 255, 255, 0.85);
       display: grid;
       place-items: center;
-      font-size: 19px;
+      font-size: 18px;
+      font-weight: 700;
+      color: #fff;
+      flex: 0 0 auto;
+    }
+
+    .brand-text {
+      display: grid;
+      gap: 2px;
+      min-width: 0;
+    }
+
+    .brand-title {
+      font-size: 1.6rem;
+      font-weight: 700;
+      letter-spacing: -0.03em;
       line-height: 1;
     }
 
-    .mix-tabs {
-      display: flex;
-      align-items: center;
-      gap: 8px;
+    .brand-subtitle {
+      color: var(--muted);
+      font-size: 0.8rem;
     }
 
-    .tab {
-      height: 33px;
-      padding: 0 20px;
-      border-radius: 18px;
-      border: none;
-      background: #e8e8e8;
-      color: #444;
-      display: inline-flex;
-      align-items: center;
-      font-size: 14px;
+    .mix-pill {
+      border-radius: 999px;
+      padding: 8px 14px;
+      background: rgba(240, 180, 26, 0.16);
+      border: 1px solid rgba(240, 180, 26, 0.25);
+      color: #f8d67a;
+      font-size: 0.85rem;
       white-space: nowrap;
-    }
-
-    .tab.active {
-      background: var(--accent);
-      color: white;
-      font-weight: 700;
     }
 
     .top-actions {
       display: flex;
       align-items: center;
+      justify-content: flex-end;
       gap: 10px;
+      flex-wrap: wrap;
     }
 
     .btn {
-      min-height: 34px;
+      min-height: 38px;
+      padding: 9px 14px;
+      border-radius: 12px;
       border: 1px solid var(--border);
+      background: linear-gradient(180deg, #24262f 0%, #1b1d24 100%);
       color: var(--text);
-      background: var(--panel);
-      padding: 8px 13px;
-      border-radius: 10px;
       cursor: pointer;
-      font-size: 14px;
+      transition: transform 0.15s ease, background 0.15s ease, border-color 0.15s ease, opacity 0.15s ease;
     }
 
-    .btn:hover { background: var(--panel-2); }
-    .btn.primary { background: var(--accent); border-color: var(--accent); color: #111; font-weight: 700; }
-    .btn.blue { background: var(--blue); border-color: var(--blue); color: #fff; }
-    .btn.danger { background: rgba(229,72,77,.14); border-color: rgba(229,72,77,.6); color: #ffb3b6; }
-    .btn.ghost { background: transparent; }
-
-    .search-row {
-      display: flex;
-      justify-content: center;
-      align-items: center;
-      gap: 24px;
-      padding: 28px 16px 30px;
+    .btn:hover:not(:disabled) {
+      transform: translateY(-1px);
+      background: linear-gradient(180deg, #2d303a 0%, #1f222a 100%);
     }
 
-    .searchbox {
-      width: min(560px, 90vw);
-      height: 48px;
-      border-radius: 28px;
-      background: #fff;
-      color: #111;
-      display: flex;
-      align-items: center;
-      padding: 0 17px;
-      box-shadow: inset 0 0 0 2px #d7d7d7;
+    .btn:disabled {
+      opacity: 0.6;
+      cursor: wait;
     }
 
-    .searchbox input {
+    .btn.primary {
+      background: linear-gradient(180deg, var(--accent) 0%, #d89f10 100%);
+      border-color: rgba(255, 213, 125, 0.34);
+      color: #141414;
+      font-weight: 700;
+    }
+
+    .btn.primary:hover:not(:disabled) {
+      background: linear-gradient(180deg, #f7be2b 0%, #dd9d07 100%);
+    }
+
+    .btn.ghost {
+      background: transparent;
+    }
+
+    .btn.danger {
+      background: rgba(217, 75, 88, 0.12);
+      border-color: rgba(217, 75, 88, 0.42);
+      color: #ffb4bb;
+    }
+
+    .page {
+      padding: 28px 18px 60px;
+    }
+
+    .debug-box {
+      display: none;
+      max-width: 1200px;
+      margin: 0 auto 18px;
+      white-space: pre-wrap;
+      border-radius: 14px;
+      padding: 14px 16px;
+      border: 1px solid rgba(217, 75, 88, 0.45);
+      background: rgba(217, 75, 88, 0.1);
+      color: #ffc2c8;
+      font-size: 0.9rem;
+    }
+
+    .debug-box.open {
+      display: block;
+    }
+
+    .webmix-wrap {
       width: 100%;
-      border: 0;
-      outline: 0;
-      font-size: 17px;
-      color: #222;
+      overflow-x: auto;
+      padding-bottom: 10px;
     }
-
-    .page { padding: 0 18px 70px; }
 
     .webmix {
-      max-width: none;
+      width: max-content;
+      min-width: 100%;
       margin: 0 auto;
       display: grid;
-      grid-template-columns: repeat(11, var(--tile-size));
+      grid-template-columns: repeat(var(--columns), var(--tile-size));
       gap: var(--tile-gap);
       justify-content: center;
       align-content: start;
+      padding: 10px 0;
     }
 
     .tile {
+      position: relative;
       width: var(--tile-size);
       height: var(--tile-size);
       border-radius: var(--tile-radius);
-      background: #fff;
-      color: #202020;
-      border: 1px solid rgba(255,255,255,0.12);
       overflow: hidden;
-      position: relative;
+      background: #f6f6f7;
+      color: #1b1b1d;
+      border: 1px solid rgba(255, 255, 255, 0.09);
+      box-shadow: var(--shadow);
       cursor: grab;
       user-select: none;
-      box-shadow: 0 6px 18px rgba(0,0,0,.35);
-      display: grid;
-      place-items: center;
+      display: flex;
+      align-items: center;
+      justify-content: center;
       text-align: center;
+      transition: transform 0.14s ease, box-shadow 0.14s ease, opacity 0.14s ease;
     }
 
-    .tile.dragging { opacity: .45; outline: 2px dashed #fff; }
+    .tile:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 22px 44px rgba(0, 0, 0, 0.42);
+    }
+
+    .tile.dragging {
+      opacity: 0.38;
+      transform: scale(0.96);
+    }
 
     .tile.empty {
-      background: #3f3f3f;
-      border: none;
+      background:
+        linear-gradient(180deg, rgba(255, 255, 255, 0.04), rgba(255, 255, 255, 0.02)),
+        #16171c;
+      border: 1px dashed rgba(255, 255, 255, 0.12);
+      color: rgba(255, 255, 255, 0.24);
       box-shadow: none;
-      color: rgba(255,255,255,.25);
-      font-size: calc(var(--tile-size) * .35);
       cursor: pointer;
+      font-size: clamp(26px, calc(var(--tile-size) * 0.34), 38px);
     }
 
-    .tile img {
+    .tile.empty:hover {
+      background: #1a1c23;
+      color: rgba(255, 255, 255, 0.42);
+    }
+
+    .tile-media {
+      width: 100%;
+      height: 100%;
+      display: grid;
+      place-items: center;
+    }
+
+    .tile-media img {
       width: 100%;
       height: 100%;
       object-fit: cover;
       display: block;
     }
 
-    .tile.favicon img {
-      width: calc(var(--tile-size) * .67);
-      height: calc(var(--tile-size) * .67);
+    .tile-media.favicon img {
+      width: calc(var(--tile-size) * 0.64);
+      height: calc(var(--tile-size) * 0.64);
       object-fit: contain;
+      filter: drop-shadow(0 6px 14px rgba(0, 0, 0, 0.18));
+    }
+
+    .tile-text {
+      width: 100%;
+      padding: 10px;
+      font-size: clamp(11px, calc(var(--tile-size) * 0.16), 15px);
+      line-height: 1.15;
+      word-break: break-word;
     }
 
     .tile-title {
@@ -207,337 +299,445 @@
       left: 0;
       right: 0;
       bottom: 0;
-      padding: 4px 5px 5px;
-      min-height: 21px;
+      padding: 5px 6px 6px;
+      min-height: 22px;
       color: #fff;
-      font-size: clamp(10px, calc(var(--tile-size) * .125), 13px);
-      line-height: 1.05;
-      text-align: center;
-      background: linear-gradient(to top, rgba(0,0,0,.78), rgba(0,0,0,.12));
-      text-shadow: 0 1px 2px rgba(0,0,0,.85);
+      font-size: clamp(10px, calc(var(--tile-size) * 0.13), 13px);
+      line-height: 1.1;
+      white-space: nowrap;
       overflow: hidden;
       text-overflow: ellipsis;
-      white-space: nowrap;
-    }
-
-    .text-only {
-      padding: 8px;
-      font-size: clamp(11px, calc(var(--tile-size) * .15), 15px);
-      line-height: 1.15;
-      color: inherit;
-      overflow: hidden;
-      word-break: break-word;
+      background: linear-gradient(180deg, rgba(0, 0, 0, 0) 0%, rgba(0, 0, 0, 0.78) 100%);
+      text-shadow: 0 1px 2px rgba(0, 0, 0, 0.86);
     }
 
     .tile-menu {
       position: absolute;
-      top: 5px;
-      right: 5px;
-      width: 22px;
-      height: 22px;
-      border: 1px solid rgba(255,255,255,.25);
-      border-radius: 6px;
-      background: rgba(0,0,0,.62);
+      top: 6px;
+      right: 6px;
+      width: 26px;
+      height: 26px;
+      border-radius: 8px;
+      border: 1px solid rgba(255, 255, 255, 0.18);
+      background: rgba(0, 0, 0, 0.52);
       color: #fff;
       display: grid;
       place-items: center;
       opacity: 0;
-      cursor: pointer;
-      z-index: 4;
+      transition: opacity 0.14s ease, background 0.14s ease;
+      z-index: 2;
     }
 
-    .tile:hover .tile-menu { opacity: 1; }
+    .tile:hover .tile-menu {
+      opacity: 1;
+    }
 
-    .modal-backdrop, .login-screen {
+    .tile-menu:hover {
+      background: rgba(0, 0, 0, 0.74);
+    }
+
+    .overlay,
+    .login-screen {
       position: fixed;
       inset: 0;
-      background: rgba(0,0,0,.72);
+      z-index: 100;
       display: none;
       place-items: center;
-      z-index: 100;
-      padding: 18px;
+      padding: 20px;
+      background: rgba(0, 0, 0, 0.76);
+      backdrop-filter: blur(8px);
     }
 
-    .login-screen.open, .modal-backdrop.open { display: grid; }
+    .overlay.open,
+    .login-screen.open {
+      display: grid;
+    }
 
     .card {
-      width: min(520px, 100%);
-      max-height: 92vh;
+      width: min(560px, 100%);
+      max-height: min(92vh, 900px);
       overflow: auto;
-      background: #17171b;
-      border: 1px solid rgba(255,255,255,.13);
-      border-radius: 18px;
+      border-radius: 22px;
+      background:
+        linear-gradient(180deg, rgba(255, 255, 255, 0.04), rgba(255, 255, 255, 0)),
+        #16181f;
+      border: 1px solid rgba(255, 255, 255, 0.08);
+      box-shadow: 0 28px 70px rgba(0, 0, 0, 0.45);
       padding: 22px;
-      box-shadow: 0 25px 90px rgba(0,0,0,.5);
     }
 
-    .size-card { width: min(460px, 100%); }
-    .card h1, .card h2 { margin: 0 0 16px; }
-    .card p { color: var(--muted); margin: 0 0 16px; line-height: 1.4; }
+    .size-card {
+      width: min(500px, 100%);
+    }
 
-    .field { margin-bottom: 13px; }
-    .field label { display: block; color: #d4d4d8; font-size: 13px; margin-bottom: 6px; }
+    .card h1,
+    .card h2 {
+      margin: 0 0 10px;
+      font-size: 1.5rem;
+      letter-spacing: -0.02em;
+    }
 
-    .field input, .field select {
+    .card p {
+      margin: 0 0 16px;
+      color: var(--muted);
+      line-height: 1.45;
+    }
+
+    .field {
+      margin-bottom: 14px;
+    }
+
+    .field label {
+      display: block;
+      margin-bottom: 6px;
+      color: #d7dae0;
+      font-size: 0.9rem;
+    }
+
+    .field input {
       width: 100%;
-      height: 40px;
-      border-radius: 10px;
-      border: 1px solid var(--border);
-      background: #0e0e12;
+      min-height: 42px;
+      border-radius: 12px;
+      border: 1px solid rgba(255, 255, 255, 0.1);
+      background: #0d0f14;
       color: #fff;
-      padding: 0 11px;
+      padding: 10px 12px;
       outline: none;
     }
 
-    .field input[type="color"] { padding: 3px; }
-
-    .row { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
-
-    .checkbox-row {
-      display: flex;
-      align-items: center;
-      gap: 8px;
-      margin: 10px 0;
-      font-size: 14px;
-      color: #ddd;
+    .field input:focus {
+      border-color: rgba(240, 180, 26, 0.6);
+      box-shadow: 0 0 0 3px rgba(240, 180, 26, 0.12);
     }
 
-    .image-panel {
-      border: 1px solid var(--border);
-      border-radius: 14px;
+    .field input[type="color"] {
+      padding: 5px;
+      min-height: 48px;
+    }
+
+    .field input[type="file"] {
       padding: 12px;
-      margin: 15px 0;
-      background: rgba(255,255,255,.03);
+      min-height: auto;
     }
 
-    .image-mode {
+    .grid-2 {
       display: grid;
-      grid-template-columns: repeat(3, 1fr);
-      gap: 8px;
-      margin-bottom: 12px;
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      gap: 12px;
     }
 
-    .mode-btn {
-      border: 1px solid var(--border);
-      background: #101014;
-      color: #ddd;
-      padding: 8px;
-      border-radius: 10px;
-      cursor: pointer;
-      font-size: 13px;
-    }
-
-    .mode-btn.active { background: var(--accent); border-color: var(--accent); color: #111; font-weight: 700; }
-
-    .preview {
-      width: 86px;
-      height: 86px;
-      border-radius: 10px;
-      overflow: hidden;
-      background: #222;
-      display: grid;
-      place-items: center;
+    .status {
+      min-height: 18px;
       margin-top: 8px;
-      border: 1px solid rgba(255,255,255,.12);
-      font-size: 11px;
-      text-align: center;
+      color: var(--muted);
+      font-size: 0.92rem;
     }
 
-    .preview img { width: 100%; height: 100%; object-fit: cover; }
-    .preview.contain img { width: 62px; height: 62px; object-fit: contain; }
+    .status.ok {
+      color: var(--ok);
+    }
+
+    .status.error {
+      color: #ffb4bb;
+    }
 
     .modal-actions {
       display: flex;
       justify-content: flex-end;
       gap: 10px;
       flex-wrap: wrap;
-      margin-top: 16px;
+      margin-top: 18px;
     }
 
-    .status { min-height: 18px; margin-top: 10px; font-size: 13px; color: var(--muted); }
-    .error { color: #ffb3b6; }
-    .ok { color: #a7f3d0; }
-    .hidden { display: none !important; }
-
-    .debug-box {
-      max-width: 840px;
-      margin: 0 auto 20px;
-      color: #ffb3b6;
-      font-size: 13px;
-      white-space: pre-wrap;
-      display: none;
-      border: 1px solid rgba(229,72,77,.5);
-      border-radius: 10px;
-      padding: 12px;
-      background: rgba(229,72,77,.08);
-    }
-
-    .debug-box.open { display: block; }
-
-    .size-panel {
-      display: grid;
-      grid-template-columns: 1fr 130px 1fr;
-      gap: 18px;
+    .checkbox-row {
+      display: flex;
       align-items: center;
-      margin: 18px 0;
-    }
-
-    .size-control {
-      display: grid;
       gap: 10px;
-      justify-items: center;
+      min-height: 42px;
+      border-radius: 12px;
+      border: 1px solid rgba(255, 255, 255, 0.08);
+      background: rgba(255, 255, 255, 0.03);
+      padding: 10px 12px;
+      color: #ececf0;
+      font-size: 0.95rem;
     }
 
-    .size-control-title {
-      font-size: 13px;
+    .checkbox-row input {
+      width: 18px;
+      height: 18px;
+      margin: 0;
+    }
+
+    .image-panel {
+      margin: 18px 0;
+      padding: 14px;
+      border-radius: 18px;
+      border: 1px solid rgba(255, 255, 255, 0.08);
+      background: rgba(255, 255, 255, 0.03);
+    }
+
+    .image-panel-title {
+      margin-bottom: 10px;
+      color: #d7dae0;
+      font-size: 0.9rem;
+    }
+
+    .mode-list {
+      display: grid;
+      grid-template-columns: repeat(3, minmax(0, 1fr));
+      gap: 8px;
+      margin-bottom: 12px;
+    }
+
+    .mode-btn {
+      min-height: 40px;
+      padding: 8px 10px;
+      border-radius: 12px;
+      border: 1px solid rgba(255, 255, 255, 0.08);
+      background: #0f1117;
+      color: #d9dbe1;
+      cursor: pointer;
+    }
+
+    .mode-btn.active {
+      background: linear-gradient(180deg, var(--accent) 0%, #df9f08 100%);
+      border-color: rgba(255, 214, 130, 0.32);
+      color: #131313;
+      font-weight: 700;
+    }
+
+    .helper {
       color: var(--muted);
-      text-align: center;
+      font-size: 0.84rem;
+      line-height: 1.4;
     }
 
-    .round-btn {
+    .preview {
+      width: 100px;
+      height: 100px;
+      border-radius: 18px;
+      border: 1px solid rgba(255, 255, 255, 0.1);
+      overflow: hidden;
+      display: grid;
+      place-items: center;
+      margin-top: 10px;
+      background: #1f2129;
+      color: #fff;
+      text-align: center;
+      box-shadow: inset 0 0 0 1px rgba(255, 255, 255, 0.03);
+    }
+
+    .preview img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      display: block;
+    }
+
+    .preview.favicon img {
+      width: 62px;
+      height: 62px;
+      object-fit: contain;
+    }
+
+    .size-grid {
+      display: grid;
+      gap: 14px;
+      margin-top: 18px;
+    }
+
+    .size-preview {
+      display: grid;
+      place-items: center;
+      min-height: 110px;
+      border-radius: 18px;
+      background:
+        radial-gradient(circle at top, rgba(240, 180, 26, 0.16), transparent 50%),
+        linear-gradient(180deg, #21232b 0%, #191b22 100%);
+      border: 1px solid rgba(255, 255, 255, 0.08);
+      text-align: center;
+      padding: 16px;
+    }
+
+    .size-preview strong {
+      font-size: 1.9rem;
+      line-height: 1;
+      letter-spacing: -0.03em;
+    }
+
+    .size-preview span {
+      display: block;
+      margin-top: 8px;
+      color: var(--muted);
+      font-size: 0.92rem;
+    }
+
+    .stepper-row {
+      display: grid;
+      grid-template-columns: 1fr auto auto;
+      gap: 8px;
+      align-items: center;
+    }
+
+    .step-btn {
       width: 38px;
       height: 38px;
-      border-radius: 50%;
-      border: 1px solid var(--border);
-      background: #24242a;
+      border-radius: 12px;
+      background: #20222a;
+      border: 1px solid rgba(255, 255, 255, 0.08);
       color: #fff;
       cursor: pointer;
-      font-size: 22px;
+      font-size: 1.2rem;
       line-height: 1;
+    }
+
+    .step-btn:hover {
+      background: #2a2d36;
+    }
+
+    .range-block {
       display: grid;
-      place-items: center;
+      gap: 8px;
     }
 
-    .round-btn:hover { background: #303038; }
-
-    .size-display {
-      width: 130px;
-      min-height: 96px;
-      border-radius: 14px;
-      background: #d7d7d7;
-      color: #333;
-      display: grid;
-      place-items: center;
-      text-align: center;
-      font-size: 20px;
-      font-weight: 700;
-      padding: 10px;
-      line-height: 1.35;
-    }
-
-    .size-note {
-      font-size: 13px;
-      color: var(--muted);
-      text-align: center;
-      margin-top: 8px;
-    }
-
-    .range-row {
-      margin: 12px 0 16px;
-    }
-
-    .range-row input[type="range"] {
+    .range-block input[type="range"] {
       width: 100%;
     }
 
-    @media (max-width: 650px) {
-      :root { --tile-size: 76px; --tile-gap: 10px; }
-      .topbar { height: auto; flex-direction: column; align-items: flex-start; padding: 14px; gap: 12px; }
-      .left-head { flex-wrap: wrap; gap: 8px; }
-      .brand { font-size: 25px; }
-      .top-actions { width: 100%; justify-content: space-between; flex-wrap: wrap; }
-      .row, .image-mode { grid-template-columns: 1fr; }
-      .webmix { overflow-x: auto; justify-content: start; padding-bottom: 20px; }
-      .size-panel { grid-template-columns: 1fr; }
-      .size-display { margin: 0 auto; }
+    .login-screen .card {
+      width: min(460px, 100%);
+    }
+
+    @media (max-width: 860px) {
+      .topbar {
+        flex-direction: column;
+        align-items: stretch;
+      }
+
+      .brand-wrap {
+        justify-content: space-between;
+        flex-wrap: wrap;
+      }
+
+      .top-actions {
+        justify-content: flex-start;
+      }
+    }
+
+    @media (max-width: 640px) {
+      :root {
+        --tile-gap: 10px;
+      }
+
+      .page {
+        padding-left: 12px;
+        padding-right: 12px;
+      }
+
+      .grid-2,
+      .mode-list {
+        grid-template-columns: 1fr;
+      }
+
+      .topbar {
+        padding: 14px 14px 16px;
+      }
+
+      .brand-title {
+        font-size: 1.3rem;
+      }
     }
   </style>
 </head>
 <body>
-  <div id="loginScreen" class="login-screen">
-    <div class="card">
-      <h1>Login</h1>
-      <p>Connexion avec ton email et ton mot de passe Supabase. La session reste mémorisée sur cet appareil.</p>
-      <div class="field">
-        <label for="loginEmail">Login / email</label>
-        <input id="loginEmail" type="email" autocomplete="email" placeholder="ton@email.com" />
+  <div class="app-shell">
+    <div id="loginScreen" class="login-screen">
+      <div class="card">
+        <h1>Connexion</h1>
+        <p>Connecte-toi avec ton compte Supabase. La session reste mémorisée sur cet appareil.</p>
+        <div class="field">
+          <label for="loginEmail">Email</label>
+          <input id="loginEmail" type="email" autocomplete="email" placeholder="ton@email.com" />
+        </div>
+        <div class="field">
+          <label for="loginPassword">Mot de passe</label>
+          <input id="loginPassword" type="password" autocomplete="current-password" placeholder="Mot de passe" />
+        </div>
+        <div class="modal-actions" style="justify-content:flex-start;margin-top:10px;">
+          <button id="loginBtn" class="btn primary" type="button">Login</button>
+          <button id="forgotBtn" class="btn ghost" type="button">Mot de passe oublié</button>
+        </div>
+        <div id="loginStatus" class="status"></div>
       </div>
-      <div class="field">
-        <label for="loginPassword">Mot de passe</label>
-        <input id="loginPassword" type="password" autocomplete="current-password" placeholder="Mot de passe" />
-      </div>
-      <button id="loginBtn" class="btn primary" type="button">Login</button>
-      <button id="forgotBtn" class="btn ghost" type="button">Mot de passe oublié</button>
-      <div id="loginStatus" class="status"></div>
     </div>
+
+    <header class="topbar">
+      <div class="brand-wrap">
+        <div class="brand">
+          <div class="brand-mark">A</div>
+          <div class="brand-text">
+            <div class="brand-title">alkoda start</div>
+            <div class="brand-subtitle">tableau personnel type Symbaloo</div>
+          </div>
+        </div>
+        <div class="mix-pill">bureau</div>
+      </div>
+      <div class="top-actions">
+        <button id="sizeBtn" class="btn" type="button">Taille</button>
+        <button id="addTileBtn" class="btn primary" type="button">+ Ajouter</button>
+        <button id="seedBtn" class="btn" type="button">Préremplir</button>
+        <button id="logoutBtn" class="btn" type="button">Déconnexion</button>
+      </div>
+    </header>
+
+    <main class="page">
+      <div id="debugBox" class="debug-box"></div>
+      <div class="webmix-wrap">
+        <section id="webmix" class="webmix" aria-label="Webmix"></section>
+      </div>
+    </main>
   </div>
 
-  <header class="topbar">
-    <div class="left-head">
-      <div class="brand"><div class="brand-icon">▦</div><span>alkoda start</span></div>
-      <div class="mix-tabs">
-        <div class="tab active">★ bureau</div>
-        <div class="tab">Achat en ligne</div>
-      </div>
-    </div>
-    <div class="top-actions">
-      <button id="sizeBtn" class="btn" type="button">Taille</button>
-      <button id="addTileBtn" class="btn primary" type="button">+ Ajouter</button>
-      <button id="seedBtn" class="btn" type="button">Préremplir</button>
-      <button id="logoutBtn" class="btn" type="button">Déconnexion</button>
-    </div>
-  </header>
-
-  <div class="search-row">
-    <div class="searchbox"><input id="searchInput" type="search" placeholder="Recherche" /></div>
-  </div>
-
-  <main class="page">
-    <div id="debugBox" class="debug-box"></div>
-    <section id="webmix" class="webmix" aria-label="Webmix"></section>
-  </main>
-
-  <div id="sizeModal" class="modal-backdrop">
+  <div id="sizeModal" class="overlay">
     <div class="card size-card">
       <h2>Taille du webmix</h2>
-      <p>Choisis les colonnes, les lignes et la taille des tuiles. Les tuiles restent toujours carrées.</p>
+      <p>Choisis le nombre de colonnes, de lignes et la taille des tuiles. L’aperçu de la grille change immédiatement derrière cette fenêtre.</p>
 
-      <div class="size-panel">
-        <div class="size-control">
-          <div class="size-control-title">Colonnes</div>
-          <button id="colsPlusBtn" class="round-btn" type="button">+</button>
-          <button id="colsMinusBtn" class="round-btn" type="button">−</button>
-        </div>
-
-        <div id="sizeDisplay" class="size-display">11×5<br>86 px</div>
-
-        <div class="size-control">
-          <div class="size-control-title">Lignes</div>
-          <button id="rowsPlusBtn" class="round-btn" type="button">+</button>
-          <button id="rowsMinusBtn" class="round-btn" type="button">−</button>
+      <div id="sizePreview" class="size-preview">
+        <div>
+          <strong>11 × 5</strong>
+          <span>86 px par tuile</span>
         </div>
       </div>
 
-      <div class="row">
+      <div class="size-grid">
         <div class="field">
           <label for="colsInput">Colonnes</label>
-          <input id="colsInput" type="number" min="1" max="30" value="11" />
+          <div class="stepper-row">
+            <input id="colsInput" type="number" min="1" max="30" value="11" />
+            <button id="colsMinusBtn" class="step-btn" type="button">−</button>
+            <button id="colsPlusBtn" class="step-btn" type="button">+</button>
+          </div>
         </div>
+
         <div class="field">
           <label for="rowsInput">Lignes</label>
-          <input id="rowsInput" type="number" min="1" max="30" value="5" />
+          <div class="stepper-row">
+            <input id="rowsInput" type="number" min="1" max="30" value="5" />
+            <button id="rowsMinusBtn" class="step-btn" type="button">−</button>
+            <button id="rowsPlusBtn" class="step-btn" type="button">+</button>
+          </div>
+        </div>
+
+        <div class="field">
+          <label for="tileSizeInput">Taille des tuiles en pixels</label>
+          <div class="range-block">
+            <input id="tileSizeInput" type="number" min="50" max="150" value="86" />
+            <input id="tileSizeRange" type="range" min="50" max="150" value="86" />
+          </div>
         </div>
       </div>
 
-      <div class="field">
-        <label for="tileSizeInput">Taille des tuiles en pixels</label>
-        <input id="tileSizeInput" type="number" min="50" max="150" value="86" />
-      </div>
-      <div class="range-row">
-        <input id="tileSizeRange" type="range" min="50" max="150" value="86" />
-      </div>
-
-      <div class="size-note">La taille est sauvegardée dans Supabase et appliquée sur tous tes appareils.</div>
       <div id="sizeStatus" class="status"></div>
 
       <div class="modal-actions">
@@ -547,9 +747,9 @@
     </div>
   </div>
 
-  <div id="tileModal" class="modal-backdrop">
+  <div id="tileModal" class="overlay">
     <div class="card">
-      <h2 id="modalTitle">Tuile</h2>
+      <h2 id="tileModalTitle">Ajouter une tuile</h2>
 
       <div class="field">
         <label for="tileTitle">Nom</label>
@@ -562,11 +762,11 @@
       </div>
 
       <div class="image-panel">
-        <label style="display:block;margin-bottom:9px;color:#d4d4d8;font-size:13px;">Image de la tuile</label>
-        <div class="image-mode">
-          <button class="mode-btn active" id="modeColor" type="button">Couleur</button>
-          <button class="mode-btn" id="modeUpload" type="button">Image importée</button>
-          <button class="mode-btn" id="modeWeb" type="button">Image du net</button>
+        <div class="image-panel-title">Image de la tuile</div>
+        <div class="mode-list">
+          <button id="modeColor" class="mode-btn active" type="button">Couleur</button>
+          <button id="modeUpload" class="mode-btn" type="button">Image importée</button>
+          <button id="modeWeb" class="mode-btn" type="button">Image du net</button>
         </div>
 
         <div id="colorOptions">
@@ -578,10 +778,10 @@
 
         <div id="uploadOptions" class="hidden">
           <div class="field">
-            <label for="tileUpload">Importer une image depuis l’ordinateur</label>
+            <label for="tileUpload">Importer une image</label>
             <input id="tileUpload" type="file" accept="image/*" />
           </div>
-          <p style="font-size:12px;margin:0;color:#a1a1aa;">Nécessite un bucket Supabase Storage nommé <strong>tile-images</strong>.</p>
+          <div class="helper">Le bucket Supabase Storage attendu est <strong>tile-images</strong>.</div>
         </div>
 
         <div id="webOptions" class="hidden">
@@ -589,21 +789,27 @@
             <label for="tileImage">URL d’image</label>
             <input id="tileImage" type="url" placeholder="https://.../image.png" />
           </div>
-          <button id="autoLogoBtn" class="btn blue" type="button">Logo automatique depuis l’URL</button>
+          <button id="autoLogoBtn" class="btn" type="button">Logo automatique depuis l’URL</button>
         </div>
 
         <div id="preview" class="preview">Aperçu</div>
       </div>
 
-      <div class="row">
-        <label class="checkbox-row"><input id="tileShowTitle" type="checkbox" checked />Afficher le nom</label>
-        <label class="checkbox-row"><input id="tileOpenNewTab" type="checkbox" checked />Nouvel onglet</label>
+      <div class="grid-2">
+        <label class="checkbox-row">
+          <input id="tileShowTitle" type="checkbox" checked />
+          <span>Afficher le nom</span>
+        </label>
+        <label class="checkbox-row">
+          <input id="tileOpenNewTab" type="checkbox" checked />
+          <span>Ouvrir dans un nouvel onglet</span>
+        </label>
       </div>
 
-      <div id="modalStatus" class="status"></div>
+      <div id="tileStatus" class="status"></div>
 
       <div class="modal-actions">
-        <button id="deleteTileBtn" class="btn danger" type="button">Supprimer</button>
+        <button id="deleteTileBtn" class="btn danger hidden" type="button">Supprimer</button>
         <button id="cancelTileBtn" class="btn" type="button">Annuler</button>
         <button id="saveTileBtn" class="btn primary" type="button">Sauvegarder</button>
       </div>
@@ -613,547 +819,810 @@
   <script>
     const SUPABASE_URL = "https://ejblebseqggezptuvqfj.supabase.co";
     const SUPABASE_KEY = "sb_publishable_5JCL-teaTWmLPfDM5UrRoQ_xTFm4yrb";
+    const CONFIG_TITLE = "__WEBMIX_CONFIG__";
+    const DEFAULT_CONFIG = { columns: 11, rows: 5, tileSize: 86 };
+    const TILE_LIMITS = { columns: [1, 30], rows: [1, 30], tileSize: [50, 150] };
 
     const sbClient = window.supabase.createClient(SUPABASE_URL, SUPABASE_KEY, {
-      auth: { persistSession: true, autoRefreshToken: true, detectSessionInUrl: true }
+      auth: {
+        persistSession: true,
+        autoRefreshToken: true,
+        detectSessionInUrl: true
+      }
     });
 
-    const CONFIG_TITLE = "__WEBMIX_CONFIG__";
-
     const defaultTiles = [
-      ["Google", "https://www.google.com", "https://www.google.com/s2/favicons?domain=google.com&sz=128"],
-      ["Google AdSense", "https://adsense.google.com", "https://www.google.com/s2/favicons?domain=adsense.google.com&sz=128"],
-      ["Audiens", "https://www.audiens.org", "https://www.google.com/s2/favicons?domain=audiens.org&sz=128"],
-      ["Congés Spectacles", "https://www.audiens.org", "https://www.google.com/s2/favicons?domain=audiens.org&sz=128"],
-      ["Crédit Mutuel", "https://www.creditmutuel.fr", "https://www.google.com/s2/favicons?domain=creditmutuel.fr&sz=128"],
-      ["Fortuneo", "https://www.fortuneo.fr", "https://www.google.com/s2/favicons?domain=fortuneo.fr&sz=128"],
-      ["Stripe", "https://dashboard.stripe.com", "https://www.google.com/s2/favicons?domain=stripe.com&sz=128"],
-      ["Indy", "https://app.indy.fr", "https://www.google.com/s2/favicons?domain=indy.fr&sz=128"],
-      ["France Travail", "https://www.francetravail.fr", "https://www.google.com/s2/favicons?domain=francetravail.fr&sz=128"],
-      ["ameli.fr", "https://www.ameli.fr", "https://www.google.com/s2/favicons?domain=ameli.fr&sz=128"],
-      ["Mutuelle des motards", "https://www.mutuelledesmotards.fr", "https://www.google.com/s2/favicons?domain=mutuelledesmotards.fr&sz=128"],
-      ["Digiposte", "https://www.digiposte.fr", "https://www.google.com/s2/favicons?domain=digiposte.fr&sz=128"],
-      ["Zoho", "https://www.zoho.com", "https://www.google.com/s2/favicons?domain=zoho.com&sz=128"],
-      ["Google Photos", "https://photos.google.com", "https://www.google.com/s2/favicons?domain=photos.google.com&sz=128"],
-      ["Urssaf", "https://www.urssaf.fr", "https://www.google.com/s2/favicons?domain=urssaf.fr&sz=128"],
-      ["Allociné", "https://www.allocine.fr", "https://www.google.com/s2/favicons?domain=allocine.fr&sz=128"],
-      ["airbnb", "https://www.airbnb.fr", "https://www.google.com/s2/favicons?domain=airbnb.fr&sz=128"],
-      ["IMDb", "https://www.imdb.com", "https://www.google.com/s2/favicons?domain=imdb.com&sz=128"],
-      ["tvdb", "https://thetvdb.com", "https://www.google.com/s2/favicons?domain=thetvdb.com&sz=128"],
-      ["MAIF", "https://www.maif.fr", "https://www.google.com/s2/favicons?domain=maif.fr&sz=128"],
-      ["Gras Savoye", "https://www.wtwco.com/fr-fr", "https://www.google.com/s2/favicons?domain=wtwco.com&sz=128"],
-      ["Paris Habitat", "https://www.parishabitat.fr", "https://www.google.com/s2/favicons?domain=parishabitat.fr&sz=128"],
-      ["WeTransfer", "https://wetransfer.com", "https://www.google.com/s2/favicons?domain=wetransfer.com&sz=128"],
-      ["Filme", "", ""],
-      ["Lightyshare", "", ""],
-      ["LibreELEC", "https://libreelec.tv", "https://www.google.com/s2/favicons?domain=libreelec.tv&sz=128"],
-      ["Reverso", "https://www.reverso.net", "https://www.google.com/s2/favicons?domain=reverso.net&sz=128"],
-      ["LinkedIn", "https://www.linkedin.com", "https://www.google.com/s2/favicons?domain=linkedin.com&sz=128"],
-      ["Ooviz", "", ""],
-      ["Tipeee", "https://fr.tipeee.com", "https://www.google.com/s2/favicons?domain=tipeee.com&sz=128"],
-      ["YouTube", "https://www.youtube.com", "https://www.google.com/s2/favicons?domain=youtube.com&sz=128"],
-      ["YouTube Studio", "https://studio.youtube.com", "https://www.google.com/s2/favicons?domain=studio.youtube.com&sz=128"],
-      ["GrosFichiers", "https://www.grosfichiers.com", "https://www.google.com/s2/favicons?domain=grosfichiers.com&sz=128"],
-      ["SwissTransfer", "https://www.swisstransfer.com", "https://www.google.com/s2/favicons?domain=swisstransfer.com&sz=128"],
-      ["LogMeIn", "https://www.logmein.com", "https://www.google.com/s2/favicons?domain=logmein.com&sz=128"],
-      ["Prime Video", "https://www.primevideo.com", "https://www.google.com/s2/favicons?domain=primevideo.com&sz=128"],
-      ["Orange.fr", "https://www.orange.fr", "https://www.google.com/s2/favicons?domain=orange.fr&sz=128"],
-      ["Squarespace", "https://www.squarespace.com", "https://www.google.com/s2/favicons?domain=squarespace.com&sz=128"],
-      ["Free", "https://www.free.fr", "https://www.google.com/s2/favicons?domain=free.fr&sz=128"],
-      ["rebrickable", "https://rebrickable.com", "https://www.google.com/s2/favicons?domain=rebrickable.com&sz=128"],
-      ["Bricklink", "https://www.bricklink.com", "https://www.google.com/s2/favicons?domain=bricklink.com&sz=128"],
-      ["ChatGPT", "https://chat.openai.com", "https://www.google.com/s2/favicons?domain=openai.com&sz=128"],
-      ["Claude", "https://claude.ai", "https://www.google.com/s2/favicons?domain=claude.ai&sz=128"],
-      ["diakov.net", "", ""],
-      ["Wawacity", "", ""],
-      ["xtrem-download", "", ""],
-      ["Torlock", "", ""],
-      ["EXT.TO", "", ""],
-      ["Sous-titres.eu", "", ""],
-      ["Addic7ed", "https://www.addic7ed.com", "https://www.google.com/s2/favicons?domain=addic7ed.com&sz=128"],
-      ["opensubtitles.org", "https://www.opensubtitles.org", "https://www.google.com/s2/favicons?domain=opensubtitles.org&sz=128"]
+      ["Google", "https://www.google.com"],
+      ["Gmail", "https://mail.google.com"],
+      ["YouTube", "https://www.youtube.com"],
+      ["Google Drive", "https://drive.google.com"],
+      ["Google Photos", "https://photos.google.com"],
+      ["Google Agenda", "https://calendar.google.com"],
+      ["Stripe", "https://dashboard.stripe.com"],
+      ["PayPal", "https://www.paypal.com"],
+      ["Fortuneo", "https://www.fortuneo.fr"],
+      ["Crédit Mutuel", "https://www.creditmutuel.fr"],
+      ["Urssaf", "https://www.urssaf.fr"],
+      ["ameli.fr", "https://www.ameli.fr"],
+      ["France Travail", "https://www.francetravail.fr"],
+      ["Audiens", "https://www.audiens.org"],
+      ["Zoho", "https://www.zoho.com"],
+      ["WeTransfer", "https://wetransfer.com"],
+      ["SwissTransfer", "https://www.swisstransfer.com"],
+      ["IMDb", "https://www.imdb.com"],
+      ["Allociné", "https://www.allocine.fr"],
+      ["Airbnb", "https://www.airbnb.fr"],
+      ["Amazon", "https://www.amazon.fr"],
+      ["Prime Video", "https://www.primevideo.com"],
+      ["Orange", "https://www.orange.fr"],
+      ["Free", "https://www.free.fr"],
+      ["YouTube Studio", "https://studio.youtube.com"],
+      ["LinkedIn", "https://www.linkedin.com"],
+      ["Facebook", "https://www.facebook.com"],
+      ["Instagram", "https://www.instagram.com"],
+      ["Tipeee", "https://fr.tipeee.com"],
+      ["ChatGPT", "https://chat.openai.com"]
     ];
 
-    const el = id => document.getElementById(id);
-    const loginScreen = el("loginScreen"), webmix = el("webmix"), searchInput = el("searchInput"), debugBox = el("debugBox");
-    const sizeModal = el("sizeModal"), sizeDisplay = el("sizeDisplay"), colsInput = el("colsInput"), rowsInput = el("rowsInput"), tileSizeInput = el("tileSizeInput"), tileSizeRange = el("tileSizeRange"), sizeStatus = el("sizeStatus");
-    const tileModal = el("tileModal"), modalTitle = el("modalTitle"), modalStatus = el("modalStatus");
-    const tileTitle = el("tileTitle"), tileUrl = el("tileUrl"), tileImage = el("tileImage"), tileColor = el("tileColor"), tileUpload = el("tileUpload");
-    const tileShowTitle = el("tileShowTitle"), tileOpenNewTab = el("tileOpenNewTab"), preview = el("preview");
-    const modeColor = el("modeColor"), modeUpload = el("modeUpload"), modeWeb = el("modeWeb");
-    const colorOptions = el("colorOptions"), uploadOptions = el("uploadOptions"), webOptions = el("webOptions");
+    const $ = id => document.getElementById(id);
 
-    let tiles = [];
-    let configRow = null;
-    let webmixConfig = { columns: 11, rows: 5, tileSize: 86 };
-    let editingTile = null;
-    let imageMode = "color";
-    let uploadedImageUrl = "";
-    let draggedTileId = null;
+    const ui = {
+      loginScreen: $("loginScreen"),
+      loginEmail: $("loginEmail"),
+      loginPassword: $("loginPassword"),
+      loginStatus: $("loginStatus"),
+      loginBtn: $("loginBtn"),
+      forgotBtn: $("forgotBtn"),
+      logoutBtn: $("logoutBtn"),
+      debugBox: $("debugBox"),
+      webmix: $("webmix"),
+      addTileBtn: $("addTileBtn"),
+      seedBtn: $("seedBtn"),
+      sizeBtn: $("sizeBtn"),
+      sizeModal: $("sizeModal"),
+      sizePreview: $("sizePreview"),
+      colsInput: $("colsInput"),
+      rowsInput: $("rowsInput"),
+      tileSizeInput: $("tileSizeInput"),
+      tileSizeRange: $("tileSizeRange"),
+      colsMinusBtn: $("colsMinusBtn"),
+      colsPlusBtn: $("colsPlusBtn"),
+      rowsMinusBtn: $("rowsMinusBtn"),
+      rowsPlusBtn: $("rowsPlusBtn"),
+      cancelSizeBtn: $("cancelSizeBtn"),
+      saveSizeBtn: $("saveSizeBtn"),
+      sizeStatus: $("sizeStatus"),
+      tileModal: $("tileModal"),
+      tileModalTitle: $("tileModalTitle"),
+      tileTitle: $("tileTitle"),
+      tileUrl: $("tileUrl"),
+      tileImage: $("tileImage"),
+      tileColor: $("tileColor"),
+      tileUpload: $("tileUpload"),
+      tileShowTitle: $("tileShowTitle"),
+      tileOpenNewTab: $("tileOpenNewTab"),
+      tileStatus: $("tileStatus"),
+      preview: $("preview"),
+      modeColor: $("modeColor"),
+      modeUpload: $("modeUpload"),
+      modeWeb: $("modeWeb"),
+      colorOptions: $("colorOptions"),
+      uploadOptions: $("uploadOptions"),
+      webOptions: $("webOptions"),
+      autoLogoBtn: $("autoLogoBtn"),
+      deleteTileBtn: $("deleteTileBtn"),
+      cancelTileBtn: $("cancelTileBtn"),
+      saveTileBtn: $("saveTileBtn")
+    };
+
+    const state = {
+      tiles: [],
+      configRow: null,
+      config: { ...DEFAULT_CONFIG },
+      draftConfig: { ...DEFAULT_CONFIG },
+      sizeModalSnapshot: null,
+      editingTile: null,
+      imageMode: "color",
+      uploadedImageUrl: "",
+      draggingTileId: null,
+      saveTileCloseTimer: null,
+      saveSizeCloseTimer: null
+    };
 
     function showDebug(message) {
-      debugBox.textContent = message;
-      debugBox.classList.add("open");
-      console.error(message);
+      ui.debugBox.textContent = message || "";
+      ui.debugBox.classList.toggle("open", Boolean(message));
+      if (message) {
+        console.error(message);
+      }
     }
 
-    function clearDebug() {
-      debugBox.textContent = "";
-      debugBox.classList.remove("open");
+    function setStatus(node, message, tone) {
+      node.textContent = message || "";
+      node.className = "status";
+      if (tone) {
+        node.classList.add(tone);
+      }
     }
 
-    function status(node, msg, type="") {
-      node.textContent = msg || "";
-      node.className = `status ${type}`.trim();
+    function clampNumber(value, min, max, fallback) {
+      const num = Number(value);
+      if (!Number.isFinite(num)) {
+        return fallback;
+      }
+      return Math.min(max, Math.max(min, Math.round(num)));
     }
 
     function normalizeUrl(url) {
-      const u = (url || "").trim();
-      if (!u) return "";
-      return /^https?:\/\//i.test(u) ? u : "https://" + u;
+      const value = (url || "").trim();
+      if (!value) {
+        return "";
+      }
+      return /^https?:\/\//i.test(value) ? value : `https://${value}`;
     }
 
     function faviconFor(url) {
       try {
-        const u = new URL(normalizeUrl(url));
-        return `https://www.google.com/s2/favicons?domain=${u.hostname}&sz=128`;
+        const parsed = new URL(normalizeUrl(url));
+        return `https://www.google.com/s2/favicons?domain=${parsed.hostname}&sz=128`;
       } catch {
         return "";
       }
     }
 
-    function clampNumber(value, min, max, fallback) {
-      const n = Number(value);
-      if (!Number.isFinite(n)) return fallback;
-      return Math.max(min, Math.min(max, Math.round(n)));
-    }
-
-    function applyGridConfig() {
-      webmixConfig = {
-        columns: clampNumber(webmixConfig.columns, 1, 30, 11),
-        rows: clampNumber(webmixConfig.rows, 1, 30, 5),
-        tileSize: clampNumber(webmixConfig.tileSize, 50, 150, 86)
-      };
-      document.documentElement.style.setProperty("--tile-size", `${webmixConfig.tileSize}px`);
-      webmix.style.gridTemplateColumns = `repeat(${webmixConfig.columns}, var(--tile-size))`;
-      colsInput.value = webmixConfig.columns;
-      rowsInput.value = webmixConfig.rows;
-      tileSizeInput.value = webmixConfig.tileSize;
-      tileSizeRange.value = webmixConfig.tileSize;
-      sizeDisplay.innerHTML = `${webmixConfig.columns}×${webmixConfig.rows}<br>${webmixConfig.tileSize} px`;
-    }
-
-    function updateSizeDisplayFromInputs() {
-      const c = clampNumber(colsInput.value, 1, 30, 11);
-      const r = clampNumber(rowsInput.value, 1, 30, 5);
-      const s = clampNumber(tileSizeInput.value, 50, 150, 86);
-      colsInput.value = c;
-      rowsInput.value = r;
-      tileSizeInput.value = s;
-      tileSizeRange.value = s;
-      sizeDisplay.innerHTML = `${c}×${r}<br>${s} px`;
+    function escapeHtml(value) {
+      return String(value || "")
+        .replace(/&/g, "&amp;")
+        .replace(/</g, "&lt;")
+        .replace(/>/g, "&gt;")
+        .replace(/"/g, "&quot;")
+        .replace(/'/g, "&#39;");
     }
 
     function parseConfigRow(row) {
-      if (!row || !row.url) return { columns: 11, rows: 5, tileSize: 86 };
+      if (!row || !row.url) {
+        return { ...DEFAULT_CONFIG };
+      }
       try {
         const parsed = JSON.parse(row.url);
-        return {
-          columns: clampNumber(parsed.columns, 1, 30, 11),
-          rows: clampNumber(parsed.rows, 1, 30, 5),
-          tileSize: clampNumber(parsed.tileSize, 50, 150, 86)
-        };
+        return sanitizeConfig(parsed);
       } catch {
-        return { columns: 11, rows: 5, tileSize: 86 };
+        return { ...DEFAULT_CONFIG };
       }
     }
 
-    async function saveWebmixConfig() {
-      webmixConfig = {
-        columns: clampNumber(colsInput.value, 1, 30, 11),
-        rows: clampNumber(rowsInput.value, 1, 30, 5),
-        tileSize: clampNumber(tileSizeInput.value, 50, 150, 86)
+    function sanitizeConfig(candidate) {
+      return {
+        columns: clampNumber(candidate?.columns, TILE_LIMITS.columns[0], TILE_LIMITS.columns[1], DEFAULT_CONFIG.columns),
+        rows: clampNumber(candidate?.rows, TILE_LIMITS.rows[0], TILE_LIMITS.rows[1], DEFAULT_CONFIG.rows),
+        tileSize: clampNumber(candidate?.tileSize, TILE_LIMITS.tileSize[0], TILE_LIMITS.tileSize[1], DEFAULT_CONFIG.tileSize)
       };
-      applyGridConfig();
-      renderTiles();
-      status(sizeStatus, "Sauvegarde...", "");
+    }
 
-      const payload = {
-        title: CONFIG_TITLE,
-        url: JSON.stringify(webmixConfig),
-        image: null,
-        color: "#000000",
-        show_title: false,
-        open_new_tab: false,
-        position: 0
-      };
+    function syncSizeInputs(config) {
+      ui.colsInput.value = config.columns;
+      ui.rowsInput.value = config.rows;
+      ui.tileSizeInput.value = config.tileSize;
+      ui.tileSizeRange.value = config.tileSize;
+      ui.sizePreview.innerHTML = `<div><strong>${config.columns} × ${config.rows}</strong><span>${config.tileSize} px par tuile</span></div>`;
+    }
 
-      try {
-        const result = configRow
-          ? await sbClient.from("tiles").update(payload).eq("id", configRow.id).select().single()
-          : await sbClient.from("tiles").insert(payload).select().single();
+    function applyGridConfig(config) {
+      const clean = sanitizeConfig(config);
+      document.documentElement.style.setProperty("--columns", clean.columns);
+      document.documentElement.style.setProperty("--tile-size", `${clean.tileSize}px`);
+    }
 
-        if (result.error) throw result.error;
-        if (result.data) configRow = result.data;
-        status(sizeStatus, "Sauvegardé.", "ok");
-        setTimeout(closeSizeModal, 400);
-      } catch (e) {
-        status(sizeStatus, e.message || "Erreur de sauvegarde.", "error");
+    function gridCapacity(config = state.config) {
+      return config.columns * config.rows;
+    }
+
+    function getOrderedTiles() {
+      return [...state.tiles].sort((a, b) => {
+        const posA = Number(a.position) || 0;
+        const posB = Number(b.position) || 0;
+        if (posA !== posB) {
+          return posA - posB;
+        }
+        return String(a.title || "").localeCompare(String(b.title || ""), "fr");
+      });
+    }
+
+    function renderTiles() {
+      const orderedTiles = getOrderedTiles();
+      const targetCells = gridCapacity();
+      ui.webmix.innerHTML = "";
+
+      orderedTiles.forEach(tile => {
+        const element = document.createElement("article");
+        const url = normalizeUrl(tile.url);
+        const hasImage = Boolean(tile.image);
+        const isFavicon = hasImage && /google\.com\/s2\/favicons/i.test(tile.image);
+
+        element.className = "tile";
+        element.draggable = true;
+        element.dataset.id = tile.id;
+        element.style.background = tile.color || "#ffffff";
+
+        const media = document.createElement("div");
+        media.className = `tile-media${isFavicon ? " favicon" : ""}`;
+
+        if (hasImage) {
+          media.innerHTML = `<img src="${escapeHtml(tile.image)}" alt="${escapeHtml(tile.title || "")}">`;
+        } else {
+          media.innerHTML = `<div class="tile-text">${escapeHtml(tile.title || "Sans titre")}</div>`;
+        }
+
+        const menu = document.createElement("button");
+        menu.type = "button";
+        menu.className = "tile-menu";
+        menu.textContent = "⋯";
+        menu.addEventListener("click", event => {
+          event.stopPropagation();
+          openTileModal(tile);
+        });
+
+        element.appendChild(media);
+
+        if (tile.show_title && hasImage) {
+          const label = document.createElement("div");
+          label.className = "tile-title";
+          label.textContent = tile.title || "Sans titre";
+          element.appendChild(label);
+        }
+
+        element.appendChild(menu);
+
+        element.addEventListener("click", () => {
+          if (!url) {
+            openTileModal(tile);
+            return;
+          }
+          if (tile.open_new_tab) {
+            window.open(url, "_blank", "noopener,noreferrer");
+          } else {
+            window.location.href = url;
+          }
+        });
+
+        element.addEventListener("dragstart", event => {
+          state.draggingTileId = tile.id;
+          element.classList.add("dragging");
+          event.dataTransfer.effectAllowed = "move";
+        });
+
+        element.addEventListener("dragend", () => {
+          state.draggingTileId = null;
+          element.classList.remove("dragging");
+        });
+
+        element.addEventListener("dragover", event => {
+          event.preventDefault();
+        });
+
+        element.addEventListener("drop", async event => {
+          event.preventDefault();
+          if (!state.draggingTileId || state.draggingTileId === tile.id) {
+            return;
+          }
+          await reorderTiles(state.draggingTileId, tile.id);
+        });
+
+        ui.webmix.appendChild(element);
+      });
+
+      const emptyCount = Math.max(0, targetCells - orderedTiles.length);
+      for (let index = 0; index < emptyCount; index += 1) {
+        const emptyTile = document.createElement("button");
+        emptyTile.type = "button";
+        emptyTile.className = "tile empty";
+        emptyTile.textContent = "+";
+        emptyTile.addEventListener("click", () => openTileModal(null));
+        ui.webmix.appendChild(emptyTile);
+      }
+    }
+
+    function setImageMode(mode) {
+      state.imageMode = mode;
+      ui.modeColor.classList.toggle("active", mode === "color");
+      ui.modeUpload.classList.toggle("active", mode === "upload");
+      ui.modeWeb.classList.toggle("active", mode === "web");
+      ui.colorOptions.classList.toggle("hidden", mode !== "color");
+      ui.uploadOptions.classList.toggle("hidden", mode !== "upload");
+      ui.webOptions.classList.toggle("hidden", mode !== "web");
+      updatePreview();
+    }
+
+    function getPreviewImageUrl() {
+      if (state.imageMode === "web") {
+        return normalizeUrl(ui.tileImage.value);
+      }
+      if (state.imageMode === "upload") {
+        return state.uploadedImageUrl || normalizeUrl(ui.tileImage.value);
+      }
+      return "";
+    }
+
+    function updatePreview() {
+      const imageUrl = getPreviewImageUrl();
+      const title = ui.tileTitle.value.trim() || "Aperçu";
+      const isFavicon = /google\.com\/s2\/favicons/i.test(imageUrl);
+
+      ui.preview.className = `preview${isFavicon ? " favicon" : ""}`;
+      ui.preview.style.background = ui.tileColor.value || "#ffffff";
+
+      if (imageUrl) {
+        ui.preview.innerHTML = `<img src="${escapeHtml(imageUrl)}" alt="${escapeHtml(title)}">`;
+      } else {
+        ui.preview.textContent = title;
       }
     }
 
     function openSizeModal() {
-      status(sizeStatus, "");
-      applyGridConfig();
-      sizeModal.classList.add("open");
+      clearTimeout(state.saveSizeCloseTimer);
+      setStatus(ui.sizeStatus, "");
+      state.sizeModalSnapshot = { ...state.config };
+      state.draftConfig = { ...state.config };
+      syncSizeInputs(state.draftConfig);
+      ui.sizeModal.classList.add("open");
     }
 
-    function closeSizeModal() {
-      sizeModal.classList.remove("open");
-    }
-
-    function nudgeSize(kind, delta) {
-      if (kind === "columns") colsInput.value = clampNumber(Number(colsInput.value) + delta, 1, 30, 11);
-      if (kind === "rows") rowsInput.value = clampNumber(Number(rowsInput.value) + delta, 1, 30, 5);
-      updateSizeDisplayFromInputs();
-    }
-
-    function setImageMode(mode) {
-      imageMode = mode;
-      modeColor.classList.toggle("active", mode === "color");
-      modeUpload.classList.toggle("active", mode === "upload");
-      modeWeb.classList.toggle("active", mode === "web");
-      colorOptions.classList.toggle("hidden", mode !== "color");
-      uploadOptions.classList.toggle("hidden", mode !== "upload");
-      webOptions.classList.toggle("hidden", mode !== "web");
-      updatePreview();
-    }
-
-    function updatePreview() {
-      const img = imageMode === "upload" ? uploadedImageUrl : (imageMode === "web" ? normalizeUrl(tileImage.value) : "");
-      preview.className = "preview" + (img && img.includes("google.com/s2/favicons") ? " contain" : "");
-      preview.style.background = tileColor.value || "#fff";
-      preview.innerHTML = img ? `<img src="${img}" alt="aperçu">` : `<span>${tileTitle.value || "Aperçu"}</span>`;
-    }
-
-    async function init() {
-      try {
-        clearDebug();
-        const { data, error } = await sbClient.auth.getSession();
-        if (error) throw error;
-
-        if (data.session) {
-          loginScreen.classList.remove("open");
-          await loadTiles();
-        } else {
-          loginScreen.classList.add("open");
-        }
-
-        sbClient.auth.onAuthStateChange(async (_event, session) => {
-          if (session) {
-            loginScreen.classList.remove("open");
-            await loadTiles();
-          } else {
-            loginScreen.classList.add("open");
-            webmix.innerHTML = "";
-          }
-        });
-      } catch (e) {
-        showDebug("Erreur initialisation : " + e.message);
-      }
-    }
-
-    async function login() {
-      status(el("loginStatus"), "Connexion...");
-      const email = el("loginEmail").value.trim();
-      const password = el("loginPassword").value;
-      const { error } = await sbClient.auth.signInWithPassword({ email, password });
-      if (error) status(el("loginStatus"), error.message, "error");
-      else status(el("loginStatus"), "Connecté.", "ok");
-    }
-
-    async function forgotPassword() {
-      const email = el("loginEmail").value.trim();
-      if (!email) {
-        status(el("loginStatus"), "Entre ton email d’abord.", "error");
-        return;
-      }
-      const { error } = await sbClient.auth.resetPasswordForEmail(email, { redirectTo: location.origin + location.pathname });
-      status(el("loginStatus"), error ? error.message : "Email de réinitialisation envoyé si le compte existe.", error ? "error" : "ok");
-    }
-
-    async function seedTiles(force=false) {
-      const { data, error: selectError } = await sbClient.from("tiles").select("id,title");
-      if (selectError) {
-        showDebug("Erreur lecture tiles : " + selectError.message);
-        return;
-      }
-
-      const realTiles = (data || []).filter(row => row.title !== CONFIG_TITLE);
-      if (realTiles.length > 0 && !force) return;
-      if (force && !confirm("Préremplir va ajouter les tuiles de référence. Continuer ?")) return;
-
-      const rows = defaultTiles.map((t, i) => ({
-        title: t[0],
-        url: t[1],
-        image: t[2] || null,
-        color: "#ffffff",
-        show_title: true,
-        open_new_tab: true,
-        position: i + 1
-      }));
-
-      const { error } = await sbClient.from("tiles").insert(rows);
-      if (error) {
-        showDebug("Erreur préremplissage : " + error.message);
-        return;
-      }
-      await loadTiles();
-    }
-
-    async function loadTiles() {
-      clearDebug();
-      const { data, error } = await sbClient.from("tiles").select("*").order("position", { ascending: true });
-      if (error) {
-        showDebug("Erreur Supabase : " + error.message);
-        return;
-      }
-
-      const allRows = data || [];
-      configRow = allRows.find(row => row.title === CONFIG_TITLE) || null;
-      webmixConfig = parseConfigRow(configRow);
-      applyGridConfig();
-
-      tiles = allRows.filter(row => row.title !== CONFIG_TITLE);
-      if (tiles.length === 0) await seedTiles(false);
-      else renderTiles();
-    }
-
-    function renderTiles() {
-      const q = searchInput.value.trim().toLowerCase();
-      webmix.innerHTML = "";
-
-      const displayedTiles = tiles.filter(t => !q || (t.title || "").toLowerCase().includes(q));
-
-      displayedTiles.forEach(tile => {
-        const d = document.createElement("div");
-        d.className = "tile" + (tile.image && tile.image.includes("google.com/s2/favicons") ? " favicon" : "");
-        d.draggable = true;
-        d.dataset.id = tile.id;
-        d.style.background = tile.color || "#ffffff";
-
-        if (tile.image) d.innerHTML = `<img src="${tile.image}" alt="${tile.title || ""}">`;
-        else d.innerHTML = `<div class="text-only">${tile.title || "Sans titre"}</div>`;
-
-        if (tile.show_title && tile.image) {
-          const title = document.createElement("div");
-          title.className = "tile-title";
-          title.textContent = tile.title || "Sans titre";
-          d.appendChild(title);
-        }
-
-        const menu = document.createElement("button");
-        menu.className = "tile-menu";
-        menu.type = "button";
-        menu.textContent = "⋯";
-        menu.onclick = e => { e.stopPropagation(); openModal(tile); };
-        d.appendChild(menu);
-
-        d.onclick = () => {
-          const url = normalizeUrl(tile.url);
-          if (!url) {
-            openModal(tile);
-            return;
-          }
-          if (tile.open_new_tab) window.open(url, "_blank", "noopener,noreferrer");
-          else location.href = url;
-        };
-
-        d.ondragstart = ev => {
-          draggedTileId = tile.id;
-          d.classList.add("dragging");
-          ev.dataTransfer.effectAllowed = "move";
-        };
-        d.ondragend = () => {
-          draggedTileId = null;
-          d.classList.remove("dragging");
-        };
-        d.ondragover = ev => ev.preventDefault();
-        d.ondrop = async ev => {
-          ev.preventDefault();
-          if (draggedTileId && draggedTileId !== tile.id) await reorderTiles(draggedTileId, tile.id);
-        };
-
-        webmix.appendChild(d);
+    function applyDraftConfigFromInputs() {
+      state.draftConfig = sanitizeConfig({
+        columns: ui.colsInput.value,
+        rows: ui.rowsInput.value,
+        tileSize: ui.tileSizeInput.value
       });
-
-      if (!q) {
-        const targetCells = webmixConfig.columns * webmixConfig.rows;
-        const emptyCount = Math.max(0, targetCells - tiles.length);
-        for (let i = 0; i < emptyCount; i++) {
-          const e = document.createElement("div");
-          e.className = "tile empty";
-          e.textContent = "+";
-          e.onclick = () => openModal(null);
-          webmix.appendChild(e);
-        }
-      }
+      syncSizeInputs(state.draftConfig);
+      state.config = { ...state.draftConfig };
+      applyGridConfig(state.config);
+      renderTiles();
     }
 
-    async function reorderTiles(sourceId, targetId) {
-      const a = tiles.findIndex(t => t.id === sourceId);
-      const b = tiles.findIndex(t => t.id === targetId);
-      if (a < 0 || b < 0) return;
+    function closeSizeModal(restoreSnapshot) {
+      clearTimeout(state.saveSizeCloseTimer);
+      if (restoreSnapshot && state.sizeModalSnapshot) {
+        state.config = { ...state.sizeModalSnapshot };
+        applyGridConfig(state.config);
+        renderTiles();
+      }
+      ui.sizeModal.classList.remove("open");
+      setStatus(ui.sizeStatus, "");
+      state.sizeModalSnapshot = null;
+    }
 
-      const [moved] = tiles.splice(a, 1);
-      tiles.splice(b, 0, moved);
-      tiles = tiles.map((t, i) => ({ ...t, position: i + 1 }));
+    async function saveConfig() {
+      clearTimeout(state.saveSizeCloseTimer);
+      state.draftConfig = sanitizeConfig({
+        columns: ui.colsInput.value,
+        rows: ui.rowsInput.value,
+        tileSize: ui.tileSizeInput.value
+      });
+      state.config = { ...state.draftConfig };
+      applyGridConfig(state.config);
       renderTiles();
 
-      for (const t of tiles) {
-        const { error } = await sbClient.from("tiles").update({ position: t.position }).eq("id", t.id);
+      setStatus(ui.sizeStatus, "Sauvegarde…");
+      ui.saveSizeBtn.disabled = true;
+
+      const payload = {
+        title: CONFIG_TITLE,
+        url: JSON.stringify(state.config),
+        show_title: false,
+        color: "#000000",
+        position: 0,
+        image: null,
+        open_new_tab: false
+      };
+
+      try {
+        const query = state.configRow
+          ? sbClient.from("tiles").update(payload).eq("id", state.configRow.id).select().single()
+          : sbClient.from("tiles").insert(payload).select().single();
+
+        const { data, error } = await query;
         if (error) {
-          showDebug("Erreur sauvegarde ordre : " + error.message);
-          await loadTiles();
-          break;
+          throw error;
         }
+        state.configRow = data || state.configRow;
+        setStatus(ui.sizeStatus, "Sauvegardé.", "ok");
+        state.sizeModalSnapshot = { ...state.config };
+        state.saveSizeCloseTimer = window.setTimeout(() => {
+          ui.sizeModal.classList.remove("open");
+          setStatus(ui.sizeStatus, "");
+        }, 450);
+      } catch (error) {
+        setStatus(ui.sizeStatus, error.message || "Erreur de sauvegarde.", "error");
+      } finally {
+        ui.saveSizeBtn.disabled = false;
       }
     }
 
-    function openModal(tile) {
-      editingTile = tile;
-      modalTitle.textContent = tile ? "Modifier la tuile" : "Ajouter une tuile";
-      el("deleteTileBtn").classList.toggle("hidden", !tile);
-      status(modalStatus, "");
-      uploadedImageUrl = "";
-      tileTitle.value = tile?.title || "";
-      tileUrl.value = tile?.url || "";
-      tileImage.value = tile?.image || "";
-      tileColor.value = tile?.color || "#ffffff";
-      tileShowTitle.checked = tile?.show_title ?? true;
-      tileOpenNewTab.checked = tile?.open_new_tab ?? true;
-      setImageMode(tile?.image ? "web" : "color");
-      tileModal.classList.add("open");
-      setTimeout(() => tileTitle.focus(), 50);
+    function detectImageMode(tile) {
+      if (!tile?.image) {
+        return "color";
+      }
+      return /^https?:\/\//i.test(tile.image) ? "web" : "upload";
     }
 
-    function closeModal() {
-      tileModal.classList.remove("open");
-      editingTile = null;
+    function openTileModal(tile) {
+      clearTimeout(state.saveTileCloseTimer);
+      state.editingTile = tile;
+      state.uploadedImageUrl = "";
+      ui.tileUpload.value = "";
+      ui.tileModalTitle.textContent = tile ? "Modifier la tuile" : "Ajouter une tuile";
+      ui.deleteTileBtn.classList.toggle("hidden", !tile);
+      ui.tileTitle.value = tile?.title || "";
+      ui.tileUrl.value = tile?.url || "";
+      ui.tileImage.value = tile?.image || "";
+      ui.tileColor.value = tile?.color || "#ffffff";
+      ui.tileShowTitle.checked = tile?.show_title ?? true;
+      ui.tileOpenNewTab.checked = tile?.open_new_tab ?? true;
+      setStatus(ui.tileStatus, "");
+      setImageMode(detectImageMode(tile));
+      ui.tileModal.classList.add("open");
+      window.setTimeout(() => ui.tileTitle.focus(), 30);
+    }
+
+    function closeTileModal() {
+      clearTimeout(state.saveTileCloseTimer);
+      ui.tileModal.classList.remove("open");
+      ui.saveTileBtn.disabled = false;
+      state.editingTile = null;
+      state.uploadedImageUrl = "";
+      setStatus(ui.tileStatus, "");
     }
 
     async function uploadImage(file) {
-      const ext = (file.name.split(".").pop() || "png").toLowerCase();
-      const path = `tile-${Date.now()}-${Math.random().toString(16).slice(2)}.${ext}`;
+      const extension = (file.name.split(".").pop() || "png").toLowerCase();
+      const path = `tile-${Date.now()}-${Math.random().toString(16).slice(2)}.${extension}`;
       const { error } = await sbClient.storage.from("tile-images").upload(path, file, { upsert: false });
-      if (error) throw error;
+      if (error) {
+        throw error;
+      }
       const { data } = sbClient.storage.from("tile-images").getPublicUrl(path);
       return data.publicUrl;
     }
 
     async function saveTile() {
-      const title = tileTitle.value.trim();
-      const url = normalizeUrl(tileUrl.value);
+      clearTimeout(state.saveTileCloseTimer);
+      const title = ui.tileTitle.value.trim();
+      const url = normalizeUrl(ui.tileUrl.value);
+
       if (!url) {
-        status(modalStatus, "Le lien est obligatoire.", "error");
+        setStatus(ui.tileStatus, "Le lien est obligatoire.", "error");
         return;
       }
 
       let image = null;
-      if (imageMode === "web") image = normalizeUrl(tileImage.value) || null;
-      if (imageMode === "upload") image = uploadedImageUrl || normalizeUrl(tileImage.value) || null;
+      if (state.imageMode === "web") {
+        image = normalizeUrl(ui.tileImage.value) || null;
+      } else if (state.imageMode === "upload") {
+        image = state.uploadedImageUrl || normalizeUrl(ui.tileImage.value) || null;
+      }
 
       const payload = {
         title,
         url,
+        show_title: ui.tileShowTitle.checked,
+        color: ui.tileColor.value || "#ffffff",
         image,
-        color: tileColor.value || "#ffffff",
-        show_title: tileShowTitle.checked,
-        open_new_tab: tileOpenNewTab.checked
+        open_new_tab: ui.tileOpenNewTab.checked
       };
 
-      status(modalStatus, "Sauvegarde...", "");
+      setStatus(ui.tileStatus, "Sauvegarde…");
+      ui.saveTileBtn.disabled = true;
 
       try {
-        const result = editingTile
-          ? await sbClient.from("tiles").update(payload).eq("id", editingTile.id).select().single()
-          : await sbClient.from("tiles").insert({ ...payload, position: tiles.length + 1 }).select().single();
+        const query = state.editingTile
+          ? sbClient.from("tiles").update(payload).eq("id", state.editingTile.id).select().single()
+          : sbClient.from("tiles").insert({ ...payload, position: state.tiles.length + 1 }).select().single();
 
-        if (result.error) throw result.error;
+        const { error } = await query;
+        if (error) {
+          throw error;
+        }
 
-        status(modalStatus, "Sauvegardé.", "ok");
         await loadTiles();
-        setTimeout(closeModal, 350);
-      } catch (e) {
-        status(modalStatus, e.message || "Erreur de sauvegarde.", "error");
+        setStatus(ui.tileStatus, "Sauvegardé.", "ok");
+        state.saveTileCloseTimer = window.setTimeout(() => {
+          closeTileModal();
+        }, 450);
+      } catch (error) {
+        setStatus(ui.tileStatus, error.message || "Erreur de sauvegarde.", "error");
+        ui.saveTileBtn.disabled = false;
       }
     }
 
     async function deleteTile() {
-      if (!editingTile || !confirm("Supprimer cette tuile ?")) return;
-      const { error } = await sbClient.from("tiles").delete().eq("id", editingTile.id);
-      if (error) {
-        status(modalStatus, error.message, "error");
+      if (!state.editingTile) {
         return;
       }
-      closeModal();
-      await loadTiles();
+      if (!window.confirm("Supprimer cette tuile ?")) {
+        return;
+      }
+
+      setStatus(ui.tileStatus, "Suppression…");
+
+      try {
+        const { error } = await sbClient.from("tiles").delete().eq("id", state.editingTile.id);
+        if (error) {
+          throw error;
+        }
+        closeTileModal();
+        await loadTiles();
+      } catch (error) {
+        setStatus(ui.tileStatus, error.message || "Erreur de suppression.", "error");
+      }
     }
 
-    el("loginBtn").onclick = login;
-    el("forgotBtn").onclick = forgotPassword;
-    el("logoutBtn").onclick = () => sbClient.auth.signOut();
-    el("addTileBtn").onclick = () => openModal(null);
-    el("seedBtn").onclick = () => seedTiles(true);
-    el("sizeBtn").onclick = openSizeModal;
-    el("cancelSizeBtn").onclick = closeSizeModal;
-    el("saveSizeBtn").onclick = saveWebmixConfig;
-    el("colsPlusBtn").onclick = () => nudgeSize("columns", 1);
-    el("colsMinusBtn").onclick = () => nudgeSize("columns", -1);
-    el("rowsPlusBtn").onclick = () => nudgeSize("rows", 1);
-    el("rowsMinusBtn").onclick = () => nudgeSize("rows", -1);
+    async function reorderTiles(sourceId, targetId) {
+      const ordered = getOrderedTiles();
+      const sourceIndex = ordered.findIndex(tile => tile.id === sourceId);
+      const targetIndex = ordered.findIndex(tile => tile.id === targetId);
+      if (sourceIndex < 0 || targetIndex < 0) {
+        return;
+      }
 
-    colsInput.oninput = updateSizeDisplayFromInputs;
-    rowsInput.oninput = updateSizeDisplayFromInputs;
-    tileSizeInput.oninput = () => {
-      tileSizeInput.value = clampNumber(tileSizeInput.value, 50, 150, 86);
-      tileSizeRange.value = tileSizeInput.value;
-      updateSizeDisplayFromInputs();
-    };
-    tileSizeRange.oninput = () => {
-      tileSizeInput.value = tileSizeRange.value;
-      updateSizeDisplayFromInputs();
-    };
+      const next = [...ordered];
+      const [moved] = next.splice(sourceIndex, 1);
+      next.splice(targetIndex, 0, moved);
 
-    el("cancelTileBtn").onclick = closeModal;
-    el("saveTileBtn").onclick = saveTile;
-    el("deleteTileBtn").onclick = deleteTile;
-    modeColor.onclick = () => setImageMode("color");
-    modeUpload.onclick = () => setImageMode("upload");
-    modeWeb.onclick = () => setImageMode("web");
-    el("autoLogoBtn").onclick = () => {
-      tileImage.value = faviconFor(tileUrl.value);
+      state.tiles = next.map((tile, index) => ({
+        ...tile,
+        position: index + 1
+      }));
+      renderTiles();
+
+      try {
+        for (const tile of state.tiles) {
+          const { error } = await sbClient
+            .from("tiles")
+            .update({ position: tile.position })
+            .eq("id", tile.id);
+          if (error) {
+            throw error;
+          }
+        }
+      } catch (error) {
+        showDebug(`Erreur de sauvegarde de l'ordre : ${error.message || error}`);
+        await loadTiles();
+      }
+    }
+
+    async function seedTiles(force) {
+      try {
+        const { data, error } = await sbClient.from("tiles").select("id,title");
+        if (error) {
+          throw error;
+        }
+
+        const realTiles = (data || []).filter(row => row.title !== CONFIG_TITLE);
+        if (realTiles.length && !force) {
+          return;
+        }
+
+        if (force && !window.confirm("Préremplir va ajouter des tuiles de référence. Continuer ?")) {
+          return;
+        }
+
+        const rows = defaultTiles.map(([title, url], index) => ({
+          title,
+          url,
+          image: faviconFor(url),
+          color: "#ffffff",
+          show_title: true,
+          open_new_tab: true,
+          position: index + 1
+        }));
+
+        const { error: insertError } = await sbClient.from("tiles").insert(rows);
+        if (insertError) {
+          throw insertError;
+        }
+        await loadTiles();
+      } catch (error) {
+        showDebug(`Erreur de préremplissage : ${error.message || error}`);
+      }
+    }
+
+    async function loadTiles() {
+      showDebug("");
+
+      try {
+        const { data, error } = await sbClient
+          .from("tiles")
+          .select("*")
+          .order("position", { ascending: true })
+          .order("created_at", { ascending: true });
+
+        if (error) {
+          throw error;
+        }
+
+        const rows = data || [];
+        state.configRow = rows.find(row => row.title === CONFIG_TITLE) || null;
+        state.config = parseConfigRow(state.configRow);
+        applyGridConfig(state.config);
+
+        state.tiles = rows
+          .filter(row => row.title !== CONFIG_TITLE)
+          .map((row, index) => ({
+            ...row,
+            position: Number(row.position) || index + 1
+          }));
+
+        if (!state.tiles.length) {
+          await seedTiles(false);
+          return;
+        }
+
+        renderTiles();
+      } catch (error) {
+        showDebug(`Erreur Supabase : ${error.message || error}`);
+      }
+    }
+
+    async function login() {
+      setStatus(ui.loginStatus, "Connexion…");
+      ui.loginBtn.disabled = true;
+
+      try {
+        const email = ui.loginEmail.value.trim();
+        const password = ui.loginPassword.value;
+        const { error } = await sbClient.auth.signInWithPassword({ email, password });
+        if (error) {
+          throw error;
+        }
+        setStatus(ui.loginStatus, "Connecté.", "ok");
+      } catch (error) {
+        setStatus(ui.loginStatus, error.message || "Erreur de connexion.", "error");
+      } finally {
+        ui.loginBtn.disabled = false;
+      }
+    }
+
+    async function forgotPassword() {
+      const email = ui.loginEmail.value.trim();
+      if (!email) {
+        setStatus(ui.loginStatus, "Entre ton email d’abord.", "error");
+        return;
+      }
+
+      setStatus(ui.loginStatus, "Envoi…");
+
+      try {
+        const { error } = await sbClient.auth.resetPasswordForEmail(email, {
+          redirectTo: window.location.href
+        });
+        if (error) {
+          throw error;
+        }
+        setStatus(ui.loginStatus, "Email de réinitialisation envoyé si le compte existe.", "ok");
+      } catch (error) {
+        setStatus(ui.loginStatus, error.message || "Erreur d’envoi.", "error");
+      }
+    }
+
+    async function init() {
+      syncSizeInputs(state.config);
+      applyGridConfig(state.config);
+      renderTiles();
+
+      try {
+        const { data, error } = await sbClient.auth.getSession();
+        if (error) {
+          throw error;
+        }
+
+        if (data.session) {
+          ui.loginScreen.classList.remove("open");
+          await loadTiles();
+        } else {
+          ui.loginScreen.classList.add("open");
+        }
+
+        sbClient.auth.onAuthStateChange(async (_event, session) => {
+          if (session) {
+            ui.loginScreen.classList.remove("open");
+            await loadTiles();
+          } else {
+            ui.loginScreen.classList.add("open");
+            state.tiles = [];
+            ui.webmix.innerHTML = "";
+          }
+        });
+      } catch (error) {
+        showDebug(`Erreur d'initialisation : ${error.message || error}`);
+      }
+    }
+
+    ui.loginBtn.addEventListener("click", login);
+    ui.forgotBtn.addEventListener("click", forgotPassword);
+    ui.logoutBtn.addEventListener("click", () => sbClient.auth.signOut());
+    ui.addTileBtn.addEventListener("click", () => openTileModal(null));
+    ui.seedBtn.addEventListener("click", () => seedTiles(true));
+    ui.sizeBtn.addEventListener("click", openSizeModal);
+    ui.cancelSizeBtn.addEventListener("click", () => closeSizeModal(true));
+    ui.saveSizeBtn.addEventListener("click", saveConfig);
+    ui.colsMinusBtn.addEventListener("click", () => {
+      ui.colsInput.value = clampNumber(Number(ui.colsInput.value) - 1, TILE_LIMITS.columns[0], TILE_LIMITS.columns[1], DEFAULT_CONFIG.columns);
+      applyDraftConfigFromInputs();
+    });
+    ui.colsPlusBtn.addEventListener("click", () => {
+      ui.colsInput.value = clampNumber(Number(ui.colsInput.value) + 1, TILE_LIMITS.columns[0], TILE_LIMITS.columns[1], DEFAULT_CONFIG.columns);
+      applyDraftConfigFromInputs();
+    });
+    ui.rowsMinusBtn.addEventListener("click", () => {
+      ui.rowsInput.value = clampNumber(Number(ui.rowsInput.value) - 1, TILE_LIMITS.rows[0], TILE_LIMITS.rows[1], DEFAULT_CONFIG.rows);
+      applyDraftConfigFromInputs();
+    });
+    ui.rowsPlusBtn.addEventListener("click", () => {
+      ui.rowsInput.value = clampNumber(Number(ui.rowsInput.value) + 1, TILE_LIMITS.rows[0], TILE_LIMITS.rows[1], DEFAULT_CONFIG.rows);
+      applyDraftConfigFromInputs();
+    });
+    ui.colsInput.addEventListener("input", applyDraftConfigFromInputs);
+    ui.rowsInput.addEventListener("input", applyDraftConfigFromInputs);
+    ui.tileSizeInput.addEventListener("input", () => {
+      ui.tileSizeInput.value = clampNumber(ui.tileSizeInput.value, TILE_LIMITS.tileSize[0], TILE_LIMITS.tileSize[1], DEFAULT_CONFIG.tileSize);
+      ui.tileSizeRange.value = ui.tileSizeInput.value;
+      applyDraftConfigFromInputs();
+    });
+    ui.tileSizeRange.addEventListener("input", () => {
+      ui.tileSizeInput.value = ui.tileSizeRange.value;
+      applyDraftConfigFromInputs();
+    });
+
+    ui.cancelTileBtn.addEventListener("click", closeTileModal);
+    ui.deleteTileBtn.addEventListener("click", deleteTile);
+    ui.saveTileBtn.addEventListener("click", saveTile);
+    ui.modeColor.addEventListener("click", () => setImageMode("color"));
+    ui.modeUpload.addEventListener("click", () => setImageMode("upload"));
+    ui.modeWeb.addEventListener("click", () => setImageMode("web"));
+    ui.autoLogoBtn.addEventListener("click", () => {
+      ui.tileImage.value = faviconFor(ui.tileUrl.value);
       setImageMode("web");
       updatePreview();
-    };
-    searchInput.oninput = renderTiles;
-    [tileTitle, tileImage, tileColor].forEach(n => n.addEventListener("input", updatePreview));
-    tileUpload.onchange = async () => {
-      const file = tileUpload.files?.[0];
-      if (!file) return;
-      status(modalStatus, "Import de l’image...");
-      try {
-        uploadedImageUrl = await uploadImage(file);
-        tileImage.value = uploadedImageUrl;
-        status(modalStatus, "Image importée.", "ok");
-        updatePreview();
-      } catch (e) {
-        status(modalStatus, "Erreur upload : " + e.message, "error");
+    });
+    ui.tileTitle.addEventListener("input", updatePreview);
+    ui.tileUrl.addEventListener("input", updatePreview);
+    ui.tileImage.addEventListener("input", updatePreview);
+    ui.tileColor.addEventListener("input", updatePreview);
+    ui.tileUpload.addEventListener("change", async () => {
+      const file = ui.tileUpload.files?.[0];
+      if (!file) {
+        return;
       }
-    };
-    el("loginPassword").addEventListener("keydown", e => { if (e.key === "Enter") login(); });
-    tileModal.addEventListener("click", e => { if (e.target === tileModal) closeModal(); });
-    sizeModal.addEventListener("click", e => { if (e.target === sizeModal) closeSizeModal(); });
+
+      setStatus(ui.tileStatus, "Import de l’image…");
+
+      try {
+        state.uploadedImageUrl = await uploadImage(file);
+        ui.tileImage.value = state.uploadedImageUrl;
+        setImageMode("upload");
+        setStatus(ui.tileStatus, "Image importée.", "ok");
+      } catch (error) {
+        setStatus(ui.tileStatus, `Erreur upload : ${error.message || error}`, "error");
+      }
+    });
+
+    ui.loginPassword.addEventListener("keydown", event => {
+      if (event.key === "Enter") {
+        login();
+      }
+    });
+
+    ui.tileModal.addEventListener("click", event => {
+      if (event.target === ui.tileModal) {
+        closeTileModal();
+      }
+    });
+
+    ui.sizeModal.addEventListener("click", event => {
+      if (event.target === ui.sizeModal) {
+        closeSizeModal(true);
+      }
+    });
 
     init();
   </script>

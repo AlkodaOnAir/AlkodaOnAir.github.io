@@ -517,7 +517,7 @@
     }
 
     .image-panel.image-panel-fixed {
-      min-height: 418px;
+      min-height: 390px;
       display: flex;
       flex-direction: column;
     }
@@ -538,15 +538,15 @@
       display: flex;
       flex-direction: column;
       gap: 12px;
-      min-height: 418px;
+      min-height: 390px;
     }
 
     .image-panel.fund-panel {
-      min-height: 202px;
+      min-height: 188px;
     }
 
     .image-panel.general-panel {
-      min-height: 204px;
+      min-height: 190px;
       display: flex;
       flex-direction: column;
       justify-content: flex-start;
@@ -568,34 +568,27 @@
     .web-suggestions {
       display: grid;
       grid-template-columns: repeat(3, minmax(0, 1fr));
-      gap: 8px;
+      gap: 6px;
       margin-top: 10px;
     }
 
     .web-suggestion {
       display: grid;
-      gap: 6px;
-      justify-items: center;
-      padding: 8px 6px;
-      border-radius: 12px;
+      place-items: center;
+      padding: 4px;
+      min-height: 42px;
+      border-radius: 10px;
       border: 1px solid rgba(255, 255, 255, 0.08);
       background: rgba(255, 255, 255, 0.03);
       color: #d9dbe1;
       cursor: pointer;
-      text-align: center;
     }
 
     .web-suggestion img {
-      width: 30px;
-      height: 30px;
+      width: 20px;
+      height: 20px;
       object-fit: contain;
       display: block;
-    }
-
-    .web-suggestion-label {
-      font-size: 0.74rem;
-      line-height: 1.2;
-      color: var(--muted);
     }
 
     .mode-list {
@@ -1295,10 +1288,10 @@
         return [
           { label: "Favicon 128", url: `https://www.google.com/s2/favicons?domain=${hostname}&sz=128` },
           { label: "favicon.ico", url: `${origin}/favicon.ico` },
-          { label: "favicon.png", url: `${origin}/favicon.png` },
+          { label: "icon 192", url: `${origin}/icon-192.png` },
           { label: "apple touch", url: `${origin}/apple-touch-icon.png` },
           { label: "android 192", url: `${origin}/android-chrome-192x192.png` },
-          { label: "android 512", url: `${origin}/android-chrome-512x512.png` }
+          { label: "logo", url: `${origin}/logo.png` }
         ];
       } catch {
         return [];
@@ -1317,10 +1310,13 @@
         const button = document.createElement("button");
         button.type = "button";
         button.className = "web-suggestion";
-        button.innerHTML = `
-          <img src="${escapeHtml(candidate.url)}" alt="${escapeHtml(candidate.label)}">
-          <span class="web-suggestion-label">${escapeHtml(candidate.label)}</span>
-        `;
+        button.title = candidate.label;
+        button.innerHTML = `<img src="${escapeHtml(candidate.url)}" alt="${escapeHtml(candidate.label)}">`;
+        const previewImage = button.querySelector("img");
+        previewImage.addEventListener("error", () => {
+          button.remove();
+          ui.webSuggestions.classList.toggle("hidden", ui.webSuggestions.children.length === 0);
+        });
         button.addEventListener("click", () => {
           ui.tileImage.value = candidate.url;
           ui.tileImageEnabled.checked = true;

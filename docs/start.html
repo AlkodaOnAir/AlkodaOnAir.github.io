@@ -241,6 +241,9 @@
       border-radius: inherit;
       overflow: hidden;
       background: inherit;
+      isolation: isolate;
+      clip-path: inset(0 round var(--tile-radius));
+      -webkit-clip-path: inset(0 round var(--tile-radius));
     }
 
     .tile.empty {
@@ -270,6 +273,7 @@
 
     .tile-media img {
       display: block;
+      backface-visibility: hidden;
     }
 
     .tile-media.scaled {
@@ -284,6 +288,7 @@
       height: var(--image-size, 90%);
       object-fit: contain;
       transform: translate(-50%, -50%);
+      will-change: transform;
     }
 
     .tile-media.full img {
@@ -294,6 +299,7 @@
       height: 102%;
       object-fit: cover;
       transform: translate(-50%, -50%);
+      will-change: transform;
     }
 
     .tile-media.favicon img {
@@ -1227,6 +1233,15 @@
         .replace(/'/g, "&#39;");
     }
 
+    function withTimeout(promise, timeoutMs, message) {
+      return Promise.race([
+        promise,
+        new Promise((_, reject) => {
+          window.setTimeout(() => reject(new Error(message)), timeoutMs);
+        })
+      ]);
+    }
+
     function parseTileImageData(rawImage) {
       const source = rawImage ? String(rawImage) : "";
       const plainUrl = normalizeUrl(source);
@@ -1679,20 +1694,34 @@
       ui.saveTileBtn.disabled = true;
 
       try {
-        const query = state.editingTile
-          ? sbClient.from("tiles").update(payload).eq("id", state.editingTile.id).select().single()
-          : sbClient.from("tiles").insert({ ...payload, position: state.tiles.length + 1 }).select().single();
-
-        const { data, error } = await query;
-        if (error) {
-          throw error;
+        let savedTile = null;
+        if (state.editingTile) {
+          const { error } = await withTimeout(
+            sbClient.from("tiles").update(payload).eq("id", state.editingTile.id),
+            12000,
+            "La sauvegarde a pris trop de temps."
+          );
+          if (error) {
+            throw error;
+          }
+          savedTile = { ...state.editingTile, ...payload };
+        } else {
+          const { data, error } = await withTimeout(
+            sbClient.from("tiles").insert({ ...payload, position: state.tiles.length + 1 }).select().single(),
+            12000,
+            "La sauvegarde a pris trop de temps."
+          );
+          if (error) {
+            throw error;
+          }
+          savedTile = data;
         }
 
-        if (data) {
+        if (savedTile) {
           if (state.editingTile) {
-            state.tiles = state.tiles.map(tile => tile.id === data.id ? { ...tile, ...data } : tile);
+            state.tiles = state.tiles.map(tile => tile.id === savedTile.id ? { ...tile, ...savedTile } : tile);
           } else {
-            state.tiles.push(data);
+            state.tiles.push(savedTile);
           }
           renderTiles();
         }

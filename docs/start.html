@@ -788,6 +788,7 @@
     }
 
     .image-panel.image-panel-fixed {
+      height: 100%;
       min-height: 0;
       display: flex;
       flex-direction: column;
@@ -797,11 +798,13 @@
       display: grid;
       grid-template-columns: 1.2fr 0.8fr;
       gap: 12px;
-      align-items: start;
+      align-items: stretch;
       min-height: 0;
     }
 
     .tile-editor-column {
+      display: flex;
+      flex-direction: column;
       min-height: 0;
     }
 
@@ -817,14 +820,15 @@
     }
 
     .image-panel.general-panel {
-      min-height: 210px;
+      flex: 1;
+      min-height: 0;
       display: flex;
       flex-direction: column;
       justify-content: flex-start;
     }
 
     .general-panel .grid-2 {
-      margin-bottom: 14px;
+      margin-bottom: 10px;
     }
 
     .tile-card-top {
@@ -967,7 +971,8 @@
     }
 
     .general-panel .range-inline {
-      margin-top: 10px;
+      margin-top: auto;
+      padding-top: 8px;
     }
 
     .range-inline label {

@@ -429,6 +429,14 @@
       letter-spacing: -0.02em;
     }
 
+    .login-logo {
+      display: block;
+      width: min(100%, 360px);
+      margin: 0 auto 18px;
+      object-fit: contain;
+      filter: drop-shadow(0 12px 30px rgba(0, 0, 0, 0.35));
+    }
+
     .card p {
       margin: 0 0 16px;
       color: var(--muted);
@@ -494,6 +502,7 @@
       border-radius: 10px;
       background: transparent;
       border: 1px solid rgba(255, 255, 255, 0.08);
+      transition: background 0.15s ease, border-color 0.15s ease, opacity 0.15s ease;
     }
 
     .password-toggle svg {
@@ -501,6 +510,11 @@
       height: 17px;
       fill: currentColor;
       display: block;
+    }
+
+    .password-toggle:hover:not(:disabled) {
+      transform: translateY(-50%);
+      background: rgba(255, 255, 255, 0.04);
     }
 
     .grid-2 {
@@ -966,6 +980,7 @@
   <div class="app-shell">
     <div id="loginScreen" class="login-screen">
       <div id="loginCard" class="card">
+        <img class="login-logo" src="./alkoda-startpage.png" alt="Alkoda On Air Startpage" />
         <h1>Connexion</h1>
         <div class="field">
           <label for="loginEmail">Email</label>
@@ -984,6 +999,7 @@
       </div>
 
       <div id="signupCard" class="card hidden">
+        <img class="login-logo" src="./alkoda-startpage.png" alt="Alkoda On Air Startpage" />
         <h1>Creer un compte</h1>
         <p>Utilise un nouvel email et cree un nouveau mot de passe. L'acces sera autorise apres validation du mail.</p>
         <div class="field">

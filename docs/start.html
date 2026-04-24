@@ -629,6 +629,7 @@
     }
 
     .preview {
+      position: relative;
       width: 84px;
       height: 84px;
       border-radius: 14px;
@@ -655,22 +656,6 @@
       height: 100%;
       object-fit: cover;
       display: block;
-    }
-
-    .preview-title {
-      position: absolute;
-      left: 0;
-      right: 0;
-      bottom: 0;
-      padding: 4px 5px 5px;
-      color: #fff;
-      font-size: 10px;
-      line-height: 1.1;
-      white-space: nowrap;
-      overflow: hidden;
-      text-overflow: ellipsis;
-      background: linear-gradient(180deg, rgba(0, 0, 0, 0) 0%, rgba(0, 0, 0, 0.76) 100%);
-      text-shadow: 0 1px 2px rgba(0, 0, 0, 0.8);
     }
 
     .preview.favicon img {
@@ -1299,6 +1284,35 @@
       });
     }
 
+    function fillTileVisual(element, tile) {
+      const imageData = parseTileImageData(tile.image);
+      const hasImage = Boolean(imageData.src) && imageData.enabled;
+      const isFavicon = hasImage && /google\.com\/s2\/favicons/i.test(imageData.src);
+
+      element.style.background = tile.color || "#ffffff";
+
+      const media = document.createElement("div");
+      media.className = `tile-media${hasImage ? ` ${imageData.full ? "full" : "scaled"}` : ""}${isFavicon ? " favicon" : ""}`;
+      if (hasImage && !imageData.full) {
+        media.style.setProperty("--image-scale", `${imageData.scale / 100}`);
+      }
+
+      if (hasImage) {
+        media.innerHTML = `<img src="${escapeHtml(imageData.src)}" alt="${escapeHtml(tile.title || "")}">`;
+      } else if (!tile.show_title) {
+        media.innerHTML = `<div class="tile-text">${escapeHtml(tile.title || "Sans titre")}</div>`;
+      }
+
+      element.appendChild(media);
+
+      if (tile.show_title) {
+        const label = document.createElement("div");
+        label.className = "tile-title";
+        label.textContent = tile.title || "Sans titre";
+        element.appendChild(label);
+      }
+    }
+
     function renderTiles() {
       const orderedTiles = getOrderedTiles();
       const targetCells = gridCapacity();
@@ -1307,26 +1321,13 @@
       orderedTiles.forEach(tile => {
         const element = document.createElement("article");
         const url = normalizeUrl(tile.url);
-        const imageData = parseTileImageData(tile.image);
-        const hasImage = Boolean(imageData.src) && imageData.enabled;
-        const isFavicon = hasImage && /google\.com\/s2\/favicons/i.test(imageData.src);
 
         element.className = "tile";
         element.draggable = true;
         element.dataset.id = tile.id;
-        element.style.background = tile.color || "#ffffff";
-
-        const media = document.createElement("div");
-        media.className = `tile-media${hasImage ? ` ${imageData.full ? "full" : "scaled"}` : ""}${isFavicon ? " favicon" : ""}`;
-        if (hasImage && !imageData.full) {
-          media.style.setProperty("--image-scale", `${imageData.scale / 100}`);
-        }
-
-        if (hasImage) {
-          media.innerHTML = `<img src="${escapeHtml(imageData.src)}" alt="${escapeHtml(tile.title || "")}">`;
-        } else if (!tile.show_title) {
-          media.innerHTML = `<div class="tile-text">${escapeHtml(tile.title || "Sans titre")}</div>`;
-        }
+        const imageData = parseTileImageData(tile.image);
+        const hasImage = Boolean(imageData.src) && imageData.enabled;
+        fillTileVisual(element, tile);
 
         const menu = document.createElement("button");
         menu.type = "button";
@@ -1336,15 +1337,6 @@
           event.stopPropagation();
           openTileModal(tile);
         });
-
-        element.appendChild(media);
-
-        if (tile.show_title) {
-          const label = document.createElement("div");
-          label.className = "tile-title";
-          label.textContent = tile.title || "Sans titre";
-          element.appendChild(label);
-        }
 
         element.appendChild(menu);
 
@@ -1430,22 +1422,21 @@
     function updatePreview() {
       const imageUrl = getPreviewImageUrl();
       const title = ui.tileTitle.value.trim() || "Aperçu";
-      const showImage = state.imageMode !== "color" && ui.tileImageEnabled.checked && Boolean(imageUrl);
-      const isFavicon = showImage && /google\.com\/s2\/favicons/i.test(imageUrl);
-      const showTitle = ui.tileShowTitle.checked && Boolean(title);
-
       syncImageControls();
-      ui.preview.className = `preview${isFavicon ? " favicon" : ""}`;
-      ui.preview.style.background = ui.tileColor.value || "#ffffff";
-
-      if (showImage) {
-        const full = ui.tileImageFull.checked;
-        const scale = clampNumber(ui.tileImageScale.value, 10, 200, 100);
-        const style = full ? "object-fit:cover;" : `object-fit:contain;transform:scale(${scale / 100});transform-origin:center;`;
-        ui.preview.innerHTML = `<img src="${escapeHtml(imageUrl)}" alt="${escapeHtml(title)}" style="${style}">${showTitle ? `<div class="preview-title">${escapeHtml(title)}</div>` : ""}`;
-      } else {
-        ui.preview.textContent = showTitle ? title : "";
-      }
+      ui.preview.className = "preview";
+      ui.preview.innerHTML = "";
+      fillTileVisual(ui.preview, {
+        title,
+        color: ui.tileColor.value || "#ffffff",
+        image: (state.imageMode === "web" || state.imageMode === "upload") ? serializeTileImageData({
+          src: imageUrl,
+          enabled: ui.tileImageEnabled.checked,
+          full: ui.tileImageFull.checked,
+          scale: ui.tileImageScale.value,
+          mode: state.imageMode
+        }) : null,
+        show_title: ui.tileShowTitle.checked
+      });
       syncColorSwatches();
     }
 

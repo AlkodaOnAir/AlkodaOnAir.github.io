@@ -431,10 +431,42 @@
 
     .login-logo {
       display: block;
-      width: min(100%, 360px);
-      margin: 0 auto 18px;
+      width: min(100%, 270px);
+      margin: 0 auto 14px;
       object-fit: contain;
       filter: drop-shadow(0 12px 30px rgba(0, 0, 0, 0.35));
+    }
+
+    .auth-actions {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 10px;
+      margin-top: 10px;
+      flex-wrap: wrap;
+    }
+
+    .auth-main-actions {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      flex-wrap: wrap;
+    }
+
+    .btn.text-btn {
+      min-height: auto;
+      padding: 2px 0;
+      border: 0;
+      border-radius: 0;
+      background: transparent;
+      color: var(--muted);
+      font-size: 0.86rem;
+    }
+
+    .btn.text-btn:hover:not(:disabled) {
+      transform: none;
+      background: transparent;
+      color: var(--text);
     }
 
     .card p {
@@ -990,10 +1022,12 @@
           <label for="loginPassword">Mot de passe</label>
           <input id="loginPassword" type="password" autocomplete="current-password" placeholder="Mot de passe" />
         </div>
-        <div class="modal-actions" style="justify-content:flex-start;margin-top:10px;">
-          <button id="loginBtn" class="btn primary" type="button">Login</button>
-          <button id="signupBtn" class="btn" type="button">Creer un compte</button>
-          <button id="forgotBtn" class="btn ghost" type="button">Mot de passe oublie</button>
+        <div class="auth-actions">
+          <div class="auth-main-actions">
+            <button id="loginBtn" class="btn primary" type="button">Login</button>
+            <button id="signupBtn" class="btn" type="button">Creer un compte</button>
+          </div>
+          <button id="forgotBtn" class="btn text-btn" type="button">Mot de passe oublie</button>
         </div>
         <div id="loginStatus" class="status"></div>
       </div>

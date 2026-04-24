@@ -1250,6 +1250,7 @@
       <div id="sizeStatus" class="status"></div>
 
       <div class="modal-actions">
+        <button id="sizeImportBtn" class="btn" type="button">Importer favoris</button>
         <button id="cancelSizeBtn" class="btn" type="button">Annuler</button>
         <button id="saveSizeBtn" class="btn primary" type="button">Sauvegarder</button>
       </div>
@@ -1492,6 +1493,7 @@
       cancelBookmarksBtn: $("cancelBookmarksBtn"),
       importBookmarksSubmitBtn: $("importBookmarksSubmitBtn"),
       sizeBtn: $("sizeBtn"),
+      sizeImportBtn: $("sizeImportBtn"),
       sizeModal: $("sizeModal"),
       sizePreview: $("sizePreview"),
       tileSizeRange: $("tileSizeRange"),
@@ -3167,8 +3169,12 @@
     ui.deleteAccountBtn.addEventListener("click", deleteAccount);
     ui.logoutBtn.addEventListener("click", logout);
     ui.sizeBtn.addEventListener("click", openSizeModal);
-    ui.importBookmarksBtn.addEventListener("click", () => {
+    ui.sizeImportBtn.addEventListener("click", () => {
       state.bookmarksImportSnapshot = true;
+      openBookmarksModal();
+    });
+    ui.importBookmarksBtn.addEventListener("click", () => {
+      state.bookmarksImportSnapshot = false;
       openBookmarksModal();
     });
     ui.bookmarksFile.addEventListener("change", async () => {
@@ -3185,7 +3191,7 @@
       renderImportedBookmarks();
     });
     ui.bookmarksSizeBtn.addEventListener("click", () => {
-      ui.bookmarksModal.classList.remove("open");
+      state.bookmarksImportSnapshot = true;
       openSizeModal();
     });
     ui.cancelBookmarksBtn.addEventListener("click", () => {

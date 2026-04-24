@@ -1092,7 +1092,11 @@
                 <label for="tileUpload">Importer une image</label>
                 <input id="tileUpload" type="file" accept="image/*" />
               </div>
-              <div id="tileDropZone" class="drop-zone">Glisse une image ici depuis ton bureau ou un navigateur.</div>
+              <div class="field">
+                <label for="tileUploadUrl">Image importee</label>
+                <input id="tileUploadUrl" type="url" placeholder="URL Supabase apres import" readonly />
+              </div>
+              <div id="tileDropZone" class="drop-zone">Glisse un fichier image ici.</div>
             </div>
 
             <div id="webOptions" class="hidden">
@@ -1219,6 +1223,7 @@
       tileImage: $("tileImage"),
       tileColor: $("tileColor"),
       tileUpload: $("tileUpload"),
+      tileUploadUrl: $("tileUploadUrl"),
       tileDropZone: $("tileDropZone"),
       tileImageEnabled: $("tileImageEnabled"),
       tileImageFull: $("tileImageFull"),
@@ -1257,6 +1262,10 @@
       imageMode: "color",
       imageTab: "color",
       uploadedImageUrl: "",
+      uploadedImagePreviewUrl: "",
+      uploadedImagePath: "",
+      webImageEnabled: false,
+      uploadImageEnabled: false,
       draggingTileId: null,
       saveTileCloseTimer: null,
       saveSizeCloseTimer: null,
@@ -1305,53 +1314,19 @@
       }
     }
 
-    function imageUrlFromHtml(html) {
-      if (!html) {
-        return "";
+    function revokeUploadPreviewUrl() {
+      if (state.uploadedImagePreviewUrl && state.uploadedImagePreviewUrl.startsWith("blob:")) {
+        URL.revokeObjectURL(state.uploadedImagePreviewUrl);
       }
-      const match = html.match(/<img[^>]+src=["']([^"']+)["']/i);
-      return extractImageUrl(match?.[1] || "");
     }
 
-    function extractImageUrl(rawUrl) {
-      const source = String(rawUrl || "").trim();
-      if (!source) {
-        return "";
+    function setUploadedPreviewUrl(url) {
+      const next = String(url || "");
+      if (state.uploadedImagePreviewUrl === next) {
+        return;
       }
-
-      const candidates = source
-        .split(/[\s\r\n]+/)
-        .map(part => part.trim())
-        .filter(Boolean);
-
-      for (const candidate of candidates) {
-        const normalized = normalizeUrl(candidate);
-        if (!normalized) {
-          continue;
-        }
-
-        try {
-          const parsed = new URL(normalized);
-          if (/google\./i.test(parsed.hostname) && parsed.pathname.includes("/imgres")) {
-            const inner = parsed.searchParams.get("imgurl") || "";
-            const cleanInner = normalizeUrl(decodeURIComponent(inner));
-            if (cleanInner) {
-              return cleanInner;
-            }
-          }
-          if (/\.(png|jpg|jpeg|webp|gif|svg|ico)(\?|#|$)/i.test(parsed.pathname)) {
-            return normalized;
-          }
-          if (!/google\./i.test(parsed.hostname)) {
-            return normalized;
-          }
-        } catch {
-          continue;
-        }
-      }
-
-      const directMatch = source.match(/https?:\/\/[^\s"'<>]+/i);
-      return directMatch ? normalizeUrl(directMatch[0]) : "";
+      revokeUploadPreviewUrl();
+      state.uploadedImagePreviewUrl = next;
     }
 
     async function handleDroppedData(dataTransfer) {
@@ -1362,32 +1337,18 @@
       const imageFile = Array.from(dataTransfer.files || []).find(file => file.type && file.type.startsWith("image/"));
       if (imageFile) {
         setStatus(ui.tileStatus, "Import de l'image...");
-        state.uploadedImageUrl = await uploadImage(imageFile);
-        ui.tileImageEnabled.checked = true;
+        setUploadedPreviewUrl(URL.createObjectURL(imageFile));
+        state.uploadImageEnabled = true;
+        setImageMode("upload");
+        const uploaded = await uploadImage(imageFile);
+        state.uploadedImagePath = uploaded.path;
+        state.uploadedImageUrl = uploaded.url;
+        ui.tileUploadUrl.value = state.uploadedImageUrl;
         setImageMode("upload");
         setStatus(ui.tileStatus, "Image importee.", "ok");
         return;
       }
-
-      const uriList = dataTransfer.getData("text/uri-list");
-      const html = dataTransfer.getData("text/html");
-      const text = dataTransfer.getData("text/plain");
-      const droppedUrl = extractImageUrl(uriList) || imageUrlFromHtml(html) || extractImageUrl(text);
-
-      if (droppedUrl) {
-        applyDroppedWebImageUrl(droppedUrl);
-      }
-    }
-
-    function applyDroppedWebImageUrl(url) {
-      const cleanUrl = extractImageUrl(url);
-      if (!cleanUrl) {
-        return;
-      }
-      ui.tileImage.value = cleanUrl;
-      ui.tileImageEnabled.checked = true;
-      setImageMode("web");
-      setStatus(ui.tileStatus, "");
+      throw new Error("Glisse un vrai fichier image local.");
     }
 
     function logoCandidatesFor(url) {
@@ -1472,6 +1433,7 @@
         button.innerHTML = `<img src="${escapeHtml(candidate.url)}" alt="${escapeHtml(candidate.label)}">`;
         button.addEventListener("click", () => {
           ui.tileImage.value = candidate.url;
+          state.webImageEnabled = true;
           ui.tileImageEnabled.checked = true;
           ui.webSuggestions.classList.add("hidden");
           setImageMode("web");
@@ -1540,11 +1502,44 @@
       }
     }
 
+    async function signedUploadUrl(path) {
+      if (!path) {
+        return "";
+      }
+      const { data, error } = await sbClient.storage.from("tile-images").createSignedUrl(path, 60 * 60 * 24 * 30);
+      if (error) {
+        throw error;
+      }
+      return data?.signedUrl || "";
+    }
+
+    async function hydrateUploadImage(rawImage) {
+      const imageData = parseTileImageData(rawImage);
+      if (imageData.mode !== "upload" || !imageData.storagePath) {
+        return rawImage;
+      }
+      try {
+        const signedUrl = await signedUploadUrl(imageData.storagePath);
+        return serializeTileImageData({
+          src: signedUrl,
+          storagePath: imageData.storagePath,
+          enabled: imageData.enabled,
+          full: imageData.full,
+          scale: imageData.scale,
+          surface: imageData.surface,
+          mode: "upload"
+        });
+      } catch {
+        return rawImage;
+      }
+    }
+
     function parseTileImageData(rawImage) {
       const source = rawImage ? String(rawImage) : "";
       const plainUrl = normalizeUrl(source);
       const fallback = {
         src: plainUrl,
+        storagePath: "",
         enabled: Boolean(plainUrl),
         full: false,
         scale: 90,
@@ -1562,6 +1557,7 @@
           const src = normalizeUrl(parsed.src || "");
           return {
             src,
+            storagePath: String(parsed.storagePath || ""),
             enabled: parsed.enabled !== false && Boolean(src),
             full: Boolean(parsed.full),
             scale: clampNumber(parsed.scale, 10, 200, 90),
@@ -1583,6 +1579,7 @@
       }
       return JSON.stringify({
         src: normalizedSrc,
+        storagePath: String(data.storagePath || ""),
         enabled: Boolean(data.enabled) && Boolean(normalizedSrc),
         full: Boolean(data.full),
         scale: clampNumber(data.scale, 10, 200, 90),
@@ -1774,11 +1771,12 @@
       ui.webOptions.classList.toggle("hidden", state.imageTab !== "web");
       ui.imageSettings.classList.toggle("hidden", !((state.imageMode === "upload" || state.imageMode === "web")));
       if (state.imageMode === "web") {
-        ui.tileImageEnabled.checked = Boolean(normalizeUrl(ui.tileImage.value));
+        ui.tileImageEnabled.checked = Boolean(state.webImageEnabled && normalizeUrl(ui.tileImage.value));
         renderWebSuggestions();
       } else if (state.imageMode === "upload") {
-        ui.tileImageEnabled.checked = Boolean(state.uploadedImageUrl);
+        ui.tileImageEnabled.checked = Boolean(state.uploadImageEnabled && (state.uploadedImagePreviewUrl || state.uploadedImageUrl));
       }
+      ui.tileUploadUrl.value = state.uploadedImageUrl || "";
       updatePreview();
     }
 
@@ -1787,7 +1785,7 @@
         return normalizeUrl(ui.tileImage.value);
       }
       if (state.imageMode === "upload") {
-        return state.uploadedImageUrl;
+        return state.uploadedImagePreviewUrl || state.uploadedImageUrl;
       }
       return "";
     }
@@ -1921,11 +1919,16 @@
       ui.tileUpload.value = "";
       const imageData = parseTileImageData(tile?.image);
       state.uploadedImageUrl = imageData.mode === "upload" ? imageData.src : "";
+      state.uploadedImagePreviewUrl = imageData.mode === "upload" ? imageData.src : "";
+      state.uploadedImagePath = imageData.mode === "upload" ? imageData.storagePath : "";
+      state.uploadImageEnabled = imageData.mode === "upload" ? imageData.enabled : Boolean(state.uploadedImageUrl);
       ui.tileModalTitle.textContent = tile ? "Modifier la tuile" : "Ajouter une tuile";
       ui.deleteTileBtn.classList.toggle("hidden", !tile);
       ui.tileTitle.value = tile?.title || "";
       ui.tileUrl.value = tile?.url || "";
       ui.tileImage.value = imageData.mode === "web" ? (imageData.src || "") : "";
+      state.webImageEnabled = imageData.mode === "web" ? imageData.enabled : Boolean(normalizeUrl(ui.tileImage.value));
+      ui.tileUploadUrl.value = state.uploadedImageUrl || "";
       ui.tileColor.value = tile?.color || "#ffffff";
       ui.tileImageEnabled.checked = imageData.enabled;
       ui.tileImageFull.checked = imageData.full;
@@ -1947,6 +1950,12 @@
       ui.saveTileBtn.disabled = false;
       state.editingTile = null;
       state.uploadedImageUrl = "";
+      revokeUploadPreviewUrl();
+      state.uploadedImagePreviewUrl = "";
+      state.uploadedImagePath = "";
+      state.webImageEnabled = false;
+      state.uploadImageEnabled = false;
+      ui.tileUploadUrl.value = "";
       setStatus(ui.tileStatus, "");
     }
 
@@ -1962,14 +1971,20 @@
       if (error) {
         throw error;
       }
-      const { data } = sbClient.storage.from("tile-images").getPublicUrl(path);
-      return data.publicUrl;
+      const url = await signedUploadUrl(path);
+      return { path, url };
     }
 
     async function saveTile() {
       clearTimeout(state.saveTileCloseTimer);
       const title = ui.tileTitle.value.trim();
       const url = normalizeUrl(ui.tileUrl.value);
+
+      if (state.imageMode === "upload" && state.uploadImageEnabled && !state.uploadedImageUrl) {
+        setStatus(ui.tileStatus, "L'image importee n'est pas encore prete.", "error");
+        ui.saveTileBtn.disabled = false;
+        return;
+      }
 
       let image = null;
       if (state.imageMode === "web" || state.imageMode === "upload") {
@@ -1978,7 +1993,8 @@
           : normalizeUrl(ui.tileImage.value);
         image = serializeTileImageData({
           src,
-          enabled: ui.tileImageEnabled.checked,
+          storagePath: state.uploadedImagePath,
+          enabled: state.imageMode === "upload" ? state.uploadImageEnabled : state.webImageEnabled,
           full: ui.tileImageFull.checked,
           scale: ui.tileImageScale.value,
           surface: ui.tileSurface.checked,
@@ -2150,12 +2166,17 @@
         state.config = parseConfigRow(state.configRow);
         applyGridConfig(state.config);
 
-        state.tiles = rows
-          .filter(row => row.title !== CONFIG_TITLE)
-          .map((row, index) => ({
-            ...row,
-            position: Number(row.position) || index + 1
-          }));
+        const contentRows = await Promise.all(
+          rows
+            .filter(row => row.title !== CONFIG_TITLE)
+            .map(async (row, index) => ({
+              ...row,
+              image: await hydrateUploadImage(row.image),
+              position: Number(row.position) || index + 1
+            }))
+        );
+
+        state.tiles = contentRows;
 
         renderTiles();
       } catch (error) {
@@ -2290,14 +2311,19 @@
       updatePreview();
     });
     ui.modeUpload.addEventListener("click", () => {
-      ui.tileImageEnabled.checked = true;
       setImageMode("upload");
     });
     ui.modeWeb.addEventListener("click", () => {
-      ui.tileImageEnabled.checked = true;
       setImageMode("web");
     });
-    ui.tileImageEnabled.addEventListener("input", updatePreview);
+    ui.tileImageEnabled.addEventListener("input", () => {
+      if (state.imageMode === "web") {
+        state.webImageEnabled = ui.tileImageEnabled.checked;
+      } else if (state.imageMode === "upload") {
+        state.uploadImageEnabled = ui.tileImageEnabled.checked;
+      }
+      updatePreview();
+    });
     ui.tileImageFull.addEventListener("input", updatePreview);
     ui.tileImageScale.addEventListener("input", updatePreview);
     ui.tileShowTitle.addEventListener("input", updatePreview);
@@ -2314,7 +2340,8 @@
     });
     ui.tileImage.addEventListener("input", () => {
       if (state.imageMode === "web") {
-        ui.tileImageEnabled.checked = Boolean(normalizeUrl(ui.tileImage.value));
+        state.webImageEnabled = Boolean(normalizeUrl(ui.tileImage.value));
+        ui.tileImageEnabled.checked = state.webImageEnabled;
       }
       updatePreview();
     });
@@ -2334,9 +2361,13 @@
       setStatus(ui.tileStatus, "Import de l'image...");
 
       try {
-        state.uploadedImageUrl = await uploadImage(file);
-        ui.tileImage.value = state.uploadedImageUrl;
-        ui.tileImageEnabled.checked = true;
+        setUploadedPreviewUrl(URL.createObjectURL(file));
+        state.uploadImageEnabled = true;
+        setImageMode("upload");
+        const uploaded = await uploadImage(file);
+        state.uploadedImagePath = uploaded.path;
+        state.uploadedImageUrl = uploaded.url;
+        ui.tileUploadUrl.value = state.uploadedImageUrl;
         setImageMode("upload");
         setStatus(ui.tileStatus, "Image importee.", "ok");
       } catch (error) {
@@ -2351,12 +2382,6 @@
       });
     });
 
-    ["dragenter", "dragover"].forEach(eventName => {
-      ui.tileImage.addEventListener(eventName, event => {
-        event.preventDefault();
-      });
-    });
-
     ["dragleave", "dragend", "drop"].forEach(eventName => {
       ui.tileDropZone.addEventListener(eventName, () => {
         ui.tileDropZone.classList.remove("active");
@@ -2365,16 +2390,6 @@
 
     ui.tileDropZone.addEventListener("drop", async event => {
       event.preventDefault();
-      try {
-        await handleDroppedData(event.dataTransfer);
-      } catch (error) {
-        setStatus(ui.tileStatus, error.message || "Erreur de glisser-deposer.", "error");
-      }
-    });
-
-    ui.tileImage.addEventListener("drop", async event => {
-      event.preventDefault();
-      event.stopPropagation();
       try {
         await handleDroppedData(event.dataTransfer);
       } catch (error) {

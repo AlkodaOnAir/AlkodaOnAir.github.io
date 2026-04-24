@@ -494,11 +494,18 @@
     .tile-card {
       width: min(860px, 100%);
       max-height: min(92vh, 860px);
-      overflow: auto;
+      overflow: hidden;
       padding: 16px 18px 18px;
       display: grid;
-      grid-template-rows: auto auto 1fr auto;
+      grid-template-rows: auto auto minmax(0, 1fr) auto;
       gap: 10px;
+    }
+
+    .tile-card-content {
+      min-height: 0;
+      overflow: auto;
+      padding-right: 4px;
+      padding-bottom: 8px;
     }
 
     .size-card {
@@ -744,6 +751,13 @@
 
     .modal-actions .btn.danger {
       margin-right: auto;
+    }
+
+    .tile-modal-actions {
+      margin-top: 10px;
+      padding-top: 14px;
+      border-top: 1px solid rgba(255, 255, 255, 0.08);
+      background: linear-gradient(180deg, rgba(34, 37, 47, 0), rgba(34, 37, 47, 0.96) 18%, rgba(34, 37, 47, 1));
     }
 
     .checkbox-row {
@@ -1138,8 +1152,7 @@
       }
 
       .tile-card {
-        max-height: none;
-        overflow: auto;
+        max-height: min(92vh, 860px);
       }
 
       .tile-card-top {
@@ -1388,8 +1401,9 @@
         </div>
       </div>
 
-      <div class="tile-editor-layout">
-        <div class="tile-editor-column tile-editor-column-left">
+      <div class="tile-card-content">
+        <div class="tile-editor-layout">
+          <div class="tile-editor-column tile-editor-column-left">
           <div class="image-panel fund-panel">
             <div class="image-panel-title" data-i18n="background_title">Fond</div>
             <div id="colorOptions">
@@ -1444,10 +1458,10 @@
               </label>
             </div>
           </div>
-        </div>
+          </div>
 
-        <div class="tile-editor-column">
-          <div class="image-panel image-panel-fixed">
+          <div class="tile-editor-column">
+            <div class="image-panel image-panel-fixed">
             <div class="image-panel-title" data-i18n="image_title">Image</div>
             <div class="mode-list">
               <button id="modeColor" class="mode-btn active" type="button" data-i18n="mode_color">Couleur</button>
@@ -1492,13 +1506,14 @@
                 <input id="tileImageScale" type="range" min="10" max="200" step="5" value="90" />
               </div>
             </div>
+            </div>
           </div>
         </div>
+
+        <div id="tileStatus" class="status"></div>
       </div>
 
-      <div id="tileStatus" class="status"></div>
-
-      <div class="modal-actions">
+      <div class="modal-actions tile-modal-actions">
         <button id="deleteTileBtn" class="btn danger hidden" type="button" data-i18n="delete_button">Supprimer</button>
         <button id="cancelTileBtn" class="btn" type="button" data-i18n="cancel_button">Annuler</button>
         <button id="saveTileBtn" class="btn primary" type="button" data-i18n="save_button">Sauvegarder</button>
@@ -2344,30 +2359,49 @@
     function startUploadTask(file) {
       setStatus(ui.tileStatus, t("image_importing"));
       setUploadedPreviewUrl(URL.createObjectURL(file));
+      state.uploadedImagePath = "";
+      state.uploadedImageUrl = "";
+      ui.tileUploadUrl.value = "";
       state.uploadImageEnabled = true;
       state.webImageEnabled = false;
       setImageMode("upload");
 
-      state.uploadPending = (async () => {
+      const uploadTask = (async () => {
         const uploaded = await uploadImage(file);
         state.uploadedImagePath = uploaded.path;
-        state.uploadedImageUrl = "";
-        ui.tileUploadUrl.value = uploaded.path;
+        try {
+          state.uploadedImageUrl = await signedUploadUrl(uploaded.path);
+        } catch {
+          state.uploadedImageUrl = "";
+        }
+        ui.tileUploadUrl.value = state.uploadedImageUrl || uploaded.path;
+        return uploaded;
       })();
 
-      state.uploadPending
+      state.uploadPending = uploadTask;
+
+      uploadTask
         .then(() => {
-          if (!state.uploadPending) {
+          if (state.uploadPending !== uploadTask) {
             return;
           }
           setImageMode("upload");
           setStatus(ui.tileStatus, t("image_imported"), "ok");
         })
         .catch(error => {
+          if (state.uploadPending !== uploadTask) {
+            return;
+          }
+          state.uploadedImagePath = "";
+          state.uploadedImageUrl = "";
+          ui.tileUploadUrl.value = "";
           setStatus(ui.tileStatus, t("image_upload_error", { message: error.message || error }), "error");
         })
         .finally(() => {
-          state.uploadPending = null;
+          if (state.uploadPending === uploadTask) {
+            state.uploadPending = null;
+          }
+          updatePreview();
         });
     }
 
@@ -3216,14 +3250,14 @@
           await waitForPendingUpload();
         } catch (error) {
           setStatus(ui.tileStatus, t("image_upload_error", { message: error.message || error }), "error");
-          ui.saveTileBtn.disabled = false;
+          refreshSaveTileButtonState();
           return;
         }
       }
 
       if (state.imageMode === "upload" && state.uploadImageEnabled && !state.uploadedImagePath) {
         setStatus(ui.tileStatus, t("image_save_failed"), "error");
-        ui.saveTileBtn.disabled = false;
+        refreshSaveTileButtonState();
         return;
       }
 
@@ -3303,8 +3337,7 @@
         loadTiles().catch(() => {});
       } catch (error) {
         setStatus(ui.tileStatus, error.message || t("save_error"), "error");
-        ui.saveTileBtn.disabled = false;
-        ui.saveTileBtn.textContent = t("save_button");
+        refreshSaveTileButtonState();
       }
     }
 

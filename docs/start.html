@@ -169,6 +169,21 @@
       color: #ffb4bb;
     }
 
+    .icon-btn {
+      width: 40px;
+      min-width: 40px;
+      padding: 0;
+      display: grid;
+      place-items: center;
+    }
+
+    .icon-btn svg {
+      width: 18px;
+      height: 18px;
+      display: block;
+      fill: currentColor;
+    }
+
     .field-note {
       margin-top: 8px;
       font-size: 0.82rem;
@@ -970,6 +985,11 @@
       </div>
       <div class="top-actions">
         <button id="sizeBtn" class="btn" type="button">Taille</button>
+        <button id="accountBtn" class="btn icon-btn" type="button" aria-label="Reglages du compte" title="Reglages du compte">
+          <svg viewBox="0 0 24 24" aria-hidden="true">
+            <path d="M19.14 12.94a7.99 7.99 0 0 0 .05-.94 7.99 7.99 0 0 0-.05-.94l2.03-1.58a.5.5 0 0 0 .12-.64l-1.92-3.32a.5.5 0 0 0-.6-.22l-2.39.96a7.28 7.28 0 0 0-1.63-.94l-.36-2.54A.49.49 0 0 0 13.9 2h-3.8a.49.49 0 0 0-.49.42l-.36 2.54c-.58.22-1.13.53-1.63.94l-2.39-.96a.5.5 0 0 0-.6.22L2.71 8.48a.5.5 0 0 0 .12.64l2.03 1.58c-.03.31-.05.63-.05.94s.02.63.05.94l-2.03 1.58a.5.5 0 0 0-.12.64l1.92 3.32a.5.5 0 0 0 .6.22l2.39-.96c.5.41 1.05.72 1.63.94l.36 2.54a.49.49 0 0 0 .49.42h3.8a.49.49 0 0 0 .49-.42l.36-2.54c.58-.22 1.13-.53 1.63-.94l2.39.96a.5.5 0 0 0 .6-.22l1.92-3.32a.5.5 0 0 0-.12-.64l-2.03-1.58ZM12 15.5A3.5 3.5 0 1 1 12 8.5a3.5 3.5 0 0 1 0 7Z"/>
+          </svg>
+        </button>
         <button id="logoutBtn" class="btn" type="button">Deconnexion</button>
       </div>
     </header>
@@ -980,6 +1000,25 @@
         <section id="webmix" class="webmix" aria-label="Webmix"></section>
       </div>
     </main>
+  </div>
+
+  <div id="accountModal" class="overlay">
+    <div class="card size-card">
+      <h2>Reglages du compte</h2>
+      <div class="field">
+        <label for="accountEmail">Email du compte</label>
+        <input id="accountEmail" type="text" readonly />
+      </div>
+      <div class="modal-actions" style="justify-content:flex-start;">
+        <button id="changePasswordBtn" class="btn" type="button">Modifier le mot de passe</button>
+      </div>
+      <div class="field-note">Se desinscrire supprimera le compte, le webmix et les tuiles associees.</div>
+      <div id="accountStatus" class="status"></div>
+      <div class="modal-actions">
+        <button id="cancelAccountBtn" class="btn" type="button">Fermer</button>
+        <button id="deleteAccountBtn" class="btn danger" type="button">Se desinscrire</button>
+      </div>
+    </div>
   </div>
 
   <div id="sizeModal" class="overlay">
@@ -1230,9 +1269,16 @@
       signupSubmitBtn: $("signupSubmitBtn"),
       signupBackBtn: $("signupBackBtn"),
       forgotBtn: $("forgotBtn"),
+      accountBtn: $("accountBtn"),
       logoutBtn: $("logoutBtn"),
       debugBox: $("debugBox"),
       webmix: $("webmix"),
+      accountModal: $("accountModal"),
+      accountEmail: $("accountEmail"),
+      accountStatus: $("accountStatus"),
+      changePasswordBtn: $("changePasswordBtn"),
+      cancelAccountBtn: $("cancelAccountBtn"),
+      deleteAccountBtn: $("deleteAccountBtn"),
       sizeBtn: $("sizeBtn"),
       sizeModal: $("sizeModal"),
       sizePreview: $("sizePreview"),
@@ -1341,6 +1387,21 @@
       ui.loginCard.classList.remove("hidden");
       setStatus(ui.signupStatus, "");
       ui.loginEmail.focus();
+    }
+
+    function refreshAccountView() {
+      ui.accountEmail.value = state.currentSession?.user?.email || "";
+    }
+
+    function openAccountModal() {
+      refreshAccountView();
+      setStatus(ui.accountStatus, "");
+      ui.accountModal.classList.add("open");
+    }
+
+    function closeAccountModal() {
+      ui.accountModal.classList.remove("open");
+      setStatus(ui.accountStatus, "");
     }
 
     function clampNumber(value, min, max, fallback) {
@@ -2522,6 +2583,79 @@
       }
     }
 
+    async function deleteAccount() {
+      if (!state.currentSession?.access_token) {
+        setStatus(ui.accountStatus, "Session introuvable.", "error");
+        return;
+      }
+
+      const confirmation = window.confirm("Se desinscrire va supprimer ce compte, le webmix et les tuiles. Continuer ?");
+      if (!confirmation) {
+        return;
+      }
+
+      setStatus(ui.accountStatus, "Suppression du compte...");
+      ui.deleteAccountBtn.disabled = true;
+      ui.cancelAccountBtn.disabled = true;
+
+      try {
+        const response = await fetch(`${SUPABASE_URL}/functions/v1/delete-account`, {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+            apikey: SUPABASE_KEY,
+            Authorization: `Bearer ${state.currentSession.access_token}`
+          },
+          body: JSON.stringify({})
+        });
+
+        let payload = null;
+        try {
+          payload = await response.json();
+        } catch (_error) {
+          payload = null;
+        }
+
+        if (!response.ok) {
+          throw new Error(payload?.error || "La fonction Supabase delete-account n'est pas encore configuree.");
+        }
+
+        setStatus(ui.accountStatus, "Compte supprime.", "ok");
+        closeAccountModal();
+        await sbClient.auth.signOut();
+      } catch (error) {
+        setStatus(ui.accountStatus, error.message || "Erreur de suppression du compte.", "error");
+      } finally {
+        ui.deleteAccountBtn.disabled = false;
+        ui.cancelAccountBtn.disabled = false;
+      }
+    }
+
+    async function sendAccountPasswordReset() {
+      const email = state.currentSession?.user?.email || "";
+      if (!email) {
+        setStatus(ui.accountStatus, "Email du compte introuvable.", "error");
+        return;
+      }
+
+      setStatus(ui.accountStatus, "Envoi de l'email de modification...");
+      ui.changePasswordBtn.disabled = true;
+
+      try {
+        const { error } = await sbClient.auth.resetPasswordForEmail(email, {
+          redirectTo: window.location.href
+        });
+        if (error) {
+          throw error;
+        }
+        setStatus(ui.accountStatus, "Email envoye pour modifier le mot de passe.", "ok");
+      } catch (error) {
+        setStatus(ui.accountStatus, error.message || "Erreur d'envoi.", "error");
+      } finally {
+        ui.changePasswordBtn.disabled = false;
+      }
+    }
+
     async function init() {
       if (ui.brandMarkImage) {
         ui.brandMarkImage.src = "./alkoda-apple-touch-icon.png";
@@ -2540,6 +2674,7 @@
         if (data.session) {
           state.currentSession = data.session;
           state.currentUserId = data.session.user?.id || "";
+          refreshAccountView();
           closeSignUpScreen();
           ui.loginScreen.classList.remove("open");
           await loadTiles();
@@ -2547,6 +2682,7 @@
           state.currentSession = null;
           state.currentUserId = "";
           state.currentWebmix = null;
+          refreshAccountView();
           ui.loginScreen.classList.add("open");
         }
 
@@ -2554,6 +2690,7 @@
           if (session) {
             state.currentSession = session;
             state.currentUserId = session.user?.id || "";
+            refreshAccountView();
             closeSignUpScreen();
             ui.loginScreen.classList.remove("open");
             await loadTiles();
@@ -2561,7 +2698,9 @@
             state.currentSession = null;
             state.currentUserId = "";
             state.currentWebmix = null;
+            refreshAccountView();
             closeSignUpScreen();
+            closeAccountModal();
             ui.loginScreen.classList.add("open");
             state.tiles = [];
             state.config = { ...DEFAULT_CONFIG };
@@ -2579,6 +2718,10 @@
     ui.signupSubmitBtn.addEventListener("click", signUp);
     ui.signupBackBtn.addEventListener("click", closeSignUpScreen);
     ui.forgotBtn.addEventListener("click", forgotPassword);
+    ui.accountBtn.addEventListener("click", openAccountModal);
+    ui.changePasswordBtn.addEventListener("click", sendAccountPasswordReset);
+    ui.cancelAccountBtn.addEventListener("click", closeAccountModal);
+    ui.deleteAccountBtn.addEventListener("click", deleteAccount);
     ui.logoutBtn.addEventListener("click", () => sbClient.auth.signOut());
     ui.sizeBtn.addEventListener("click", openSizeModal);
     ui.cancelSizeBtn.addEventListener("click", () => closeSizeModal(true));
@@ -2753,6 +2896,11 @@
     ui.sizeModal.addEventListener("click", event => {
       if (event.target === ui.sizeModal) {
         closeSizeModal(true);
+      }
+    });
+    ui.accountModal.addEventListener("click", event => {
+      if (event.target === ui.accountModal) {
+        closeAccountModal();
       }
     });
 

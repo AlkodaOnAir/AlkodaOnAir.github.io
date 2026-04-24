@@ -373,6 +373,16 @@
       padding: 22px;
     }
 
+    .tile-card {
+      width: min(860px, 100%);
+      max-height: min(92vh, 860px);
+      overflow: hidden;
+      padding: 18px;
+      display: grid;
+      grid-template-rows: auto auto 1fr auto auto;
+      gap: 12px;
+    }
+
     .size-card {
       width: min(440px, 100%);
       max-height: none;
@@ -436,6 +446,12 @@
       gap: 12px;
     }
 
+    .tile-meta {
+      display: grid;
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      gap: 12px;
+    }
+
     .status {
       min-height: 18px;
       margin-top: 8px;
@@ -479,11 +495,23 @@
     }
 
     .image-panel {
-      margin: 18px 0;
-      padding: 14px;
+      margin: 0;
+      padding: 12px;
       border-radius: 18px;
       border: 1px solid rgba(255, 255, 255, 0.08);
       background: rgba(255, 255, 255, 0.03);
+    }
+
+    .tile-editor-layout {
+      display: grid;
+      grid-template-columns: 1.2fr 0.8fr;
+      gap: 12px;
+      align-items: start;
+      min-height: 0;
+    }
+
+    .tile-editor-column {
+      min-height: 0;
     }
 
     .image-panel-title {
@@ -518,16 +546,16 @@
 
     .color-swatches {
       display: grid;
-      grid-template-columns: repeat(8, minmax(0, 1fr));
-      gap: 8px;
+      grid-template-columns: repeat(10, minmax(0, 1fr));
+      gap: 5px;
       margin-top: 8px;
     }
 
     .swatch-btn {
       width: 100%;
       aspect-ratio: 1;
-      border-radius: 12px;
-      border: 2px solid rgba(255, 255, 255, 0.1);
+      border-radius: 7px;
+      border: 1px solid rgba(255, 255, 255, 0.18);
       cursor: pointer;
       box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.18);
     }
@@ -601,8 +629,8 @@
     }
 
     .preview {
-      width: 100px;
-      height: 100px;
+      width: 124px;
+      height: 124px;
       border-radius: 18px;
       border: 1px solid rgba(255, 255, 255, 0.1);
       overflow: hidden;
@@ -613,6 +641,13 @@
       color: #fff;
       text-align: center;
       box-shadow: inset 0 0 0 1px rgba(255, 255, 255, 0.03);
+    }
+
+    .preview-wrap {
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      margin-bottom: 2px;
     }
 
     .preview img {
@@ -723,6 +758,11 @@
       .top-actions {
         justify-content: flex-start;
       }
+
+      .tile-editor-layout,
+      .tile-meta {
+        grid-template-columns: 1fr;
+      }
     }
 
     @media (max-width: 640px) {
@@ -738,6 +778,11 @@
       .grid-2,
       .mode-list {
         grid-template-columns: 1fr;
+      }
+
+      .tile-card {
+        max-height: none;
+        overflow: auto;
       }
 
       .size-panel {
@@ -843,95 +888,123 @@
   </div>
 
   <div id="tileModal" class="overlay">
-    <div class="card">
+    <div class="card tile-card">
       <h2 id="tileModalTitle">Ajouter une tuile</h2>
 
-      <div class="field">
-        <label for="tileTitle">Nom</label>
-        <input id="tileTitle" type="text" placeholder="Prime Video" />
-      </div>
-
-      <div class="field">
-        <label for="tileUrl">Lien</label>
-        <input id="tileUrl" type="url" placeholder="https://www.primevideo.com" />
-      </div>
-
-      <div class="image-panel">
-        <div class="image-panel-title">Image de la tuile</div>
-        <div class="mode-list">
-          <button id="modeColor" class="mode-btn active" type="button">Couleur</button>
-          <button id="modeUpload" class="mode-btn" type="button">Image importée</button>
-          <button id="modeWeb" class="mode-btn" type="button">Image du net</button>
-        </div>
-
-        <div id="colorOptions">
-          <div class="field">
-            <label>Couleur de fond</label>
-            <div id="colorSwatches" class="color-swatches">
-              <button class="swatch-btn" type="button" data-color="#ffffff" style="background:#ffffff;"></button>
-              <button class="swatch-btn" type="button" data-color="#f5d547" style="background:#f5d547;"></button>
-              <button class="swatch-btn" type="button" data-color="#ff8a65" style="background:#ff8a65;"></button>
-              <button class="swatch-btn" type="button" data-color="#f06292" style="background:#f06292;"></button>
-              <button class="swatch-btn" type="button" data-color="#7e57c2" style="background:#7e57c2;"></button>
-              <button class="swatch-btn" type="button" data-color="#42a5f5" style="background:#42a5f5;"></button>
-              <button class="swatch-btn" type="button" data-color="#26a69a" style="background:#26a69a;"></button>
-              <button class="swatch-btn" type="button" data-color="#111827" style="background:#111827;"></button>
-            </div>
-            <details class="advanced-color advanced-toggle">
-              <summary>Couleur personnalisée</summary>
-              <div class="field">
-                <input id="tileColor" type="color" value="#ffffff" />
-              </div>
-            </details>
-          </div>
-        </div>
-
-        <div id="uploadOptions" class="hidden">
-          <div class="field">
-            <label for="tileUpload">Importer une image</label>
-            <input id="tileUpload" type="file" accept="image/*" />
-          </div>
-          <div class="helper">Le bucket Supabase Storage attendu est <strong>tile-images</strong>.</div>
-        </div>
-
-        <div id="webOptions" class="hidden">
-          <div class="field">
-            <label for="tileImage">URL d’image</label>
-            <input id="tileImage" type="url" placeholder="https://.../image.png" />
-          </div>
-          <button id="autoLogoBtn" class="btn" type="button">Logo automatique depuis l’URL</button>
-        </div>
-
-        <div id="imageSettings" class="image-settings hidden">
-          <label class="checkbox-row">
-            <input id="tileImageEnabled" type="checkbox" checked />
-            <span>Afficher l’image</span>
-          </label>
-          <label class="checkbox-row">
-            <input id="tileImageFull" type="checkbox" />
-            <span>Image plein cadre</span>
-          </label>
-          <div id="tileImageScaleWrap" class="range-inline">
-            <label for="tileImageScale">
-              <span>Taille de l’image</span>
-              <span id="tileImageScaleValue" class="range-value">100%</span>
-            </label>
-            <input id="tileImageScale" type="range" min="10" max="200" step="10" value="100" />
-          </div>
-        </div>
-
+      <div class="preview-wrap">
         <div id="preview" class="preview">Aperçu</div>
       </div>
 
-      <div class="grid-2">
-        <label class="checkbox-row">
-          <input id="tileShowTitle" type="checkbox" checked />
-          <span>Afficher le nom</span>
-        </label>
-        <label class="checkbox-row">
-          <input id="tileOpenNewTab" type="checkbox" checked />
-          <span>Ouvrir dans un nouvel onglet</span>
-        </label>
+      <div class="tile-meta">
+        <div class="field">
+          <label for="tileTitle">Nom</label>
+          <input id="tileTitle" type="text" placeholder="Nom facultatif" />
+        </div>
+
+        <div class="field">
+          <label for="tileUrl">Lien</label>
+          <input id="tileUrl" type="url" placeholder="https://..." />
+        </div>
+      </div>
+
+      <div class="tile-editor-layout">
+        <div class="tile-editor-column">
+          <div class="image-panel">
+            <div class="image-panel-title">Fond</div>
+            <div id="colorOptions">
+              <div class="field">
+                <label>Couleur de fond</label>
+                <div id="colorSwatches" class="color-swatches">
+                  <button class="swatch-btn" type="button" data-color="#ffffff" style="background:#ffffff;"></button>
+                  <button class="swatch-btn" type="button" data-color="#f4f4f5" style="background:#f4f4f5;"></button>
+                  <button class="swatch-btn" type="button" data-color="#e5e7eb" style="background:#e5e7eb;"></button>
+                  <button class="swatch-btn" type="button" data-color="#f5d547" style="background:#f5d547;"></button>
+                  <button class="swatch-btn" type="button" data-color="#ffd166" style="background:#ffd166;"></button>
+                  <button class="swatch-btn" type="button" data-color="#ff8a65" style="background:#ff8a65;"></button>
+                  <button class="swatch-btn" type="button" data-color="#fb7185" style="background:#fb7185;"></button>
+                  <button class="swatch-btn" type="button" data-color="#f06292" style="background:#f06292;"></button>
+                  <button class="swatch-btn" type="button" data-color="#c084fc" style="background:#c084fc;"></button>
+                  <button class="swatch-btn" type="button" data-color="#7e57c2" style="background:#7e57c2;"></button>
+                  <button class="swatch-btn" type="button" data-color="#6366f1" style="background:#6366f1;"></button>
+                  <button class="swatch-btn" type="button" data-color="#42a5f5" style="background:#42a5f5;"></button>
+                  <button class="swatch-btn" type="button" data-color="#38bdf8" style="background:#38bdf8;"></button>
+                  <button class="swatch-btn" type="button" data-color="#26a69a" style="background:#26a69a;"></button>
+                  <button class="swatch-btn" type="button" data-color="#4ade80" style="background:#4ade80;"></button>
+                  <button class="swatch-btn" type="button" data-color="#84cc16" style="background:#84cc16;"></button>
+                  <button class="swatch-btn" type="button" data-color="#78716c" style="background:#78716c;"></button>
+                  <button class="swatch-btn" type="button" data-color="#475569" style="background:#475569;"></button>
+                  <button class="swatch-btn" type="button" data-color="#1f2937" style="background:#1f2937;"></button>
+                  <button class="swatch-btn" type="button" data-color="#111827" style="background:#111827;"></button>
+                </div>
+                <details class="advanced-color advanced-toggle">
+                  <summary>Couleur personnalisée</summary>
+                  <div class="field">
+                    <input id="tileColor" type="color" value="#ffffff" />
+                  </div>
+                </details>
+              </div>
+            </div>
+          </div>
+
+          <div class="image-panel" style="margin-top:12px;">
+            <div class="image-panel-title">Options générales</div>
+            <div class="grid-2">
+              <label class="checkbox-row">
+                <input id="tileShowTitle" type="checkbox" checked />
+                <span>Afficher le nom</span>
+              </label>
+              <label class="checkbox-row">
+                <input id="tileOpenNewTab" type="checkbox" checked />
+                <span>Ouvrir dans un nouvel onglet</span>
+              </label>
+            </div>
+          </div>
+        </div>
+
+        <div class="tile-editor-column">
+          <div class="image-panel">
+            <div class="image-panel-title">Image</div>
+            <div class="mode-list">
+              <button id="modeColor" class="mode-btn active" type="button">Couleur</button>
+              <button id="modeUpload" class="mode-btn" type="button">Image importée</button>
+              <button id="modeWeb" class="mode-btn" type="button">Image du net</button>
+            </div>
+
+            <div id="uploadOptions" class="hidden">
+              <div class="field">
+                <label for="tileUpload">Importer une image</label>
+                <input id="tileUpload" type="file" accept="image/*" />
+              </div>
+              <div class="helper">Le bucket Supabase Storage attendu est <strong>tile-images</strong>.</div>
+            </div>
+
+            <div id="webOptions" class="hidden">
+              <div class="field">
+                <label for="tileImage">URL d’image</label>
+                <input id="tileImage" type="url" placeholder="https://.../image.png" />
+              </div>
+              <button id="autoLogoBtn" class="btn" type="button">Logo automatique depuis l’URL</button>
+            </div>
+
+            <div id="imageSettings" class="image-settings hidden">
+              <label class="checkbox-row">
+                <input id="tileImageEnabled" type="checkbox" checked />
+                <span>Afficher l’image</span>
+              </label>
+              <label class="checkbox-row">
+                <input id="tileImageFull" type="checkbox" />
+                <span>Image plein cadre</span>
+              </label>
+              <div id="tileImageScaleWrap" class="range-inline">
+                <label for="tileImageScale">
+                  <span>Taille de l’image</span>
+                  <span id="tileImageScaleValue" class="range-value">100%</span>
+                </label>
+                <input id="tileImageScale" type="range" min="10" max="200" step="10" value="100" />
+              </div>
+            </div>
+          </div>
+        </div>
       </div>
 
       <div id="tileStatus" class="status"></div>
@@ -1522,16 +1595,25 @@
           ? sbClient.from("tiles").update(payload).eq("id", state.editingTile.id).select().single()
           : sbClient.from("tiles").insert({ ...payload, position: state.tiles.length + 1 }).select().single();
 
-        const { error } = await query;
+        const { data, error } = await query;
         if (error) {
           throw error;
         }
 
-        await loadTiles();
+        if (data) {
+          if (state.editingTile) {
+            state.tiles = state.tiles.map(tile => tile.id === data.id ? { ...tile, ...data } : tile);
+          } else {
+            state.tiles.push(data);
+          }
+          renderTiles();
+        }
         setStatus(ui.tileStatus, "Sauvegardé.", "ok");
+        ui.saveTileBtn.disabled = false;
         state.saveTileCloseTimer = window.setTimeout(() => {
           closeTileModal();
         }, 450);
+        loadTiles().catch(() => {});
       } catch (error) {
         setStatus(ui.tileStatus, error.message || "Erreur de sauvegarde.", "error");
         ui.saveTileBtn.disabled = false;

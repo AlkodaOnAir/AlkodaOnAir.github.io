@@ -1345,6 +1345,7 @@
           const uploaded = await uploadImage(imageFile);
           state.uploadedImagePath = uploaded.path;
           state.uploadedImageUrl = uploaded.url;
+          state.webImageEnabled = false;
           ui.tileUploadUrl.value = state.uploadedImageUrl;
         })();
         try {
@@ -1443,6 +1444,7 @@
         button.addEventListener("click", () => {
           ui.tileImage.value = candidate.url;
           state.webImageEnabled = true;
+          state.uploadImageEnabled = false;
           ui.tileImageEnabled.checked = true;
           ui.webSuggestions.classList.add("hidden");
           setImageMode("web");
@@ -1772,6 +1774,11 @@
     function setImageMode(mode) {
       state.imageMode = mode;
       state.imageTab = mode;
+      if (mode === "web") {
+        state.uploadImageEnabled = false;
+      } else if (mode === "upload") {
+        state.webImageEnabled = false;
+      }
       ui.modeColor.classList.toggle("active", state.imageTab === "color");
       ui.modeUpload.classList.toggle("active", state.imageTab === "upload");
       ui.modeWeb.classList.toggle("active", state.imageTab === "web");
@@ -2352,8 +2359,14 @@
     ui.tileImageEnabled.addEventListener("input", () => {
       if (state.imageMode === "web") {
         state.webImageEnabled = ui.tileImageEnabled.checked;
+        if (ui.tileImageEnabled.checked) {
+          state.uploadImageEnabled = false;
+        }
       } else if (state.imageMode === "upload") {
         state.uploadImageEnabled = ui.tileImageEnabled.checked;
+        if (ui.tileImageEnabled.checked) {
+          state.webImageEnabled = false;
+        }
       }
       updatePreview();
     });
@@ -2374,6 +2387,9 @@
     ui.tileImage.addEventListener("input", () => {
       if (state.imageMode === "web") {
         state.webImageEnabled = Boolean(normalizeUrl(ui.tileImage.value));
+        if (state.webImageEnabled) {
+          state.uploadImageEnabled = false;
+        }
         ui.tileImageEnabled.checked = state.webImageEnabled;
       }
       updatePreview();
@@ -2402,6 +2418,7 @@
           const uploaded = await uploadImage(file);
           state.uploadedImagePath = uploaded.path;
           state.uploadedImageUrl = uploaded.url;
+          state.webImageEnabled = false;
           ui.tileUploadUrl.value = state.uploadedImageUrl;
         })();
         try {

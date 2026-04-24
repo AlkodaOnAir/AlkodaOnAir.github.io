@@ -1,10 +1,13 @@
-<!DOCTYPE html>
+﻿<!DOCTYPE html>
 <html lang="fr">
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Alkoda Start</title>
-  <link rel="icon" type="image/x-icon" href="./logo-carre-Alkoda-On-Air.ico" />
+  <link rel="icon" type="image/x-icon" href="./alkoda.ico" />
+  <link rel="icon" type="image/png" sizes="32x32" href="./alkoda-32x32.png" />
+  <link rel="icon" type="image/png" sizes="16x16" href="./alkoda-16x16.png" />
+  <link rel="apple-touch-icon" href="./alkoda-apple-touch-icon.png" />
   <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
   <style>
     :root {
@@ -825,7 +828,7 @@
     <div id="loginScreen" class="login-screen">
       <div class="card">
         <h1>Connexion</h1>
-        <p>Connecte-toi avec ton compte Supabase. La session reste mémorisée sur cet appareil.</p>
+        <p>Connecte-toi avec ton compte Supabase. La session reste mÃ©morisÃ©e sur cet appareil.</p>
         <div class="field">
           <label for="loginEmail">Email</label>
           <input id="loginEmail" type="email" autocomplete="email" placeholder="ton@email.com" />
@@ -836,7 +839,7 @@
         </div>
         <div class="modal-actions" style="justify-content:flex-start;margin-top:10px;">
           <button id="loginBtn" class="btn primary" type="button">Login</button>
-          <button id="forgotBtn" class="btn ghost" type="button">Mot de passe oublié</button>
+          <button id="forgotBtn" class="btn ghost" type="button">Mot de passe oubliÃ©</button>
         </div>
         <div id="loginStatus" class="status"></div>
       </div>
@@ -845,13 +848,13 @@
     <header class="topbar">
       <div class="brand-wrap">
         <div class="brand">
-          <div class="brand-mark"><img alt="Alkoda On Air" src="data:image/x-icon;base64,AAABAAEAgIAAAAEAIAAoCAEAFgAAACgAAACAAAAAAAEAAAEAIAAAAAAAAAABAAAAAAAAAAAAAAAAAAAAAAAAAAD/AAAA/wAAAP8AAAD/AAAA/wAAAP8AAAD/AAAA/wAAAP8AAAD/AAAA/wAAAP8AAAD/AAAA/wAAAP8AAAD/AAAA/wAAAP8AAAD/AAAA/wAAAP8AAAD/AAAA/wAAAP8AAAD/AAAA/wAAAP8AAAD/AAAA/wAAAP8AAAD/AAAA/wAAAP8AAAD/AAAA/wAAAP8AAAD/AAAA/wAAAP8AAAD/AAAA/wAAAP8AAAD/AAAA/wAAAP8AAAD/AAAA/wAAAP8AAAD/AAAA/wAAAP8AAAD/AAAA/wAAAP8AAAD/AAAA/wAAAP8AAAD/AAAA/wAAAP8AAAD/AAAA/wAAAP8AAAD/AAAA/wAAAP8AAAD/AAAA/wAAAP8AAAD/AAAA/wAAAP8AAAD/AAAA/wAAAP8AAAD/AAAA/wAAAP8AAAD/AAAA/wAAAP8AAAD/AAAA/wAAAP8AAAD/AAAA/wAAAP8AAAD/AAAA/wAAAP8AAAD/AAAA/wAAAP8AAAD/AAAA/wAAAP8AAAD/AAAA/wAAAP8AAAD/AAAA/wAAAP8AAAD/AAAA/wAAAP8AAAD/AAAA/wAAAP8AAAD/AAAA/wAAAP8AAAD/AAAA/wAAAP8AAAD/AAAA/wAAAP8AAAD/AAAA/wAAAP8AAAD/AAAA/wAAAP8AAAD/AAAA/wAAAP8AAAD/AAAA/wAAAP8AAAD/AAAA/wAAAP8AAAD/AAAA/wAAAP8AAAD/AAAA/wAAAP8AAAD/AAAA/wAAAP8AAAD/AAAA/wAAAP8AAAD/AAAA/wAAAP8AAAD/AAAA/wAAAP8AAAD/AAAA/wAAAP8AAAD/AAAA/wAAAP8AAAD/AAAA/wAAAP8AAAD/AAAA/wAAAP8AAAD/AAAA/wAAAP8AAAD/AAAA/wAAAP8AAAD/AAAA/wAAAP8AAAD/AAAA/wAAAP8AAAD/AAAA/wAAAP8AAAD/AAAA/wAAAP8AAAD/AAAA/wAAAP8AAAD/AAAA/wAAAP8AAAD/AAAA/wAAAP8AAAD/AAAA/wAAAP8AAAD/AAAA/wAAAP8AAAD/AAAA/wAAAP8AAAD/AAAA/wAAAP8AAAD/AAAA/wAAAP8AAAD/AAAA/wAAAP8AAAD/AAAA/wAAAP8AAAD/AAAA/wAAAP8AAAD/AAAA/wAAAP8AAAD/AAAA/wAAAP8AAAD/AAAA/wAAAP8AAAD/AAAA/wAAAP8AAAD/AAAA/wAAAP8AAAD/AAAA/wAAAP8AAAD/AAAA/wAAAP8AAAD/AAAA/wAAAP8AAAD/AAAA/wAAAP8AAAD/AAAA/wAAAP8AAAD/AAAA/wAAAP8AAAD/AAAA/wAAAP8AAAD/AAAA/wAAAP8AAAD/AAAA/wAAAP8AAAD/AAAA/wAAAP8AAAD/AAAA/wAAAP8AAAD/AAAA/wAAAP8AAAD/AAAA/wAAAP8AAAD/AAAA/wAAAP8AAAD/AAAA/wAAAP8AAAD/AAAA/wAAAP8AAAD/AAAA/wAAAP8AAAD/AAAA/wAAAP8AAAD/AAAA/wAAAP8AAAD/AAAA/wAAAP8AAAD/AAAA/wAAAP8AAAD/AAAA/wAAAP8AAAD/AAAA/wAAAP8AAAD/AAAA/wAAAP8AAAD/AAAA/wAAAP8AAAD/AAAA/wAAAP8AAAD/AAAA/wAAAP8AAAD/AAAA/wAAAP8AAAD/AAAA/wAAAP8AAAD/AAAA/wAAAP8AAAD/AAAA/wAAAP8AAAD/AAAA/wAAAP8AAAD/AAAA/wAAAP8AAAD/AAAA/wAAAP8AAAD/AAAA/wAAAP8AAAD/AAAA/wAAAP8AAAD/AAAA/wAAAP8AAAD/AAAA/wAAAP8AAAD/AAAA/wAAAP8AAAD/AAAA/wAAAP8AAAD/AAAA/wAAAP8AAAD/AAAA/wAAAP8AAAD/AAAA/wAAAP8AAAD/AAAA/wAAAP8AAAD/AAAA/wAAAP8AAAD/AAAA/wAAAP8AAAD/AAAA/wAAAP8AAAD/AAAA/wAAAP8AAAD/AAAA/wAAAP8AAAD/AAAA/wAAAP8AAAD/AAAA/wAAAP8AAAD/AAAA/wAAAP8AAAD/AAAA/wAAAP8AAAD/AAAA/wAAAP8AAAD/AAAA/wAAAP8AAAD/AAAA/wAAAP8AAAD/AAAA/wAAAP8AAAD/AAAA/wAAAP8AAAD/AAAA/wAAAP8AAAD/AAAA/wAAAP8AAAD/AAAA/wAAAP8AAAD/AAAA/wAAAP8AAAD/AAAA/wAAAP8AAAD/AAAA/wAAAP8AAAD/AAAA/wAAAP8AAAD/AAAA/wAAAP8AAAD/AAAA/wAAAP8AAAD/AAAA/wAAAP8AAAD/AAAA/wAAAP8AAAD/AAAA/wAAAP8AAAD/AAAA/wAAAP8AAAD/AAAA/wAAAP8AAAD/AAAA/wAAAP8AAAD/AAAA/wAAAP8AAAD/AAAA/wAAAP8AAAD/AAAA/wAAAP8AAAD/AAAA/wAAAP8AAAD/AAAA/wAAAP8AAAD/AAAA/wAAAP8AAAD/AAAA/wAAAP8AAAD/AAAA/wAAAP8AAAD/AAAA/wAAAP8AAAD/AAAA/wAAAP8AAAD/AAAA/wAAAP8AAAD/AAAA/wAAAP8AAAD/AAAA/wAAAP8AAAD/AAAA/wAAAP8AAAD/AAAA/wAAAP8AAAD/AAAA/wAAAP8AAAD/AAAA/wAAAP8AAAD/AAAA/wAAAP8AAAD/AAAA/wAAAP8AAAD/AAAA/wAAAP8AAAD/AAAA/wAAAP8AAAD/AAAA/wAAAP8AAAD/AAAA/wAAAP8AAAD/AAAA/wAAAP8AAAD/AAAA/wAAAP8AAAD/AAAA/wAAAP8AAAD/AAAA/wAAAP8AAAD/AAAA/wAAAP8AAAD/AAAA/wAAAP8AAAD/AAAA/wAAAP8AAAD/AAAA/wAAAP8AAAD/AAAA/wAAAP8AAAD/AAAA/wAAAP8AAAD/AAAA/wAAAP8AAAD/AAAA/wAAAP8AAAD/AAAA/wAAAP8AAAD/AAAA/wAAAP8AAAD/AAAA/wAAAP8AAAD/AAAA/wAAAP8AAAD/AAAA/wAAAP8AAAD/AAAA/wAAAP8AAAD/AAAA/wAAAP8AAAD/AAAA/wAAAP8AAAD/AAAA/wAAAP8AAAD/AAAA/wAAAP8AAAD/AAAA/wAAAP8AAAD/AAAA/wAAAP8AAAD/AAAA/wAAAP8AAAD/AAAA/wAAAP8AAAD/AAAA/wAAAP8AAAD/AAAA/wAAAP8AAAD/AAAA/wAAAP8AAAD/AAAA/wAAAP8AAAD/AAAA/wAAAP8AAAD/AAAA/wAAAP8AAAD/AAAA/wAAAP8AAAD/AAAA/wAAAP8AAAD/AAAA/wAAAP8AAAD/AAAA/wAAAP8AAAD/AAAA/wAAAP8AAAD/AAAA/wAAAP8AAAD/AAAA/wAAAP8AAAD/AAAA/wAAAP8AAAD/AAAA/wAAAP8AAAD/AAAA/wAAAP8AAAD/AAAA/wAAAP8AAAD/AAAA/wAAAP8AAAD/AAAA/wAAAP8AAAD/AAAA/wAAAP8AAAD/AAAA/wAAAP8AAAD/AAAA/wAAAP8AAAD/AAAA/wAAAP8AAAD/AAAA/wAAAP8AAAD/AAAA/wAAAP8AAAD/AAAA/wAAAP8AAAD/AAAA/wAAAP8AAAD/AAAA/wAAAP8AAAD/AAAA/wAAAP8AAAD/AAAA/wAAAP8AAAD/AAAA/wAAAP8AAAD/AAAA/wAAAP8AAAD/AAAA/wAAAP8AAAD/AAAA/wAAAP8AAAD/AAAA/wAAAP8AAAD/AAAA/wAAAP8AAAD/AAAA/wAAAP8AAAD/AAAA/wAAAP8AAAD/AAAA/wAAAP8AAAD/AAAA/wAAAP8AAAD/AAAA/wAAAP8AAAD/AAAA/wAAAP8AAAD/AAAA/wAAAP8AAAD/AAAA/wAAAP8AAAD/AAAA/wAAAP8AAAD/AAAA/wAAAP8AAAD/AAAA/wAAAP8AAAD/AAAA/wAAAP8AAAD/AAAA/wAAAP8AAAD/AAAA/wAAAP8AAAD/AAAA/wAAAP8AAAD/AAAA/wAAAP8AAAD/AAAA/wAAAP8AAAD/AAAA/wAAAP8AAAD/AAAA/wAAAP8AAAD/AAAA/wAAAP8AAAD/AAAA/wAAAP8AAAD/AAAA/wAAAP8AAAD/AAAA/wAAAP8AAAD/AAAA/wAAAP8AAAD/AAAA/wAAAP8AAAD/AAAA/wAAAP8AAAD/AAAA/wAAAP8AAAD/AAAA/wAAAP8AAAD/AAAA/wAAAP8AAAD/AAAA/wAAAP8AAAD/AAAA/wAAAP8AAAD/AAAA/wAAAP8AAAD/AAAA/wAAAP8AAAD/AAAA/wAAAP8AAAD/AAAA/wAAAP8AAAD/AAAA/wAAAP8AAAD/AAAA/wAAAP8AAAD/AAAA/wAAAP8AAAD/AAAA/wAAAP8AAAD/AAAA/wEBAf8AAAD/AAAA/wAAAf8BAQH/AQEB/wEBAf8AAAD/AQEB/wEBAf8BAQH/AQEB/wEBAf8BAQH/AAAA/wEBAf8BAAH/AQEB/wEBAf8BAQH/AQEB/wAAAP8AAAD/AQEB/wAAAP8AAAD/AAAB/wAAAP8AAAD/AAAA/wAAAP8AAAD/AAAA/wAAAP8AAAD/AAAA/wAAAP8AAAD/AAAA/wAAAP8AAAD/AAAA/wAAAP8AAAD/AAAA/wAAAP8AAAD/AAAA/wAAAP8AAAD/AAAA/wAAAP8AAAD/AAAA/wAAAP8AAAD/AAAA/wAAAP8AAAD/AAAA/wAAAP8AAAD/AAAA/wAAAP8AAAD/AAAA/wAAAP8AAAD/AAAA/wAAAP8AAAD/AAAA/wAAAP8AAAD/AAAA/wAAAP8AAAD/AAAA/wAAAP8AAAD/AAAA/wAAAP8AAAD/AAAA/wAAAP8AAAD/AAAA/wAAAP8AAAD/AAAA/wAAAP8AAAD/AAAA/wAAAP8AAAD/AAAA/wAAAP8AAAD/AAAA/wAAAP8AAAD/AAAA/wAAAP8AAAD/AAAA/wAAAP8AAAD/AAAA/wAAAP8AAAD/AAAA/wAAAP8AAAD/AAAA/wAAAP8AAAD/AAAA/wAAAP8AAAD/AAAA/wAAAP8AAAD/AAAA/wAAAP8AAAD/AAAA/wAAAP8AAAD/AAAA/wAAAP8AAAD/AAAA/wAAAP8AAAD/AAAA/wAAAP8AAAD/AAAA/wAAAP8AAAD/AAAA/wAAAP8AAAD/AAAA/wAAAP8AAAD/AAAA/wAAAP8AAAD/AAAA/wAAAP8AAAD/AAAA/wAAAP8AAAD/AAAA/wAAAP8AAAD/AAAA/wAAAP8AAAD/AAAA/wAAAP8AAAD/AAAA/wAAAP8AAAD/AAAA/wAAAP8AAAD/AAAA/wAAAP8AAAD/AAAA/wAAAP8AAAD/AAAA/wAAAP8AAAD/AAAA/wAAAP8AAAD/AAAA/wAAAP8AAAD/AAAA/wAAAP8AAAD/AAAA/wAAAP8AAAD/AAAA/wAAAP8AAAD/AAAA/wAAAP8AAAD/AAAA/wAAAP8AAAD/AAAA/wAAAP8AAAD/AAAA/wAAAP8AAAD/AAAA/wAAAP8AAAD/AAAA/wAAAP8AAAD/AAAA/wAAAP8AAAD/AAAA/wAAAP8AAAD/AAAA/wAAAP8AAAD/AAAA/wAAAP8AAAD/AAAA/wAAAP8AAAD/AAAA/wAAAP8AAAD/AAAA/wAAAP8AAAD/AAAA/wAAAP8AAAD/AAAA/wAAAP8AAAD/AAAA/wAAAP8AAAD/AAAA/wAAAP8AAAD/AAAA/wAAAP8AAAD/AAAA/wAAAP8AAAD/AAAA/wAAAP8AAAD/AAAA/wAAAP8AAAD/AAAA/wAAAP8AAAD/AAAA/wAAAP8AAAD/AAAA/wAAAP8AAAD/AAAA/wAAAP8AAAD/AAAA/wAAAP8AAAD/AAAA/wAAAP8AAAD/AAAA/wAAAP8AAAD/AAAA/wAAAP8AAAD/AAAA/wAAAP8AAAD/AAAA/wAAAP8AAAD/AAAA/wAAAP8AAAD/AAAA/wAAAP8AAAD/AAAA/wAAAP8AAAD/AAAA/wAAAP8AAAD/AAAA/wAAAP8AAAD/AAAA/wAAAP8AAAD/AAAA/wAAAP8AAAD/AAAA/wAAAP8AAAD/AAAA/wAAAP8AAAD/AAAA/wAAAP8AAAD/AAAA/wAAAP8AAAD/AAAA/wAAAP8AAAD/AAAA/wAAAP8AAAD/AAAA/wAAAP8AAAD/AAAA/wAAAP8AAAD/AAAA/wAAAP8AAAD/AAAA/wAAAP8AAAD/AAAA/wAAAP8AAAD/AAAA/wAAAP8AAAD/AAAA/wAAAP8AAAD/AAAA/wAAAP8AAAD/AAAA/wAAAP8AAAD/AAAA/wAAAP8AAAD/AAAA/wAAAP8AAAD/AAAA/wAAAP8AAAD/AAAA/wAAAP8AAAD/AAAA/wAAAP8AAAD/AAAA/wAAAP8AAAD/AAAA/wAAAP8AAAD/AAAA/wAAAP8AAAD/AAAA/wAAAP8AAAD/AAAA/wAAAP8AAAD/AAAA/wAAAP8AAAD/AAAA/wAAAP8AAAD/AAAA/wAAAP8AAAD/AAAA/wAAAP8AAAD/AAAA/wAAAP8AAAD/AAAA/wAAAP8AAAD/AAAA/wAAAP8AAAD/AAAA/wAAAP8AAAD/AAAA/wAAAP8AAAD/AAAA/wAAAP8AAAD/AAAA/wAAAP8AAAD/AAAA/wAAAP8AAAD/AAAA/wAAAP8AAAD/AAAA/wAAAP8AAAD/AAAA/wAAAP8AAAD/AAAA/wAAAP8AAAD/AAAA/wAAAP8AAAD/AAAA/wAAAP8AAAD/AAAA/wAAAP8AAAD/AAAA/wAAAP8AAAD/AAAA/wAAAP8AAAD/AAAA/wAAAP8AAAD/AAAA/wAAAP8AAAD/AAAA/wAAAP8AAAD/AAAA/wAAAP8AAAD/AAAA/wAAAP8AAAD/AAAA/wAAAP8AAAD/AAAA/wAAAP8AAAD/AAAA/wAAAP8AAAD/AAAA/wAAAP8AAAD/AAAA/wAAAP8AAAD/AAAA/wAAAP8AAAD/AAAA/wAAAP8AAAD/AAAA/wAAAP8AAAD/AAAA/wAAAP8AAAD/AAAA/wAAAP8AAAD/AAAA/wAAAP8AAAD/AAAA/wAAAP8AAAD/AAAA/wAAAP8AAAD/AAAA/wAAAP8AAAD/AAAA/wAAAP8AAAD/AAAA/wAAAP8AAAD/AAAA/wAAAP8AAAD/AAAA/wAAAP8AAAD/AAAA/wAAAP8AAAD/AAAA/wAAAP8AAAD/AAAA/wAAAP8AAAD/AAAA/wAAAP8AAAD/AAAA/wAAAP8AAAD/AAAA/wAAAP8AAAD/AAAA/wAAAP8AAAD/AAAA/wAAAP8AAAD/AAAA/wAAAP8AAAD/AAAA/wAAAP8AAAD/AAAA/wAAAP8AAAD/AAAA/wAAAP8AAAD/AAAA/wAAAP8AAAD/AAAA/wAAAP8AAAD/AAAA/wAAAP8AAAD/AAAA/wAAAP8AAAD/AAAA/wAAAP8AAAD/AAAA/wAAAP8AAAD/AAAA/wAAAP8AAAD/AAAA/wAAAP8AAAD/AAAA/wAAAP8AAAD/AAAA/wAAAP8AAAD/AAAA/wAAAP8AAAD/AAAA/wAAAP8AAAD/AAAA/wAAAP8AAAD/AAAA/wAAAP8AAAD/AAAA/wAAAP8AAAD/AAAA/wAAAP8AAAD/AAAA/wAAAP8AAAD/AAAA/wAAAP8AAAD/AAAA/wAAAP8AAAD/AAAA/wAAAP8AAAD/AAAA/wAAAP8AAAD/AAAA/wAAAP8AAAD/AAAA/wAAAP8AAAD/AAAA/wAAAP8AAAD/AAAA/wAAAP8AAAD/AAAA/wAAAP8AAAD/AAAA/wAAAP8AAAD/AAAA/wAAAP8AAAD/AAAA/wAAAP8AAAD/AAAA/wAAAP8AAAD/AAAA/wAAAP8AAAD/AAAA/wAAAP8AAAD/AAAA/wAAAP8AAAD/AAAA/wAAAP8AAAD/AAAA/wAAAP8AAAD/AAAA/wAAAP8AAAD/AAAA/wAAAP8AAAD/AAAA/wAAAP8AAAD/AAAA/wAAAP8AAAD/AAAA/wAAAP8AAAD/AAAA/wAAAP8AAAD/AAAA/wAAAP8AAAD/AAAA/wAAAP8AAAD/AAAA/wAAAP8AAAD/AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA=" /></div>
+          <div class="brand-mark"><img alt="Alkoda On Air" src="./alkoda-apple-touch-icon.png" /></div>
           <div class="brand-title">alkoda start</div>
         </div>
       </div>
       <div class="top-actions">
         <button id="sizeBtn" class="btn" type="button">Taille</button>
-        <button id="logoutBtn" class="btn" type="button">Déconnexion</button>
+        <button id="logoutBtn" class="btn" type="button">DÃ©connexion</button>
       </div>
     </header>
 
@@ -866,21 +869,21 @@
   <div id="sizeModal" class="overlay">
     <div class="card size-card">
       <h2>Taille du webmix</h2>
-      <p>Choisis les colonnes, les lignes et la taille des tuiles. La grille derrière la popup change immédiatement.</p>
+      <p>Choisis les colonnes, les lignes et la taille des tuiles. La grille derriÃ¨re la popup change immÃ©diatement.</p>
 
       <div class="size-panel">
         <div class="size-control">
           <div class="size-control-title">Colonnes</div>
           <button id="colsPlusBtn" class="step-btn" type="button">+</button>
-          <button id="colsMinusBtn" class="step-btn" type="button">−</button>
+          <button id="colsMinusBtn" class="step-btn" type="button">âˆ’</button>
         </div>
 
-        <div id="sizePreview" class="size-display">11 × 5<br>86 px</div>
+        <div id="sizePreview" class="size-display">11 Ã— 5<br>86 px</div>
 
         <div class="size-control">
           <div class="size-control-title">Lignes</div>
           <button id="rowsPlusBtn" class="step-btn" type="button">+</button>
-          <button id="rowsMinusBtn" class="step-btn" type="button">−</button>
+          <button id="rowsMinusBtn" class="step-btn" type="button">âˆ’</button>
         </div>
       </div>
 
@@ -889,7 +892,7 @@
         <div class="size-slider-label">Taille des tuiles</div>
       </div>
 
-      <div class="size-note">Les tuiles restent carrées et la configuration est sauvegardée dans Supabase.</div>
+      <div class="size-note">Les tuiles restent carrÃ©es et la configuration est sauvegardÃ©e dans Supabase.</div>
 
       <div id="sizeStatus" class="status"></div>
 
@@ -906,7 +909,7 @@
         <h2 id="tileModalTitle">Ajouter une tuile</h2>
 
       <div class="preview-wrap">
-        <div id="preview" class="preview">Aperçu</div>
+        <div id="preview" class="preview">AperÃ§u</div>
       </div>
 
       </div>
@@ -953,7 +956,7 @@
                   <button class="swatch-btn" type="button" data-color="#111827" style="background:#111827;"></button>
                 </div>
                 <details class="advanced-color advanced-toggle">
-                  <summary>Couleur personnalisée</summary>
+                  <summary>Couleur personnalisÃ©e</summary>
                   <div class="field">
                     <input id="tileColor" type="color" value="#ffffff" />
                   </div>
@@ -963,7 +966,7 @@
           </div>
 
           <div class="image-panel" style="margin-top:12px;">
-            <div class="image-panel-title">Options générales</div>
+            <div class="image-panel-title">Options gÃ©nÃ©rales</div>
             <div class="grid-2">
               <label class="checkbox-row">
                 <input id="tileShowTitle" type="checkbox" checked />
@@ -982,7 +985,7 @@
             <div class="image-panel-title">Image</div>
             <div class="mode-list">
               <button id="modeColor" class="mode-btn active" type="button">Couleur</button>
-              <button id="modeUpload" class="mode-btn" type="button">Image importée</button>
+              <button id="modeUpload" class="mode-btn" type="button">Image importÃ©e</button>
               <button id="modeWeb" class="mode-btn" type="button">Image du net</button>
             </div>
 
@@ -996,16 +999,16 @@
 
             <div id="webOptions" class="hidden">
               <div class="field">
-                <label for="tileImage">URL d’image</label>
+                <label for="tileImage">URL dâ€™image</label>
                 <input id="tileImage" type="url" placeholder="https://.../image.png" />
               </div>
-              <button id="autoLogoBtn" class="btn" type="button">Logo automatique depuis l’URL</button>
+              <button id="autoLogoBtn" class="btn" type="button">Logo automatique depuis lâ€™URL</button>
             </div>
 
             <div id="imageSettings" class="image-settings hidden">
               <label class="checkbox-row">
                 <input id="tileImageEnabled" type="checkbox" checked />
-                <span>Afficher l’image</span>
+                <span>Afficher lâ€™image</span>
               </label>
               <label class="checkbox-row">
                 <input id="tileImageFull" type="checkbox" />
@@ -1013,7 +1016,7 @@
               </label>
               <div id="tileImageScaleWrap" class="range-inline">
                 <label for="tileImageScale">
-                  <span>Taille de l’image</span>
+                  <span>Taille de lâ€™image</span>
                   <span id="tileImageScaleValue" class="range-value">100%</span>
                 </label>
                 <input id="tileImageScale" type="range" min="10" max="200" step="10" value="100" />
@@ -1058,7 +1061,7 @@
       ["Stripe", "https://dashboard.stripe.com"],
       ["PayPal", "https://www.paypal.com"],
       ["Fortuneo", "https://www.fortuneo.fr"],
-      ["Crédit Mutuel", "https://www.creditmutuel.fr"],
+      ["CrÃ©dit Mutuel", "https://www.creditmutuel.fr"],
       ["Urssaf", "https://www.urssaf.fr"],
       ["ameli.fr", "https://www.ameli.fr"],
       ["France Travail", "https://www.francetravail.fr"],
@@ -1067,7 +1070,7 @@
       ["WeTransfer", "https://wetransfer.com"],
       ["SwissTransfer", "https://www.swisstransfer.com"],
       ["IMDb", "https://www.imdb.com"],
-      ["Allociné", "https://www.allocine.fr"],
+      ["AllocinÃ©", "https://www.allocine.fr"],
       ["Airbnb", "https://www.airbnb.fr"],
       ["Amazon", "https://www.amazon.fr"],
       ["Prime Video", "https://www.primevideo.com"],
@@ -1276,7 +1279,7 @@
 
     function syncSizeInputs(config) {
       ui.tileSizeRange.value = config.tileSize;
-      ui.sizePreview.innerHTML = `${config.columns} × ${config.rows}<br>${config.tileSize} px`;
+      ui.sizePreview.innerHTML = `${config.columns} Ã— ${config.rows}<br>${config.tileSize} px`;
     }
 
     function applyGridConfig(config) {
@@ -1348,7 +1351,7 @@
         const menu = document.createElement("button");
         menu.type = "button";
         menu.className = "tile-menu";
-        menu.textContent = "⋯";
+        menu.textContent = "â‹¯";
         menu.addEventListener("click", event => {
           event.stopPropagation();
           openTileModal(tile);
@@ -1437,7 +1440,7 @@
 
     function updatePreview() {
       const imageUrl = getPreviewImageUrl();
-      const title = ui.tileTitle.value.trim() || "Aperçu";
+      const title = ui.tileTitle.value.trim() || "AperÃ§u";
       syncImageControls();
       ui.preview.className = "preview";
       ui.preview.innerHTML = "";
@@ -1492,7 +1495,7 @@
       applyGridConfig(state.config);
       renderTiles();
 
-      setStatus(ui.sizeStatus, "Sauvegarde…");
+      setStatus(ui.sizeStatus, "Sauvegardeâ€¦");
       ui.saveSizeBtn.disabled = true;
 
       const payload = {
@@ -1515,7 +1518,7 @@
           throw error;
         }
         state.configRow = data || state.configRow;
-        setStatus(ui.sizeStatus, "Sauvegardé.", "ok");
+        setStatus(ui.sizeStatus, "SauvegardÃ©.", "ok");
         state.sizeModalSnapshot = { ...state.config };
         state.saveSizeCloseTimer = window.setTimeout(() => {
           ui.sizeModal.classList.remove("open");
@@ -1609,7 +1612,7 @@
         open_new_tab: ui.tileOpenNewTab.checked
       };
 
-      setStatus(ui.tileStatus, "Sauvegarde…");
+      setStatus(ui.tileStatus, "Sauvegardeâ€¦");
       ui.saveTileBtn.disabled = true;
 
       try {
@@ -1649,7 +1652,7 @@
         return;
       }
 
-      setStatus(ui.tileStatus, "Suppression…");
+      setStatus(ui.tileStatus, "Suppressionâ€¦");
 
       try {
         const { error } = await sbClient.from("tiles").delete().eq("id", state.editingTile.id);
@@ -1709,7 +1712,7 @@
           return;
         }
 
-        if (force && !window.confirm("Préremplir va ajouter des tuiles de référence. Continuer ?")) {
+        if (force && !window.confirm("PrÃ©remplir va ajouter des tuiles de rÃ©fÃ©rence. Continuer ?")) {
           return;
         }
 
@@ -1729,7 +1732,7 @@
         }
         await loadTiles();
       } catch (error) {
-        showDebug(`Erreur de préremplissage : ${error.message || error}`);
+        showDebug(`Erreur de prÃ©remplissage : ${error.message || error}`);
       }
     }
 
@@ -1766,7 +1769,7 @@
     }
 
     async function login() {
-      setStatus(ui.loginStatus, "Connexion…");
+      setStatus(ui.loginStatus, "Connexionâ€¦");
       ui.loginBtn.disabled = true;
 
       try {
@@ -1776,7 +1779,7 @@
         if (error) {
           throw error;
         }
-        setStatus(ui.loginStatus, "Connecté.", "ok");
+        setStatus(ui.loginStatus, "ConnectÃ©.", "ok");
       } catch (error) {
         setStatus(ui.loginStatus, error.message || "Erreur de connexion.", "error");
       } finally {
@@ -1787,11 +1790,11 @@
     async function forgotPassword() {
       const email = ui.loginEmail.value.trim();
       if (!email) {
-        setStatus(ui.loginStatus, "Entre ton email d’abord.", "error");
+        setStatus(ui.loginStatus, "Entre ton email dâ€™abord.", "error");
         return;
       }
 
-      setStatus(ui.loginStatus, "Envoi…");
+      setStatus(ui.loginStatus, "Envoiâ€¦");
 
       try {
         const { error } = await sbClient.auth.resetPasswordForEmail(email, {
@@ -1800,15 +1803,15 @@
         if (error) {
           throw error;
         }
-        setStatus(ui.loginStatus, "Email de réinitialisation envoyé si le compte existe.", "ok");
+        setStatus(ui.loginStatus, "Email de rÃ©initialisation envoyÃ© si le compte existe.", "ok");
       } catch (error) {
-        setStatus(ui.loginStatus, error.message || "Erreur d’envoi.", "error");
+        setStatus(ui.loginStatus, error.message || "Erreur dâ€™envoi.", "error");
       }
     }
 
     async function init() {
       if (ui.brandMarkImage) {
-        ui.brandMarkImage.src = "./logo-carre-Alkoda-On-Air.ico";
+        ui.brandMarkImage.src = "./alkoda-apple-touch-icon.png";
       }
 
       syncSizeInputs(state.config);
@@ -1918,14 +1921,14 @@
         return;
       }
 
-      setStatus(ui.tileStatus, "Import de l’image…");
+      setStatus(ui.tileStatus, "Import de lâ€™imageâ€¦");
 
       try {
         state.uploadedImageUrl = await uploadImage(file);
         ui.tileImage.value = state.uploadedImageUrl;
         ui.tileImageEnabled.checked = true;
         setImageMode("upload");
-        setStatus(ui.tileStatus, "Image importée.", "ok");
+        setStatus(ui.tileStatus, "Image importÃ©e.", "ok");
       } catch (error) {
         setStatus(ui.tileStatus, `Erreur upload : ${error.message || error}`, "error");
       }
@@ -1953,3 +1956,4 @@
   </script>
 </body>
 </html>
+

@@ -260,18 +260,30 @@
       height: 100%;
       display: grid;
       place-items: center;
+      padding: 0;
     }
 
     .tile-media img {
       width: 100%;
       height: 100%;
-      object-fit: cover;
       display: block;
     }
 
+    .tile-media.scaled {
+      padding: 8%;
+    }
+
+    .tile-media.scaled img {
+      object-fit: contain;
+      transform: scale(var(--image-scale, 1));
+      transform-origin: center;
+    }
+
+    .tile-media.full img {
+      object-fit: cover;
+    }
+
     .tile-media.favicon img {
-      width: calc(var(--tile-size) * 0.64);
-      height: calc(var(--tile-size) * 0.64);
       object-fit: contain;
       filter: drop-shadow(0 6px 14px rgba(0, 0, 0, 0.18));
     }
@@ -510,6 +522,39 @@
       line-height: 1.4;
     }
 
+    .image-settings {
+      display: grid;
+      gap: 10px;
+      margin-top: 12px;
+      padding-top: 12px;
+      border-top: 1px solid rgba(255, 255, 255, 0.08);
+    }
+
+    .range-inline {
+      display: grid;
+      gap: 6px;
+    }
+
+    .range-inline label {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 10px;
+      margin: 0;
+      color: #d7dae0;
+      font-size: 0.9rem;
+    }
+
+    .range-inline input[type="range"] {
+      width: 100%;
+    }
+
+    .range-value {
+      color: var(--muted);
+      font-size: 0.84rem;
+      white-space: nowrap;
+    }
+
     .preview {
       width: 100px;
       height: 100px;
@@ -703,7 +748,6 @@
       </div>
       <div class="top-actions">
         <button id="sizeBtn" class="btn" type="button">Taille</button>
-        <button id="seedBtn" class="btn" type="button">Préremplir</button>
         <button id="logoutBtn" class="btn" type="button">Déconnexion</button>
       </div>
     </header>
@@ -798,6 +842,24 @@
           <button id="autoLogoBtn" class="btn" type="button">Logo automatique depuis l’URL</button>
         </div>
 
+        <div id="imageSettings" class="image-settings hidden">
+          <label class="checkbox-row">
+            <input id="tileImageEnabled" type="checkbox" checked />
+            <span>Afficher l’image</span>
+          </label>
+          <label class="checkbox-row">
+            <input id="tileImageFull" type="checkbox" />
+            <span>Image plein cadre</span>
+          </label>
+          <div id="tileImageScaleWrap" class="range-inline">
+            <label for="tileImageScale">
+              <span>Taille de l’image</span>
+              <span id="tileImageScaleValue" class="range-value">100%</span>
+            </label>
+            <input id="tileImageScale" type="range" min="10" max="150" step="10" value="100" />
+          </div>
+        </div>
+
         <div id="preview" class="preview">Aperçu</div>
       </div>
 
@@ -882,7 +944,6 @@
       logoutBtn: $("logoutBtn"),
       debugBox: $("debugBox"),
       webmix: $("webmix"),
-      seedBtn: $("seedBtn"),
       sizeBtn: $("sizeBtn"),
       sizeModal: $("sizeModal"),
       sizePreview: $("sizePreview"),
@@ -901,6 +962,12 @@
       tileImage: $("tileImage"),
       tileColor: $("tileColor"),
       tileUpload: $("tileUpload"),
+      tileImageEnabled: $("tileImageEnabled"),
+      tileImageFull: $("tileImageFull"),
+      tileImageScale: $("tileImageScale"),
+      tileImageScaleValue: $("tileImageScaleValue"),
+      tileImageScaleWrap: $("tileImageScaleWrap"),
+      imageSettings: $("imageSettings"),
       tileShowTitle: $("tileShowTitle"),
       tileOpenNewTab: $("tileOpenNewTab"),
       tileStatus: $("tileStatus"),
@@ -981,6 +1048,53 @@
         .replace(/'/g, "&#39;");
     }
 
+    function parseTileImageData(rawImage) {
+      const source = rawImage ? String(rawImage) : "";
+      const plainUrl = normalizeUrl(source);
+      const fallback = {
+        src: plainUrl,
+        enabled: Boolean(plainUrl),
+        full: false,
+        scale: /google\.com\/s2\/favicons/i.test(plainUrl) ? 70 : 100,
+        mode: plainUrl ? "web" : "color"
+      };
+
+      if (!source) {
+        return fallback;
+      }
+
+      try {
+        const parsed = JSON.parse(source);
+        if (parsed && typeof parsed === "object" && !Array.isArray(parsed)) {
+          const src = normalizeUrl(parsed.src || "");
+          return {
+            src,
+            enabled: parsed.enabled !== false && Boolean(src),
+            full: Boolean(parsed.full),
+            scale: clampNumber(parsed.scale, 10, 150, /google\.com\/s2\/favicons/i.test(src) ? 70 : 100),
+            mode: parsed.mode === "upload" ? "upload" : (parsed.mode === "web" ? "web" : (src ? "web" : "color"))
+          };
+        }
+      } catch {
+        return fallback;
+      }
+
+      return fallback;
+    }
+
+    function serializeTileImageData(data) {
+      if (!data?.src) {
+        return null;
+      }
+      return JSON.stringify({
+        src: normalizeUrl(data.src),
+        enabled: Boolean(data.enabled),
+        full: Boolean(data.full),
+        scale: clampNumber(data.scale, 10, 150, 100),
+        mode: data.mode === "upload" ? "upload" : "web"
+      });
+    }
+
     function parseConfigRow(row) {
       if (!row || !row.url) {
         return { ...DEFAULT_CONFIG };
@@ -1035,8 +1149,9 @@
       orderedTiles.forEach(tile => {
         const element = document.createElement("article");
         const url = normalizeUrl(tile.url);
-        const hasImage = Boolean(tile.image);
-        const isFavicon = hasImage && /google\.com\/s2\/favicons/i.test(tile.image);
+        const imageData = parseTileImageData(tile.image);
+        const hasImage = Boolean(imageData.src) && imageData.enabled;
+        const isFavicon = hasImage && /google\.com\/s2\/favicons/i.test(imageData.src);
 
         element.className = "tile";
         element.draggable = true;
@@ -1044,10 +1159,13 @@
         element.style.background = tile.color || "#ffffff";
 
         const media = document.createElement("div");
-        media.className = `tile-media${isFavicon ? " favicon" : ""}`;
+        media.className = `tile-media${hasImage ? ` ${imageData.full ? "full" : "scaled"}` : ""}${isFavicon ? " favicon" : ""}`;
+        if (hasImage && !imageData.full) {
+          media.style.setProperty("--image-scale", `${imageData.scale / 100}`);
+        }
 
         if (hasImage) {
-          media.innerHTML = `<img src="${escapeHtml(tile.image)}" alt="${escapeHtml(tile.title || "")}">`;
+          media.innerHTML = `<img src="${escapeHtml(imageData.src)}" alt="${escapeHtml(tile.title || "")}">`;
         } else {
           media.innerHTML = `<div class="tile-text">${escapeHtml(tile.title || "Sans titre")}</div>`;
         }
@@ -1129,6 +1247,7 @@
       ui.colorOptions.classList.toggle("hidden", mode !== "color");
       ui.uploadOptions.classList.toggle("hidden", mode !== "upload");
       ui.webOptions.classList.toggle("hidden", mode !== "web");
+      ui.imageSettings.classList.toggle("hidden", mode === "color");
       updatePreview();
     }
 
@@ -1142,16 +1261,28 @@
       return "";
     }
 
+    function syncImageControls() {
+      const scale = clampNumber(ui.tileImageScale.value, 10, 150, 100);
+      ui.tileImageScale.value = scale;
+      ui.tileImageScaleValue.textContent = `${scale}%`;
+      ui.tileImageScaleWrap.classList.toggle("hidden", ui.tileImageFull.checked);
+    }
+
     function updatePreview() {
       const imageUrl = getPreviewImageUrl();
       const title = ui.tileTitle.value.trim() || "Aperçu";
-      const isFavicon = /google\.com\/s2\/favicons/i.test(imageUrl);
+      const showImage = state.imageMode !== "color" && ui.tileImageEnabled.checked && Boolean(imageUrl);
+      const isFavicon = showImage && /google\.com\/s2\/favicons/i.test(imageUrl);
 
+      syncImageControls();
       ui.preview.className = `preview${isFavicon ? " favicon" : ""}`;
       ui.preview.style.background = ui.tileColor.value || "#ffffff";
 
-      if (imageUrl) {
-        ui.preview.innerHTML = `<img src="${escapeHtml(imageUrl)}" alt="${escapeHtml(title)}">`;
+      if (showImage) {
+        const full = ui.tileImageFull.checked;
+        const scale = clampNumber(ui.tileImageScale.value, 10, 150, 100);
+        const style = full ? "object-fit:cover;" : `object-fit:contain;transform:scale(${scale / 100});transform-origin:center;`;
+        ui.preview.innerHTML = `<img src="${escapeHtml(imageUrl)}" alt="${escapeHtml(title)}" style="${style}">`;
       } else {
         ui.preview.textContent = title;
       }
@@ -1230,10 +1361,11 @@
     }
 
     function detectImageMode(tile) {
-      if (!tile?.image) {
+      const imageData = parseTileImageData(tile?.image);
+      if (!imageData.src) {
         return "color";
       }
-      return /^https?:\/\//i.test(tile.image) ? "web" : "upload";
+      return imageData.mode;
     }
 
     function openTileModal(tile) {
@@ -1241,12 +1373,16 @@
       state.editingTile = tile;
       state.uploadedImageUrl = "";
       ui.tileUpload.value = "";
+      const imageData = parseTileImageData(tile?.image);
       ui.tileModalTitle.textContent = tile ? "Modifier la tuile" : "Ajouter une tuile";
       ui.deleteTileBtn.classList.toggle("hidden", !tile);
       ui.tileTitle.value = tile?.title || "";
       ui.tileUrl.value = tile?.url || "";
-      ui.tileImage.value = tile?.image || "";
+      ui.tileImage.value = imageData.src || "";
       ui.tileColor.value = tile?.color || "#ffffff";
+      ui.tileImageEnabled.checked = imageData.enabled;
+      ui.tileImageFull.checked = imageData.full;
+      ui.tileImageScale.value = imageData.scale;
       ui.tileShowTitle.checked = tile?.show_title ?? true;
       ui.tileOpenNewTab.checked = tile?.open_new_tab ?? true;
       setStatus(ui.tileStatus, "");
@@ -1286,10 +1422,17 @@
       }
 
       let image = null;
-      if (state.imageMode === "web") {
-        image = normalizeUrl(ui.tileImage.value) || null;
-      } else if (state.imageMode === "upload") {
-        image = state.uploadedImageUrl || normalizeUrl(ui.tileImage.value) || null;
+      if (state.imageMode === "web" || state.imageMode === "upload") {
+        const src = state.imageMode === "upload"
+          ? (state.uploadedImageUrl || normalizeUrl(ui.tileImage.value))
+          : normalizeUrl(ui.tileImage.value);
+        image = serializeTileImageData({
+          src,
+          enabled: ui.tileImageEnabled.checked,
+          full: ui.tileImageFull.checked,
+          scale: ui.tileImageScale.value,
+          mode: state.imageMode
+        });
       }
 
       const payload = {
@@ -1443,11 +1586,6 @@
             position: Number(row.position) || index + 1
           }));
 
-        if (!state.tiles.length) {
-          await seedTiles(false);
-          return;
-        }
-
         renderTiles();
       } catch (error) {
         showDebug(`Erreur Supabase : ${error.message || error}`);
@@ -1531,7 +1669,6 @@
     ui.loginBtn.addEventListener("click", login);
     ui.forgotBtn.addEventListener("click", forgotPassword);
     ui.logoutBtn.addEventListener("click", () => sbClient.auth.signOut());
-    ui.seedBtn.addEventListener("click", () => seedTiles(true));
     ui.sizeBtn.addEventListener("click", openSizeModal);
     ui.cancelSizeBtn.addEventListener("click", () => closeSizeModal(true));
     ui.saveSizeBtn.addEventListener("click", saveConfig);
@@ -1560,10 +1697,20 @@
     ui.deleteTileBtn.addEventListener("click", deleteTile);
     ui.saveTileBtn.addEventListener("click", saveTile);
     ui.modeColor.addEventListener("click", () => setImageMode("color"));
-    ui.modeUpload.addEventListener("click", () => setImageMode("upload"));
-    ui.modeWeb.addEventListener("click", () => setImageMode("web"));
+    ui.modeUpload.addEventListener("click", () => {
+      ui.tileImageEnabled.checked = true;
+      setImageMode("upload");
+    });
+    ui.modeWeb.addEventListener("click", () => {
+      ui.tileImageEnabled.checked = true;
+      setImageMode("web");
+    });
+    ui.tileImageEnabled.addEventListener("input", updatePreview);
+    ui.tileImageFull.addEventListener("input", updatePreview);
+    ui.tileImageScale.addEventListener("input", updatePreview);
     ui.autoLogoBtn.addEventListener("click", () => {
       ui.tileImage.value = faviconFor(ui.tileUrl.value);
+      ui.tileImageEnabled.checked = true;
       setImageMode("web");
       updatePreview();
     });
@@ -1582,6 +1729,7 @@
       try {
         state.uploadedImageUrl = await uploadImage(file);
         ui.tileImage.value = state.uploadedImageUrl;
+        ui.tileImageEnabled.checked = true;
         setImageMode("upload");
         setStatus(ui.tileStatus, "Image importée.", "ok");
       } catch (error) {

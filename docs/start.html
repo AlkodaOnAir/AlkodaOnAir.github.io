@@ -213,7 +213,7 @@
       width: var(--tile-size);
       height: var(--tile-size);
       border-radius: var(--tile-radius);
-      overflow: hidden;
+      overflow: visible;
       background: #f6f6f7;
       color: #1b1b1d;
       border: 0;
@@ -241,6 +241,14 @@
     .tile.dragging {
       opacity: 0.38;
       transform: scale(0.96);
+    }
+
+    .tile-face {
+      position: absolute;
+      inset: 0;
+      border-radius: inherit;
+      overflow: hidden;
+      background: inherit;
     }
 
     .tile.empty {
@@ -281,6 +289,8 @@
       width: var(--image-size, 90%);
       height: var(--image-size, 90%);
       object-fit: contain;
+      justify-self: center;
+      align-self: center;
     }
 
     .tile-media.full img {
@@ -320,18 +330,21 @@
     .tile-menu {
       position: absolute;
       top: 6px;
-      right: 6px;
-      width: 26px;
+      right: -62px;
+      min-width: 86px;
       height: 26px;
       border-radius: 8px;
       border: 1px solid rgba(255, 255, 255, 0.18);
       background: rgba(0, 0, 0, 0.52);
       color: #fff;
-      display: grid;
-      place-items: center;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      padding: 0 10px;
+      white-space: nowrap;
       opacity: 0;
       transition: opacity 0.14s ease, background 0.14s ease;
-      z-index: 2;
+      z-index: 5;
     }
 
     .tile:hover .tile-menu {
@@ -1360,14 +1373,15 @@
 
       orderedTiles.forEach(tile => {
         const element = document.createElement("article");
+        const face = document.createElement("div");
         const url = normalizeUrl(tile.url);
 
         element.className = "tile";
         element.draggable = true;
         element.dataset.id = tile.id;
-        const imageData = parseTileImageData(tile.image);
-        const hasImage = Boolean(imageData.src) && imageData.enabled;
-        fillTileVisual(element, tile);
+        face.className = "tile-face";
+        fillTileVisual(face, tile);
+        element.appendChild(face);
 
         const menu = document.createElement("button");
         menu.type = "button";

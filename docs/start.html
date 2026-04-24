@@ -1035,7 +1035,6 @@
       <div id="signupCard" class="card hidden">
         <img class="login-logo" src="./alkoda-startpage.png" alt="Alkoda On Air Startpage" />
         <h1>Creer un compte</h1>
-        <p>Utilise un nouvel email et cree un nouveau mot de passe. L'acces sera autorise apres validation du mail.</p>
         <div class="field">
           <label for="signupEmail">Nouvel email</label>
           <input id="signupEmail" type="email" autocomplete="off" placeholder="nouveau@email.com" />
@@ -1501,10 +1500,20 @@
       setStatus(ui.accountStatus, "");
     }
 
+    function passwordEyeSvg(isVisible) {
+      if (isVisible) {
+        return '<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 5c5.23 0 9.27 3.11 11 7-1.73 3.89-5.77 7-11 7S2.73 15.89 1 12c1.73-3.89 5.77-7 11-7Zm0 2c-3.98 0-7.17 2.12-8.8 5 1.63 2.88 4.82 5 8.8 5s7.17-2.12 8.8-5C19.17 9.12 15.98 7 12 7Zm0 1.5A3.5 3.5 0 1 1 12 15a3.5 3.5 0 0 1 0-7Zm0 2A1.5 1.5 0 1 0 12 13a1.5 1.5 0 0 0 0-3Z"/></svg>';
+      }
+      return '<svg viewBox="0 0 24 24" aria-hidden="true"><path d="m2.71 3.72 17.57 17.57-1.41 1.41-3.02-3.02A11.84 11.84 0 0 1 12 19c-5.23 0-9.27-3.11-11-7a12.48 12.48 0 0 1 4.29-4.95L1.29 5.13l1.42-1.41ZM7 8.76A9.74 9.74 0 0 0 3.2 12c1.63 2.88 4.82 5 8.8 5 .93 0 1.81-.11 2.63-.32l-2.06-2.06A3.5 3.5 0 0 1 9.38 11.43L7 8.76Zm5-3.76c5.23 0 9.27 3.11 11 7a12.39 12.39 0 0 1-3.45 4.31l-1.44-1.44A9.87 9.87 0 0 0 20.8 12c-1.63-2.88-4.82-5-8.8-5-1.36 0-2.63.25-3.77.7L6.68 6.15A11.92 11.92 0 0 1 12 5Zm-.46 3.52a3.5 3.5 0 0 1 3.94 3.94l-3.94-3.94Z"/></svg>';
+    }
+
     function togglePasswordVisibility(input, button) {
-      const nextType = input.type === "password" ? "text" : "password";
+      const isVisible = button.dataset.visible === "true";
+      const nextType = isVisible ? "password" : "text";
       input.type = nextType;
       button.setAttribute("aria-label", nextType === "text" ? "Masquer le mot de passe" : "Afficher le mot de passe");
+      button.dataset.visible = nextType === "text" ? "true" : "false";
+      button.innerHTML = passwordEyeSvg(nextType === "text");
     }
 
     function clampNumber(value, min, max, fallback) {
@@ -2851,8 +2860,21 @@
     ui.signupBtn.addEventListener("click", openSignUpScreen);
     ui.signupSubmitBtn.addEventListener("click", signUp);
     ui.signupBackBtn.addEventListener("click", closeSignUpScreen);
-    ui.signupPasswordToggle.addEventListener("click", () => togglePasswordVisibility(ui.signupPassword, ui.signupPasswordToggle));
-    ui.signupPasswordConfirmToggle.addEventListener("click", () => togglePasswordVisibility(ui.signupPasswordConfirm, ui.signupPasswordConfirmToggle));
+    ui.signupPasswordToggle.innerHTML = passwordEyeSvg(false);
+    ui.signupPasswordToggle.dataset.visible = "false";
+    ui.signupPasswordConfirmToggle.innerHTML = passwordEyeSvg(false);
+    ui.signupPasswordConfirmToggle.dataset.visible = "false";
+    [ui.signupPasswordToggle, ui.signupPasswordConfirmToggle].forEach(button => {
+      button.addEventListener("mousedown", event => event.preventDefault());
+    });
+    ui.signupPasswordToggle.addEventListener("click", event => {
+      event.preventDefault();
+      togglePasswordVisibility(ui.signupPassword, ui.signupPasswordToggle);
+    });
+    ui.signupPasswordConfirmToggle.addEventListener("click", event => {
+      event.preventDefault();
+      togglePasswordVisibility(ui.signupPasswordConfirm, ui.signupPasswordConfirmToggle);
+    });
     ui.forgotBtn.addEventListener("click", forgotPassword);
     ui.accountBtn.addEventListener("click", openAccountModal);
     ui.changePasswordBtn.addEventListener("click", sendAccountPasswordReset);

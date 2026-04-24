@@ -490,6 +490,7 @@
     }
 
     .card {
+      position: relative;
       width: min(560px, 100%);
       max-height: min(92vh, 900px);
       overflow: auto;
@@ -500,6 +501,30 @@
       border: 1px solid rgba(255, 255, 255, 0.08);
       box-shadow: 0 28px 70px rgba(0, 0, 0, 0.45);
       padding: 22px;
+    }
+
+    .modal-close {
+      position: absolute;
+      top: 12px;
+      right: 12px;
+      width: 34px;
+      height: 34px;
+      border-radius: 10px;
+      border: 1px solid rgba(255, 255, 255, 0.08);
+      background: rgba(255, 255, 255, 0.04);
+      color: #d9dbe1;
+      display: grid;
+      place-items: center;
+      font-size: 1.15rem;
+      line-height: 1;
+      cursor: pointer;
+      transition: background 0.15s ease, border-color 0.15s ease, color 0.15s ease;
+    }
+
+    .modal-close:hover {
+      background: rgba(255, 255, 255, 0.08);
+      border-color: rgba(255, 255, 255, 0.14);
+      color: #ffffff;
     }
 
     .tile-card {
@@ -843,9 +868,9 @@
     }
 
     .tile-card-top {
-      display: flex;
+      display: grid;
+      grid-template-columns: 1fr auto 1fr;
       align-items: flex-start;
-      justify-content: space-between;
       gap: 16px;
     }
 
@@ -1035,10 +1060,10 @@
 
     .preview-wrap {
       display: flex;
-      justify-content: flex-end;
+      justify-content: center;
       align-items: flex-start;
       margin-bottom: 0;
-      flex: 0 0 auto;
+      grid-column: 2;
     }
 
     .preview img {
@@ -1321,6 +1346,7 @@
 
   <div id="bookmarksModal" class="overlay">
     <div class="card size-card">
+      <button id="closeBookmarksModalBtn" class="modal-close" type="button" aria-label="Fermer">×</button>
       <h2 data-i18n="import_bookmarks_title">Importer des favoris</h2>
       <div class="bookmarks-meta">
         <div id="bookmarksAvailable">0 tuiles disponibles dans le webmix</div>
@@ -1345,6 +1371,7 @@
 
   <div id="accountModal" class="overlay">
     <div class="card size-card">
+      <button id="closeAccountModalBtn" class="modal-close" type="button" aria-label="Fermer">×</button>
       <img class="account-logo" src="./alkoda-startpage.png" alt="Alkoda On Air StartPage" data-i18n-alt="brand_startpage_alt" />
       <h2 data-i18n="account_title">Reglages du compte</h2>
       <div class="field">
@@ -1366,6 +1393,7 @@
 
   <div id="sizeModal" class="overlay">
     <div class="card size-card">
+      <button id="closeSizeModalBtn" class="modal-close" type="button" aria-label="Fermer">×</button>
       <h2 data-i18n="size_title">Taille du webmix</h2>
       <p data-i18n="size_intro">Choisis les colonnes, les lignes et la taille des tuiles. La grille derriere la popup change immediatement.</p>
 
@@ -1404,6 +1432,7 @@
 
   <div id="tileModal" class="overlay">
     <div class="card tile-card">
+      <button id="closeTileModalBtn" class="modal-close" type="button" aria-label="Fermer">×</button>
       <div class="tile-card-top">
         <h2 id="tileModalTitle">Ajouter une tuile</h2>
 

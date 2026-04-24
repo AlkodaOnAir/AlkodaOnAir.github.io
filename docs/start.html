@@ -1241,6 +1241,51 @@
       ]);
     }
 
+    async function getRestHeaders(prefer = "return=representation") {
+      const { data, error } = await sbClient.auth.getSession();
+      if (error) {
+        throw error;
+      }
+      return {
+        apikey: SUPABASE_KEY,
+        Authorization: `Bearer ${data.session?.access_token || SUPABASE_KEY}`,
+        "Content-Type": "application/json",
+        Prefer: prefer
+      };
+    }
+
+    async function restTilesRequest({ method = "GET", query = "", body, prefer = "return=representation", timeoutMs = 12000 }) {
+      const headers = await getRestHeaders(prefer);
+      const controller = new AbortController();
+      const timer = window.setTimeout(() => controller.abort(), timeoutMs);
+
+      try {
+        const response = await fetch(`${SUPABASE_URL}/rest/v1/tiles${query}`, {
+          method,
+          headers,
+          body: body === undefined ? undefined : JSON.stringify(body),
+          signal: controller.signal
+        });
+
+        const rawText = await response.text();
+        const data = rawText ? JSON.parse(rawText) : null;
+
+        if (!response.ok) {
+          const message = data?.message || data?.error || `Erreur HTTP ${response.status}`;
+          throw new Error(message);
+        }
+
+        return data;
+      } catch (error) {
+        if (error.name === "AbortError") {
+          throw new Error("La sauvegarde a pris trop de temps.");
+        }
+        throw error;
+      } finally {
+        window.clearTimeout(timer);
+      }
+    }
+
     function parseTileImageData(rawImage) {
       const source = rawImage ? String(rawImage) : "";
       const plainUrl = normalizeUrl(source);
@@ -1574,15 +1619,19 @@
       };
 
       try {
-        const query = state.configRow
-          ? sbClient.from("tiles").update(payload).eq("id", state.configRow.id).select().single()
-          : sbClient.from("tiles").insert(payload).select().single();
+        const data = state.configRow
+          ? await restTilesRequest({
+            method: "PATCH",
+            query: `?id=eq.${encodeURIComponent(state.configRow.id)}&select=*`,
+            body: payload
+          })
+          : await restTilesRequest({
+            method: "POST",
+            query: "?select=*",
+            body: payload
+          });
 
-        const { data, error } = await query;
-        if (error) {
-          throw error;
-        }
-        state.configRow = data || state.configRow;
+        state.configRow = Array.isArray(data) ? (data[0] || state.configRow) : (data || state.configRow);
         setStatus(ui.sizeStatus, "Sauvegarde effectuee.", "ok");
         state.sizeModalSnapshot = { ...state.config };
         state.saveSizeCloseTimer = window.setTimeout(() => {
@@ -1695,25 +1744,19 @@
       try {
         let savedTile = null;
         if (state.editingTile) {
-          const { error } = await withTimeout(
-            sbClient.from("tiles").update(payload).eq("id", state.editingTile.id),
-            12000,
-            "La sauvegarde a pris trop de temps."
-          );
-          if (error) {
-            throw error;
-          }
-          savedTile = { ...state.editingTile, ...payload };
+          const data = await restTilesRequest({
+            method: "PATCH",
+            query: `?id=eq.${encodeURIComponent(state.editingTile.id)}&select=*`,
+            body: payload
+          });
+          savedTile = Array.isArray(data) ? (data[0] || { ...state.editingTile, ...payload }) : ({ ...state.editingTile, ...payload });
         } else {
-          const { data, error } = await withTimeout(
-            sbClient.from("tiles").insert({ ...payload, position: state.tiles.length + 1 }).select().single(),
-            12000,
-            "La sauvegarde a pris trop de temps."
-          );
-          if (error) {
-            throw error;
-          }
-          savedTile = data;
+          const data = await restTilesRequest({
+            method: "POST",
+            query: "?select=*",
+            body: { ...payload, position: state.tiles.length + 1 }
+          });
+          savedTile = Array.isArray(data) ? data[0] : data;
         }
 
         if (savedTile) {
@@ -1746,10 +1789,11 @@
       setStatus(ui.tileStatus, "Suppression...");
 
       try {
-        const { error } = await sbClient.from("tiles").delete().eq("id", state.editingTile.id);
-        if (error) {
-          throw error;
-        }
+        await restTilesRequest({
+          method: "DELETE",
+          query: `?id=eq.${encodeURIComponent(state.editingTile.id)}`,
+          prefer: "return=minimal"
+        });
         closeTileModal();
         await loadTiles();
       } catch (error) {
@@ -1777,13 +1821,12 @@
 
       try {
         for (const tile of state.tiles) {
-          const { error } = await sbClient
-            .from("tiles")
-            .update({ position: tile.position })
-            .eq("id", tile.id);
-          if (error) {
-            throw error;
-          }
+          await restTilesRequest({
+            method: "PATCH",
+            query: `?id=eq.${encodeURIComponent(tile.id)}`,
+            body: { position: tile.position },
+            prefer: "return=minimal"
+          });
         }
       } catch (error) {
         showDebug(`Erreur de sauvegarde de l'ordre : ${error.message || error}`);

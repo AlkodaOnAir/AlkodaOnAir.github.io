@@ -283,7 +283,6 @@
     .page {
       flex: 1;
       min-height: 0;
-      height: calc(100vh - var(--topbar-height));
       position: relative;
       isolation: isolate;
       display: grid;
@@ -4481,14 +4480,12 @@
         const p = e.touches ? e.touches[0] : e;
         startX = p.clientX;
         startY = p.clientY;
-        if (card.style.transform !== "") {
-          const r = card.getBoundingClientRect();
-          card.style.left = r.left + "px";
-          card.style.top = r.top + "px";
-          card.style.transform = "";
-        }
-        startL = parseFloat(card.style.left) || 0;
-        startT = parseFloat(card.style.top) || 0;
+        const r = card.getBoundingClientRect();
+        card.style.left = r.left + "px";
+        card.style.top = r.top + "px";
+        card.style.transform = "";
+        startL = r.left;
+        startT = r.top;
         e.preventDefault();
       }
 

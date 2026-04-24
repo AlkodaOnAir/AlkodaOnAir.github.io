@@ -1622,8 +1622,9 @@
         const data = state.configRow
           ? await restTilesRequest({
             method: "PATCH",
-            query: `?id=eq.${encodeURIComponent(state.configRow.id)}&select=*`,
-            body: payload
+            query: `?id=eq.${encodeURIComponent(state.configRow.id)}`,
+            body: payload,
+            prefer: "return=minimal"
           })
           : await restTilesRequest({
             method: "POST",
@@ -1744,12 +1745,13 @@
       try {
         let savedTile = null;
         if (state.editingTile) {
-          const data = await restTilesRequest({
+          await restTilesRequest({
             method: "PATCH",
-            query: `?id=eq.${encodeURIComponent(state.editingTile.id)}&select=*`,
-            body: payload
+            query: `?id=eq.${encodeURIComponent(state.editingTile.id)}`,
+            body: payload,
+            prefer: "return=minimal"
           });
-          savedTile = Array.isArray(data) ? (data[0] || { ...state.editingTile, ...payload }) : ({ ...state.editingTile, ...payload });
+          savedTile = { ...state.editingTile, ...payload };
         } else {
           const data = await restTilesRequest({
             method: "POST",

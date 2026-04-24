@@ -217,7 +217,6 @@
       background: #f6f6f7;
       color: #1b1b1d;
       border: 0;
-      box-shadow: var(--shadow);
       cursor: grab;
       user-select: none;
       display: flex;
@@ -229,6 +228,13 @@
 
     .tile:hover {
       transform: translateY(-2px);
+    }
+
+    .tile.surface {
+      box-shadow: var(--shadow);
+    }
+
+    .tile.surface:hover {
       box-shadow: 0 22px 44px rgba(0, 0, 0, 0.42);
     }
 
@@ -649,7 +655,12 @@
       background: #1f2129;
       color: #fff;
       text-align: center;
-      box-shadow: inset 0 0 0 1px rgba(255, 255, 255, 0.03);
+    }
+
+    .preview.surface {
+      box-shadow:
+        var(--shadow),
+        inset 0 0 0 1px rgba(255, 255, 255, 0.03);
     }
 
     .preview-wrap {
@@ -976,6 +987,10 @@
                 <input id="tileOpenNewTab" type="checkbox" checked />
                 <span>Ouvrir dans un nouvel onglet</span>
               </label>
+              <label class="checkbox-row">
+                <input id="tileSurface" type="checkbox" />
+                <span>Effet de surface</span>
+              </label>
             </div>
           </div>
         </div>
@@ -1124,6 +1139,7 @@
       colorSwatches: Array.from(document.querySelectorAll(".swatch-btn")),
       tileShowTitle: $("tileShowTitle"),
       tileOpenNewTab: $("tileOpenNewTab"),
+      tileSurface: $("tileSurface"),
       tileStatus: $("tileStatus"),
       preview: $("preview"),
       modeColor: $("modeColor"),
@@ -1211,6 +1227,7 @@
         enabled: Boolean(plainUrl),
         full: false,
         scale: 90,
+        surface: false,
         mode: plainUrl ? "web" : "color"
       };
 
@@ -1227,6 +1244,7 @@
             enabled: parsed.enabled !== false && Boolean(src),
             full: Boolean(parsed.full),
             scale: clampNumber(parsed.scale, 10, 200, 90),
+            surface: Boolean(parsed.surface),
             mode: parsed.mode === "upload" ? "upload" : (parsed.mode === "web" ? "web" : (src ? "web" : "color"))
           };
         }
@@ -1238,15 +1256,17 @@
     }
 
     function serializeTileImageData(data) {
-      if (!data?.src) {
+      const normalizedSrc = normalizeUrl(data?.src || "");
+      if (!normalizedSrc && !data?.persistWithoutSrc) {
         return null;
       }
       return JSON.stringify({
-        src: normalizeUrl(data.src),
-        enabled: Boolean(data.enabled),
+        src: normalizedSrc,
+        enabled: Boolean(data.enabled) && Boolean(normalizedSrc),
         full: Boolean(data.full),
         scale: clampNumber(data.scale, 10, 200, 90),
-        mode: data.mode === "upload" ? "upload" : "web"
+        surface: Boolean(data.surface),
+        mode: data.mode === "upload" ? "upload" : (data.mode === "web" ? "web" : "color")
       });
     }
 
@@ -1308,6 +1328,7 @@
       const hasImage = Boolean(imageData.src) && imageData.enabled;
       const isFavicon = hasImage && /google\.com\/s2\/favicons/i.test(imageData.src);
 
+      element.classList.toggle("surface", imageData.surface);
       element.style.background = tile.color || "#ffffff";
 
       const media = document.createElement("div");
@@ -1452,8 +1473,17 @@
           enabled: ui.tileImageEnabled.checked,
           full: ui.tileImageFull.checked,
           scale: ui.tileImageScale.value,
+          surface: ui.tileSurface.checked,
           mode: state.imageMode
-        }) : null,
+        }) : serializeTileImageData({
+          src: "",
+          enabled: false,
+          full: false,
+          scale: ui.tileImageScale.value,
+          surface: ui.tileSurface.checked,
+          mode: "color",
+          persistWithoutSrc: ui.tileSurface.checked
+        }),
         show_title: ui.tileShowTitle.checked
       });
       syncColorSwatches();
@@ -1557,6 +1587,7 @@
       ui.tileImageScale.value = imageData.scale;
       ui.tileShowTitle.checked = tile?.show_title ?? true;
       ui.tileOpenNewTab.checked = tile?.open_new_tab ?? true;
+      ui.tileSurface.checked = imageData.surface;
       setStatus(ui.tileStatus, "");
       setImageMode(detectImageMode(tile));
       syncColorSwatches();
@@ -1599,7 +1630,18 @@
           enabled: ui.tileImageEnabled.checked,
           full: ui.tileImageFull.checked,
           scale: ui.tileImageScale.value,
+          surface: ui.tileSurface.checked,
           mode: state.imageMode
+        });
+      } else if (ui.tileSurface.checked) {
+        image = serializeTileImageData({
+          src: "",
+          enabled: false,
+          full: false,
+          scale: ui.tileImageScale.value,
+          surface: true,
+          mode: "color",
+          persistWithoutSrc: true
         });
       }
 
@@ -1899,6 +1941,7 @@
     ui.tileImageFull.addEventListener("input", updatePreview);
     ui.tileImageScale.addEventListener("input", updatePreview);
     ui.tileShowTitle.addEventListener("input", updatePreview);
+    ui.tileSurface.addEventListener("input", updatePreview);
     ui.autoLogoBtn.addEventListener("click", () => {
       ui.tileImage.value = faviconFor(ui.tileUrl.value);
       ui.tileImageEnabled.checked = true;

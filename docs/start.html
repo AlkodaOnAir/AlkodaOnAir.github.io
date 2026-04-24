@@ -333,6 +333,15 @@
       transition: box-shadow 0.14s ease, opacity 0.14s ease;
     }
 
+    .tile.editable {
+      cursor: pointer;
+    }
+
+    .tile.editable .tile-face,
+    .tile.empty.editable {
+      box-shadow: 0 0 0 2px rgba(240, 180, 26, 0.75);
+    }
+
     .tile.surface {
       box-shadow: var(--shadow);
     }
@@ -436,23 +445,6 @@
       text-overflow: ellipsis;
       background: linear-gradient(180deg, rgba(0, 0, 0, 0) 0%, rgba(0, 0, 0, 0.78) 100%);
       text-shadow: 0 1px 2px rgba(0, 0, 0, 0.86);
-    }
-
-    .context-menu {
-      position: fixed;
-      z-index: 140;
-      min-width: 132px;
-      padding: 6px;
-      border-radius: 12px;
-      border: 1px solid rgba(255, 255, 255, 0.08);
-      background: rgba(20, 22, 29, 0.96);
-      box-shadow: 0 16px 40px rgba(0, 0, 0, 0.35);
-    }
-
-    .context-menu .btn {
-      width: 100%;
-      justify-content: flex-start;
-      text-align: left;
     }
 
     .overlay,
@@ -1315,6 +1307,7 @@
         </div>
       </div>
       <div class="top-actions">
+        <button id="editWebmixBtn" class="btn" type="button" data-i18n="edit_webmix_button">Editer le webmix</button>
         <button id="sizeBtn" class="btn" type="button" data-i18n="size_button">Taille</button>
         <button id="importBookmarksBtn" class="btn" type="button" data-i18n="import_bookmarks_button">Importer favoris</button>
         <div id="lang-selector">
@@ -1569,10 +1562,6 @@
     </div>
   </div>
 
-  <div id="tileContextMenu" class="context-menu hidden">
-    <button id="contextEditBtn" class="btn" type="button" data-i18n="edit_button">Modifier</button>
-  </div>
-
   <script>
     const SUPABASE_URL = "https://ejblebseqggezptuvqfj.supabase.co";
     const SUPABASE_KEY = "sb_publishable_5JCL-teaTWmLPfDM5UrRoQ_xTFm4yrb";
@@ -1643,6 +1632,8 @@
         signup_password_confirm_placeholder: "Retape le mot de passe",
         signup_submit_button: "Creer le compte",
         signup_back_button: "Retour connexion",
+        edit_webmix_button: "Editer le webmix",
+        done_editing_button: "Terminer l'edition",
         size_button: "Taille",
         import_bookmarks_button: "Importer favoris",
         account_settings_title: "Reglages du compte",
@@ -1778,6 +1769,8 @@
         signup_password_confirm_placeholder: "Type the password again",
         signup_submit_button: "Create account",
         signup_back_button: "Back to sign in",
+        edit_webmix_button: "Edit webmix",
+        done_editing_button: "Done editing",
         size_button: "Size",
         import_bookmarks_button: "Import bookmarks",
         account_settings_title: "Account settings",
@@ -1940,6 +1933,7 @@
       signupSubmitBtn: $("signupSubmitBtn"),
       signupBackBtn: $("signupBackBtn"),
       forgotBtn: $("forgotBtn"),
+      editWebmixBtn: $("editWebmixBtn"),
       accountBtn: $("accountBtn"),
       logoutBtn: $("logoutBtn"),
       debugBox: $("debugBox"),
@@ -2002,8 +1996,6 @@
       webOptions: $("webOptions"),
       autoLogoBtn: $("autoLogoBtn"),
       webSuggestions: $("webSuggestions"),
-      tileContextMenu: $("tileContextMenu"),
-      contextEditBtn: $("contextEditBtn"),
       deleteTileBtn: $("deleteTileBtn"),
       cancelTileBtn: $("cancelTileBtn"),
       saveTileBtn: $("saveTileBtn")
@@ -2032,10 +2024,10 @@
       uploadImageFull: false,
       webImageScale: 90,
       uploadImageScale: 90,
+      editMode: false,
       draggingTileId: null,
       saveTileCloseTimer: null,
       saveSizeCloseTimer: null,
-      contextTile: null,
       webSuggestionsRequestId: 0,
       bookmarksImportSnapshot: null,
       importedBookmarks: []
@@ -2155,6 +2147,7 @@
       if (!state.editingTile && !ui.tileTitle.value.trim() && !ui.preview.querySelector(".preview-face")) {
         ui.preview.textContent = t("preview_label");
       }
+      refreshEditWebmixButton();
     }
 
     function setLang(lang) {
@@ -2187,6 +2180,20 @@
 
     function closeLoginLangDrop() {
       $("login-lang-drop")?.classList.remove("open");
+    }
+
+    function refreshEditWebmixButton() {
+      if (!ui.editWebmixBtn) {
+        return;
+      }
+      ui.editWebmixBtn.textContent = state.editMode ? t("done_editing_button") : t("edit_webmix_button");
+      ui.editWebmixBtn.classList.toggle("primary", state.editMode);
+    }
+
+    function setEditMode(enabled) {
+      state.editMode = Boolean(enabled);
+      refreshEditWebmixButton();
+      renderTiles();
     }
 
     function showDebug(message) {
@@ -2858,6 +2865,7 @@
           const url = normalizeUrl(tile.url);
 
           element.className = "tile";
+          element.classList.toggle("editable", state.editMode);
           element.draggable = true;
           element.dataset.id = tile.id;
           element.dataset.position = String(position);
@@ -2866,6 +2874,10 @@
           element.appendChild(face);
 
           element.addEventListener("click", () => {
+            if (state.editMode) {
+              openTileModal(tile);
+              return;
+            }
             if (!url) {
               openTileModal(tile);
               return;
@@ -2875,11 +2887,6 @@
             } else {
               window.location.href = url;
             }
-          });
-
-          element.addEventListener("contextmenu", event => {
-            event.preventDefault();
-            showTileContextMenu(event.clientX, event.clientY, tile);
           });
 
           element.addEventListener("dragstart", event => {
@@ -2900,6 +2907,7 @@
         const emptyTile = document.createElement("button");
         emptyTile.type = "button";
         emptyTile.className = "tile empty";
+        emptyTile.classList.toggle("editable", state.editMode);
         emptyTile.textContent = "+";
         emptyTile.dataset.position = String(position);
         emptyTile.addEventListener("click", () => openTileModal(null, position));
@@ -2918,24 +2926,6 @@
         });
         ui.webmix.appendChild(emptyTile);
       }
-    }
-
-    function closeTileContextMenu() {
-      state.contextTile = null;
-      ui.tileContextMenu.classList.add("hidden");
-    }
-
-    function showTileContextMenu(x, y, tile) {
-      state.contextTile = tile;
-      ui.tileContextMenu.classList.remove("hidden");
-
-      const menuWidth = ui.tileContextMenu.offsetWidth || 140;
-      const menuHeight = ui.tileContextMenu.offsetHeight || 44;
-      const left = Math.min(x, window.innerWidth - menuWidth - 12);
-      const top = Math.min(y, window.innerHeight - menuHeight - 12);
-
-      ui.tileContextMenu.style.left = `${Math.max(12, left)}px`;
-      ui.tileContextMenu.style.top = `${Math.max(12, top)}px`;
     }
 
     function setImageMode(mode) {
@@ -3731,6 +3721,7 @@
         state.currentSession = null;
         state.currentUserId = "";
         state.currentWebmix = null;
+        state.editMode = false;
         refreshAccountView();
         closeAccountModal();
         closeSignUpScreen();
@@ -3752,6 +3743,7 @@
       }
 
       updateLayoutMetrics();
+      refreshEditWebmixButton();
       syncSizeInputs(state.config);
       applyGridConfig(state.config);
       renderTiles();
@@ -3765,6 +3757,7 @@
         if (data.session) {
           state.currentSession = data.session;
           state.currentUserId = data.session.user?.id || "";
+          state.editMode = false;
           refreshAccountView();
           closeSignUpScreen();
           ui.loginScreen.classList.remove("open");
@@ -3773,6 +3766,7 @@
           state.currentSession = null;
           state.currentUserId = "";
           state.currentWebmix = null;
+          state.editMode = false;
           refreshAccountView();
           ui.loginScreen.classList.add("open");
         }
@@ -3781,6 +3775,7 @@
           if (session) {
             state.currentSession = session;
             state.currentUserId = session.user?.id || "";
+            state.editMode = false;
             refreshAccountView();
             closeSignUpScreen();
             ui.loginScreen.classList.remove("open");
@@ -3789,6 +3784,7 @@
             state.currentSession = null;
             state.currentUserId = "";
             state.currentWebmix = null;
+            state.editMode = false;
             refreshAccountView();
             closeSignUpScreen();
             closeAccountModal();
@@ -3808,6 +3804,9 @@
     ui.signupBtn.addEventListener("click", openSignUpScreen);
     ui.signupSubmitBtn.addEventListener("click", signUp);
     ui.signupBackBtn.addEventListener("click", closeSignUpScreen);
+    ui.editWebmixBtn.addEventListener("click", () => {
+      setEditMode(!state.editMode);
+    });
     ui.loginPasswordToggle.innerHTML = passwordEyeSvg(false);
     ui.loginPasswordToggle.dataset.visible = "false";
     ui.signupPasswordToggle.innerHTML = passwordEyeSvg(false);
@@ -3896,13 +3895,6 @@
     ui.cancelTileBtn.addEventListener("click", closeTileModal);
     ui.deleteTileBtn.addEventListener("click", deleteTile);
     ui.saveTileBtn.addEventListener("click", saveTile);
-    ui.contextEditBtn.addEventListener("click", () => {
-      const tile = state.contextTile;
-      closeTileContextMenu();
-      if (tile) {
-        openTileModal(tile);
-      }
-    });
     ui.modeColor.addEventListener("click", () => {
       state.imageTab = "color";
       ui.colorOptions.classList.remove("hidden");
@@ -4015,12 +4007,6 @@
       }
     });
 
-    document.addEventListener("click", event => {
-      if (!ui.tileContextMenu.contains(event.target)) {
-        closeTileContextMenu();
-      }
-    });
-
     ui.loginPassword.addEventListener("keydown", event => {
       if (event.key === "Enter") {
         login();
@@ -4055,12 +4041,9 @@
       }
     });
 
-      window.addEventListener("blur", closeTileContextMenu);
-      window.addEventListener("resize", () => {
-        closeTileContextMenu();
-        updateLayoutMetrics();
-      });
-    document.addEventListener("scroll", closeTileContextMenu, true);
+    window.addEventListener("resize", () => {
+      updateLayoutMetrics();
+    });
     document.addEventListener("click", event => {
       if (!event.target.closest("#lang-selector")) {
         closeLangDrop();

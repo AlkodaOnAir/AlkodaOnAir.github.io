@@ -1766,13 +1766,13 @@
             state.tiles = state.tiles.map(tile => tile.id === savedTile.id ? { ...tile, ...savedTile } : tile);
           } else {
             state.tiles.push(savedTile);
+            state.editingTile = savedTile;
+            ui.deleteTileBtn.classList.remove("hidden");
           }
           renderTiles();
         }
         ui.saveTileBtn.disabled = false;
-        state.saveTileCloseTimer = window.setTimeout(() => {
-          closeTileModal();
-        }, 450);
+        setStatus(ui.tileStatus, "");
         loadTiles().catch(() => {});
       } catch (error) {
         setStatus(ui.tileStatus, error.message || "Erreur de sauvegarde.", "error");

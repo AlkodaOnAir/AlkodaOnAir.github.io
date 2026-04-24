@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Alkoda Start</title>
+  <title>Alkoda StartPage</title>
   <link rel="icon" type="image/x-icon" href="./alkoda.ico" />
   <link rel="icon" type="image/png" sizes="32x32" href="./alkoda-32x32.png" />
   <link rel="icon" type="image/png" sizes="16x16" href="./alkoda-16x16.png" />
@@ -335,11 +335,9 @@
 
     .tile.editable {
       cursor: pointer;
-    }
-
-    .tile.editable .tile-face,
-    .tile.empty.editable {
-      box-shadow: 0 0 0 2px rgba(240, 180, 26, 0.75);
+      box-shadow:
+        0 0 0 3px rgba(240, 180, 26, 0.95),
+        0 0 0 8px rgba(240, 180, 26, 0.22);
     }
 
     .tile.surface {
@@ -1303,11 +1301,11 @@
       <div class="brand-wrap">
         <div class="brand">
           <div class="brand-mark"><img alt="Alkoda On Air" src="./alkoda-apple-touch-icon.png" data-i18n-alt="brand_alt" /></div>
-          <div class="brand-title">alkoda start</div>
+          <div class="brand-title">Alkoda StartPage</div>
         </div>
       </div>
       <div class="top-actions">
-        <button id="editWebmixBtn" class="btn" type="button" data-i18n="edit_webmix_button">Editer le webmix</button>
+        <button id="editWebmixBtn" class="btn" type="button" data-i18n="edit_webmix_button">Editer la grille</button>
         <button id="sizeBtn" class="btn" type="button" data-i18n="size_button">Taille</button>
         <button id="importBookmarksBtn" class="btn" type="button" data-i18n="import_bookmarks_button">Importer favoris</button>
         <div id="lang-selector">
@@ -1331,7 +1329,7 @@
     <main class="page">
       <div id="debugBox" class="debug-box"></div>
       <div class="webmix-wrap">
-        <section id="webmix" class="webmix" aria-label="Webmix" data-i18n-aria-label="webmix_aria"></section>
+        <section id="webmix" class="webmix" aria-label="Grille" data-i18n-aria-label="webmix_aria"></section>
       </div>
     </main>
   </div>
@@ -1341,7 +1339,7 @@
       <button id="closeBookmarksModalBtn" class="modal-close" type="button" aria-label="Fermer">×</button>
       <h2 data-i18n="import_bookmarks_title">Importer des favoris</h2>
       <div class="bookmarks-meta">
-        <div id="bookmarksAvailable">0 tuiles disponibles dans le webmix</div>
+        <div id="bookmarksAvailable">0 tuiles disponibles dans la grille</div>
         <button id="bookmarksSizeBtn" class="btn" type="button" data-i18n="size_button">Taille</button>
       </div>
       <div class="field">
@@ -1372,9 +1370,9 @@
       </div>
       <div class="modal-actions" style="justify-content:flex-start;">
         <button id="changePasswordBtn" class="btn" type="button" data-i18n="change_password_button">Modifier le mot de passe</button>
-        <button id="clearWebmixBtn" class="btn danger" type="button" data-i18n="clear_webmix_button">Vider le webmix</button>
+        <button id="clearWebmixBtn" class="btn danger" type="button" data-i18n="clear_webmix_button">Vider la grille</button>
       </div>
-      <div class="field-note" data-i18n="account_delete_note">Se desinscrire supprimera le compte, le webmix et les tuiles associees.</div>
+      <div class="field-note" data-i18n="account_delete_note">Se desinscrire supprimera le compte, la grille et les tuiles associees.</div>
       <div id="accountStatus" class="status"></div>
       <div class="modal-actions">
         <button id="cancelAccountBtn" class="btn" type="button" data-i18n="close_button">Fermer</button>
@@ -1386,7 +1384,7 @@
   <div id="sizeModal" class="overlay">
     <div class="card size-card">
       <button id="closeSizeModalBtn" class="modal-close" type="button" aria-label="Fermer">×</button>
-      <h2 data-i18n="size_title">Taille du webmix</h2>
+      <h2 data-i18n="size_title">Taille de la grille</h2>
       <p data-i18n="size_intro">Choisis les colonnes, les lignes et la taille des tuiles. La grille derriere la popup change immediatement.</p>
 
       <div class="size-panel">
@@ -1632,13 +1630,13 @@
         signup_password_confirm_placeholder: "Retape le mot de passe",
         signup_submit_button: "Creer le compte",
         signup_back_button: "Retour connexion",
-        edit_webmix_button: "Editer le webmix",
+        edit_webmix_button: "Editer la grille",
         done_editing_button: "Terminer l'edition",
         size_button: "Taille",
         import_bookmarks_button: "Importer favoris",
         account_settings_title: "Reglages du compte",
         logout_button: "Deconnexion",
-        webmix_aria: "Webmix",
+        webmix_aria: "Grille",
         import_bookmarks_title: "Importer des favoris",
         bookmarks_file_label: "Fichier HTML",
         select_all_button: "Tout cocher",
@@ -1648,11 +1646,11 @@
         account_title: "Reglages du compte",
         account_email_label: "Email du compte",
         change_password_button: "Modifier le mot de passe",
-        clear_webmix_button: "Vider le webmix",
-        account_delete_note: "Se desinscrire supprimera le compte, le webmix et les tuiles associees.",
+        clear_webmix_button: "Vider la grille",
+        account_delete_note: "Se desinscrire supprimera le compte, la grille et les tuiles associees.",
         close_button: "Fermer",
         unsubscribe_button: "Se desinscrire",
-        size_title: "Taille du webmix",
+        size_title: "Taille de la grille",
         size_intro: "Choisis les colonnes, les lignes et la taille des tuiles. La grille derriere la popup change immediatement.",
         columns_label: "Colonnes",
         rows_label: "Lignes",
@@ -1689,8 +1687,8 @@
         tile_add_title: "Ajouter une tuile",
         tile_edit_title: "Modifier la tuile",
         bookmark_untitled: "Sans titre",
-        bookmarks_available_one: "{count} tuile disponible dans le webmix",
-        bookmarks_available_many: "{count} tuiles disponibles dans le webmix",
+        bookmarks_available_one: "{count} tuile disponible dans la grille",
+        bookmarks_available_many: "{count} tuiles disponibles dans la grille",
         bookmarks_none_found: "Aucun favori trouve dans ce fichier.",
         image_importing: "Import de l'image...",
         image_imported: "Image importee.",
@@ -1725,19 +1723,19 @@
         forgot_success: "Email de reinitialisation envoye si le compte existe.",
         send_error: "Erreur d'envoi.",
         session_not_found: "Session introuvable.",
-        delete_account_confirm: "Se desinscrire va supprimer ce compte, le webmix et les tuiles. Continuer ?",
+        delete_account_confirm: "Se desinscrire va supprimer ce compte, la grille et les tuiles. Continuer ?",
         delete_account_in_progress: "Suppression du compte...",
         delete_account_success: "Compte supprime.",
         delete_account_error: "Erreur de suppression du compte.",
         account_email_missing: "Email du compte introuvable.",
         account_password_reset_sending: "Envoi de l'email de modification...",
         account_password_reset_sent: "Email envoye pour modifier le mot de passe.",
-        webmix_not_found: "Webmix introuvable.",
-        clear_webmix_confirm_1: "Vider le webmix va supprimer toutes les tuiles actuelles. Continuer ?",
-        clear_webmix_confirm_2: "Confirmation finale : toutes les tuiles de ce webmix seront effacees. Voulez-vous vraiment continuer ?",
-        clear_webmix_in_progress: "Vidage du webmix...",
-        clear_webmix_success: "Webmix vide.",
-        clear_webmix_error: "Erreur pendant le vidage du webmix.",
+        webmix_not_found: "Grille introuvable.",
+        clear_webmix_confirm_1: "Vider la grille va supprimer toutes les tuiles actuelles. Continuer ?",
+        clear_webmix_confirm_2: "Confirmation finale : toutes les tuiles de cette grille seront effacees. Voulez-vous vraiment continuer ?",
+        clear_webmix_in_progress: "Vidage de la grille...",
+        clear_webmix_success: "Grille vide.",
+        clear_webmix_error: "Erreur pendant le vidage de la grille.",
         logout_error: "Erreur de deconnexion : {message}",
         init_error: "Erreur d'initialisation : {message}",
         supabase_error: "Erreur Supabase : {message}",
@@ -1769,13 +1767,13 @@
         signup_password_confirm_placeholder: "Type the password again",
         signup_submit_button: "Create account",
         signup_back_button: "Back to sign in",
-        edit_webmix_button: "Edit webmix",
+        edit_webmix_button: "Edit grid",
         done_editing_button: "Done editing",
         size_button: "Size",
         import_bookmarks_button: "Import bookmarks",
         account_settings_title: "Account settings",
         logout_button: "Log out",
-        webmix_aria: "Webmix",
+        webmix_aria: "Grid",
         import_bookmarks_title: "Import bookmarks",
         bookmarks_file_label: "HTML file",
         select_all_button: "Select all",
@@ -1785,11 +1783,11 @@
         account_title: "Account settings",
         account_email_label: "Account email",
         change_password_button: "Change password",
-        clear_webmix_button: "Clear webmix",
-        account_delete_note: "Unsubscribing will delete the account, the webmix, and all related tiles.",
+        clear_webmix_button: "Clear grid",
+        account_delete_note: "Unsubscribing will delete the account, the grid, and all related tiles.",
         close_button: "Close",
         unsubscribe_button: "Unsubscribe",
-        size_title: "Webmix size",
+        size_title: "Grid size",
         size_intro: "Choose the columns, rows, and tile size. The grid behind the popup updates immediately.",
         columns_label: "Columns",
         rows_label: "Rows",
@@ -1826,8 +1824,8 @@
         tile_add_title: "Add a tile",
         tile_edit_title: "Edit tile",
         bookmark_untitled: "Untitled",
-        bookmarks_available_one: "{count} tile available in the webmix",
-        bookmarks_available_many: "{count} tiles available in the webmix",
+        bookmarks_available_one: "{count} tile available in the grid",
+        bookmarks_available_many: "{count} tiles available in the grid",
         bookmarks_none_found: "No bookmarks found in this file.",
         image_importing: "Importing image...",
         image_imported: "Image imported.",
@@ -1862,19 +1860,19 @@
         forgot_success: "Password reset email sent if the account exists.",
         send_error: "Sending error.",
         session_not_found: "Session not found.",
-        delete_account_confirm: "Unsubscribing will delete this account, the webmix, and all tiles. Continue?",
+        delete_account_confirm: "Unsubscribing will delete this account, the grid, and all tiles. Continue?",
         delete_account_in_progress: "Deleting account...",
         delete_account_success: "Account deleted.",
         delete_account_error: "Account deletion error.",
         account_email_missing: "Account email not found.",
         account_password_reset_sending: "Sending password change email...",
         account_password_reset_sent: "Email sent to change the password.",
-        webmix_not_found: "Webmix not found.",
-        clear_webmix_confirm_1: "Clearing the webmix will delete all current tiles. Continue?",
-        clear_webmix_confirm_2: "Final confirmation: all tiles in this webmix will be erased. Do you really want to continue?",
-        clear_webmix_in_progress: "Clearing webmix...",
-        clear_webmix_success: "Webmix cleared.",
-        clear_webmix_error: "Error while clearing the webmix.",
+        webmix_not_found: "Grid not found.",
+        clear_webmix_confirm_1: "Clearing the grid will delete all current tiles. Continue?",
+        clear_webmix_confirm_2: "Final confirmation: all tiles in this grid will be erased. Do you really want to continue?",
+        clear_webmix_in_progress: "Clearing grid...",
+        clear_webmix_success: "Grid cleared.",
+        clear_webmix_error: "Error while clearing the grid.",
         logout_error: "Logout error: {message}",
         init_error: "Initialization error: {message}",
         supabase_error: "Supabase error: {message}",
@@ -1939,6 +1937,7 @@
       debugBox: $("debugBox"),
       webmix: $("webmix"),
       accountModal: $("accountModal"),
+      closeAccountModalBtn: $("closeAccountModalBtn"),
       accountEmail: $("accountEmail"),
       accountStatus: $("accountStatus"),
       changePasswordBtn: $("changePasswordBtn"),
@@ -1947,6 +1946,7 @@
       deleteAccountBtn: $("deleteAccountBtn"),
       importBookmarksBtn: $("importBookmarksBtn"),
       bookmarksModal: $("bookmarksModal"),
+      closeBookmarksModalBtn: $("closeBookmarksModalBtn"),
       bookmarksAvailable: $("bookmarksAvailable"),
       bookmarksFile: $("bookmarksFile"),
       bookmarksSelectAllBtn: $("bookmarksSelectAllBtn"),
@@ -1959,6 +1959,7 @@
       sizeBtn: $("sizeBtn"),
       sizeImportBtn: $("sizeImportBtn"),
       sizeModal: $("sizeModal"),
+      closeSizeModalBtn: $("closeSizeModalBtn"),
       sizePreview: $("sizePreview"),
       tileSizeRange: $("tileSizeRange"),
       colsMinusBtn: $("colsMinusBtn"),
@@ -1969,6 +1970,7 @@
       saveSizeBtn: $("saveSizeBtn"),
       sizeStatus: $("sizeStatus"),
       tileModal: $("tileModal"),
+      closeTileModalBtn: $("closeTileModalBtn"),
       tileModalTitle: $("tileModalTitle"),
       tileTitle: $("tileTitle"),
       tileUrl: $("tileUrl"),
@@ -3833,6 +3835,7 @@
     });
     ui.forgotBtn.addEventListener("click", forgotPassword);
     ui.accountBtn.addEventListener("click", openAccountModal);
+    ui.closeAccountModalBtn.addEventListener("click", closeAccountModal);
     ui.changePasswordBtn.addEventListener("click", sendAccountPasswordReset);
     ui.clearWebmixBtn.addEventListener("click", clearWebmix);
     ui.cancelAccountBtn.addEventListener("click", closeAccountModal);
@@ -3868,8 +3871,13 @@
       state.bookmarksImportSnapshot = null;
       closeBookmarksModal();
     });
+    ui.closeBookmarksModalBtn.addEventListener("click", () => {
+      state.bookmarksImportSnapshot = null;
+      closeBookmarksModal();
+    });
     ui.importBookmarksSubmitBtn.addEventListener("click", importSelectedBookmarks);
     ui.cancelSizeBtn.addEventListener("click", () => closeSizeModal(true));
+    ui.closeSizeModalBtn.addEventListener("click", () => closeSizeModal(true));
     ui.saveSizeBtn.addEventListener("click", saveConfig);
     ui.colsMinusBtn.addEventListener("click", () => {
       state.draftConfig.columns = clampNumber(state.draftConfig.columns - 1, TILE_LIMITS.columns[0], TILE_LIMITS.columns[1], DEFAULT_CONFIG.columns);
@@ -3893,6 +3901,7 @@
     });
 
     ui.cancelTileBtn.addEventListener("click", closeTileModal);
+    ui.closeTileModalBtn.addEventListener("click", closeTileModal);
     ui.deleteTileBtn.addEventListener("click", deleteTile);
     ui.saveTileBtn.addEventListener("click", saveTile);
     ui.modeColor.addEventListener("click", () => {

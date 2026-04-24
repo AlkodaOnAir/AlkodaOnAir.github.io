@@ -1257,6 +1257,10 @@
       uploadPending: null,
       webImageEnabled: false,
       uploadImageEnabled: false,
+      webImageFull: false,
+      uploadImageFull: false,
+      webImageScale: 90,
+      uploadImageScale: 90,
       draggingTileId: null,
       saveTileCloseTimer: null,
       saveSizeCloseTimer: null,
@@ -1813,8 +1817,12 @@
       state.imageTab = mode;
       if (mode === "web") {
         state.uploadImageEnabled = false;
+        ui.tileImageFull.checked = Boolean(state.webImageFull);
+        ui.tileImageScale.value = state.webImageScale;
       } else if (mode === "upload") {
         state.webImageEnabled = false;
+        ui.tileImageFull.checked = Boolean(state.uploadImageFull);
+        ui.tileImageScale.value = state.uploadImageScale;
       }
       ui.modeColor.classList.toggle("active", state.imageTab === "color");
       ui.modeUpload.classList.toggle("active", state.imageTab === "upload");
@@ -1843,11 +1851,19 @@
       return "";
     }
 
+    function currentImageFull() {
+      return state.imageMode === "upload" ? Boolean(state.uploadImageFull) : Boolean(state.webImageFull);
+    }
+
+    function currentImageScale() {
+      return state.imageMode === "upload" ? state.uploadImageScale : state.webImageScale;
+    }
+
     function syncImageControls() {
-      const scale = clampNumber(ui.tileImageScale.value, 10, 200, 90);
+      const scale = clampNumber(currentImageScale(), 10, 200, 90);
       ui.tileImageScale.value = scale;
       ui.tileImageScaleValue.textContent = `${scale}%`;
-      ui.tileImageScaleWrap.classList.toggle("hidden", ui.tileImageFull.checked);
+      ui.tileImageScaleWrap.classList.toggle("hidden", currentImageFull());
     }
 
     function updatePreview() {
@@ -1862,15 +1878,15 @@
         image: (state.imageMode === "web" || state.imageMode === "upload") ? serializeTileImageData({
           src: imageUrl,
           enabled: ui.tileImageEnabled.checked,
-          full: ui.tileImageFull.checked,
-          scale: ui.tileImageScale.value,
+          full: currentImageFull(),
+          scale: currentImageScale(),
           surface: ui.tileSurface.checked,
           mode: state.imageMode
         }) : serializeTileImageData({
           src: "",
           enabled: false,
           full: false,
-          scale: ui.tileImageScale.value,
+          scale: currentImageScale(),
           surface: ui.tileSurface.checked,
           mode: "color",
           persistWithoutSrc: ui.tileSurface.checked
@@ -1976,6 +1992,10 @@
       state.uploadedImagePreviewUrl = imageData.mode === "upload" ? imageData.src : "";
       state.uploadedImagePath = imageData.mode === "upload" ? imageData.storagePath : "";
       state.uploadImageEnabled = imageData.mode === "upload" ? imageData.enabled : Boolean(state.uploadedImageUrl);
+      state.webImageFull = imageData.mode === "web" ? imageData.full : false;
+      state.uploadImageFull = imageData.mode === "upload" ? imageData.full : false;
+      state.webImageScale = imageData.mode === "web" ? imageData.scale : 90;
+      state.uploadImageScale = imageData.mode === "upload" ? imageData.scale : 90;
       ui.tileModalTitle.textContent = tile ? "Modifier la tuile" : "Ajouter une tuile";
       ui.deleteTileBtn.classList.toggle("hidden", !tile);
       ui.tileTitle.value = tile?.title || "";
@@ -1985,8 +2005,8 @@
       ui.tileUploadUrl.value = state.uploadedImageUrl || "";
       ui.tileColor.value = tile?.color || "#ffffff";
       ui.tileImageEnabled.checked = imageData.enabled;
-      ui.tileImageFull.checked = imageData.full;
-      ui.tileImageScale.value = imageData.scale;
+      ui.tileImageFull.checked = imageData.mode === "upload" ? state.uploadImageFull : state.webImageFull;
+      ui.tileImageScale.value = imageData.mode === "upload" ? state.uploadImageScale : state.webImageScale;
       ui.tileShowTitle.checked = tile?.show_title ?? true;
       ui.tileOpenNewTab.checked = tile?.open_new_tab ?? true;
       ui.tileSurface.checked = imageData.surface;
@@ -2011,6 +2031,10 @@
       state.pendingTilePosition = null;
       state.webImageEnabled = false;
       state.uploadImageEnabled = false;
+      state.webImageFull = false;
+      state.uploadImageFull = false;
+      state.webImageScale = 90;
+      state.uploadImageScale = 90;
       ui.tileUploadUrl.value = "";
       setStatus(ui.tileStatus, "");
     }
@@ -2057,6 +2081,17 @@
         return;
       }
 
+      if (state.imageMode === "upload" && state.uploadImageEnabled && state.uploadedImagePath && !state.uploadedImageUrl) {
+        try {
+          state.uploadedImageUrl = await signedUploadUrl(state.uploadedImagePath);
+          ui.tileUploadUrl.value = state.uploadedImageUrl;
+        } catch (error) {
+          setStatus(ui.tileStatus, `Erreur image importee : ${error.message || error}`, "error");
+          ui.saveTileBtn.disabled = false;
+          return;
+        }
+      }
+
       let image = null;
       if (state.imageMode === "web" || state.imageMode === "upload") {
         const src = state.imageMode === "upload"
@@ -2066,8 +2101,8 @@
           src,
           storagePath: state.uploadedImagePath,
           enabled: state.imageMode === "upload" ? state.uploadImageEnabled : state.webImageEnabled,
-          full: ui.tileImageFull.checked,
-          scale: ui.tileImageScale.value,
+          full: currentImageFull(),
+          scale: currentImageScale(),
           surface: ui.tileSurface.checked,
           mode: state.imageMode
         });
@@ -2076,7 +2111,7 @@
           src: "",
           enabled: false,
           full: false,
-          scale: ui.tileImageScale.value,
+          scale: currentImageScale(),
           surface: true,
           mode: "color",
           persistWithoutSrc: true
@@ -2397,8 +2432,23 @@
       }
       updatePreview();
     });
-    ui.tileImageFull.addEventListener("input", updatePreview);
-    ui.tileImageScale.addEventListener("input", updatePreview);
+    ui.tileImageFull.addEventListener("input", () => {
+      if (state.imageMode === "web") {
+        state.webImageFull = ui.tileImageFull.checked;
+      } else if (state.imageMode === "upload") {
+        state.uploadImageFull = ui.tileImageFull.checked;
+      }
+      updatePreview();
+    });
+    ui.tileImageScale.addEventListener("input", () => {
+      const scale = clampNumber(ui.tileImageScale.value, 10, 200, 90);
+      if (state.imageMode === "web") {
+        state.webImageScale = scale;
+      } else if (state.imageMode === "upload") {
+        state.uploadImageScale = scale;
+      }
+      updatePreview();
+    });
     ui.tileShowTitle.addEventListener("input", updatePreview);
     ui.tileSurface.addEventListener("input", updatePreview);
     ui.autoLogoBtn.addEventListener("click", () => {

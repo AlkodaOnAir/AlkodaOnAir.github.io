@@ -1330,6 +1330,36 @@
       await state.uploadPending;
     }
 
+    function startUploadTask(file) {
+      setStatus(ui.tileStatus, "Import de l'image...");
+      setUploadedPreviewUrl(URL.createObjectURL(file));
+      state.uploadImageEnabled = true;
+      state.webImageEnabled = false;
+      setImageMode("upload");
+
+      state.uploadPending = (async () => {
+        const uploaded = await uploadImage(file);
+        state.uploadedImagePath = uploaded.path;
+        state.uploadedImageUrl = "";
+        ui.tileUploadUrl.value = uploaded.path;
+      })();
+
+      state.uploadPending
+        .then(() => {
+          if (!state.uploadPending) {
+            return;
+          }
+          setImageMode("upload");
+          setStatus(ui.tileStatus, "Image importee.", "ok");
+        })
+        .catch(error => {
+          setStatus(ui.tileStatus, `Erreur upload : ${error.message || error}`, "error");
+        })
+        .finally(() => {
+          state.uploadPending = null;
+        });
+    }
+
     async function handleDroppedData(dataTransfer) {
       if (!dataTransfer) {
         return;
@@ -1337,26 +1367,7 @@
 
       const imageFile = Array.from(dataTransfer.files || []).find(file => file.type && file.type.startsWith("image/"));
       if (imageFile) {
-        setStatus(ui.tileStatus, "Import de l'image...");
-        setUploadedPreviewUrl(URL.createObjectURL(imageFile));
-        state.uploadImageEnabled = true;
-        setImageMode("upload");
-        ui.saveTileBtn.disabled = true;
-        state.uploadPending = (async () => {
-          const uploaded = await uploadImage(imageFile);
-          state.uploadedImagePath = uploaded.path;
-          state.uploadedImageUrl = "";
-          state.webImageEnabled = false;
-          ui.tileUploadUrl.value = uploaded.path;
-        })();
-        try {
-          await state.uploadPending;
-          setImageMode("upload");
-          setStatus(ui.tileStatus, "Image importee.", "ok");
-        } finally {
-          state.uploadPending = null;
-          ui.saveTileBtn.disabled = false;
-        }
+        startUploadTask(imageFile);
         return;
       }
       throw new Error("Glisse un vrai fichier image local.");
@@ -2008,11 +2019,15 @@
       const extension = (file.name.split(".").pop() || "png").toLowerCase();
       const path = `tile-${Date.now()}-${Math.random().toString(16).slice(2)}.${extension}`;
       const contentType = file.type || (extension === "svg" ? "image/svg+xml" : "application/octet-stream");
-      const { error } = await sbClient.storage.from("tile-images").upload(path, file, {
+      const uploadPromise = sbClient.storage.from("tile-images").upload(path, file, {
         upsert: false,
         contentType,
         cacheControl: "3600"
       });
+      const timeoutPromise = new Promise((_, reject) => {
+        window.setTimeout(() => reject(new Error("Import trop long. Reessaie.")), 20000);
+      });
+      const { error } = await Promise.race([uploadPromise, timeoutPromise]);
       if (error) {
         throw error;
       }
@@ -2419,32 +2434,11 @@
         return;
       }
 
-      setStatus(ui.tileStatus, "Import de l'image...");
-
       try {
-        setUploadedPreviewUrl(URL.createObjectURL(file));
-        state.uploadImageEnabled = true;
-        setImageMode("upload");
-        ui.saveTileBtn.disabled = true;
-        state.uploadPending = (async () => {
-          const uploaded = await uploadImage(file);
-          state.uploadedImagePath = uploaded.path;
-          state.uploadedImageUrl = "";
-          state.webImageEnabled = false;
-          ui.tileUploadUrl.value = uploaded.path;
-        })();
-        try {
-          await state.uploadPending;
-          setImageMode("upload");
-          setStatus(ui.tileStatus, "Image importee.", "ok");
-        } finally {
-          state.uploadPending = null;
-          ui.saveTileBtn.disabled = false;
-        }
+        startUploadTask(file);
       } catch (error) {
         setStatus(ui.tileStatus, `Erreur upload : ${error.message || error}`, "error");
         state.uploadPending = null;
-        ui.saveTileBtn.disabled = false;
       }
     });
 

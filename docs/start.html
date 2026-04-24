@@ -992,12 +992,26 @@
         </div>
         <div class="field">
           <label for="signupPassword">Mot de passe a creer</label>
-          <input id="signupPassword" type="password" autocomplete="new-password" placeholder="Minimum 8 caracteres" />
+          <div class="password-field">
+            <input id="signupPassword" type="password" autocomplete="new-password" placeholder="Minimum 8 caracteres" />
+            <button id="signupPasswordToggle" class="btn password-toggle" type="button" aria-label="Afficher ou masquer le mot de passe">
+              <svg viewBox="0 0 24 24" aria-hidden="true">
+                <path d="M12 5c5.23 0 9.27 3.11 11 7-1.73 3.89-5.77 7-11 7S2.73 15.89 1 12c1.73-3.89 5.77-7 11-7Zm0 2c-3.98 0-7.17 2.12-8.8 5 1.63 2.88 4.82 5 8.8 5s7.17-2.12 8.8-5C19.17 9.12 15.98 7 12 7Zm0 1.5A3.5 3.5 0 1 1 12 15a3.5 3.5 0 0 1 0-7Zm0 2A1.5 1.5 0 1 0 12 13a1.5 1.5 0 0 0 0-3Z"/>
+              </svg>
+            </button>
+          </div>
           <div class="field-note">Minimum 8 caracteres, avec au moins une majuscule et un symbole.</div>
         </div>
         <div class="field">
           <label for="signupPasswordConfirm">Confirmer le mot de passe</label>
-          <input id="signupPasswordConfirm" type="password" autocomplete="new-password" placeholder="Retape le mot de passe" />
+          <div class="password-field">
+            <input id="signupPasswordConfirm" type="password" autocomplete="new-password" placeholder="Retape le mot de passe" />
+            <button id="signupPasswordConfirmToggle" class="btn password-toggle" type="button" aria-label="Afficher ou masquer la confirmation du mot de passe">
+              <svg viewBox="0 0 24 24" aria-hidden="true">
+                <path d="M12 5c5.23 0 9.27 3.11 11 7-1.73 3.89-5.77 7-11 7S2.73 15.89 1 12c1.73-3.89 5.77-7 11-7Zm0 2c-3.98 0-7.17 2.12-8.8 5 1.63 2.88 4.82 5 8.8 5s7.17-2.12 8.8-5C19.17 9.12 15.98 7 12 7Zm0 1.5A3.5 3.5 0 1 1 12 15a3.5 3.5 0 0 1 0-7Zm0 2A1.5 1.5 0 1 0 12 13a1.5 1.5 0 0 0 0-3Z"/>
+              </svg>
+            </button>
+          </div>
         </div>
         <div class="modal-actions" style="justify-content:flex-start;margin-top:10px;">
           <button id="signupSubmitBtn" class="btn primary" type="button">Creer le compte</button>
@@ -1296,6 +1310,8 @@
       signupEmail: $("signupEmail"),
       signupPassword: $("signupPassword"),
       signupPasswordConfirm: $("signupPasswordConfirm"),
+      signupPasswordToggle: $("signupPasswordToggle"),
+      signupPasswordConfirmToggle: $("signupPasswordConfirmToggle"),
       signupStatus: $("signupStatus"),
       signupSubmitBtn: $("signupSubmitBtn"),
       signupBackBtn: $("signupBackBtn"),
@@ -1433,6 +1449,12 @@
     function closeAccountModal() {
       ui.accountModal.classList.remove("open");
       setStatus(ui.accountStatus, "");
+    }
+
+    function togglePasswordVisibility(input, button) {
+      const nextType = input.type === "password" ? "text" : "password";
+      input.type = nextType;
+      button.setAttribute("aria-label", nextType === "text" ? "Masquer le mot de passe" : "Afficher le mot de passe");
     }
 
     function clampNumber(value, min, max, fallback) {
@@ -2506,6 +2528,10 @@
         state.tiles = contentRows;
 
         renderTiles();
+
+        if (!contentRows.length) {
+          requestAnimationFrame(() => openSizeModal());
+        }
       } catch (error) {
         showDebug(`Erreur Supabase : ${error.message || error}`);
       }
@@ -2775,6 +2801,8 @@
     ui.signupBtn.addEventListener("click", openSignUpScreen);
     ui.signupSubmitBtn.addEventListener("click", signUp);
     ui.signupBackBtn.addEventListener("click", closeSignUpScreen);
+    ui.signupPasswordToggle.addEventListener("click", () => togglePasswordVisibility(ui.signupPassword, ui.signupPasswordToggle));
+    ui.signupPasswordConfirmToggle.addEventListener("click", () => togglePasswordVisibility(ui.signupPasswordConfirm, ui.signupPasswordConfirmToggle));
     ui.forgotBtn.addEventListener("click", forgotPassword);
     ui.accountBtn.addEventListener("click", openAccountModal);
     ui.changePasswordBtn.addEventListener("click", sendAccountPasswordReset);

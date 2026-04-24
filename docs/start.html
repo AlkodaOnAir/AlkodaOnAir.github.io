@@ -1213,6 +1213,7 @@
       </div>
       <div class="modal-actions" style="justify-content:flex-start;">
         <button id="changePasswordBtn" class="btn" type="button">Modifier le mot de passe</button>
+        <button id="clearWebmixBtn" class="btn danger" type="button">Vider le webmix</button>
       </div>
       <div class="field-note">Se desinscrire supprimera le compte, le webmix et les tuiles associees.</div>
       <div id="accountStatus" class="status"></div>
@@ -1483,6 +1484,7 @@
       accountEmail: $("accountEmail"),
       accountStatus: $("accountStatus"),
       changePasswordBtn: $("changePasswordBtn"),
+      clearWebmixBtn: $("clearWebmixBtn"),
       cancelAccountBtn: $("cancelAccountBtn"),
       deleteAccountBtn: $("deleteAccountBtn"),
       importBookmarksBtn: $("importBookmarksBtn"),
@@ -3057,6 +3059,43 @@
       }
     }
 
+    async function clearWebmix() {
+      const webmix = state.currentWebmix || await ensureCurrentWebmix();
+      if (!webmix?.id) {
+        setStatus(ui.accountStatus, "Webmix introuvable.", "error");
+        return;
+      }
+
+      const firstConfirm = window.confirm("Vider le webmix va supprimer toutes les tuiles actuelles. Continuer ?");
+      if (!firstConfirm) {
+        return;
+      }
+
+      const secondConfirm = window.confirm("Confirmation finale : toutes les tuiles de ce webmix seront effacees. Voulez-vous vraiment continuer ?");
+      if (!secondConfirm) {
+        return;
+      }
+
+      setStatus(ui.accountStatus, "Vidage du webmix...");
+      ui.clearWebmixBtn.disabled = true;
+
+      try {
+        await restTableRequest("tiles", {
+          method: "DELETE",
+          query: `?webmix_id=eq.${encodeURIComponent(webmix.id)}`,
+          prefer: "return=minimal"
+        });
+        state.tiles = [];
+        renderTiles();
+        setStatus(ui.accountStatus, "Webmix vide.", "ok");
+        requestAnimationFrame(() => openSizeModal());
+      } catch (error) {
+        setStatus(ui.accountStatus, error.message || "Erreur pendant le vidage du webmix.", "error");
+      } finally {
+        ui.clearWebmixBtn.disabled = false;
+      }
+    }
+
     async function logout() {
       ui.logoutBtn.disabled = true;
 
@@ -3169,6 +3208,7 @@
     ui.forgotBtn.addEventListener("click", forgotPassword);
     ui.accountBtn.addEventListener("click", openAccountModal);
     ui.changePasswordBtn.addEventListener("click", sendAccountPasswordReset);
+    ui.clearWebmixBtn.addEventListener("click", clearWebmix);
     ui.cancelAccountBtn.addEventListener("click", closeAccountModal);
     ui.deleteAccountBtn.addEventListener("click", deleteAccount);
     ui.logoutBtn.addEventListener("click", logout);

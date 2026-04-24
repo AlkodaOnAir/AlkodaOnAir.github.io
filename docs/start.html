@@ -284,9 +284,12 @@
       flex: 1;
       min-height: 0;
       height: calc(100vh - var(--topbar-height));
+      position: relative;
+      isolation: isolate;
       display: grid;
       grid-template-rows: auto minmax(0, 1fr);
       padding: 28px 18px 60px;
+      background: #060606;
     }
 
     .debug-box {
@@ -309,12 +312,12 @@
     .webmix-wrap {
       min-height: 0;
       width: 100%;
-      position: relative;
-      isolation: isolate;
       display: grid;
       place-items: center;
       overflow: auto;
       padding-bottom: 10px;
+      position: relative;
+      z-index: 1;
     }
 
     .grid-background-image {
@@ -1429,9 +1432,9 @@
     </header>
 
     <main class="page">
+      <img id="gridBackgroundImage" class="grid-background-image hidden" alt="" />
       <div id="debugBox" class="debug-box"></div>
       <div class="webmix-wrap">
-        <img id="gridBackgroundImage" class="grid-background-image hidden" alt="" />
         <section id="webmix" class="webmix" aria-label="Grille" data-i18n-aria-label="webmix_aria"></section>
       </div>
     </main>
@@ -2092,6 +2095,7 @@
       backgroundBtn: $("backgroundBtn"),
       accountBtn: $("accountBtn"),
       logoutBtn: $("logoutBtn"),
+      page: document.querySelector(".page"),
       debugBox: $("debugBox"),
       webmix: $("webmix"),
       accountModal: $("accountModal"),
@@ -2593,7 +2597,7 @@
 
     function applyGridBackground(background) {
       const clean = sanitizeBackgroundConfig(background);
-      ui.webmix.parentElement.style.background = clean.color || DEFAULT_BACKGROUND.color;
+      ui.page.style.background = clean.color || DEFAULT_BACKGROUND.color;
       const imageSrc = clean.mode === "image" ? clean.src : "";
       ui.gridBackgroundImage.classList.toggle("hidden", !imageSrc);
       ui.gridBackgroundImage.classList.toggle("stretch-width", Boolean(clean.stretchWidth));

@@ -2670,6 +2670,7 @@
       state.backgroundUploadFile = null;
       setBackgroundPreviewUrl("");
       ui.backgroundImageFile.value = "";
+      applyGridBackground(state.config.background);
     }
 
     function setPasswordVisibility(input, button, isVisible) {
@@ -3633,13 +3634,13 @@
         return;
       }
 
-      const nextBackground = sanitizeBackgroundConfig({
+      const rawDraft = {
         ...state.backgroundDraft,
         color: ui.backgroundColor.value,
         stretchWidth: ui.backgroundStretchWidth.checked
-      });
+      };
 
-      if (nextBackground.mode === "image" && !state.backgroundUploadFile && !nextBackground.storagePath && !nextBackground.src) {
+      if (rawDraft.mode === "image" && !state.backgroundUploadFile && !rawDraft.storagePath && !rawDraft.src) {
         setStatus(ui.backgroundStatus, t("background_image_required"), "error");
         return;
       }
@@ -3649,11 +3650,13 @@
       ui.cancelBackgroundBtn.disabled = true;
 
       try {
-        if (nextBackground.mode === "image" && state.backgroundUploadFile) {
+        if (rawDraft.mode === "image" && state.backgroundUploadFile) {
           const uploaded = await uploadBackgroundImage(state.backgroundUploadFile);
-          nextBackground.storagePath = uploaded.path;
-          nextBackground.src = await signedUploadUrl(uploaded.path);
+          rawDraft.storagePath = uploaded.path;
+          rawDraft.src = await signedUploadUrl(uploaded.path);
         }
+
+        const nextBackground = sanitizeBackgroundConfig(rawDraft);
 
         await restTableRequest("webmixes", {
           method: "PATCH",
@@ -4316,8 +4319,10 @@
       if (file) {
         state.backgroundDraft.mode = "image";
         setBackgroundPreviewUrl(URL.createObjectURL(file));
+        applyGridBackground({ ...state.backgroundDraft, src: state.backgroundPreviewUrl });
       } else {
         setBackgroundPreviewUrl("");
+        applyGridBackground(state.backgroundDraft);
       }
       renderBackgroundPreview();
     });

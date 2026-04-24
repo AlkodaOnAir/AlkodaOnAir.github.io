@@ -2656,6 +2656,33 @@
       }
     }
 
+    async function logout() {
+      ui.logoutBtn.disabled = true;
+
+      try {
+        const { error } = await sbClient.auth.signOut();
+        if (error) {
+          throw error;
+        }
+
+        state.currentSession = null;
+        state.currentUserId = "";
+        state.currentWebmix = null;
+        refreshAccountView();
+        closeAccountModal();
+        closeSignUpScreen();
+        state.tiles = [];
+        state.config = { ...DEFAULT_CONFIG };
+        applyGridConfig(state.config);
+        ui.webmix.innerHTML = "";
+        ui.loginScreen.classList.add("open");
+      } catch (error) {
+        showDebug(`Erreur de deconnexion : ${error.message || error}`);
+      } finally {
+        ui.logoutBtn.disabled = false;
+      }
+    }
+
     async function init() {
       if (ui.brandMarkImage) {
         ui.brandMarkImage.src = "./alkoda-apple-touch-icon.png";
@@ -2722,7 +2749,7 @@
     ui.changePasswordBtn.addEventListener("click", sendAccountPasswordReset);
     ui.cancelAccountBtn.addEventListener("click", closeAccountModal);
     ui.deleteAccountBtn.addEventListener("click", deleteAccount);
-    ui.logoutBtn.addEventListener("click", () => sbClient.auth.signOut());
+    ui.logoutBtn.addEventListener("click", logout);
     ui.sizeBtn.addEventListener("click", openSizeModal);
     ui.cancelSizeBtn.addEventListener("click", () => closeSizeModal(true));
     ui.saveSizeBtn.addEventListener("click", saveConfig);

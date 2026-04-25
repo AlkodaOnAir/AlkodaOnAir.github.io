@@ -3006,43 +3006,15 @@
       }
     }
 
-    async function storageSignedUrl(bucket, path, expiresIn = 60 * 60 * 24 * 30, timeoutMs = 10000) {
+    async function signedUploadUrl(path) {
       if (!path) {
         return "";
       }
-      const token = state.currentSession?.access_token || SUPABASE_KEY;
-      const controller = new AbortController();
-      const timer = window.setTimeout(() => controller.abort(), timeoutMs);
-      try {
-        const response = await fetch(`${SUPABASE_URL}/storage/v1/object/sign/${bucket}/${path}`, {
-          method: "POST",
-          headers: {
-            "Authorization": `Bearer ${token}`,
-            "apikey": SUPABASE_KEY,
-            "Content-Type": "application/json"
-          },
-          body: JSON.stringify({ expiresIn }),
-          signal: controller.signal
-        });
-        if (!response.ok) {
-          const data = await response.json().catch(() => ({}));
-          throw new Error(data?.message || data?.error || `HTTP ${response.status}`);
-        }
-        const data = await response.json();
-        const rel = data?.signedURL || data?.signedUrl || "";
-        return rel ? (rel.startsWith("http") ? rel : `${SUPABASE_URL}${rel}`) : "";
-      } catch (error) {
-        if (error.name === "AbortError") {
-          throw new Error(t("request_timeout"));
-        }
+      const { data, error } = await sbClient.storage.from("tile-images").createSignedUrl(path, 60 * 60 * 24 * 30);
+      if (error) {
         throw error;
-      } finally {
-        window.clearTimeout(timer);
       }
-    }
-
-    async function signedUploadUrl(path) {
-      return storageSignedUrl("tile-images", path);
+      return data?.signedUrl || "";
     }
 
     async function hydrateUploadImage(rawImage) {

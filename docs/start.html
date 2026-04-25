@@ -2363,6 +2363,7 @@
       uploadedImagePath: "",
       uploadPending: null,
       initialTileSnapshot: "",
+      tileModalTilesSnapshot: null,
       webImageEnabled: false,
       uploadImageEnabled: false,
       webImageFull: false,
@@ -3535,6 +3536,64 @@
       });
     }
 
+    function cloneTilesSnapshot(tiles) {
+      return tiles.map(tile => ({ ...tile }));
+    }
+
+    function buildLiveDraftTile() {
+      const imageUrl = getPreviewImageUrl();
+      const image = (state.imageMode === "web" || state.imageMode === "upload")
+        ? serializeTileImageData({
+          src: imageUrl,
+          storagePath: state.imageMode === "upload" ? state.uploadedImagePath : "",
+          enabled: currentImageEnabled(),
+          full: currentImageFull(),
+          scale: currentImageScale(),
+          surface: false,
+          mode: state.imageMode
+        })
+        : serializeTileImageData({
+          src: "",
+          enabled: false,
+          full: false,
+          scale: currentImageScale(),
+          surface: false,
+          mode: "color",
+          persistWithoutSrc: false
+        });
+
+      return {
+        ...(state.editingTile ? { ...state.editingTile } : {}),
+        id: state.editingTile?.id || "__tile_modal_preview__",
+        title: ui.tileTitle.value.trim(),
+        url: normalizeUrl(ui.tileUrl.value),
+        color: currentTileColor(),
+        image,
+        show_title: ui.tileShowTitle.checked,
+        open_new_tab: ui.tileOpenNewTab.checked,
+        position: state.pendingTilePosition || state.editingTile?.position || firstAvailablePosition()
+      };
+    }
+
+    function applyTileModalLivePreview() {
+      if (!ui.tileModal.classList.contains("open") || !state.tileModalTilesSnapshot) {
+        return;
+      }
+      const draftTile = buildLiveDraftTile();
+      const baseTiles = cloneTilesSnapshot(state.tileModalTilesSnapshot)
+        .filter(tile => tile.id !== draftTile.id);
+      state.tiles = [...baseTiles, draftTile];
+      renderTiles();
+    }
+
+    function restoreTileModalTilesSnapshot() {
+      if (!state.tileModalTilesSnapshot) {
+        return;
+      }
+      state.tiles = cloneTilesSnapshot(state.tileModalTilesSnapshot);
+      renderTiles();
+    }
+
     function refreshSaveTileButtonState() {
       const isDirty = buildTileDraftSnapshot() !== state.initialTileSnapshot;
       ui.saveTileBtn.disabled = !isDirty || Boolean(state.uploadPending);
@@ -3577,6 +3636,7 @@
       });
       syncColorSwatches();
       refreshSaveTileButtonState();
+      applyTileModalLivePreview();
     }
 
     function openSizeModal() {
@@ -3717,6 +3777,7 @@
 
     function openTileModal(tile, position = null) {
       clearTimeout(state.saveTileCloseTimer);
+      state.tileModalTilesSnapshot = cloneTilesSnapshot(state.tiles);
       state.editingTile = tile;
       state.pendingTilePosition = tile ? (Number(tile.position) || null) : position;
       state.imageTab = "color";
@@ -3751,11 +3812,13 @@
       syncColorSwatches();
       ui.tileModal.classList.add("open");
       renderWebSuggestions();
+      applyTileModalLivePreview();
       window.setTimeout(() => ui.tileTitle.focus(), 30);
     }
 
     function closeTileModal() {
       clearTimeout(state.saveTileCloseTimer);
+      restoreTileModalTilesSnapshot();
       ui.tileModal.classList.remove("open");
       ui.saveTileBtn.disabled = false;
       ui.saveTileBtn.textContent = t("save_button");
@@ -3767,6 +3830,7 @@
       state.uploadPending = null;
       state.pendingTilePosition = null;
       state.initialTileSnapshot = "";
+      state.tileModalTilesSnapshot = null;
       state.webImageEnabled = false;
       state.uploadImageEnabled = false;
       state.webImageFull = false;
@@ -3941,6 +4005,7 @@
             ui.deleteTileBtn.classList.remove("hidden");
           }
           state.initialTileSnapshot = snapshotFromPayload(payload, state.pendingTilePosition || savedTile.position || null);
+          state.tileModalTilesSnapshot = cloneTilesSnapshot(state.tiles);
           renderTiles();
         }
         ui.saveTileBtn.disabled = true;

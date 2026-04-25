@@ -1024,16 +1024,11 @@
     }
 
     .color-col-left .color-swatches {
+      flex: 1;
+      min-height: 0;
       grid-template-columns: repeat(7, minmax(0, 1fr));
-      grid-template-rows: repeat(3, 14px);
-      gap: 2px;
-      align-content: start;
-    }
-
-    .color-col-left .swatch-btn {
-      aspect-ratio: unset;
-      height: 14px;
-      border-radius: 3px;
+      gap: 4px;
+      align-content: space-between;
     }
 
     .custom-color-box {

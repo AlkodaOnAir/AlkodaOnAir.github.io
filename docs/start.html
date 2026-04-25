@@ -988,7 +988,77 @@
     }
 
     .image-panel.fund-panel {
-      min-height: 188px;
+      height: 188px;
+      display: flex;
+      flex-direction: column;
+    }
+
+    .color-options-split {
+      display: flex;
+      gap: 8px;
+      flex: 1;
+      min-height: 0;
+    }
+
+    .color-col-left {
+      flex: 1;
+      min-width: 0;
+      display: flex;
+      flex-direction: column;
+    }
+
+    .color-col-right {
+      width: 72px;
+      flex-shrink: 0;
+      display: flex;
+      flex-direction: column;
+    }
+
+    .color-col-title {
+      font-size: 0.72rem;
+      font-weight: 700;
+      color: var(--muted);
+      margin-bottom: 5px;
+      flex-shrink: 0;
+    }
+
+    .color-col-left .color-swatches {
+      grid-template-columns: repeat(7, minmax(0, 1fr));
+      flex: 1;
+      align-content: start;
+    }
+
+    .custom-color-box {
+      flex: 1;
+      position: relative;
+      border-radius: 8px;
+      overflow: hidden;
+      cursor: pointer;
+      border: 1px solid rgba(255, 255, 255, 0.15);
+      background:
+        linear-gradient(to bottom, rgba(255,255,255,0.35) 0%, transparent 50%, rgba(0,0,0,0.45) 100%),
+        linear-gradient(to right,
+          hsl(0,100%,50%),
+          hsl(45,100%,50%),
+          hsl(90,100%,50%),
+          hsl(135,100%,50%),
+          hsl(180,100%,50%),
+          hsl(225,100%,50%),
+          hsl(270,100%,50%),
+          hsl(315,100%,50%),
+          hsl(360,100%,50%)
+        );
+    }
+
+    .custom-color-box input[type="color"] {
+      position: absolute;
+      inset: 0;
+      width: 100%;
+      height: 100%;
+      opacity: 0;
+      cursor: pointer;
+      border: none;
+      padding: 0;
     }
 
     .image-panel.general-panel {
@@ -1647,37 +1717,39 @@
           <div class="image-panel fund-panel">
             <div class="image-panel-title" data-i18n="background_title">Fond</div>
             <div id="colorOptions">
-              <div class="field">
-                <label data-i18n="background_color_label">Couleur de fond</label>
-                <div id="colorSwatches" class="color-swatches">
-                  <button class="swatch-btn" type="button" data-color="#ffffff" style="background:#ffffff;"></button>
-                  <button class="swatch-btn" type="button" data-color="#f4f4f5" style="background:#f4f4f5;"></button>
-                  <button class="swatch-btn" type="button" data-color="#e5e7eb" style="background:#e5e7eb;"></button>
-                  <button class="swatch-btn" type="button" data-color="#f5d547" style="background:#f5d547;"></button>
-                  <button class="swatch-btn" type="button" data-color="#ffd166" style="background:#ffd166;"></button>
-                  <button class="swatch-btn" type="button" data-color="#ff8a65" style="background:#ff8a65;"></button>
-                  <button class="swatch-btn" type="button" data-color="#fb7185" style="background:#fb7185;"></button>
-                  <button class="swatch-btn" type="button" data-color="#f06292" style="background:#f06292;"></button>
-                  <button class="swatch-btn" type="button" data-color="#c084fc" style="background:#c084fc;"></button>
-                  <button class="swatch-btn" type="button" data-color="#7e57c2" style="background:#7e57c2;"></button>
-                  <button class="swatch-btn" type="button" data-color="#6366f1" style="background:#6366f1;"></button>
-                  <button class="swatch-btn" type="button" data-color="#42a5f5" style="background:#42a5f5;"></button>
-                  <button class="swatch-btn" type="button" data-color="#38bdf8" style="background:#38bdf8;"></button>
-                  <button class="swatch-btn" type="button" data-color="#26a69a" style="background:#26a69a;"></button>
-                  <button class="swatch-btn" type="button" data-color="#4ade80" style="background:#4ade80;"></button>
-                  <button class="swatch-btn" type="button" data-color="#84cc16" style="background:#84cc16;"></button>
-                  <button class="swatch-btn" type="button" data-color="#78716c" style="background:#78716c;"></button>
-                  <button class="swatch-btn" type="button" data-color="#475569" style="background:#475569;"></button>
-                  <button class="swatch-btn" type="button" data-color="#1f2937" style="background:#1f2937;"></button>
-                  <button class="swatch-btn" type="button" data-color="#000000" style="background:#000000;"></button>
-                  <button class="swatch-btn swatch-transparent" type="button" data-color="transparent"></button>
+              <div class="color-options-split">
+                <div class="color-col-left">
+                  <div class="color-col-title" data-i18n="background_color_label">Couleur de fond</div>
+                  <div id="colorSwatches" class="color-swatches">
+                    <button class="swatch-btn" type="button" data-color="#ffffff" style="background:#ffffff;"></button>
+                    <button class="swatch-btn" type="button" data-color="#f4f4f5" style="background:#f4f4f5;"></button>
+                    <button class="swatch-btn" type="button" data-color="#e5e7eb" style="background:#e5e7eb;"></button>
+                    <button class="swatch-btn" type="button" data-color="#f5d547" style="background:#f5d547;"></button>
+                    <button class="swatch-btn" type="button" data-color="#ffd166" style="background:#ffd166;"></button>
+                    <button class="swatch-btn" type="button" data-color="#ff8a65" style="background:#ff8a65;"></button>
+                    <button class="swatch-btn" type="button" data-color="#fb7185" style="background:#fb7185;"></button>
+                    <button class="swatch-btn" type="button" data-color="#f06292" style="background:#f06292;"></button>
+                    <button class="swatch-btn" type="button" data-color="#c084fc" style="background:#c084fc;"></button>
+                    <button class="swatch-btn" type="button" data-color="#7e57c2" style="background:#7e57c2;"></button>
+                    <button class="swatch-btn" type="button" data-color="#6366f1" style="background:#6366f1;"></button>
+                    <button class="swatch-btn" type="button" data-color="#42a5f5" style="background:#42a5f5;"></button>
+                    <button class="swatch-btn" type="button" data-color="#38bdf8" style="background:#38bdf8;"></button>
+                    <button class="swatch-btn" type="button" data-color="#26a69a" style="background:#26a69a;"></button>
+                    <button class="swatch-btn" type="button" data-color="#4ade80" style="background:#4ade80;"></button>
+                    <button class="swatch-btn" type="button" data-color="#84cc16" style="background:#84cc16;"></button>
+                    <button class="swatch-btn" type="button" data-color="#78716c" style="background:#78716c;"></button>
+                    <button class="swatch-btn" type="button" data-color="#475569" style="background:#475569;"></button>
+                    <button class="swatch-btn" type="button" data-color="#1f2937" style="background:#1f2937;"></button>
+                    <button class="swatch-btn" type="button" data-color="#000000" style="background:#000000;"></button>
+                    <button class="swatch-btn swatch-transparent" type="button" data-color="transparent"></button>
+                  </div>
                 </div>
-                <details class="advanced-color advanced-toggle">
-                  <summary data-i18n="custom_color_label">Couleur personnalisee</summary>
-                  <div class="field">
+                <div class="color-col-right">
+                  <div class="color-col-title" data-i18n="custom_color_label">Couleur personnalisee</div>
+                  <div class="custom-color-box">
                     <input id="tileColor" type="color" value="#ffffff" />
                   </div>
-                </details>
+                </div>
               </div>
             </div>
           </div>

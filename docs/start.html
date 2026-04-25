@@ -3010,11 +3010,20 @@
       if (!path) {
         return "";
       }
-      const { data, error } = await sbClient.storage.from("tile-images").createSignedUrl(path, 60 * 60 * 24 * 30);
-      if (error) {
-        throw error;
+      let timerId;
+      const timeout = new Promise((_, reject) => {
+        timerId = setTimeout(() => reject(new Error("signedUrl timeout")), 8000);
+      });
+      try {
+        const { data, error } = await Promise.race([
+          sbClient.storage.from("tile-images").createSignedUrl(path, 60 * 60 * 24 * 30),
+          timeout
+        ]);
+        if (error) throw error;
+        return data?.signedUrl || "";
+      } finally {
+        clearTimeout(timerId);
       }
-      return data?.signedUrl || "";
     }
 
     async function hydrateUploadImage(rawImage) {

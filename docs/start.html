@@ -3029,7 +3029,8 @@
           throw new Error(data?.message || data?.error || `HTTP ${response.status}`);
         }
         const data = await response.json();
-        return data?.signedURL || data?.signedUrl || "";
+        const rel = data?.signedURL || data?.signedUrl || "";
+        return rel ? (rel.startsWith("http") ? rel : `${SUPABASE_URL}${rel}`) : "";
       } catch (error) {
         if (error.name === "AbortError") {
           throw new Error(t("request_timeout"));

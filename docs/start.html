@@ -81,6 +81,33 @@
       background: rgba(6, 6, 6, 0.88);
       backdrop-filter: blur(12px);
       border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+      overflow: hidden;
+      max-height: 120px;
+      transition:
+        max-height 0.28s ease,
+        padding-top 0.28s ease,
+        padding-bottom 0.28s ease,
+        opacity 0.22s ease,
+        border-color 0.22s ease;
+    }
+
+    .topbar.topbar-collapsed {
+      max-height: 0;
+      padding-top: 0;
+      padding-bottom: 0;
+      border-bottom-color: transparent;
+      opacity: 0;
+      pointer-events: none;
+    }
+
+    .topbar-reveal-zone {
+      position: fixed;
+      top: 0;
+      left: 0;
+      right: 0;
+      height: 18px;
+      z-index: 35;
+      background: transparent;
     }
 
     .brand-wrap {
@@ -1575,6 +1602,7 @@
       </div>
     </div>
 
+    <div id="topbarRevealZone" class="topbar-reveal-zone"></div>
     <header class="topbar">
       <div class="brand-wrap">
         <div class="brand">
@@ -2260,6 +2288,7 @@
 
     const ui = {
       topbar: document.querySelector(".topbar"),
+      topbarRevealZone: $("topbarRevealZone"),
       brandMarkImage: document.querySelector(".brand-mark img"),
       loginScreen: $("loginScreen"),
       loginCard: $("loginCard"),
@@ -2401,7 +2430,9 @@
       saveSizeCloseTimer: null,
       webSuggestionsRequestId: 0,
       bookmarksImportSnapshot: null,
-      importedBookmarks: []
+      importedBookmarks: [],
+      topbarVisible: true,
+      topbarHideTimer: null
     };
 
     function availableTilesText(count) {
@@ -3324,6 +3355,31 @@
     function updateLayoutMetrics() {
       const topbarHeight = ui.topbar ? Math.ceil(ui.topbar.getBoundingClientRect().height) : 0;
       document.documentElement.style.setProperty("--topbar-height", `${topbarHeight}px`);
+    }
+
+    function setTopbarVisible(visible) {
+      state.topbarVisible = Boolean(visible);
+      if (ui.topbar) {
+        ui.topbar.classList.toggle("topbar-collapsed", !state.topbarVisible);
+      }
+      updateLayoutMetrics();
+    }
+
+    function clearTopbarHideTimer() {
+      if (state.topbarHideTimer) {
+        clearTimeout(state.topbarHideTimer);
+        state.topbarHideTimer = null;
+      }
+    }
+
+    function scheduleTopbarHide(delay = 120) {
+      clearTopbarHideTimer();
+      state.topbarHideTimer = window.setTimeout(() => {
+        if (!state.currentSession) {
+          return;
+        }
+        setTopbarVisible(false);
+      }, delay);
     }
 
     function gridCapacity(config = state.config) {
@@ -4401,6 +4457,8 @@
         applyGridConfig(state.config);
         ui.webmix.innerHTML = "";
         ui.loginScreen.classList.add("open");
+        clearTopbarHideTimer();
+        setTopbarVisible(true);
       } catch (error) {
         showDebug(t("logout_error", { message: error.message || error }));
       } finally {
@@ -4433,6 +4491,11 @@
           closeSignUpScreen();
           ui.loginScreen.classList.remove("open");
           await loadTiles();
+          window.setTimeout(() => {
+            if (state.currentSession) {
+              setTopbarVisible(false);
+            }
+          }, 700);
         } else {
           state.currentSession = null;
           state.currentUserId = "";
@@ -4440,6 +4503,8 @@
           state.editMode = false;
           refreshAccountView();
           ui.loginScreen.classList.add("open");
+          clearTopbarHideTimer();
+          setTopbarVisible(true);
         }
 
         sbClient.auth.onAuthStateChange(async (_event, session) => {
@@ -4451,6 +4516,11 @@
             closeSignUpScreen();
             ui.loginScreen.classList.remove("open");
             await loadTiles();
+            window.setTimeout(() => {
+              if (state.currentSession) {
+                setTopbarVisible(false);
+              }
+            }, 700);
           } else {
             state.currentSession = null;
             state.currentUserId = "";
@@ -4460,6 +4530,8 @@
             closeSignUpScreen();
             closeAccountModal();
             ui.loginScreen.classList.add("open");
+            clearTopbarHideTimer();
+            setTopbarVisible(true);
             state.tiles = [];
             state.config = { ...DEFAULT_CONFIG };
             applyGridConfig(state.config);
@@ -4725,6 +4797,35 @@
         await handleDroppedData(event.dataTransfer);
       } catch (error) {
         setStatus(ui.tileStatus, error.message || t("drag_drop_error"), "error");
+      }
+    });
+
+    ui.topbarRevealZone?.addEventListener("mouseenter", () => {
+      if (!state.currentSession) {
+        return;
+      }
+      clearTopbarHideTimer();
+      setTopbarVisible(true);
+    });
+
+    ui.topbar?.addEventListener("mouseenter", () => {
+      if (!state.currentSession) {
+        return;
+      }
+      clearTopbarHideTimer();
+      setTopbarVisible(true);
+    });
+
+    ui.topbar?.addEventListener("mouseleave", () => {
+      if (!state.currentSession) {
+        return;
+      }
+      scheduleTopbarHide();
+    });
+
+    ui.topbar?.addEventListener("transitionend", event => {
+      if (event.propertyName === "max-height" || event.propertyName === "padding-top" || event.propertyName === "padding-bottom") {
+        updateLayoutMetrics();
       }
     });
 

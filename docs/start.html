@@ -1086,6 +1086,17 @@
       box-shadow: 0 0 0 2px rgba(255, 255, 255, 0.18);
     }
 
+    .swatch-transparent {
+      background:
+        linear-gradient(45deg, #888 25%, transparent 25%),
+        linear-gradient(-45deg, #888 25%, transparent 25%),
+        linear-gradient(45deg, transparent 75%, #888 75%),
+        linear-gradient(-45deg, transparent 75%, #888 75%);
+      background-size: 6px 6px;
+      background-position: 0 0, 0 3px, 3px -3px, -3px 0px;
+      background-color: #ccc;
+    }
+
     .advanced-color {
       margin-top: 10px;
     }
@@ -1658,7 +1669,8 @@
                   <button class="swatch-btn" type="button" data-color="#78716c" style="background:#78716c;"></button>
                   <button class="swatch-btn" type="button" data-color="#475569" style="background:#475569;"></button>
                   <button class="swatch-btn" type="button" data-color="#1f2937" style="background:#1f2937;"></button>
-                  <button class="swatch-btn" type="button" data-color="#111827" style="background:#111827;"></button>
+                  <button class="swatch-btn" type="button" data-color="#000000" style="background:#000000;"></button>
+                  <button class="swatch-btn swatch-transparent" type="button" data-color="transparent"></button>
                 </div>
                 <details class="advanced-color advanced-toggle">
                   <summary data-i18n="custom_color_label">Couleur personnalisee</summary>
@@ -2259,6 +2271,7 @@
       webImageScale: 90,
       uploadImageScale: 90,
       editMode: false,
+      tileColorTransparent: false,
       draggingTileId: null,
       saveTileCloseTimer: null,
       saveSizeCloseTimer: null,
@@ -3100,10 +3113,17 @@
       });
     }
 
+    function currentTileColor() {
+      return state.tileColorTransparent ? "transparent" : (currentTileColor());
+    }
+
     function syncColorSwatches() {
       const current = (ui.tileColor.value || "").toLowerCase();
       ui.colorSwatches.forEach(button => {
-        button.classList.toggle("active", button.dataset.color.toLowerCase() === current);
+        const isTransparentBtn = button.dataset.color === "transparent";
+        button.classList.toggle("active",
+          isTransparentBtn ? state.tileColorTransparent : (!state.tileColorTransparent && button.dataset.color.toLowerCase() === current)
+        );
       });
     }
 
@@ -3392,7 +3412,7 @@
       return JSON.stringify({
         title: ui.tileTitle.value.trim(),
         url: normalizeUrl(ui.tileUrl.value),
-        color: ui.tileColor.value || "#ffffff",
+        color: currentTileColor(),
         show_title: ui.tileShowTitle.checked,
         open_new_tab: ui.tileOpenNewTab.checked,
         image,
@@ -3433,7 +3453,7 @@
       ui.preview.innerHTML = "";
       fillTileVisual(ui.preview, {
         title,
-        color: ui.tileColor.value || "#ffffff",
+        color: currentTileColor(),
         image: (state.imageMode === "web" || state.imageMode === "upload") ? serializeTileImageData({
           src: imageUrl,
           enabled: currentImageEnabled(),
@@ -3614,7 +3634,8 @@
       ui.tileImage.value = imageData.mode === "web" ? (imageData.src || "") : "";
       state.webImageEnabled = imageData.mode === "web" ? imageData.enabled : Boolean(normalizeUrl(ui.tileImage.value));
       ui.tileUploadUrl.value = state.uploadedImageUrl || "";
-      ui.tileColor.value = tile?.color || "#ffffff";
+      state.tileColorTransparent = tile?.color === "transparent";
+      ui.tileColor.value = state.tileColorTransparent ? "#ffffff" : (tile?.color || "#ffffff");
       ui.tileImageEnabled.checked = imageData.enabled;
       ui.tileImageFull.checked = imageData.mode === "upload" ? state.uploadImageFull : state.webImageFull;
       ui.tileImageScale.value = imageData.mode === "upload" ? state.uploadImageScale : state.webImageScale;
@@ -3649,6 +3670,7 @@
       state.uploadImageFull = false;
       state.webImageScale = 90;
       state.uploadImageScale = 90;
+      state.tileColorTransparent = false;
       ui.tileUploadUrl.value = "";
       setStatus(ui.tileStatus, "");
     }
@@ -3778,7 +3800,7 @@
         title,
         url,
         show_title: ui.tileShowTitle.checked,
-        color: ui.tileColor.value || "#ffffff",
+        color: currentTileColor(),
         image,
         open_new_tab: ui.tileOpenNewTab.checked
       };
@@ -4461,10 +4483,20 @@
       }
       updatePreview();
     });
-    ui.tileColor.addEventListener("input", updatePreview);
+    ui.tileColor.addEventListener("input", () => {
+      state.tileColorTransparent = false;
+      syncColorSwatches();
+      updatePreview();
+    });
     ui.colorSwatches.forEach(button => {
       button.addEventListener("click", () => {
-        ui.tileColor.value = button.dataset.color;
+        if (button.dataset.color === "transparent") {
+          state.tileColorTransparent = true;
+        } else {
+          state.tileColorTransparent = false;
+          ui.tileColor.value = button.dataset.color;
+        }
+        syncColorSwatches();
         updatePreview();
       });
     });

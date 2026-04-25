@@ -131,14 +131,31 @@
     }
 
     .edit-tools {
-      display: flex;
+      position: relative;
+      display: inline-flex;
       flex-direction: column;
-      gap: 8px;
       align-items: stretch;
     }
 
-    .edit-tools .btn {
-      width: 100%;
+    #backgroundBtn {
+      position: absolute;
+      top: calc(100% + 6px);
+      left: 0;
+      min-width: 100%;
+      white-space: nowrap;
+      max-height: 0;
+      opacity: 0;
+      overflow: hidden;
+      pointer-events: none;
+      transform: translateY(-6px);
+      transition: max-height 0.25s ease, opacity 0.2s ease, transform 0.25s ease;
+    }
+
+    #backgroundBtn.open {
+      max-height: 50px;
+      opacity: 1;
+      pointer-events: auto;
+      transform: translateY(0);
     }
 
     #lang-selector,
@@ -1440,7 +1457,7 @@
       <div class="top-actions">
         <div class="edit-tools">
           <button id="editWebmixBtn" class="btn" type="button" data-i18n="edit_webmix_button">Editer la grille</button>
-          <button id="backgroundBtn" class="btn hidden" type="button" data-i18n="background_button">Changer le fond</button>
+          <button id="backgroundBtn" class="btn" type="button" data-i18n="background_button">Changer le fond</button>
         </div>
         <button id="sizeBtn" class="btn" type="button" data-i18n="size_button">Taille</button>
         <button id="importBookmarksBtn" class="btn" type="button" data-i18n="import_bookmarks_button">Importer favoris</button>
@@ -2410,7 +2427,7 @@
       ui.editWebmixBtn.textContent = state.editMode ? t("done_editing_button") : t("edit_webmix_button");
       ui.editWebmixBtn.classList.toggle("primary", state.editMode);
       if (ui.backgroundBtn) {
-        ui.backgroundBtn.classList.toggle("hidden", !state.editMode);
+        ui.backgroundBtn.classList.toggle("open", state.editMode);
       }
     }
 

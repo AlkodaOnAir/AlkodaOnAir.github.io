@@ -381,7 +381,7 @@
     .grid-background-image {
       position: absolute;
       left: 50%;
-      top: 50%;
+      top: var(--bg-offset-y, 50%);
       height: 100%;
       width: auto;
       transform: translate(-50%, -50%);
@@ -714,6 +714,12 @@
       overflow: hidden;
       margin: 0 0 14px;
       position: relative;
+      cursor: grab;
+      touch-action: none;
+    }
+
+    .background-preview.dragging {
+      cursor: grabbing;
     }
 
     .background-preview::after {
@@ -725,8 +731,10 @@
     }
 
     .background-preview-image {
-      width: 100%;
-      height: 100%;
+      position: absolute;
+      left: 50%;
+      top: var(--bg-offset-y, 50%);
+      transform: translate(-50%, -50%);
       object-fit: cover;
       display: block;
     }
@@ -1927,7 +1935,7 @@
   <script>
     const SUPABASE_URL = "https://ejblebseqggezptuvqfj.supabase.co";
     const SUPABASE_KEY = "sb_publishable_5JCL-teaTWmLPfDM5UrRoQ_xTFm4yrb";
-    const DEFAULT_BACKGROUND = { mode: "color", color: "#060606", src: "", storagePath: "", stretchWidth: false };
+    const DEFAULT_BACKGROUND = { mode: "color", color: "#060606", src: "", storagePath: "", stretchWidth: false, offsetY: 50 };
     const DEFAULT_CONFIG = { columns: 11, rows: 5, tileSize: 86, background: { ...DEFAULT_BACKGROUND } };
     const TILE_LIMITS = { columns: [1, 30], rows: [1, 30], tileSize: [50, 150] };
 
@@ -2421,6 +2429,7 @@
       backgroundDraft: { ...DEFAULT_BACKGROUND },
       backgroundUploadFile: null,
       backgroundPreviewUrl: "",
+      backgroundDragging: false,
       sizeModalSnapshot: null,
       editingTile: null,
       pendingTilePosition: null,
@@ -2792,7 +2801,8 @@
         color: /^#[0-9a-f]{6}$/i.test(String(candidate.color || "")) ? String(candidate.color) : DEFAULT_BACKGROUND.color,
         src,
         storagePath,
-        stretchWidth: Boolean(candidate.stretchWidth)
+        stretchWidth: Boolean(candidate.stretchWidth),
+        offsetY: clampNumber(candidate.offsetY, 0, 100, DEFAULT_BACKGROUND.offsetY)
       };
     }
 
@@ -2830,6 +2840,7 @@
     function renderBackgroundPreview() {
       const previewSrc = effectiveBackgroundPreviewSrc();
       ui.backgroundPreview.style.background = state.backgroundDraft.color || DEFAULT_BACKGROUND.color;
+      ui.backgroundPreview.style.setProperty("--bg-offset-y", `${clampNumber(state.backgroundDraft.offsetY, 0, 100, DEFAULT_BACKGROUND.offsetY)}%`);
       ui.backgroundPreview.innerHTML = previewSrc && state.backgroundDraft.mode === "image"
         ? `<img class="background-preview-image${state.backgroundDraft.stretchWidth ? " stretch-width" : ""}" src="${escapeHtml(previewSrc)}" alt="">`
         : "";
@@ -2843,6 +2854,7 @@
       const clean = sanitizeBackgroundConfig(background);
       ui.page.style.background = clean.color || DEFAULT_BACKGROUND.color;
       const imageSrc = clean.mode === "image" ? clean.src : "";
+      ui.gridBackgroundImage.style.setProperty("--bg-offset-y", `${clampNumber(clean.offsetY, 0, 100, DEFAULT_BACKGROUND.offsetY)}%`);
       ui.gridBackgroundImage.classList.toggle("hidden", !imageSrc);
       ui.gridBackgroundImage.classList.toggle("stretch-width", Boolean(clean.stretchWidth));
       if (imageSrc) {
@@ -2885,7 +2897,8 @@
               color: nextBackground.color,
               storagePath: nextBackground.storagePath,
               src: nextBackground.src,
-              stretchWidth: Boolean(nextBackground.stretchWidth)
+              stretchWidth: Boolean(nextBackground.stretchWidth),
+              offsetY: nextBackground.offsetY
             }
           };
         }
@@ -2900,6 +2913,7 @@
     function openBackgroundModal() {
       state.backgroundDraft = sanitizeBackgroundConfig(state.config.background);
       state.backgroundUploadFile = null;
+      state.backgroundDragging = false;
       setBackgroundPreviewUrl("");
       ui.backgroundColor.value = state.backgroundDraft.color;
       ui.backgroundStretchWidth.checked = Boolean(state.backgroundDraft.stretchWidth);
@@ -2913,6 +2927,8 @@
       ui.backgroundModal.classList.remove("open");
       setStatus(ui.backgroundStatus, "");
       state.backgroundUploadFile = null;
+      state.backgroundDragging = false;
+      ui.backgroundPreview.classList.remove("dragging");
       setBackgroundPreviewUrl("");
       ui.backgroundImageFile.value = "";
       applyGridBackground(state.config.background);
@@ -4006,7 +4022,8 @@
       const rawDraft = {
         ...state.backgroundDraft,
         color: ui.backgroundColor.value,
-        stretchWidth: ui.backgroundStretchWidth.checked
+        stretchWidth: ui.backgroundStretchWidth.checked,
+        offsetY: state.backgroundDraft.offsetY
       };
 
       if (rawDraft.mode === "image" && !state.backgroundUploadFile && !rawDraft.storagePath && !rawDraft.src) {
@@ -4036,7 +4053,8 @@
               color: nextBackground.color,
               storagePath: nextBackground.mode === "image" ? nextBackground.storagePath : "",
               src: nextBackground.mode === "image" ? nextBackground.src : "",
-              stretchWidth: Boolean(nextBackground.stretchWidth)
+              stretchWidth: Boolean(nextBackground.stretchWidth),
+              offsetY: nextBackground.offsetY
             }
           },
           prefer: "return=minimal"
@@ -4050,7 +4068,8 @@
             color: nextBackground.color,
             storagePath: nextBackground.mode === "image" ? nextBackground.storagePath : "",
             src: nextBackground.mode === "image" ? nextBackground.src : "",
-            stretchWidth: Boolean(nextBackground.stretchWidth)
+            stretchWidth: Boolean(nextBackground.stretchWidth),
+            offsetY: nextBackground.offsetY
           }
         };
         applyGridConfig(state.config);
@@ -4677,18 +4696,22 @@
     ui.saveBackgroundBtn.addEventListener("click", saveBackground);
     ui.backgroundModeColor.addEventListener("click", () => {
       state.backgroundDraft.mode = "color";
+      applyGridBackground(state.backgroundDraft);
       renderBackgroundPreview();
     });
     ui.backgroundModeImage.addEventListener("click", () => {
       state.backgroundDraft.mode = "image";
+      applyGridBackground({ ...state.backgroundDraft, src: effectiveBackgroundPreviewSrc() });
       renderBackgroundPreview();
     });
     ui.backgroundColor.addEventListener("input", () => {
       state.backgroundDraft.color = ui.backgroundColor.value;
+      applyGridBackground({ ...state.backgroundDraft, src: effectiveBackgroundPreviewSrc() });
       renderBackgroundPreview();
     });
     ui.backgroundStretchWidth.addEventListener("input", () => {
       state.backgroundDraft.stretchWidth = ui.backgroundStretchWidth.checked;
+      applyGridBackground({ ...state.backgroundDraft, src: effectiveBackgroundPreviewSrc() });
       renderBackgroundPreview();
     });
     ui.backgroundImageFile.addEventListener("change", () => {
@@ -4704,6 +4727,33 @@
       }
       renderBackgroundPreview();
     });
+    ui.backgroundPreview.addEventListener("pointerdown", event => {
+      const previewSrc = effectiveBackgroundPreviewSrc();
+      if (state.backgroundDraft.mode !== "image" || !previewSrc) {
+        return;
+      }
+      state.backgroundDragging = true;
+      ui.backgroundPreview.classList.add("dragging");
+      ui.backgroundPreview.setPointerCapture?.(event.pointerId);
+      event.preventDefault();
+    });
+    ui.backgroundPreview.addEventListener("pointermove", event => {
+      if (!state.backgroundDragging) {
+        return;
+      }
+      const rect = ui.backgroundPreview.getBoundingClientRect();
+      const nextOffset = clampNumber(((event.clientY - rect.top) / Math.max(rect.height, 1)) * 100, 0, 100, DEFAULT_BACKGROUND.offsetY);
+      state.backgroundDraft.offsetY = nextOffset;
+      applyGridBackground({ ...state.backgroundDraft, src: effectiveBackgroundPreviewSrc() });
+      renderBackgroundPreview();
+    });
+    const stopBackgroundDrag = () => {
+      state.backgroundDragging = false;
+      ui.backgroundPreview.classList.remove("dragging");
+    };
+    ui.backgroundPreview.addEventListener("pointerup", stopBackgroundDrag);
+    ui.backgroundPreview.addEventListener("pointercancel", stopBackgroundDrag);
+    ui.backgroundPreview.addEventListener("lostpointercapture", stopBackgroundDrag);
     ui.gridBackgroundImage?.addEventListener("error", async () => {
       if (ui.gridBackgroundImage.dataset.retrying === "1") {
         return;

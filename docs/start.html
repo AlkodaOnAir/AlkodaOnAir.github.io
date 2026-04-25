@@ -70,9 +70,11 @@
     }
 
     .topbar {
-      position: sticky;
+      position: fixed;
       top: 0;
-      z-index: 30;
+      left: 0;
+      right: 0;
+      z-index: 40;
       display: flex;
       align-items: center;
       justify-content: space-between;
@@ -82,22 +84,17 @@
       backdrop-filter: blur(12px);
       border-bottom: 1px solid rgba(255, 255, 255, 0.08);
       overflow: hidden;
-      max-height: 120px;
       transition:
-        max-height 0.28s ease,
-        padding-top 0.28s ease,
-        padding-bottom 0.28s ease,
+        transform 0.28s ease,
         opacity 0.22s ease,
         border-color 0.22s ease;
     }
 
     .topbar.topbar-collapsed {
-      max-height: 0;
-      padding-top: 0;
-      padding-bottom: 0;
       border-bottom-color: transparent;
       opacity: 0;
       pointer-events: none;
+      transform: translateY(calc(-100% - 2px));
     }
 
     .topbar-reveal-zone {
@@ -106,8 +103,25 @@
       left: 0;
       right: 0;
       height: 18px;
-      z-index: 35;
+      z-index: 45;
       background: transparent;
+    }
+
+    .topbar-reveal-zone::after {
+      content: "";
+      position: absolute;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      height: 1px;
+      background: rgba(255, 255, 255, 0.3);
+      opacity: 0;
+      transition: opacity 0.2s ease;
+      pointer-events: none;
+    }
+
+    .topbar-reveal-zone.active::after {
+      opacity: 1;
     }
 
     .brand-wrap {
@@ -3353,14 +3367,16 @@
     }
 
     function updateLayoutMetrics() {
-      const topbarHeight = ui.topbar ? Math.ceil(ui.topbar.getBoundingClientRect().height) : 0;
-      document.documentElement.style.setProperty("--topbar-height", `${topbarHeight}px`);
+      document.documentElement.style.setProperty("--topbar-height", "0px");
     }
 
     function setTopbarVisible(visible) {
       state.topbarVisible = Boolean(visible);
       if (ui.topbar) {
         ui.topbar.classList.toggle("topbar-collapsed", !state.topbarVisible);
+      }
+      if (ui.topbarRevealZone) {
+        ui.topbarRevealZone.classList.toggle("active", !state.topbarVisible);
       }
       updateLayoutMetrics();
     }
@@ -4491,11 +4507,7 @@
           closeSignUpScreen();
           ui.loginScreen.classList.remove("open");
           await loadTiles();
-          window.setTimeout(() => {
-            if (state.currentSession) {
-              setTopbarVisible(false);
-            }
-          }, 700);
+          scheduleTopbarHide(2000);
         } else {
           state.currentSession = null;
           state.currentUserId = "";
@@ -4516,11 +4528,7 @@
             closeSignUpScreen();
             ui.loginScreen.classList.remove("open");
             await loadTiles();
-            window.setTimeout(() => {
-              if (state.currentSession) {
-                setTopbarVisible(false);
-              }
-            }, 700);
+            scheduleTopbarHide(2000);
           } else {
             state.currentSession = null;
             state.currentUserId = "";
@@ -4808,6 +4816,13 @@
       setTopbarVisible(true);
     });
 
+    ui.topbarRevealZone?.addEventListener("mouseleave", () => {
+      if (!state.currentSession) {
+        return;
+      }
+      scheduleTopbarHide();
+    });
+
     ui.topbar?.addEventListener("mouseenter", () => {
       if (!state.currentSession) {
         return;
@@ -4824,7 +4839,7 @@
     });
 
     ui.topbar?.addEventListener("transitionend", event => {
-      if (event.propertyName === "max-height" || event.propertyName === "padding-top" || event.propertyName === "padding-bottom") {
+      if (event.propertyName === "transform") {
         updateLayoutMetrics();
       }
     });

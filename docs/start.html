@@ -498,17 +498,20 @@
 
     .tile-media.full img {
       position: absolute;
-      left: 50%;
-      top: 50%;
-      width: 102%;
-      height: 102%;
+      inset: 0;
+      width: 100%;
+      height: 100%;
       object-fit: cover;
-      transform: translate(-50%, -50%);
+      transform: none;
       will-change: transform;
     }
 
     .tile-media.favicon img {
       object-fit: contain;
+    }
+
+    .tile-media.full.favicon img {
+      object-fit: cover;
     }
 
     .tile-text {
@@ -1394,6 +1397,12 @@
       width: 62px;
       height: 62px;
       object-fit: contain;
+    }
+
+    .preview.full.favicon img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
     }
 
     .size-panel {

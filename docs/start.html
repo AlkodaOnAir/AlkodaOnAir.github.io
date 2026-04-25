@@ -853,6 +853,15 @@
       font-size: 0.92rem;
     }
 
+    .bookmarks-count {
+      font-size: 1.5em;
+      font-weight: 800;
+      color: var(--text);
+      line-height: 1;
+      display: inline-block;
+      margin-right: 0.12em;
+    }
+
     .bookmarks-list {
       max-height: 300px;
       overflow: auto;
@@ -2366,6 +2375,10 @@
       return t(count === 1 ? "bookmarks_available_one" : "bookmarks_available_many", { count });
     }
 
+    function availableTilesMarkup(count) {
+      return availableTilesText(count).replace(String(count), `<span class="bookmarks-count">${count}</span>`);
+    }
+
     function applyLanguageTexts() {
       const langToggle = $("lang-toggle");
       const langFlag = $("lang-flag");
@@ -2586,7 +2599,7 @@
 
     function updateBookmarksAvailability() {
       const remaining = Math.max(0, emptyTileCount() - selectedBookmarksCount());
-      ui.bookmarksAvailable.textContent = availableTilesText(remaining);
+      ui.bookmarksAvailable.innerHTML = availableTilesMarkup(remaining);
     }
 
     function selectedBookmarksCount() {
@@ -4731,4 +4744,3 @@
   </script>
 </body>
 </html>
-

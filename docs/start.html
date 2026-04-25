@@ -174,22 +174,23 @@
     .edit-tools {
       position: relative;
       display: inline-flex;
-      flex-direction: column;
-      align-items: stretch;
+      flex-direction: row-reverse;
+      align-items: flex-start;
+      gap: 10px;
     }
 
     #backgroundBtn {
       position: absolute;
-      top: calc(100% + 6px);
-      left: 0;
+      top: 0;
+      right: calc(100% + 10px);
       z-index: 2;
-      min-width: 100%;
+      min-width: max-content;
       white-space: nowrap;
       max-height: 0;
       opacity: 0;
       overflow: hidden;
       pointer-events: none;
-      transform: translateY(-6px);
+      transform: translateX(6px);
       transition: max-height 0.25s ease, opacity 0.2s ease, transform 0.25s ease;
     }
 
@@ -197,7 +198,7 @@
       max-height: 50px;
       opacity: 1;
       pointer-events: auto;
-      transform: translateY(0);
+      transform: translateX(0);
     }
 
     #lang-selector,

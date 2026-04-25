@@ -3114,7 +3114,7 @@
     }
 
     function currentTileColor() {
-      return state.tileColorTransparent ? "transparent" : (currentTileColor());
+      return state.tileColorTransparent ? "transparent" : (ui.tileColor.value || "#ffffff");
     }
 
     function syncColorSwatches() {

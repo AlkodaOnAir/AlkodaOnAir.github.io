@@ -2802,6 +2802,7 @@
           if (state.uploadPending === uploadTask) {
             state.uploadPending = null;
           }
+          ui.tileUpload.value = "";
           updatePreview();
         });
     }
@@ -2972,15 +2973,75 @@
       }
     }
 
-    async function signedUploadUrl(path) {
+    async function storageUpload(bucket, path, file, timeoutMs = 30000) {
+      const token = state.currentSession?.access_token || SUPABASE_KEY;
+      const contentType = file.type || "application/octet-stream";
+      const controller = new AbortController();
+      const timer = window.setTimeout(() => controller.abort(), timeoutMs);
+      try {
+        const response = await fetch(`${SUPABASE_URL}/storage/v1/object/${bucket}/${path}`, {
+          method: "POST",
+          headers: {
+            "Authorization": `Bearer ${token}`,
+            "apikey": SUPABASE_KEY,
+            "Content-Type": contentType,
+            "x-upsert": "false",
+            "Cache-Control": "max-age=3600"
+          },
+          body: file,
+          signal: controller.signal
+        });
+        if (!response.ok) {
+          const data = await response.json().catch(() => ({}));
+          throw new Error(data?.message || data?.error || `HTTP ${response.status}`);
+        }
+        return { path };
+      } catch (error) {
+        if (error.name === "AbortError") {
+          throw new Error(t("request_timeout"));
+        }
+        throw error;
+      } finally {
+        window.clearTimeout(timer);
+      }
+    }
+
+    async function storageSignedUrl(bucket, path, expiresIn = 60 * 60 * 24 * 30, timeoutMs = 10000) {
       if (!path) {
         return "";
       }
-      const { data, error } = await sbClient.storage.from("tile-images").createSignedUrl(path, 60 * 60 * 24 * 30);
-      if (error) {
+      const token = state.currentSession?.access_token || SUPABASE_KEY;
+      const controller = new AbortController();
+      const timer = window.setTimeout(() => controller.abort(), timeoutMs);
+      try {
+        const response = await fetch(`${SUPABASE_URL}/storage/v1/object/sign/${bucket}/${path}`, {
+          method: "POST",
+          headers: {
+            "Authorization": `Bearer ${token}`,
+            "apikey": SUPABASE_KEY,
+            "Content-Type": "application/json"
+          },
+          body: JSON.stringify({ expiresIn }),
+          signal: controller.signal
+        });
+        if (!response.ok) {
+          const data = await response.json().catch(() => ({}));
+          throw new Error(data?.message || data?.error || `HTTP ${response.status}`);
+        }
+        const data = await response.json();
+        return data?.signedURL || data?.signedUrl || "";
+      } catch (error) {
+        if (error.name === "AbortError") {
+          throw new Error(t("request_timeout"));
+        }
         throw error;
+      } finally {
+        window.clearTimeout(timer);
       }
-      return data?.signedUrl || "";
+    }
+
+    async function signedUploadUrl(path) {
+      return storageSignedUrl("tile-images", path);
     }
 
     async function hydrateUploadImage(rawImage) {
@@ -3617,31 +3678,13 @@
     async function uploadImage(file) {
       const extension = (file.name.split(".").pop() || "png").toLowerCase();
       const path = `tile-${Date.now()}-${Math.random().toString(16).slice(2)}.${extension}`;
-      const contentType = file.type || (extension === "svg" ? "image/svg+xml" : "application/octet-stream");
-      const { error } = await sbClient.storage.from("tile-images").upload(path, file, {
-        upsert: false,
-        contentType,
-        cacheControl: "3600"
-      });
-      if (error) {
-        throw error;
-      }
-      return { path };
+      return storageUpload("tile-images", path, file);
     }
 
     async function uploadBackgroundImage(file) {
       const extension = (file.name.split(".").pop() || "png").toLowerCase();
       const path = `background-${Date.now()}-${Math.random().toString(16).slice(2)}.${extension}`;
-      const contentType = file.type || (extension === "svg" ? "image/svg+xml" : "application/octet-stream");
-      const { error } = await sbClient.storage.from("tile-images").upload(path, file, {
-        upsert: false,
-        contentType,
-        cacheControl: "3600"
-      });
-      if (error) {
-        throw error;
-      }
-      return { path };
+      return storageUpload("tile-images", path, file);
     }
 
     async function saveBackground() {

@@ -412,19 +412,17 @@
     }
 
     .tile.empty {
-      background:
-        linear-gradient(180deg, rgba(255, 255, 255, 0.04), rgba(255, 255, 255, 0.02)),
-        #16171c;
-      border: 1px dashed rgba(255, 255, 255, 0.12);
-      color: rgba(255, 255, 255, 0.24);
+      background: transparent;
+      border: 1px solid rgba(255, 255, 255, 0.35);
+      color: rgba(255, 255, 255, 0.50);
       box-shadow: none;
       cursor: pointer;
       font-size: clamp(26px, calc(var(--tile-size) * 0.34), 38px);
     }
 
     .tile.empty:hover {
-      background: #1a1c23;
-      color: rgba(255, 255, 255, 0.42);
+      background: rgba(255, 255, 255, 0.05);
+      color: rgba(255, 255, 255, 0.70);
     }
 
     .tile-media {

@@ -1027,8 +1027,15 @@
       flex: 1;
       min-height: 0;
       grid-template-columns: repeat(7, minmax(0, 1fr));
+      grid-auto-rows: 36px;
       gap: 4px;
       align-content: space-between;
+    }
+
+    .color-col-left .swatch-btn {
+      aspect-ratio: unset;
+      height: 100%;
+      border-radius: 5px;
     }
 
     .custom-color-box {

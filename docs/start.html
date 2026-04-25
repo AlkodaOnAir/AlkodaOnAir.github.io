@@ -2801,7 +2801,7 @@
         try {
           background.src = await signedUploadUrl(background.storagePath);
         } catch {
-          background.src = "";
+          // Keep the last known src instead of dropping back to color immediately.
         }
       }
       return background;
@@ -2845,9 +2845,54 @@
       ui.gridBackgroundImage.classList.toggle("hidden", !imageSrc);
       ui.gridBackgroundImage.classList.toggle("stretch-width", Boolean(clean.stretchWidth));
       if (imageSrc) {
+        ui.gridBackgroundImage.dataset.retrying = "0";
         ui.gridBackgroundImage.src = imageSrc;
       } else {
+        ui.gridBackgroundImage.dataset.retrying = "0";
         ui.gridBackgroundImage.removeAttribute("src");
+      }
+    }
+
+    async function refreshCurrentBackgroundImageSrc() {
+      const current = sanitizeBackgroundConfig(state.config.background);
+      if (current.mode !== "image" || !current.storagePath) {
+        return false;
+      }
+
+      try {
+        const signedUrl = await signedUploadUrl(current.storagePath);
+        if (!signedUrl) {
+          return false;
+        }
+
+        const nextBackground = {
+          ...current,
+          src: signedUrl
+        };
+
+        state.config = {
+          ...state.config,
+          background: nextBackground
+        };
+
+        if (state.currentWebmix) {
+          state.currentWebmix = {
+            ...state.currentWebmix,
+            background: {
+              ...(state.currentWebmix.background || {}),
+              mode: nextBackground.mode,
+              color: nextBackground.color,
+              storagePath: nextBackground.storagePath,
+              src: nextBackground.src,
+              stretchWidth: Boolean(nextBackground.stretchWidth)
+            }
+          };
+        }
+
+        applyGridBackground(nextBackground);
+        return true;
+      } catch {
+        return false;
       }
     }
 
@@ -3194,7 +3239,7 @@
       }
       let timerId;
       const timeout = new Promise((_, reject) => {
-        timerId = setTimeout(() => reject(new Error("signedUrl timeout")), 8000);
+        timerId = setTimeout(() => reject(new Error("signedUrl timeout")), 15000);
       });
       try {
         const { data, error } = await Promise.race([
@@ -4657,6 +4702,16 @@
         applyGridBackground(state.backgroundDraft);
       }
       renderBackgroundPreview();
+    });
+    ui.gridBackgroundImage?.addEventListener("error", async () => {
+      if (ui.gridBackgroundImage.dataset.retrying === "1") {
+        return;
+      }
+      ui.gridBackgroundImage.dataset.retrying = "1";
+      const refreshed = await refreshCurrentBackgroundImageSrc();
+      if (!refreshed) {
+        ui.gridBackgroundImage.classList.add("hidden");
+      }
     });
     ui.cancelSizeBtn.addEventListener("click", () => closeSizeModal(true));
     ui.closeSizeModalBtn.addEventListener("click", () => closeSizeModal(true));

@@ -2627,6 +2627,12 @@
       state.editMode = Boolean(enabled);
       refreshEditWebmixButton();
       renderTiles();
+      if (state.editMode) {
+        clearTopbarHideTimer();
+        setTopbarVisible(true);
+      } else {
+        scheduleTopbarHide(120);
+      }
     }
 
     function showDebug(message) {
@@ -2667,6 +2673,8 @@
     }
 
     function openAccountModal() {
+      clearTopbarHideTimer();
+      setTopbarVisible(true);
       refreshAccountView();
       setStatus(ui.accountStatus, "");
       ui.accountModal.classList.add("open");
@@ -2675,6 +2683,7 @@
     function closeAccountModal() {
       ui.accountModal.classList.remove("open");
       setStatus(ui.accountStatus, "");
+      scheduleTopbarHide(120);
     }
 
     function emptyTileCount() {
@@ -2733,6 +2742,8 @@
     }
 
     function openBookmarksModal() {
+      clearTopbarHideTimer();
+      setTopbarVisible(true);
       updateBookmarksAvailability();
       setStatus(ui.bookmarksStatus, "");
       ui.bookmarksModal.classList.add("open");
@@ -2741,6 +2752,7 @@
     function closeBookmarksModal() {
       ui.bookmarksModal.classList.remove("open");
       setStatus(ui.bookmarksStatus, "");
+      scheduleTopbarHide(120);
     }
 
     function parseBookmarksHtml(htmlText) {
@@ -2911,6 +2923,8 @@
     }
 
     function openBackgroundModal() {
+      clearTopbarHideTimer();
+      setTopbarVisible(true);
       state.backgroundDraft = sanitizeBackgroundConfig(state.config.background);
       state.backgroundUploadFile = null;
       state.backgroundDragging = false;
@@ -2932,6 +2946,7 @@
       setBackgroundPreviewUrl("");
       ui.backgroundImageFile.value = "";
       applyGridBackground(state.config.background);
+      scheduleTopbarHide(120);
     }
 
     function setPasswordVisibility(input, button, isVisible) {
@@ -3432,7 +3447,17 @@
       document.documentElement.style.setProperty("--topbar-height", "0px");
     }
 
+    function shouldKeepTopbarVisible() {
+      if (state.editMode) {
+        return true;
+      }
+      return Boolean(document.querySelector(".overlay.open"));
+    }
+
     function setTopbarVisible(visible) {
+      if (!visible && shouldKeepTopbarVisible()) {
+        visible = true;
+      }
       state.topbarVisible = Boolean(visible);
       if (ui.topbar) {
         ui.topbar.classList.toggle("topbar-collapsed", !state.topbarVisible);
@@ -3454,6 +3479,10 @@
       clearTopbarHideTimer();
       state.topbarHideTimer = window.setTimeout(() => {
         if (!state.currentSession) {
+          return;
+        }
+        if (shouldKeepTopbarVisible()) {
+          setTopbarVisible(true);
           return;
         }
         setTopbarVisible(false);
@@ -3799,6 +3828,8 @@
 
     function openSizeModal() {
       clearTimeout(state.saveSizeCloseTimer);
+      clearTopbarHideTimer();
+      setTopbarVisible(true);
       setStatus(ui.sizeStatus, "");
       state.sizeModalSnapshot = { ...state.config };
       state.draftConfig = { ...state.config };
@@ -3827,7 +3858,9 @@
       if (state.bookmarksImportSnapshot) {
         openBookmarksModal();
         renderImportedBookmarks();
+        return;
       }
+      scheduleTopbarHide(120);
     }
 
     async function saveConfig() {
@@ -3935,6 +3968,8 @@
 
     function openTileModal(tile, position = null) {
       clearTimeout(state.saveTileCloseTimer);
+      clearTopbarHideTimer();
+      setTopbarVisible(true);
       state.tileModalTilesSnapshot = cloneTilesSnapshot(state.tiles);
       state.editingTile = tile;
       state.pendingTilePosition = tile ? (Number(tile.position) || null) : position;
@@ -3998,6 +4033,7 @@
       state.tileColorTransparent = false;
       ui.tileUploadUrl.value = "";
       setStatus(ui.tileStatus, "");
+      scheduleTopbarHide(120);
     }
 
     async function uploadImage(file) {

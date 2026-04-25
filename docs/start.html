@@ -989,6 +989,7 @@
 
     .image-panel.fund-panel {
       height: 188px;
+      overflow: hidden;
       display: flex;
       flex-direction: column;
     }
@@ -1024,8 +1025,15 @@
 
     .color-col-left .color-swatches {
       grid-template-columns: repeat(7, minmax(0, 1fr));
-      flex: 1;
+      grid-template-rows: repeat(3, 14px);
+      gap: 2px;
       align-content: start;
+    }
+
+    .color-col-left .swatch-btn {
+      aspect-ratio: unset;
+      height: 14px;
+      border-radius: 3px;
     }
 
     .custom-color-box {

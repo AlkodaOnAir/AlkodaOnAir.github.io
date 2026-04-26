@@ -4208,6 +4208,17 @@
       return storageUpload("tile-images", path, file);
     }
 
+    async function deleteStorageObject(path) {
+      const cleanPath = String(path || "").trim();
+      if (!cleanPath) {
+        return;
+      }
+      const { error } = await sbClient.storage.from("tile-images").remove([cleanPath]);
+      if (error) {
+        throw error;
+      }
+    }
+
     async function saveBackground() {
       const webmix = state.currentWebmix || await ensureCurrentWebmix();
       if (!webmix?.id) {
@@ -4221,6 +4232,7 @@
         stretchWidth: ui.backgroundStretchWidth.checked,
         offsetY: state.backgroundDraft.offsetY
       };
+      const previousBackground = sanitizeBackgroundConfig(webmix.background);
 
       if (rawDraft.mode === "image" && !state.backgroundUploadFile && !rawDraft.storagePath && !rawDraft.src) {
         setStatus(ui.backgroundStatus, t("background_image_required"), "error");
@@ -4269,6 +4281,13 @@
           }
         };
         applyGridConfig(state.config);
+
+        const previousPath = previousBackground.storagePath || "";
+        const nextPath = nextBackground.mode === "image" ? (nextBackground.storagePath || "") : "";
+        if (previousPath && nextPath && previousPath !== nextPath) {
+          deleteStorageObject(previousPath).catch(() => {});
+        }
+
         setStatus(ui.backgroundStatus, t("background_saved"), "ok");
         closeBackgroundModal();
       } catch (error) {

@@ -3,9 +3,6 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<link rel="icon" type="image/png" sizes="32x32" href="https://alkoda-onair.com/alkoda-32x32.png">
-<link rel="icon" type="image/png" sizes="16x16" href="https://alkoda-onair.com/alkoda-16x16.png">
-<link rel="apple-touch-icon" sizes="180x180" href="https://alkoda-onair.com/alkoda-apple-touch-icon.png">
 <title>ALKODA ON AIR — Signal Flow [VIEWER]</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -1194,19 +1191,34 @@ function renderCables(){
     p.setAttribute('data-to',c.to);p.setAttribute('data-type',c.type);
     p.classList.add('cp','cable-visual');
     if(c.dashed)p.setAttribute('stroke-dasharray','6,4');
-    p.addEventListener('mouseenter',e=>{
+    p.style.pointerEvents='none';
+    svg.append(p);
+    const ph=document.createElementNS('http://www.w3.org/2000/svg','path');
+    ph.setAttribute('d',toSVG(pts));
+    ph.setAttribute('stroke','transparent');
+    ph.setAttribute('stroke-width','20');
+    ph.setAttribute('fill','none');
+    ph.setAttribute('pointer-events','stroke');
+    ph.setAttribute('data-cid',c.id);
+    ph.setAttribute('cursor','pointer');
+    ph.classList.add('cable-hit');
+    ph.addEventListener('mouseenter',e=>{
       if(!selId){
         ctt.style.display='block';
         ctt.innerHTML=`<span style="opacity:.5;font-size:10px">#${c.id}</span> <span style="color:${c.color}">${c.type}</span> — ${SH[c.from]?.name||''} ↔ ${SH[c.to]?.name||''}`;
       }
+      p.setAttribute('stroke-width','5');p.setAttribute('opacity','1');
     });
-    p.addEventListener('mousemove',e=>{
+    ph.addEventListener('mousemove',e=>{
       ctt.style.left=Math.min(e.clientX+12,window.innerWidth-300)+'px';
       ctt.style.top=(e.clientY-30)+'px';
     });
-    p.addEventListener('mouseleave',()=>{ctt.style.display='none';});
-    p.addEventListener('click',e=>{e.stopPropagation();ctt.style.display='none';showCableSignal(c.id);});
-    svg.append(p);
+    ph.addEventListener('mouseleave',()=>{
+      ctt.style.display='none';
+      p.setAttribute('stroke-width','3.5');p.setAttribute('opacity','0.85');
+    });
+    ph.addEventListener('click',e=>{e.stopPropagation();ctt.style.display='none';showCableSignal(c.id);});
+    svg.append(ph);
   });
 }
 function showCablePanel(c){

@@ -259,16 +259,21 @@
     .lang-opt {
       display: flex;
       align-items: center;
-      gap: 8px;
+      justify-content: center;
+      gap: 0;
       width: 100%;
       padding: 8px 12px;
       background: none;
       border: none;
       color: var(--text);
-      font-size: 13px;
+      font-size: 16px;
       cursor: pointer;
       border-radius: 6px;
       white-space: nowrap;
+    }
+
+    .lang-opt .lang-opt-label {
+      display: none;
     }
 
     .lang-opt:hover {
@@ -1595,8 +1600,8 @@
             <span id="login-lang-flag"></span><span id="login-lang-name"></span><span class="lang-arrow">▾</span>
           </button>
           <div id="login-lang-drop">
-            <button class="lang-opt" id="login-lang-opt-fr" type="button" onclick="setLang('fr');closeLoginLangDrop()"><span id="login-drop-flag-fr"></span><span>Français</span></button>
-            <button class="lang-opt" id="login-lang-opt-en" type="button" onclick="setLang('en');closeLoginLangDrop()"><span id="login-drop-flag-en"></span><span>English</span></button>
+            <button class="lang-opt" id="login-lang-opt-fr" type="button" onclick="setLang('fr');closeLoginLangDrop()"><span id="login-drop-flag-fr"></span><span class="lang-opt-label">Français</span></button>
+            <button class="lang-opt" id="login-lang-opt-en" type="button" onclick="setLang('en');closeLoginLangDrop()"><span id="login-drop-flag-en"></span><span class="lang-opt-label">English</span></button>
           </div>
         </div>
       </div>
@@ -1686,8 +1691,8 @@
             <span id="lang-flag"></span><span id="lang-name"></span><span class="lang-arrow">▾</span>
           </button>
           <div id="lang-drop">
-            <button class="lang-opt" id="lang-opt-fr" type="button" onclick="setLang('fr');closeLangDrop()"><span id="drop-flag-fr"></span><span>Français</span></button>
-            <button class="lang-opt" id="lang-opt-en" type="button" onclick="setLang('en');closeLangDrop()"><span id="drop-flag-en"></span><span>English</span></button>
+            <button class="lang-opt" id="lang-opt-fr" type="button" onclick="setLang('fr');closeLangDrop()"><span id="drop-flag-fr"></span><span class="lang-opt-label">Français</span></button>
+            <button class="lang-opt" id="lang-opt-en" type="button" onclick="setLang('en');closeLangDrop()"><span id="drop-flag-en"></span><span class="lang-opt-label">English</span></button>
           </div>
         </div>
         <button id="accountBtn" class="btn icon-btn" type="button" aria-label="Reglages du compte" title="Reglages du compte" data-i18n-aria-label="account_settings_title" data-i18n-title="account_settings_title">

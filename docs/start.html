@@ -352,7 +352,7 @@
       isolation: isolate;
       display: flex;
       flex-direction: column;
-      padding: calc(28px + var(--topbar-height)) 18px 28px;
+      padding: 28px 18px;
       background: #060606;
     }
 
@@ -382,6 +382,11 @@
       overflow: auto;
       position: relative;
       z-index: 1;
+    }
+
+    .webmix-wrap.limit-top {
+      place-items: start center;
+      padding-top: var(--topbar-height);
     }
 
     .grid-background-image {
@@ -3493,6 +3498,19 @@
     function updateLayoutMetrics() {
       const topbarHeight = ui.topbar?.offsetHeight || 0;
       document.documentElement.style.setProperty("--topbar-height", `${topbarHeight}px`);
+      updateWebmixVerticalPlacement();
+    }
+
+    function updateWebmixVerticalPlacement() {
+      const wrap = ui.webmix?.parentElement;
+      if (!wrap || !ui.webmix) {
+        return;
+      }
+      const topbarHeight = ui.topbar?.offsetHeight || 0;
+      const availableHeight = wrap.clientHeight;
+      const gridHeight = ui.webmix.scrollHeight;
+      const shouldLimitTop = gridHeight > Math.max(0, availableHeight - topbarHeight);
+      wrap.classList.toggle("limit-top", shouldLimitTop);
     }
 
     function shouldKeepTopbarVisible() {
@@ -3674,6 +3692,8 @@
         });
         ui.webmix.appendChild(emptyTile);
       }
+
+      updateWebmixVerticalPlacement();
     }
 
     function setImageMode(mode) {

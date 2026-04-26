@@ -1750,7 +1750,7 @@
   <div id="bookmarksModal" class="overlay">
     <div class="card size-card">
       <div class="win-titlebar">
-        <h2 data-i18n="import_bookmarks_title">Importer des favoris</h2>
+        <h2 data-i18n="import_export_title">Importer / exporter</h2>
         <button id="closeBookmarksModalBtn" class="modal-close" type="button" aria-label="Fermer">×</button>
       </div>
       <div class="bookmarks-meta">
@@ -1758,12 +1758,13 @@
         <button id="bookmarksSizeBtn" class="btn" type="button" data-i18n="size_button">Taille</button>
       </div>
       <div class="field">
-        <label for="bookmarksFile" data-i18n="bookmarks_file_label">Fichier HTML</label>
-        <input id="bookmarksFile" type="file" accept=".html,text/html" />
+        <label for="bookmarksFile" data-i18n="bookmarks_file_label">Fichier HTML ou JSON</label>
+        <input id="bookmarksFile" type="file" accept=".html,text/html,.json,application/json" />
       </div>
       <div class="bookmark-actions">
         <button id="bookmarksSelectAllBtn" class="btn" type="button" data-i18n="select_all_button">Tout cocher</button>
         <button id="bookmarksClearBtn" class="btn" type="button" data-i18n="clear_all_button">Tout decocher</button>
+        <button id="bookmarksExportBtn" class="btn" type="button" data-i18n="export_grid_button">Exporter la grille</button>
       </div>
       <div id="bookmarksList" class="bookmarks-list hidden"></div>
       <div id="bookmarksStatus" class="status"></div>
@@ -2072,13 +2073,15 @@
         background_storage_missing: "La colonne background n'est pas encore ajoutee dans Supabase.",
         size_button: "Taille",
         import_bookmarks_button: "Importer favoris",
+        import_export_title: "Importer / exporter",
         account_settings_title: "Reglages du compte",
         logout_button: "Deconnexion",
         webmix_aria: "Grille",
         import_bookmarks_title: "Importer des favoris",
-        bookmarks_file_label: "Fichier HTML",
+        bookmarks_file_label: "Fichier HTML ou JSON",
         select_all_button: "Tout cocher",
         clear_all_button: "Tout decocher",
+        export_grid_button: "Exporter la grille",
         cancel_button: "Annuler",
         import_button: "Importer",
         account_title: "Reglages du compte",
@@ -2128,6 +2131,12 @@
         bookmarks_available_one: "{count} tuile disponible dans la grille",
         bookmarks_available_many: "{count} tuiles disponibles dans la grille",
         bookmarks_none_found: "Aucun favori trouve dans ce fichier.",
+        grid_import_summary: "Import JSON : {tiles} tuiles, {columns} colonnes, {rows} lignes",
+        grid_import_replace_notice: "Ce fichier JSON remplacera la grille existante lors de l'import.",
+        grid_import_invalid: "Fichier JSON de grille invalide.",
+        grid_import_replace_confirm: "Importer ce JSON remplacera la grille existante. Continuer ?",
+        grid_import_in_progress: "Import JSON...",
+        grid_import_success: "Grille importee.",
         image_importing: "Import de l'image...",
         image_imported: "Image importee.",
         image_upload_error: "Erreur upload : {message}",
@@ -2223,13 +2232,15 @@
         background_storage_missing: "The background column has not been added in Supabase yet.",
         size_button: "Size",
         import_bookmarks_button: "Import bookmarks",
+        import_export_title: "Import / export",
         account_settings_title: "Account settings",
         logout_button: "Log out",
         webmix_aria: "Grid",
         import_bookmarks_title: "Import bookmarks",
-        bookmarks_file_label: "HTML file",
+        bookmarks_file_label: "HTML or JSON file",
         select_all_button: "Select all",
         clear_all_button: "Clear all",
+        export_grid_button: "Export grid",
         cancel_button: "Cancel",
         import_button: "Import",
         account_title: "Account settings",
@@ -2279,6 +2290,12 @@
         bookmarks_available_one: "{count} tile available in the grid",
         bookmarks_available_many: "{count} tiles available in the grid",
         bookmarks_none_found: "No bookmarks found in this file.",
+        grid_import_summary: "JSON import: {tiles} tiles, {columns} columns, {rows} rows",
+        grid_import_replace_notice: "Importing this JSON will replace the existing grid.",
+        grid_import_invalid: "Invalid grid JSON file.",
+        grid_import_replace_confirm: "Importing this JSON will replace the existing grid. Continue?",
+        grid_import_in_progress: "Importing JSON...",
+        grid_import_success: "Grid imported.",
         image_importing: "Importing image...",
         image_imported: "Image imported.",
         image_upload_error: "Upload error: {message}",
@@ -2407,6 +2424,7 @@
       bookmarksFile: $("bookmarksFile"),
       bookmarksSelectAllBtn: $("bookmarksSelectAllBtn"),
       bookmarksClearBtn: $("bookmarksClearBtn"),
+      bookmarksExportBtn: $("bookmarksExportBtn"),
       bookmarksList: $("bookmarksList"),
       bookmarksStatus: $("bookmarksStatus"),
       bookmarksSizeBtn: $("bookmarksSizeBtn"),
@@ -2510,6 +2528,8 @@
       webSuggestionsRequestId: 0,
       bookmarksImportSnapshot: null,
       importedBookmarks: [],
+      importedFileKind: null,
+      importedGridData: null,
       topbarVisible: true,
       topbarHideTimer: null
     };
@@ -2623,10 +2643,7 @@
         }
       });
 
-      updateBookmarksAvailability();
-      if (state.importedBookmarks.length) {
-        renderImportedBookmarks();
-      }
+      renderImportFileState();
       ui.tileModalTitle.textContent = state.editingTile ? t("tile_edit_title") : t("tile_add_title");
       refreshSaveTileButtonState();
       if (!state.editingTile && !ui.tileTitle.value.trim() && !ui.preview.querySelector(".preview-face")) {
@@ -2750,6 +2767,14 @@
     }
 
     function updateBookmarksAvailability() {
+      if (state.importedFileKind === "grid" && state.importedGridData) {
+        ui.bookmarksAvailable.textContent = t("grid_import_summary", {
+          tiles: state.importedGridData.tiles.length,
+          columns: state.importedGridData.config.columns,
+          rows: state.importedGridData.config.rows
+        });
+        return;
+      }
       const remaining = Math.max(0, emptyTileCount() - selectedBookmarksCount());
       ui.bookmarksAvailable.innerHTML = availableTilesMarkup(remaining);
     }
@@ -2758,7 +2783,27 @@
       return state.importedBookmarks.filter(item => item.selected).length;
     }
 
+    function renderImportFileState() {
+      const isGridImport = state.importedFileKind === "grid" && state.importedGridData;
+      ui.bookmarksSizeBtn.classList.toggle("hidden", Boolean(isGridImport));
+      ui.bookmarksSelectAllBtn.classList.toggle("hidden", Boolean(isGridImport));
+      ui.bookmarksClearBtn.classList.toggle("hidden", Boolean(isGridImport));
+
+      if (isGridImport) {
+        updateBookmarksAvailability();
+        ui.bookmarksList.innerHTML = "";
+        ui.bookmarksList.classList.add("hidden");
+        setStatus(ui.bookmarksStatus, t("grid_import_replace_notice"));
+        return;
+      }
+
+      renderImportedBookmarks();
+    }
+
     function renderImportedBookmarks() {
+      if (state.importedFileKind === "grid") {
+        return;
+      }
       updateBookmarksAvailability();
       const available = emptyTileCount();
       ui.bookmarksList.innerHTML = "";
@@ -2835,18 +2880,149 @@
     async function loadBookmarksFile(file) {
       if (!file) {
         state.importedBookmarks = [];
-        renderImportedBookmarks();
+        state.importedFileKind = null;
+        state.importedGridData = null;
+        renderImportFileState();
         return;
       }
       const text = await file.text();
+      const looksLikeJson = /\.json$/i.test(file.name || "") || String(text || "").trim().startsWith("{");
+      if (looksLikeJson) {
+        try {
+          state.importedGridData = parseGridImportJson(text);
+          state.importedBookmarks = [];
+          state.importedFileKind = "grid";
+          renderImportFileState();
+        } catch (_error) {
+          state.importedBookmarks = [];
+          state.importedGridData = null;
+          state.importedFileKind = null;
+          renderImportFileState();
+          setStatus(ui.bookmarksStatus, t("grid_import_invalid"), "error");
+        }
+        return;
+      }
+
       const parsed = parseBookmarksHtml(text);
-      const available = emptyTileCount();
+      state.importedGridData = null;
+      state.importedFileKind = "bookmarks";
       state.importedBookmarks = parsed.map(item => ({
         ...item,
         selected: false
       }));
-      renderImportedBookmarks();
+      renderImportFileState();
       setStatus(ui.bookmarksStatus, parsed.length ? "" : t("bookmarks_none_found"), parsed.length ? "" : "error");
+    }
+
+    function parseImportedTileRow(tile, fallbackPosition) {
+      const rawUrl = normalizeUrl(tile?.url || "");
+      const rawTitle = String(tile?.title || "").trim();
+      const rawColor = String(tile?.color || "").trim().toLowerCase();
+      let image = null;
+
+      if (tile?.image) {
+        const imageSource = typeof tile.image === "string" ? tile.image : JSON.stringify(tile.image);
+        const parsedImage = parseTileImageData(imageSource);
+        image = serializeTileImageData({
+          src: parsedImage.src,
+          storagePath: parsedImage.storagePath,
+          enabled: parsedImage.enabled,
+          full: parsedImage.full,
+          scale: parsedImage.scale,
+          surface: parsedImage.surface,
+          mode: parsedImage.mode,
+          persistWithoutSrc: Boolean(parsedImage.storagePath)
+        });
+      }
+
+      return {
+        title: rawTitle || rawUrl,
+        url: rawUrl,
+        color: rawColor === "transparent" || /^#[0-9a-f]{6}$/i.test(rawColor) ? rawColor : "#ffffff",
+        image,
+        show_title: tile?.show_title !== false,
+        open_new_tab: tile?.open_new_tab !== false,
+        position: Math.max(1, Number(tile?.position) || fallbackPosition)
+      };
+    }
+
+    function parseGridImportJson(text) {
+      let parsed;
+      try {
+        parsed = JSON.parse(text);
+      } catch {
+        throw new Error(t("grid_import_invalid"));
+      }
+
+      if (!parsed || typeof parsed !== "object" || Array.isArray(parsed)) {
+        throw new Error(t("grid_import_invalid"));
+      }
+
+      const config = sanitizeConfig(parsed.config || parsed);
+      const capacity = gridCapacity(config);
+      const incomingTiles = Array.isArray(parsed.tiles) ? parsed.tiles : [];
+      const normalizedTiles = incomingTiles
+        .map((tile, index) => parseImportedTileRow(tile, index + 1))
+        .slice(0, capacity)
+        .sort((a, b) => a.position - b.position);
+
+      const used = new Set();
+      const finalTiles = [];
+      let nextPosition = 1;
+
+      for (const tile of normalizedTiles) {
+        let position = tile.position;
+        if (position < 1 || position > capacity || used.has(position)) {
+          while (used.has(nextPosition) && nextPosition <= capacity) {
+            nextPosition += 1;
+          }
+          position = nextPosition;
+        }
+        if (position < 1 || position > capacity || used.has(position)) {
+          continue;
+        }
+        used.add(position);
+        finalTiles.push({ ...tile, position });
+      }
+
+      return {
+        config,
+        tiles: finalTiles
+      };
+    }
+
+    function exportGridJson() {
+      const now = new Date();
+      const pad = value => String(value).padStart(2, "0");
+      const filenameDate = `${now.getFullYear()}-${pad(now.getMonth() + 1)}-${pad(now.getDate())}`;
+      const payload = {
+        app: "Alkoda StartPage",
+        type: "grid-export",
+        version: 1,
+        exportedAt: now.toISOString(),
+        config: JSON.parse(JSON.stringify(state.config)),
+        tiles: [...state.tiles]
+          .sort((a, b) => (Number(a.position) || 0) - (Number(b.position) || 0))
+          .map(tile => ({
+            position: Number(tile.position) || 0,
+            title: tile.title || "",
+            url: tile.url || "",
+            color: tile.color || "#ffffff",
+            image: tile.image || null,
+            show_title: tile.show_title !== false,
+            open_new_tab: tile.open_new_tab !== false
+          }))
+      };
+
+      const blob = new Blob([JSON.stringify(payload, null, 2)], { type: "application/json" });
+      const blobUrl = URL.createObjectURL(blob);
+      const link = document.createElement("a");
+      link.href = blobUrl;
+      link.download = `alkoda-startpage-grid-${filenameDate}.json`;
+      document.body.appendChild(link);
+      link.click();
+      link.remove();
+      window.setTimeout(() => URL.revokeObjectURL(blobUrl), 0);
     }
 
     function passwordEyeSvg(isVisible) {

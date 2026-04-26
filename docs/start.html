@@ -2164,6 +2164,7 @@
         order_save_error: "Erreur de sauvegarde de l'ordre : {message}",
         seed_error: "Erreur de preremplissage : {message}",
         request_timeout: "La sauvegarde a pris trop de temps.",
+        size_remove_tiles_first: "Supprime d'abord les tuiles presentes dans la ligne ou la colonne que tu veux enlever.",
         prefill_confirm: "Preremplir va ajouter des tuiles de reference. Continuer ?",
         delete_function_missing: "La fonction Supabase delete-account n'est pas encore configuree."
       },
@@ -2314,6 +2315,7 @@
         order_save_error: "Order save error: {message}",
         seed_error: "Prefill error: {message}",
         request_timeout: "Saving took too long.",
+        size_remove_tiles_first: "Remove the tiles in that row or column first before shrinking the grid.",
         prefill_confirm: "Prefill will add reference tiles. Continue?",
         delete_function_missing: "The Supabase delete-account function is not configured yet."
       }
@@ -3974,8 +3976,32 @@
       return remapped;
     }
 
+    function hasTileInRemovedColumn(nextColumns) {
+      const columns = Math.max(1, Number(state.config.columns) || DEFAULT_CONFIG.columns);
+      return state.tiles.some(tile => {
+        const position = Number(tile.position) || 1;
+        const zeroBased = Math.max(0, position - 1);
+        const col = (zeroBased % columns) + 1;
+        return col > nextColumns;
+      });
+    }
+
+    function hasTileInRemovedRow(nextRows) {
+      const columns = Math.max(1, Number(state.config.columns) || DEFAULT_CONFIG.columns);
+      return state.tiles.some(tile => {
+        const position = Number(tile.position) || 1;
+        const zeroBased = Math.max(0, position - 1);
+        const row = Math.floor(zeroBased / columns) + 1;
+        return row > nextRows;
+      });
+    }
+
     async function saveConfig() {
       clearTimeout(state.saveSizeCloseTimer);
+      if (hasTileInRemovedColumn(state.draftConfig.columns) || hasTileInRemovedRow(state.draftConfig.rows)) {
+        setStatus(ui.sizeStatus, t("size_remove_tiles_first"), "error");
+        return;
+      }
       const previousConfig = sanitizeConfig(state.sizeModalSnapshot || state.config);
       state.draftConfig = sanitizeConfig(state.draftConfig);
       state.config = { ...state.draftConfig };
@@ -4938,18 +4964,32 @@
     ui.closeSizeModalBtn.addEventListener("click", () => closeSizeModal(true));
     ui.saveSizeBtn.addEventListener("click", saveConfig);
     ui.colsMinusBtn.addEventListener("click", () => {
-      state.draftConfig.columns = clampNumber(state.draftConfig.columns - 1, TILE_LIMITS.columns[0], TILE_LIMITS.columns[1], DEFAULT_CONFIG.columns);
+      const nextColumns = clampNumber(state.draftConfig.columns - 1, TILE_LIMITS.columns[0], TILE_LIMITS.columns[1], DEFAULT_CONFIG.columns);
+      if (nextColumns < state.config.columns && hasTileInRemovedColumn(nextColumns)) {
+        setStatus(ui.sizeStatus, t("size_remove_tiles_first"), "error");
+        return;
+      }
+      setStatus(ui.sizeStatus, "");
+      state.draftConfig.columns = nextColumns;
       applyDraftConfigFromInputs();
     });
     ui.colsPlusBtn.addEventListener("click", () => {
+      setStatus(ui.sizeStatus, "");
       state.draftConfig.columns = clampNumber(state.draftConfig.columns + 1, TILE_LIMITS.columns[0], TILE_LIMITS.columns[1], DEFAULT_CONFIG.columns);
       applyDraftConfigFromInputs();
     });
     ui.rowsMinusBtn.addEventListener("click", () => {
-      state.draftConfig.rows = clampNumber(state.draftConfig.rows - 1, TILE_LIMITS.rows[0], TILE_LIMITS.rows[1], DEFAULT_CONFIG.rows);
+      const nextRows = clampNumber(state.draftConfig.rows - 1, TILE_LIMITS.rows[0], TILE_LIMITS.rows[1], DEFAULT_CONFIG.rows);
+      if (nextRows < state.config.rows && hasTileInRemovedRow(nextRows)) {
+        setStatus(ui.sizeStatus, t("size_remove_tiles_first"), "error");
+        return;
+      }
+      setStatus(ui.sizeStatus, "");
+      state.draftConfig.rows = nextRows;
       applyDraftConfigFromInputs();
     });
     ui.rowsPlusBtn.addEventListener("click", () => {
+      setStatus(ui.sizeStatus, "");
       state.draftConfig.rows = clampNumber(state.draftConfig.rows + 1, TILE_LIMITS.rows[0], TILE_LIMITS.rows[1], DEFAULT_CONFIG.rows);
       applyDraftConfigFromInputs();
     });

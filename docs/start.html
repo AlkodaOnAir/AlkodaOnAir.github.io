@@ -99,7 +99,7 @@
 
     .topbar-reveal-zone {
       position: fixed;
-      top: 0;
+      top: max(0px, calc(var(--topbar-height) - 18px));
       left: 0;
       right: 0;
       height: 18px;
@@ -114,7 +114,7 @@
       right: 0;
       bottom: 0;
       height: 1px;
-      background: rgba(255, 255, 255, 0.3);
+      background: rgba(255, 255, 255, 0.2);
       opacity: 0;
       transition: opacity 0.2s ease;
       pointer-events: none;
@@ -3454,7 +3454,8 @@
     }
 
     function updateLayoutMetrics() {
-      document.documentElement.style.setProperty("--topbar-height", "0px");
+      const topbarHeight = ui.topbar?.offsetHeight || 0;
+      document.documentElement.style.setProperty("--topbar-height", `${topbarHeight}px`);
     }
 
     function shouldKeepTopbarVisible() {

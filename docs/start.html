@@ -3387,6 +3387,14 @@
       });
     }
 
+    function maybeDefaultTransparentBackgroundForImage() {
+      const current = (ui.tileColor.value || "").toLowerCase();
+      if (!state.tileColorTransparent && current === "#ffffff") {
+        state.tileColorTransparent = true;
+        syncColorSwatches();
+      }
+    }
+
     function parseWebmixRow(row) {
       if (!row) {
         return { ...DEFAULT_CONFIG };
@@ -3658,6 +3666,9 @@
       ui.uploadOptions.classList.toggle("hidden", state.imageTab !== "upload");
       ui.webOptions.classList.toggle("hidden", state.imageTab !== "web");
       ui.imageSettings.classList.toggle("hidden", !((state.imageMode === "upload" || state.imageMode === "web")));
+      if (state.imageMode === "web" || state.imageMode === "upload") {
+        maybeDefaultTransparentBackgroundForImage();
+      }
       if (state.imageMode === "web") {
         ui.tileImageEnabled.checked = Boolean(state.webImageEnabled && normalizeUrl(ui.tileImage.value));
         renderWebSuggestions();

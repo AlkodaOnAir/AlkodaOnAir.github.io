@@ -1248,6 +1248,7 @@
     }
 
     .swatch-btn {
+      position: relative;
       width: 100%;
       aspect-ratio: 1;
       border-radius: 4px;
@@ -1258,7 +1259,27 @@
 
     .swatch-btn.active {
       border-color: #ffffff;
-      box-shadow: 0 0 0 2px rgba(255, 255, 255, 0.18);
+      box-shadow:
+        0 0 0 2px rgba(255, 255, 255, 0.18),
+        0 0 14px rgba(255, 255, 255, 0.28);
+    }
+
+    .swatch-btn.active::after {
+      content: "✓";
+      position: absolute;
+      top: 3px;
+      right: 4px;
+      width: 15px;
+      height: 15px;
+      border-radius: 999px;
+      display: grid;
+      place-items: center;
+      font-size: 10px;
+      font-weight: 900;
+      line-height: 1;
+      color: #111;
+      background: rgba(255, 255, 255, 0.96);
+      box-shadow: 0 1px 4px rgba(0, 0, 0, 0.35);
     }
 
     .swatch-transparent {

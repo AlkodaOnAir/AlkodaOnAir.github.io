@@ -3906,10 +3906,71 @@
       scheduleTopbarHide(120);
     }
 
+    function remapTilePositionsForColumns(tiles, oldColumns, newColumns) {
+      const previousColumns = Math.max(1, Number(oldColumns) || DEFAULT_CONFIG.columns);
+      const nextColumns = Math.max(1, Number(newColumns) || previousColumns);
+      if (previousColumns === nextColumns) {
+        return tiles.map(tile => ({ ...tile }));
+      }
+
+      const ordered = [...tiles]
+        .map(tile => ({ ...tile, position: Number(tile.position) || 1 }))
+        .sort((a, b) => (a.position - b.position) || String(a.id || "").localeCompare(String(b.id || "")));
+
+      if (nextColumns > previousColumns) {
+        return ordered.map(tile => {
+          const zeroBased = Math.max(0, (Number(tile.position) || 1) - 1);
+          const row = Math.floor(zeroBased / previousColumns);
+          const col = zeroBased % previousColumns;
+          return {
+            ...tile,
+            position: row * nextColumns + col + 1
+          };
+        });
+      }
+
+      const groupedRows = new Map();
+      for (const tile of ordered) {
+        const zeroBased = Math.max(0, (Number(tile.position) || 1) - 1);
+        const row = Math.floor(zeroBased / previousColumns);
+        const col = zeroBased % previousColumns;
+        if (!groupedRows.has(row)) {
+          groupedRows.set(row, []);
+        }
+        groupedRows.get(row).push({ tile, col });
+      }
+
+      const remapped = [];
+      let nextPosition = 1;
+      [...groupedRows.keys()].sort((a, b) => a - b).forEach(row => {
+        const items = groupedRows.get(row)
+          .sort((a, b) => a.col - b.col)
+          .map(entry => entry.tile);
+        items.forEach(tile => {
+          remapped.push({
+            ...tile,
+            position: nextPosition
+          });
+          nextPosition += 1;
+        });
+      });
+
+      return remapped;
+    }
+
     async function saveConfig() {
       clearTimeout(state.saveSizeCloseTimer);
+      const previousConfig = sanitizeConfig(state.sizeModalSnapshot || state.config);
       state.draftConfig = sanitizeConfig(state.draftConfig);
       state.config = { ...state.draftConfig };
+      const remappedTiles = remapTilePositionsForColumns(state.tiles, previousConfig.columns, state.config.columns);
+      const previousPositionsById = new Map(
+        state.tiles.map(tile => [String(tile.id), Number(tile.position) || 1])
+      );
+      const changedTiles = remappedTiles.filter(tile =>
+        previousPositionsById.get(String(tile.id)) !== (Number(tile.position) || 1)
+      );
+      state.tiles = remappedTiles;
       applyGridConfig(state.config);
       renderTiles();
 
@@ -3924,6 +3985,16 @@
 
       try {
         const webmix = state.currentWebmix || await ensureCurrentWebmix();
+        if (changedTiles.length) {
+          await Promise.all(changedTiles.map(tile =>
+            restTableRequest("tiles", {
+              method: "PATCH",
+              query: `?id=eq.${encodeURIComponent(tile.id)}`,
+              body: { position: Number(tile.position) || 1 },
+              prefer: "return=minimal"
+            })
+          ));
+        }
         await restTableRequest("webmixes", {
           method: "PATCH",
           query: `?id=eq.${encodeURIComponent(webmix.id)}`,

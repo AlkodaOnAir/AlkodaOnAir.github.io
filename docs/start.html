@@ -352,7 +352,7 @@
       isolation: isolate;
       display: flex;
       flex-direction: column;
-      padding: 28px 18px;
+      padding: calc(28px + var(--topbar-height)) 18px 28px;
       background: #060606;
     }
 
@@ -382,7 +382,6 @@
       overflow: auto;
       position: relative;
       z-index: 1;
-      padding-top: var(--topbar-height);
     }
 
     .grid-background-image {

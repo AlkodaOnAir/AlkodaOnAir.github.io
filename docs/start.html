@@ -2467,6 +2467,7 @@
       backgroundPreviewUrl: "",
       backgroundDragging: false,
       sizeModalSnapshot: null,
+      sizeModalTilesSnapshot: null,
       editingTile: null,
       pendingTilePosition: null,
       imageMode: "color",
@@ -3880,6 +3881,7 @@
       setTopbarVisible(true);
       setStatus(ui.sizeStatus, "");
       state.sizeModalSnapshot = { ...state.config };
+      state.sizeModalTilesSnapshot = cloneTilesSnapshot(state.tiles);
       state.draftConfig = { ...state.config };
       syncSizeInputs(state.draftConfig);
       ui.sizeModal.classList.add("open");
@@ -3889,6 +3891,11 @@
       state.draftConfig = sanitizeConfig(state.draftConfig);
       syncSizeInputs(state.draftConfig);
       state.config = { ...state.draftConfig };
+      const baseTiles = state.sizeModalTilesSnapshot
+        ? cloneTilesSnapshot(state.sizeModalTilesSnapshot)
+        : cloneTilesSnapshot(state.tiles);
+      const baseColumns = state.sizeModalSnapshot?.columns || state.config.columns;
+      state.tiles = remapTilePositionsForColumns(baseTiles, baseColumns, state.config.columns);
       applyGridConfig(state.config);
       renderTiles();
     }
@@ -3897,12 +3904,16 @@
       clearTimeout(state.saveSizeCloseTimer);
       if (restoreSnapshot && state.sizeModalSnapshot) {
         state.config = { ...state.sizeModalSnapshot };
+        if (state.sizeModalTilesSnapshot) {
+          state.tiles = cloneTilesSnapshot(state.sizeModalTilesSnapshot);
+        }
         applyGridConfig(state.config);
         renderTiles();
       }
       ui.sizeModal.classList.remove("open");
       setStatus(ui.sizeStatus, "");
       state.sizeModalSnapshot = null;
+      state.sizeModalTilesSnapshot = null;
       if (state.bookmarksImportSnapshot) {
         openBookmarksModal();
         renderImportedBookmarks();
@@ -3968,9 +3979,12 @@
       const previousConfig = sanitizeConfig(state.sizeModalSnapshot || state.config);
       state.draftConfig = sanitizeConfig(state.draftConfig);
       state.config = { ...state.draftConfig };
-      const remappedTiles = remapTilePositionsForColumns(state.tiles, previousConfig.columns, state.config.columns);
+      const sourceTiles = state.sizeModalTilesSnapshot
+        ? cloneTilesSnapshot(state.sizeModalTilesSnapshot)
+        : cloneTilesSnapshot(state.tiles);
+      const remappedTiles = remapTilePositionsForColumns(sourceTiles, previousConfig.columns, state.config.columns);
       const previousPositionsById = new Map(
-        state.tiles.map(tile => [String(tile.id), Number(tile.position) || 1])
+        sourceTiles.map(tile => [String(tile.id), Number(tile.position) || 1])
       );
       const changedTiles = remappedTiles.filter(tile =>
         previousPositionsById.get(String(tile.id)) !== (Number(tile.position) || 1)
@@ -4009,6 +4023,7 @@
         state.currentWebmix = { ...webmix, ...payload };
         setStatus(ui.sizeStatus, t("save_done"), "ok");
         state.sizeModalSnapshot = { ...state.config };
+        state.sizeModalTilesSnapshot = cloneTilesSnapshot(state.tiles);
         state.saveSizeCloseTimer = window.setTimeout(() => {
           ui.sizeModal.classList.remove("open");
           setStatus(ui.sizeStatus, "");

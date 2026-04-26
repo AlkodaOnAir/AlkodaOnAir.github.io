@@ -105,6 +105,7 @@
       height: var(--topbar-height);
       z-index: 45;
       background: transparent;
+      pointer-events: none;
     }
 
     .topbar-reveal-zone::after {
@@ -122,6 +123,10 @@
 
     .topbar-reveal-zone.active::after {
       opacity: 1;
+    }
+
+    .topbar-reveal-zone.active {
+      pointer-events: auto;
     }
 
     .brand-wrap {

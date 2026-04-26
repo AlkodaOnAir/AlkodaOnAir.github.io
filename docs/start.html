@@ -4476,21 +4476,79 @@
         }) || [];
         state.currentWebmix = webmix;
         state.config = parseWebmixRow(webmix);
+        const originalBackground = sanitizeBackgroundConfig(webmix.background);
         state.config.background = await hydrateBackgroundConfig(webmix.background);
         applyGridConfig(state.config);
 
+        const repairedUploadImages = [];
         const contentRows = await Promise.all(
           rows
-            .map(async (row, index) => ({
-              ...row,
-              image: await hydrateUploadImage(row.image),
-              position: Number(row.position) || index + 1
-            }))
+            .map(async (row, index) => {
+              const originalImageData = parseTileImageData(row.image);
+              const hydratedImage = await hydrateUploadImage(row.image);
+              const hydratedImageData = parseTileImageData(hydratedImage);
+
+              if (
+                originalImageData.mode === "upload" &&
+                originalImageData.storagePath &&
+                !originalImageData.src &&
+                hydratedImageData.src
+              ) {
+                repairedUploadImages.push({
+                  id: row.id,
+                  image: hydratedImage
+                });
+              }
+
+              return {
+                ...row,
+                image: hydratedImage,
+                position: Number(row.position) || index + 1
+              };
+            })
         );
 
         state.tiles = contentRows;
 
         renderTiles();
+
+        if (
+          originalBackground.mode === "image" &&
+          originalBackground.storagePath &&
+          !originalBackground.src &&
+          state.config.background.src
+        ) {
+          Promise.resolve(
+            restTableRequest("webmixes", {
+              method: "PATCH",
+              query: `?id=eq.${encodeURIComponent(webmix.id)}`,
+              body: {
+                background: {
+                  mode: state.config.background.mode,
+                  color: state.config.background.color,
+                  storagePath: state.config.background.storagePath,
+                  src: state.config.background.src,
+                  stretchWidth: Boolean(state.config.background.stretchWidth),
+                  offsetY: state.config.background.offsetY
+                }
+              },
+              prefer: "return=minimal"
+            })
+          ).catch(() => {});
+        }
+
+        if (repairedUploadImages.length) {
+          Promise.allSettled(
+            repairedUploadImages.map(item =>
+              restTableRequest("tiles", {
+                method: "PATCH",
+                query: `?id=eq.${encodeURIComponent(item.id)}`,
+                body: { image: item.image },
+                prefer: "return=minimal"
+              })
+            )
+          ).catch(() => {});
+        }
 
         if (!contentRows.length) {
           requestAnimationFrame(() => openSizeModal());

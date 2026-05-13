@@ -1695,7 +1695,7 @@ function startRouteAnimation(chain){
     const _pgCtx={};
     chain.pathGroups.forEach(pg=>{
       let prevExit=pg._srcNid||_chainSrc;
-      let lastEntry=null,lastExit=null,ctxPrev=null,lastCid=null,_lastWasPar=false;
+      let lastEntry=null,lastExit=null,ctxPrev=null,lastCid=null;
       (pg.cables||[]).forEach((cid,cidx)=>{
         const c=chainCabs.find(x=>x.id===cid); if(!c) return;
         const f=String(c.from), t=String(c.to);
@@ -1715,13 +1715,10 @@ function startRouteAnimation(chain){
             fromOnly=thisCtx;
           }
         } else { _pgCtx[entry]=thisCtx; }
-        // fromCid=null pour câbles parallèles et le câble qui suit un groupe parallèle
-        const _fcid=(_par||_lastWasPar)?null:lastCid;
-        _addEdge(entry, exit, fromOnly, _fcid);
+        // fromCid uniquement si désambiguïsation active (fromOnly est set)
+        _addEdge(entry, exit, fromOnly, fromOnly!==null?lastCid:null);
         if(entry!==lastEntry) ctxPrev=thisCtx;
-        _lastWasPar=_par;
-        if(!_par) lastCid=cid;
-        lastEntry=entry; lastExit=exit; prevExit=exit;
+        lastEntry=entry; lastExit=exit; prevExit=exit; lastCid=cid;
       });
     });
     _animRoots=[...rootsSet];

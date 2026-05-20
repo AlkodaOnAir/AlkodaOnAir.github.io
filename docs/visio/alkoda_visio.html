@@ -967,19 +967,8 @@ kbd{background:var(--bg3);border:1px solid var(--border2);border-radius:2px;padd
 .node.dim .node-lbl{opacity:.35!important}
 #cables-svg .cp{transition:opacity .15s,stroke-width .15s,filter .15s}
 @media(max-width:768px){
-  /* Menu : dropdown depuis le haut (comme index.html) */
-  #sidebar-left{
-    position:fixed!important;
-    top:52px!important;left:0!important;right:0!important;bottom:auto!important;
-    width:100%!important;height:auto!important;max-height:75vh!important;
-    border-left:none!important;border-right:none!important;border-top:none!important;
-    border-bottom:1px solid var(--border2)!important;
-    border-radius:0 0 12px 12px!important;
-    transform:translateY(-110%)!important;
-    z-index:149!important;
-    box-shadow:0 8px 32px rgba(0,0,0,.6)!important;
-    overflow-y:auto!important;
-  }
+  /* Sidebar : dropdown depuis le haut */
+  #sidebar-left{position:fixed!important;top:52px!important;left:0!important;right:0!important;bottom:auto!important;width:100%!important;height:auto!important;max-height:75vh!important;border-left:none!important;border-right:none!important;border-top:none!important;border-bottom:1px solid var(--border2)!important;border-radius:0 0 12px 12px!important;transform:translateY(-110%)!important;z-index:149!important;box-shadow:0 8px 32px rgba(0,0,0,.6)!important;overflow-y:auto!important;}
   #sidebar-left.mob-open{transform:translateY(0)!important}
   #sidebar-left::before{display:none!important}
   /* Masquer dans le header les éléments déplacés dans le menu */
@@ -988,34 +977,15 @@ kbd{background:var(--bg3);border:1px solid var(--border2);border-radius:2px;padd
   #mob-backdrop{display:block;position:fixed;inset:0;z-index:148;background:rgba(0,0,0,.4)}
   /* Info panel : moins haut pour laisser le canvas visible */
   #info-panel{height:42vh!important}
-  #info-panel::before{margin:8px auto 0!important}
-  /* Drag handle visible */
-  #info-panel::before{cursor:grab!important}
-  /* ── Bloc header dans le menu déroulant ─────────────────────── */
-  #mob-header-items{
-    padding:10px 12px 6px;
-    border-bottom:1px solid var(--border2);
-    margin-bottom:6px;
-    display:flex;
-    flex-direction:column;
-    gap:8px;
-  }
-  #mob-header-items .h-search{
-    width:100%!important;margin-left:0!important;flex:none!important;
-  }
-  #mob-header-items #search-input{
-    width:100%!important;max-width:none!important;flex:1!important;min-width:0;
-  }
+  #info-panel::before{margin:8px auto 0!important;cursor:grab!important}
+  /* Bloc header dans le menu déroulant */
+  #mob-header-items{padding:10px 12px 6px;border-bottom:1px solid var(--border2);margin-bottom:6px;display:flex;flex-direction:column;gap:8px;}
+  #mob-header-items .h-search{width:100%!important;margin-left:0!important;flex:none!important;}
+  #mob-header-items #search-input{width:100%!important;max-width:none!important;flex:1!important;min-width:0;}
   #mob-header-items #search-input:focus{width:100%!important;}
-  #mob-header-items .mob-hdr-row{
-    display:flex;align-items:center;gap:6px;flex-wrap:wrap;
-  }
-  #mob-header-items .mob-hdr-row > button{
-    flex:1;min-width:0;text-align:center;
-  }
-  #mob-header-items .h-oab{
-    font-size:10px;padding:2px 8px;white-space:nowrap;flex-shrink:0;
-  }
+  #mob-header-items .mob-hdr-row{display:flex;align-items:center;gap:6px;flex-wrap:wrap;}
+  #mob-header-items .mob-hdr-row > button{flex:1;min-width:0;text-align:center;}
+  #mob-header-items .h-oab{font-size:10px;padding:2px 8px;white-space:nowrap;flex-shrink:0;}
 }
 </style>
 </head>
@@ -1380,17 +1350,18 @@ function renderNodes(){
     node.addEventListener('mouseenter',e=>showTT(e,s));
     node.addEventListener('mousemove',e=>moveTT(e));
     node.addEventListener('mouseleave',()=>hideTT());
+    // Touch: handle tap directly, prevent any browser default navigation
     let _touchStarted=false;
     node.addEventListener('touchstart',e=>{_touchStarted=true;},{passive:true});
     node.addEventListener('touchend',e=>{
       if(!_touchStarted)return;
       _touchStarted=false;
       e.stopPropagation();
-      e.preventDefault();
-      drag=false;
+      e.preventDefault(); // prevent synthesized click & browser image/link navigation
+      drag=false;         // reset pan state since area won't see this touchend
       selectNode(s.id);
     },{passive:false});
-    node.addEventListener('touchmove',e=>{_touchStarted=false;},{passive:true});
+    node.addEventListener('touchmove',e=>{_touchStarted=false;},{passive:true}); // cancel on drag
     node.addEventListener('click',e=>{e.stopPropagation();selectNode(s.id);});
     nodesL.append(node);
   });
@@ -1594,7 +1565,7 @@ function fitView(){
 function resetView(){fitView();clearSel();closePanel();}
 function dz(d){
   const ww=area.clientWidth,wh=area.clientHeight;
-  const nz=Math.max(.15,Math.min(4,zoom+d));
+  const nz=Math.max(.05,Math.min(4,zoom+d));
   const sc=nz/zoom;
   panX=ww/2-sc*(ww/2-panX);panY=wh/2-sc*(wh/2-panY);
   zoom=nz;applyT();
@@ -1942,7 +1913,7 @@ function setupEvents(){
     const r=area.getBoundingClientRect();
     const mx=e.clientX-r.left,my=e.clientY-r.top;
     const nd=e.deltaY<0?0.1:-0.1;
-    const nz=Math.max(.15,Math.min(4,zoom+nd));
+    const nz=Math.max(.05,Math.min(4,zoom+nd));
     panX=mx-(mx-panX)*(nz/zoom);panY=my-(my-panY)*(nz/zoom);
     zoom=nz;applyT();
   },{passive:false});
@@ -1975,7 +1946,7 @@ function setupEvents(){
       const r=area.getBoundingClientRect();
       const mx=(e.touches[0].clientX+e.touches[1].clientX)/2-r.left;
       const my=(e.touches[0].clientY+e.touches[1].clientY)/2-r.top;
-      const nz=Math.max(.15,Math.min(4,zoom*(d/tDist)));
+      const nz=Math.max(.05,Math.min(4,zoom*(d/tDist)));
       panX=mx-(mx-panX)*(nz/zoom);panY=my-(my-panY)*(nz/zoom);
       zoom=nz;tDist=d;applyT();
     }
@@ -2007,7 +1978,7 @@ window.addEventListener('DOMContentLoaded',()=>{
     if(!panel)return;
     let _dy=0,_dragging=false;
     panel.addEventListener('touchstart',e=>{
-      if(e.target.closest('.ip-body')) return; // scroll libre dans le corps
+      if(e.target.closest('.ip-body')) return;
       _dy=e.touches[0].clientY;_dragging=true;
     },{passive:true});
     panel.addEventListener('touchmove',e=>{
@@ -2029,10 +2000,8 @@ window.addEventListener('DOMContentLoaded',()=>{
     if(sidebar&&firstSection){
       const wrap=document.createElement('div');
       wrap.id='mob-header-items';
-      // Ligne 1 : barre de recherche (pleine largeur)
       const search=document.querySelector('.h-search');
       if(search){search.style.marginLeft='';wrap.appendChild(search);}
-      // Ligne 2 : RETOUR | ON AIR | Langue | Comment?
       const row=document.createElement('div');
       row.className='mob-hdr-row';
       [

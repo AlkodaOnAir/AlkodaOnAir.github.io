@@ -967,11 +967,27 @@ kbd{background:var(--bg3);border:1px solid var(--border2);border-radius:2px;padd
 .node.dim .node-lbl{opacity:.35!important}
 #cables-svg .cp{transition:opacity .15s,stroke-width .15s,filter .15s}
 @media(max-width:768px){
-  #sidebar-left{top:auto!important;left:0!important;right:0!important;bottom:32px!important;width:100%!important;height:60vh!important;border-left:none!important;border-top:1px solid var(--border2)!important;border-radius:14px 14px 0 0!important;transform:translateY(110%)!important;}
+  /* Menu : dropdown depuis le haut (comme index.html) */
+  #sidebar-left{
+    position:fixed!important;
+    top:52px!important;left:0!important;right:0!important;bottom:auto!important;
+    width:100%!important;height:auto!important;max-height:65vh!important;
+    border-left:none!important;border-right:none!important;border-top:none!important;
+    border-bottom:1px solid var(--border2)!important;
+    border-radius:0 0 12px 12px!important;
+    transform:translateY(-110%)!important;
+    z-index:149!important;
+    box-shadow:0 8px 32px rgba(0,0,0,.6)!important;
+  }
   #sidebar-left.mob-open{transform:translateY(0)!important}
-  #sidebar-left::before{content:'';display:block;width:36px;height:4px;border-radius:2px;background:var(--border2);margin:8px auto 4px;flex-shrink:0;}
-  #info-panel{height:55vh!important}
+  #sidebar-left::before{display:none!important}
+  /* Backdrop quand menu ouvert */
+  #mob-backdrop{display:block;position:fixed;inset:0;z-index:148;background:rgba(0,0,0,.4)}
+  /* Info panel : moins haut pour laisser le canvas visible */
+  #info-panel{height:42vh!important}
   #info-panel::before{margin:8px auto 0!important}
+  /* Drag handle visible */
+  #info-panel::before{cursor:grab!important}
 }
 </style>
 </head>
@@ -1939,13 +1955,45 @@ function setupEvents(){
   },{passive:false});
   area.addEventListener('touchend',e=>{if(e.touches.length===0){drag=false;tDist=0;}},{passive:false});
 }
-function toggleMenu(){document.getElementById('sidebar-left').classList.toggle('mob-open');}
+function toggleMenu(){
+  const sl=document.getElementById('sidebar-left');
+  const open=sl.classList.toggle('mob-open');
+  let bd=document.getElementById('mob-backdrop');
+  if(open){
+    if(!bd){bd=document.createElement('div');bd.id='mob-backdrop';document.body.appendChild(bd);}
+    bd.style.display='block';
+    bd.ontouchstart=bd.onclick=()=>toggleMenu();
+  } else {
+    if(bd) bd.style.display='none';
+  }
+}
 window.addEventListener('DOMContentLoaded',()=>{
   root.style.width=CW+'px';root.style.height=CH+'px';
   svg.setAttribute('width',CW);svg.setAttribute('height',CH);
   svg.style.width=CW+'px';svg.style.height=CH+'px';
   buildCM();renderZones();renderCables();renderNodes();setupEvents();
   setTimeout(()=>{fitView();drawMinimap();},100);
+  // Drag-to-close sur l'info panel (mobile)
+  (function(){
+    const panel=document.getElementById('info-panel');
+    if(!panel)return;
+    let _dy=0,_dragging=false;
+    panel.addEventListener('touchstart',e=>{
+      if(e.target.closest('.ip-body')) return; // scroll libre dans le corps
+      _dy=e.touches[0].clientY;_dragging=true;
+    },{passive:true});
+    panel.addEventListener('touchmove',e=>{
+      if(!_dragging)return;
+      const diff=e.touches[0].clientY-_dy;
+      if(diff>0){panel.style.transform=`translateY(${diff}px)`;e.preventDefault();}
+    },{passive:false});
+    panel.addEventListener('touchend',e=>{
+      if(!_dragging)return;_dragging=false;
+      const diff=e.changedTouches[0].clientY-_dy;
+      panel.style.transform='';
+      if(diff>80){closePanel();}
+    },{passive:true});
+  })();
   // Language detection — toujours basée sur le navigateur/système
   const sys2=(navigator.language||'fr').toLowerCase().startsWith('fr')?'fr':'en';
   setLang(sys2);

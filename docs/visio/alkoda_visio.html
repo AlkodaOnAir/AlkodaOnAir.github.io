@@ -1336,6 +1336,17 @@ function renderNodes(){
     node.addEventListener('mouseenter',e=>showTT(e,s));
     node.addEventListener('mousemove',e=>moveTT(e));
     node.addEventListener('mouseleave',()=>hideTT());
+    let _touchStarted=false;
+    node.addEventListener('touchstart',e=>{_touchStarted=true;},{passive:true});
+    node.addEventListener('touchend',e=>{
+      if(!_touchStarted)return;
+      _touchStarted=false;
+      e.stopPropagation();
+      e.preventDefault();
+      drag=false;
+      selectNode(s.id);
+    },{passive:false});
+    node.addEventListener('touchmove',e=>{_touchStarted=false;},{passive:true});
     node.addEventListener('click',e=>{e.stopPropagation();selectNode(s.id);});
     nodesL.append(node);
   });

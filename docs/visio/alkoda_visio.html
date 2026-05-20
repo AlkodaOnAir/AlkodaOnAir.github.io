@@ -970,6 +970,8 @@ kbd{background:var(--bg3);border:1px solid var(--border2);border-radius:2px;padd
   #sidebar-left{top:auto!important;left:0!important;right:0!important;bottom:32px!important;width:100%!important;height:60vh!important;border-left:none!important;border-top:1px solid var(--border2)!important;border-radius:14px 14px 0 0!important;transform:translateY(110%)!important;}
   #sidebar-left.mob-open{transform:translateY(0)!important}
   #sidebar-left::before{content:'';display:block;width:36px;height:4px;border-radius:2px;background:var(--border2);margin:8px auto 4px;flex-shrink:0;}
+  #info-panel{height:55vh!important}
+  #info-panel::before{margin:8px auto 0!important}
 }
 </style>
 </head>
@@ -989,7 +991,7 @@ kbd{background:var(--bg3);border:1px solid var(--border2);border-radius:2px;padd
         <div class="h-ver">SIGNAL MAP</div>
       </div>
     </a>
-    <button onclick="history.back()" data-i18n="back_btn" style="background:rgba(255,255,255,.07);border:1px solid var(--border2);color:var(--text);border-radius:4px;padding:3px 10px;font-family:var(--mono);font-size:10px;letter-spacing:1px;cursor:pointer;flex-shrink:0">← RETOUR</button>
+    <button onclick="history.length>1?history.back():(window.location.href='https://alkoda-onair.com/')" data-i18n="back_btn" style="background:rgba(255,255,255,.07);border:1px solid var(--border2);color:var(--text);border-radius:4px;padding:3px 10px;font-family:var(--mono);font-size:10px;letter-spacing:1px;cursor:pointer;flex-shrink:0">← RETOUR</button>
     <div class="h-sep"></div>
     <div class="h-oab">● ON AIR</div>
     <button id="lang-toggle" onclick="toggleLang()" title="Change language / Changer de langue"><span id="lang-flag"></span></button>
@@ -1321,8 +1323,8 @@ function renderNodes(){
     wrap.style.cssText=`width:${s.w}px;height:${s.h-3}px`;
     if(s.img){
       const img=document.createElement('img');
-      img.src=s.img;img.alt=s.name;
-      img.style.cssText=`width:${s.w}px;height:${s.h-3}px`;
+      img.src=s.img;img.alt=s.name;img.draggable=false;
+      img.style.cssText=`width:${s.w}px;height:${s.h-3}px;pointer-events:none;-webkit-user-drag:none;user-select:none`;
       if(s.id==='25'){img.style.objectFit='fill';img.style.padding='0';}
       if(s.id==='63'||s.id==='22')img.style.objectPosition='top';
       wrap.append(img);

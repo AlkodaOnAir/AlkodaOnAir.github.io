@@ -1350,18 +1350,25 @@ function renderNodes(){
     node.addEventListener('mouseenter',e=>showTT(e,s));
     node.addEventListener('mousemove',e=>moveTT(e));
     node.addEventListener('mouseleave',()=>hideTT());
-    // Touch: handle tap directly, prevent any browser default navigation
-    let _touchStarted=false;
-    node.addEventListener('touchstart',e=>{_touchStarted=true;},{passive:true});
+    // Touch: tap fiable — seuil de mouvement pour éviter faux-positif sur micro-tremblement
+    let _tStarted=false,_tX=0,_tY=0;
+    node.addEventListener('touchstart',e=>{
+      e.stopPropagation(); // empêche area.touchstart de mettre drag=true
+      _tStarted=true;_tX=e.touches[0].clientX;_tY=e.touches[0].clientY;
+    },{passive:false});
     node.addEventListener('touchend',e=>{
-      if(!_touchStarted)return;
-      _touchStarted=false;
+      if(!_tStarted)return;
+      _tStarted=false;
       e.stopPropagation();
-      e.preventDefault(); // prevent synthesized click & browser image/link navigation
-      drag=false;         // reset pan state since area won't see this touchend
+      e.preventDefault(); // bloque le clic synthétique navigateur
+      drag=false;
       selectNode(s.id);
     },{passive:false});
-    node.addEventListener('touchmove',e=>{_touchStarted=false;},{passive:true}); // cancel on drag
+    node.addEventListener('touchmove',e=>{
+      if(!_tStarted)return;
+      // annule le tap seulement si vrai geste de pan (> 8px)
+      if(Math.hypot(e.touches[0].clientX-_tX,e.touches[0].clientY-_tY)>8)_tStarted=false;
+    },{passive:true});
     node.addEventListener('click',e=>{e.stopPropagation();selectNode(s.id);});
     nodesL.append(node);
   });

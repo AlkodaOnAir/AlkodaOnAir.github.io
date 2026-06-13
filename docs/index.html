@@ -188,8 +188,9 @@ h2 em{font-style:normal;color:var(--accent)}
 .social-btn{display:inline-flex;align-items:center;gap:8px;padding:10px 16px;border-radius:10px;background:rgba(255,255,255,.05);border:1px solid var(--line);color:var(--muted);font-size:13px;font-weight:500;transition:.2s;text-decoration:none}
 .social-btn:hover{border-color:var(--accent);color:var(--accent);background:rgba(0,210,255,.06)}
 .contact-location{display:inline-flex;align-items:center;gap:8px;padding:10px 14px;font-size:13px;color:var(--dim)}
-.contact-project-box{background:linear-gradient(135deg,rgba(0,210,255,.08),rgba(255,107,53,.06));border:1px solid rgba(255,255,255,.08);border-radius:var(--rad);padding:32px;display:flex;flex-direction:column;justify-content:center;height:100%;box-sizing:border-box}
-.contact-project-box h3{font-size:24px;font-weight:800;color:#fff;margin-bottom:14px;letter-spacing:-.01em}
+.contact-mug{display:flex;flex-direction:column}
+.contact-mug img{width:100%;max-height:320px;object-fit:cover;object-position:center 62%;border-radius:var(--rad);pointer-events:none;cursor:default}
+.contact-mug-caption{margin-top:12px;font-size:17px;color:var(--muted);font-weight:300;text-align:center;line-height:1.7}
 .contact-project-box p{font-size:15px;color:var(--muted);font-weight:300;line-height:1.7;margin-bottom:24px}
 
 /* ── FOOTER ── */
@@ -463,10 +464,10 @@ footer{padding:28px 0 40px;border-top:1px solid var(--line);background:#000}
 <!-- CONTACT -->
 <section id="contact">
   <div class="shell">
-    <div class="section-kicker" data-i18n="contact_kicker">Nous contacter</div>
-    <h2 data-i18n="contact_h2">Parlons de<br><em>votre projet.</em></h2>
-    <div class="contact-new">
+    <div class="contact-new" style="margin-top:0">
       <div class="contact-left">
+        <div class="section-kicker" data-i18n="contact_kicker">Nous contacter</div>
+        <h2 data-i18n="contact_h2">Parlons de<br><em>votre projet.</em></h2>
         <div class="contact-direct">
           <a href="tel:+33607861211" class="contact-btn-main">
             <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M22 16.92v3a2 2 0 01-2.18 2 19.79 19.79 0 01-8.63-3.07A19.5 19.5 0 013.07 9.8a19.79 19.79 0 01-3.07-8.67A2 2 0 012 1h3a2 2 0 012 1.72c.127.96.361 1.903.7 2.81a2 2 0 01-.45 2.11L6.09 8.91a16 16 0 006 6l1.27-1.27a2 2 0 012.11-.45c.907.339 1.85.573 2.81.7A2 2 0 0122 16.92z"/></svg>
@@ -497,9 +498,9 @@ footer{padding:28px 0 40px;border-top:1px solid var(--line);background:#000}
         </div>
       </div>
       <div class="contact-right">
-        <div class="contact-project-box">
-          <h3 data-i18n="contact_cta_title">Un projet en tête ?</h3>
-          <p data-i18n="contact_cta_body">Décrivez-nous votre événement, la date, le lieu, vos besoins — par email ou par téléphone. Nous revenons vers vous sous 24h avec une proposition adaptée.</p>
+        <div class="contact-mug">
+          <img src="photos/Alkoda_OnAir_Mug.avif" alt="Alkoda On Air mug">
+          <p class="contact-mug-caption" data-i18n="contact_mug_caption">Prenons un café et parlons de votre projet.</p>
         </div>
       </div>
     </div>
@@ -635,8 +636,7 @@ const STRINGS={
     pill_years:'30+ ans broadcast', pill_location:'Paris & déplacement', pill_cameras:'9 caméras Sony FX6',
     contact_kicker:'Nous contacter',
     contact_h2:'Parlons de<br><em>votre projet.</em>',
-    contact_cta_title:'Un projet en tête ?',
-    contact_cta_body:'Décrivez-nous votre événement, la date, le lieu, vos besoins — par email ou par téléphone. Nous revenons vers vous sous 24h avec une proposition adaptée.',
+    contact_mug_caption:'Prenons un café et parlons de votre projet.',
     tag_multiplatform:'Multi-plateforme', tag_speaker_screen:'Écran speaker', tag_live_direction:'Réalisation live', tag_lower_thirds:'Titrages',
     tag_brand_identity:'Charte graphique', tag_fast_setup:'Setup rapide', tag_100events:'+100 événements',
     tag_fibre:'Fibre optique', tag_dvd:'DVD commercial',
@@ -697,8 +697,7 @@ const STRINGS={
     pill_years:'30+ yrs broadcast', pill_location:'Paris & on location', pill_cameras:'9 Sony FX6 cameras',
     contact_kicker:'Contact us',
     contact_h2:'Let\'s talk about<br><em>your project.</em>',
-    contact_cta_title:'Have a project in mind?',
-    contact_cta_body:'Tell us about your event, the date, the venue, your needs — by email or phone. We\'ll get back to you within 24h with a tailored proposal.',
+    contact_mug_caption:'Let\'s grab a coffee and talk about your project.',
     tag_multiplatform:'Multi-platform', tag_speaker_screen:'Speaker screen', tag_live_direction:'Live direction', tag_lower_thirds:'Lower thirds',
     tag_brand_identity:'Brand identity', tag_fast_setup:'Fast setup', tag_100events:'+100 events',
     tag_fibre:'Fibre optic', tag_dvd:'Commercial DVD',

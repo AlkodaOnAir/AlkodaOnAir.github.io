@@ -1,0 +1,2120 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<link rel="icon" type="image/png" sizes="32x32" href="https://alkoda-onair.com/alkoda-32x32.png">
+<link rel="icon" type="image/png" sizes="16x16" href="https://alkoda-onair.com/alkoda-16x16.png">
+<link rel="apple-touch-icon" sizes="180x180" href="https://alkoda-onair.com/alkoda-apple-touch-icon.png">
+<title>Schéma interactif broadcast — Signal Flow · Alkoda On Air</title>
+<meta name="description" content="Explorez le schéma interactif du signal flow d'une régie mobile broadcast professionnelle. Équipements, liaisons et chemins de signal de la régie mobile Alkoda On Air.">
+<link rel="canonical" href="https://alkoda-onair.com/visio/alkoda_visio.html">
+<meta name="robots" content="index, follow">
+<meta property="og:type" content="website">
+<meta property="og:locale" content="fr_FR">
+<meta property="og:title" content="Schéma interactif broadcast — Signal Flow · Alkoda On Air">
+<meta property="og:description" content="Schéma interactif du signal flow d'une régie mobile broadcast professionnelle : équipements, liaisons et chemins de signal.">
+<meta property="og:image" content="https://alkoda-onair.com/og-preview.jpg">
+<meta property="og:image:width" content="2000">
+<meta property="og:image:height" content="1125">
+<meta property="og:url" content="https://alkoda-onair.com/visio/alkoda_visio.html">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:title" content="Schéma interactif broadcast — Signal Flow · Alkoda On Air">
+<meta name="twitter:description" content="Schéma interactif du signal flow d'une régie mobile broadcast professionnelle.">
+<meta name="twitter:image" content="https://alkoda-onair.com/og-preview.jpg">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Share+Tech+Mono&family=Orbitron:wght@400;600;800;900&family=Rajdhani:wght@300;400;500;600;700&display=swap">
+<style>
+
+
+:root {
+  --bg:       #05070f;
+  --bg2:      #080b17;
+  --bg3:      #0c1020;
+  --panel:    #0f1422;
+  --border:   #1a2235;
+  --border2:  #212d45;
+  --accent:   #00d4ff;
+  --accent2:  #ff6b35;
+  --green:    #39ff14;
+  --text:     #b8ccec;
+  --textdim:  #7a90b0;
+  --textbr:   #ffffff;
+  --mono:     'Share Tech Mono', monospace;
+  --display:  'Orbitron', sans-serif;
+  --body:     'Rajdhani', sans-serif;
+}
+
+*{margin:0;padding:0;box-sizing:border-box}
+html,body{width:100%;height:100%;overflow:hidden;background:var(--bg);color:var(--text);font-family:var(--body)}
+
+/* ─── LOADING ─────────────────────────────── */
+#loading{
+  position:fixed;inset:0;background:var(--bg);z-index:9999;
+  display:flex;flex-direction:column;align-items:center;justify-content:center;
+  transition:opacity .6s ease .2s;
+}
+#loading.done{opacity:0;pointer-events:none}
+.ld-logo{
+  max-width:520px;width:80vw;margin-bottom:40px;
+  animation:ld-glow 2.8s ease-in-out infinite;
+  filter:drop-shadow(0 0 28px rgba(255,80,180,.35));
+}
+@keyframes cable-ping{
+  0%  { stroke:#ffffff; stroke-width:7; opacity:1; }
+  40% { stroke:#ffffff; stroke-width:5; opacity:.9; }
+  100%{ stroke-width:3.5; opacity:.95; }
+}
+.cable-pinged{ animation: cable-ping .6s ease-out forwards; }
+@keyframes ld-glow{
+  0%,100%{filter:drop-shadow(0 0 22px rgba(255,80,180,.4)) drop-shadow(0 0 8px rgba(0,212,255,.25))}
+  50%{filter:drop-shadow(0 0 48px rgba(255,80,180,.2)) drop-shadow(0 0 20px rgba(255,220,0,.2))}
+}
+.ld-bar-wrap{width:320px;height:2px;background:var(--border);border-radius:1px;overflow:hidden;margin-bottom:16px}
+.ld-bar{height:100%;width:0;background:linear-gradient(90deg,var(--accent),#0099ff);border-radius:1px;transition:width .3s ease;box-shadow:0 0 12px var(--accent)}
+.ld-status{font-family:var(--mono);font-size:10px;color:var(--textdim);letter-spacing:2px;min-height:16px;transition:opacity .2s}
+
+/* ─── ADD NODE MODAL ───────────────────────── */
+#anm-overlay{
+  position:fixed;inset:0;background:rgba(0,0,0,.72);z-index:10000;
+  display:flex;align-items:center;justify-content:center;
+  opacity:0;pointer-events:none;transition:opacity .2s;
+}
+#anm-overlay.open{opacity:1;pointer-events:all}
+#anm-box{
+  background:var(--panel);border:1px solid var(--border2);border-radius:10px;
+  width:520px;max-width:95vw;max-height:90vh;display:flex;flex-direction:column;
+  box-shadow:0 24px 80px rgba(0,0,0,.8);overflow:hidden;
+}
+#anm-header{
+  display:flex;align-items:center;justify-content:space-between;
+  padding:16px 20px;border-bottom:1px solid var(--border);flex-shrink:0;
+}
+#anm-header h2{font-family:var(--display);font-size:13px;font-weight:700;letter-spacing:3px;color:#fff;margin:0}
+#anm-steps{display:flex;gap:6px;align-items:center}
+.anm-step{width:22px;height:4px;border-radius:2px;background:var(--border2);transition:background .2s}
+.anm-step.active{background:var(--accent)}
+.anm-step.done{background:rgba(0,212,255,.4)}
+#anm-close{background:none;border:none;color:var(--textdim);font-size:18px;cursor:pointer;padding:2px 6px;line-height:1}
+#anm-close:hover{color:#fff}
+#anm-body{flex:1;overflow-y:auto;padding:20px;min-height:0}
+.anm-field{margin-bottom:16px}
+.anm-label{font-family:var(--mono);font-size:9px;letter-spacing:2px;color:var(--textdim);text-transform:uppercase;margin-bottom:6px}
+.anm-input{
+  width:100%;box-sizing:border-box;
+  background:var(--bg3);border:1px solid var(--border2);border-radius:4px;
+  padding:8px 10px;font-family:var(--body);font-size:13px;color:var(--text);
+  outline:none;transition:border-color .15s;
+}
+.anm-input:focus{border-color:rgba(0,212,255,.5)}
+.anm-input::placeholder{color:var(--textdim)}
+textarea.anm-input{resize:vertical;min-height:160px;max-height:300px}
+.anm-select{
+  width:100%;box-sizing:border-box;appearance:none;
+  background:var(--bg3) url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='10' height='6'%3E%3Cpath d='M0 0l5 6 5-6z' fill='%237a90b0'/%3E%3C/svg%3E") no-repeat right 10px center;
+  border:1px solid var(--border2);border-radius:4px;
+  padding:8px 28px 8px 10px;font-family:var(--body);font-size:13px;color:var(--text);
+  outline:none;cursor:pointer;transition:border-color .15s;
+}
+.anm-select:focus{border-color:rgba(0,212,255,.5)}
+.anm-select option{background:var(--bg2)}
+/* cat pill preview */
+#anm-cat-preview{display:flex;align-items:center;gap:8px;margin-top:8px;min-height:18px}
+.anm-cat-dot{width:10px;height:10px;border-radius:2px;flex-shrink:0}
+.anm-cat-name{font-family:var(--mono);font-size:10px;color:var(--text)}
+/* new-cat sub-fields */
+#anm-new-cat{display:none;margin-top:10px;padding:12px;background:var(--bg3);border-radius:6px;border:1px solid var(--border)}
+#anm-new-cat.visible{display:block}
+.anm-color-row{display:flex;align-items:center;gap:8px}
+#anm-new-cat-color{width:36px;height:28px;padding:2px;border:1px solid var(--border2);border-radius:4px;background:none;cursor:pointer}
+/* image preview */
+#anm-img-preview{
+  width:100%;height:140px;border-radius:6px;border:2px dashed var(--border2);
+  display:flex;align-items:center;justify-content:center;
+  color:var(--textdim);font-family:var(--mono);font-size:10px;letter-spacing:2px;
+  cursor:pointer;transition:border-color .15s;overflow:hidden;margin-bottom:10px;
+}
+#anm-img-preview:hover{border-color:rgba(0,212,255,.4)}
+#anm-img-preview img{width:100%;height:100%;object-fit:contain}
+/* connexions list */
+.anm-conn-row{display:flex;gap:8px;align-items:flex-start;margin-bottom:10px}
+.anm-conn-row .anm-select,.anm-conn-row .anm-input{flex:1}
+.anm-conn-remove{background:none;border:none;color:var(--textdim);font-size:18px;cursor:pointer;padding:4px 8px;align-self:center;line-height:1}
+.anm-conn-remove:hover{color:#ff5555}
+#anm-add-conn{
+  display:flex;align-items:center;gap:6px;background:none;border:1px dashed var(--border2);
+  border-radius:4px;padding:6px 12px;color:var(--textdim);font-family:var(--mono);
+  font-size:10px;letter-spacing:2px;cursor:pointer;width:100%;justify-content:center;
+  transition:all .15s;text-transform:uppercase;
+}
+#anm-add-conn:hover{border-color:rgba(0,212,255,.4);color:var(--accent)}
+/* footer */
+#anm-footer{
+  display:flex;align-items:center;justify-content:space-between;
+  padding:14px 20px;border-top:1px solid var(--border);flex-shrink:0;gap:10px;
+}
+.anm-btn{
+  padding:7px 18px;border-radius:4px;font-family:var(--mono);font-size:10px;
+  letter-spacing:2px;cursor:pointer;transition:all .15s;border:1px solid transparent;
+}
+.anm-btn-ghost{background:none;border-color:var(--border2);color:var(--textdim)}
+.anm-btn-ghost:hover{color:#fff;border-color:#fff}
+.anm-btn-primary{background:var(--accent);color:#000;font-weight:700}
+.anm-btn-primary:hover{filter:brightness(1.15)}
+.anm-btn-primary:disabled{opacity:.4;cursor:not-allowed;filter:none}
+#anm-step-label{font-family:var(--mono);font-size:9px;color:var(--textdim);letter-spacing:2px}
+
+/* ─── LAYOUT ───────────────────────────────── */
+#app{display:grid;grid-template-rows:52px 1fr 32px;grid-template-columns:200px 1fr;height:100vh;width:100vw}
+
+/* ─── HEADER ───────────────────────────────── */
+#header{
+  grid-column:1/-1;grid-row:1;
+  background:linear-gradient(90deg,var(--bg2) 0%,#0a1128 50%,var(--bg2) 100%);
+  border-bottom:1px solid var(--border2);
+  display:flex;align-items:center;gap:16px;padding:0 20px;
+  position:relative;z-index:50;
+}
+#header::after{
+  content:'';position:absolute;bottom:0;left:0;right:0;height:1px;
+  background:linear-gradient(90deg,transparent 0%,var(--accent) 30%,#0066ff 70%,transparent 100%);
+  opacity:.5;
+}
+.h-logo{display:flex;align-items:center;gap:10px}
+a.h-logo{cursor:pointer;transition:opacity .15s}
+a.h-logo:hover{opacity:.75}
+.h-hex{ display:none }
+.h-logo-img{
+  height:38px;width:auto;flex-shrink:0;
+  filter:drop-shadow(0 0 6px rgba(255,80,180,.35));
+}
+.h-name{font-family:var(--display);font-size:14px;font-weight:900;letter-spacing:4px;color:#fff}
+.h-ver{font-family:var(--mono);font-size:9px;color:var(--accent);letter-spacing:3px}
+
+.h-sep{width:1px;height:28px;background:var(--border2);margin:0 4px}
+
+.h-oab{
+  padding:3px 10px;background:#cc0000;color:#fff;
+  font-family:var(--display);font-size:9px;font-weight:700;letter-spacing:3px;
+  border-radius:2px;animation:oab 1.4s ease-in-out infinite;
+  box-shadow:0 0 16px rgba(255,0,0,.5);
+}
+@keyframes oab{0%,100%{opacity:1}50%{opacity:.5}}
+
+#lang-toggle{background:none;border:1px solid transparent;border-radius:4px;font-size:18px;cursor:pointer;padding:2px 6px;margin:0 2px;opacity:.8;transition:opacity .15s,border-color .15s;flex-shrink:0;line-height:1}
+#lang-toggle:hover{opacity:1;border-color:var(--border2)}
+
+.h-search{
+  position:relative;margin-left:8px;display:flex;align-items:center;gap:6px;
+}
+#search-input{
+  background:var(--bg3);border:1px solid var(--border2);border-radius:4px;
+  padding:5px 12px 5px 28px;font-family:var(--mono);font-size:11px;
+  color:var(--text);width:200px;outline:none;transition:all .2s;
+}
+#search-input:focus{border-color:rgba(0,212,255,.4);background:rgba(0,212,255,.04);width:240px}
+.h-search-icon{position:absolute;left:8px;top:50%;transform:translateY(-50%);color:var(--textdim);font-size:14px;pointer-events:none}
+#search-drop{
+  position:absolute;top:calc(100% + 4px);left:0;min-width:240px;max-height:240px;
+  overflow-y:auto;background:var(--panel);border:1px solid var(--border2);
+  border-radius:4px;z-index:9999;display:none;
+  box-shadow:0 8px 32px rgba(0,0,0,.6);
+}
+#search-drop.open{display:block}
+.sd-item{
+  padding:7px 12px;font-family:var(--body);font-size:12px;color:var(--text);
+  cursor:pointer;display:flex;align-items:center;gap:8px;
+  border-bottom:1px solid rgba(255,255,255,.03);transition:background .1s;
+}
+.sd-item:hover,.sd-item.active{background:rgba(0,212,255,.1);color:#fff}
+.sd-dot{width:7px;height:7px;border-radius:2px;flex-shrink:0}
+.sd-cat{font-family:var(--mono);font-size:9px;color:var(--textdim);margin-left:auto}
+/* ── Undo / Redo dans le header */
+.h-ur{display:flex;gap:3px;align-items:center}
+.h-ur-btn{
+  background:var(--bg3);border:1px solid var(--border2);border-radius:3px;
+  color:var(--textdim);font-family:var(--mono);font-size:11px;padding:4px 8px;
+  cursor:pointer;transition:all .15s;opacity:.35;
+}
+.h-ur-btn:hover{background:var(--border2);color:var(--text)}
+.h-ur-btn.active{opacity:1}
+.h-ur-btn.fsa-prompt{opacity:1;color:#ffc000;border-color:rgba(255,192,0,.45)}
+.h-ur-btn.fsa-saving{opacity:1;color:#00b0f0;border-color:rgba(0,176,240,.45)}
+.h-ur-btn.fsa-ok{opacity:1;color:#00d4aa;border-color:rgba(0,212,170,.45)}
+.h-ur-btn.fsa-err{opacity:1;color:#ff4444;border-color:rgba(255,68,68,.45)}
+#fsa-btn{font-family:'Segoe UI Emoji','Apple Color Emoji','Noto Color Emoji',var(--mono);font-size:14px;padding:3px 7px}
+
+.h-stats{margin-left:auto;display:flex;gap:20px;align-items:center}
+.h-stat{display:flex;align-items:center;gap:6px;font-family:var(--mono);font-size:10px;color:var(--textdim)}
+.h-dot{width:6px;height:6px;border-radius:50%;animation:stat-p 2s infinite}
+@keyframes stat-p{0%,100%{opacity:1}50%{opacity:.3}}
+
+/* ─── SIDEBAR LEFT ─────────────────────────── */
+#sidebar-left{
+  grid-column:1;grid-row:2;
+  background:var(--bg2);border-right:1px solid var(--border);
+  overflow-y:auto;display:flex;flex-direction:column;gap:0;
+}
+#sidebar-left::-webkit-scrollbar{width:3px}
+#sidebar-left::-webkit-scrollbar-track{background:transparent}
+#sidebar-left::-webkit-scrollbar-thumb{background:var(--border2);border-radius:2px}
+
+.sl-section{padding:14px 14px 10px;border-bottom:1px solid var(--border)}
+.sl-title{font-family:var(--mono);font-size:8px;letter-spacing:3px;color:var(--textdim);text-transform:uppercase;margin-bottom:10px}
+
+.f-btn{
+  display:flex;align-items:center;gap:8px;width:100%;padding:6px 8px;
+  background:transparent;border:1px solid transparent;border-radius:4px;
+  cursor:pointer;margin-bottom:2px;transition:all .15s;text-align:left;
+}
+.f-btn:hover{background:rgba(255,255,255,.04);border-color:var(--border)}
+.f-btn.active{background:rgba(0,212,255,.07);border-color:rgba(0,212,255,.25)}
+.f-dot{width:9px;height:9px;border-radius:2px;flex-shrink:0}
+.f-label{font-family:var(--body);font-size:12px;font-weight:600;color:var(--text)}
+.f-count{margin-left:auto;font-family:var(--mono);font-size:9px;color:var(--textdim);background:var(--bg3);padding:1px 5px;border-radius:2px}
+
+.c-btn{
+  display:flex;align-items:center;gap:7px;width:100%;padding:5px 8px;
+  background:transparent;border:1px solid transparent;border-radius:3px;
+  cursor:pointer;margin-bottom:2px;transition:all .15s;
+}
+.c-btn:hover{background:rgba(255,255,255,.03)}
+.c-btn.active{background:rgba(255,255,255,.04);border-color:var(--border)}
+.c-line{width:22px;height:2px;border-radius:1px;flex-shrink:0}
+.c-label{font-family:var(--mono);font-size:10px}
+
+.sl-actions{padding:12px 14px;margin-top:auto}
+.act-btn{
+  display:flex;align-items:center;gap:7px;width:100%;padding:7px 10px;
+  background:var(--bg3);border:1px solid var(--border);border-radius:4px;
+  cursor:pointer;font-family:var(--mono);font-size:10px;color:var(--textdim);
+  margin-bottom:4px;transition:all .15s;
+}
+.act-btn:hover{background:var(--border);color:var(--text)}
+
+/* ─── CANVAS AREA ──────────────────────────── */
+#canvas-area{
+  grid-column:2;grid-row:2;
+  position:relative;overflow:hidden;cursor:grab;
+  background:var(--bg);touch-action:none;
+}
+#canvas-area:active{cursor:grabbing}
+#canvas-area::before{
+  content:'';position:absolute;inset:0;pointer-events:none;
+  background-image:
+    linear-gradient(rgba(26,34,53,.35) 1px,transparent 1px),
+    linear-gradient(90deg,rgba(26,34,53,.35) 1px,transparent 1px);
+  background-size:50px 50px;z-index:0;
+}
+#canvas-area::after{
+  content:'';position:absolute;inset:0;pointer-events:none;z-index:1;
+  background:radial-gradient(ellipse at center,transparent 30%,rgba(5,7,15,.75) 100%);
+}
+
+#canvas-root{position:absolute;top:0;left:0;transform-origin:0 0;z-index:2;will-change:transform}
+#nodes-layer{position:relative;z-index:10}
+
+/* SVG cables layer */
+#cables-svg{position:absolute;top:0;left:0;overflow:visible;pointer-events:none;z-index:15;cursor:default}
+#cables-svg .cp{cursor:default;transition:opacity .2s,stroke-width .2s;pointer-events:stroke;}
+#cables-svg .cp:hover{stroke-width:5px!important;opacity:1!important}
+#cables-svg .anchor-handle{transition:filter .15s}
+#cables-svg .anchor-handle:hover{filter:brightness(1.5)}
+
+/* Nodes */
+.node{position:absolute;cursor:url('data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSIyMCIgaGVpZ2h0PSIyMCIgdmlld0JveD0iMCAwIDIwIDIwIj4KICA8cGF0aCBkPSJNMTAgMSBMOCA0IEw5LjUgNCBMOS41IDkuNSBMNCA5LjUgTDQgOCBMMSAxMCBMNCAxMiBMNCAxMC41IEw5LjUgMTAuNSBMOS41IDE2IEw4IDE2IEwxMCAxOSBMMTIgMTYgTDEwLjUgMTYgTDEwLjUgMTAuNSBMMTYgMTAuNSBMMTYgMTIgTDE5IDEwIEwxNiA4IEwxNiA5LjUgTDEwLjUgOS41IEwxMC41IDQgTDEyIDQgWiIgZmlsbD0id2hpdGUiIHN0cm9rZT0iYmxhY2siIHN0cm9rZS13aWR0aD0iMC44Ii8+Cjwvc3ZnPg==') 10 10, move;user-select:none;-webkit-user-drag:none}
+.node-box{
+  border:1px solid var(--border2);border-radius:5px;overflow:hidden;
+  background:transparent;transition:all .2s ease;
+  box-shadow:0 3px 16px rgba(0,0,0,.5);
+}
+.node:hover .node-box{
+  border-color:rgba(255,255,255,.2);
+  box-shadow:0 6px 28px rgba(0,0,0,.7),0 0 16px rgba(0,212,255,.08);
+  transform:translateY(-2px);
+}
+.node.sel .node-box{
+  border-color:var(--accent);
+  box-shadow:0 0 0 2px rgba(0,212,255,.25),0 8px 40px rgba(0,0,0,.8),0 0 30px rgba(0,212,255,.12);
+}
+.node.lit .node-box{border-color:rgba(255,200,0,.5);box-shadow:0 0 0 1px rgba(255,200,0,.15),0 6px 24px rgba(0,0,0,.7)}
+.node.dim .node-box{opacity:.12;transform:none}
+.node-catbar{height:3px;width:100%}
+.node-img-wrap{display:flex;align-items:center;justify-content:center;overflow:hidden;background:transparent}
+.node-img-wrap img{object-fit: cover;width:100%;height:100%;padding:3px;-webkit-user-drag:none;user-drag:none;pointer-events:none}
+/* ── Resize handles */
+.rh{
+  position:absolute;z-index:20;background:var(--accent);border:1px solid #fff;
+  border-radius:2px;opacity:.9;transition:opacity .1s;
+}
+.rh:hover{opacity:1;box-shadow:0 0 6px var(--accent)}
+.rh-n,.rh-s{left:50%;transform:translateX(-50%);width:30px;height:6px;cursor:ns-resize}
+.rh-w,.rh-e{top:50%;transform:translateY(-50%);width:6px;height:30px;cursor:ew-resize}
+.rh-nw,.rh-ne,.rh-sw,.rh-se{width:10px;height:10px;cursor:nwse-resize}
+.rh-ne,.rh-se{cursor:nesw-resize}
+.rh-n{top:-4px}.rh-s{bottom:-4px}.rh-w{left:-4px}.rh-e{right:-4px}
+.rh-nw{top:-4px;left:-4px}.rh-ne{top:-4px;right:-4px}
+.rh-sw{bottom:-4px;left:-4px}.rh-se{bottom:-4px;right:-4px}
+
+.node-lbl{
+  position:absolute;bottom:2px;left:50%;transform:translateX(-50%);
+  white-space:nowrap;font-family:var(--mono);font-size:24px;color:var(--textdim);
+  pointer-events:auto;cursor:text;letter-spacing:.5px;text-shadow:0 1px 6px rgba(0,0,0,.95);
+  transition:color .2s;outline:none;min-width:4px;
+}
+.node-lbl:focus{color:var(--text);text-shadow:0 0 12px rgba(0,212,255,.4)}
+.node.sel .node-lbl,.node.lit .node-lbl{color:var(--text)}
+
+/* Zone labels */
+.zone-lbl{
+  position:absolute;font-family:var(--display);font-size:9px;
+  letter-spacing:6px;text-transform:uppercase;color:rgba(255,255,255,.04);
+  pointer-events:none;user-select:none;font-weight:700;
+}
+
+/* Minimap */
+#minimap{
+  position:absolute;bottom:8px;left:8px;z-index:20;
+  width:160px;height:90px;border:1px solid var(--border2);border-radius:4px;
+  overflow:hidden;background:rgba(8,11,23,.9);cursor:pointer;
+}
+#minimap canvas{width:100%;height:100%;display:block}
+
+/* Corners */
+.corner{position:absolute;width:20px;height:20px;pointer-events:none;z-index:3}
+.corner.tl{top:8px;left:8px;border-top:1px solid rgba(0,212,255,.2);border-left:1px solid rgba(0,212,255,.2)}
+.corner.tr{top:8px;right:8px;border-top:1px solid rgba(0,212,255,.2);border-right:1px solid rgba(0,212,255,.2)}
+.corner.bl{bottom:42px;left:8px;border-bottom:1px solid rgba(0,212,255,.2);border-left:1px solid rgba(0,212,255,.2)}
+.corner.br{bottom:42px;right:8px;border-bottom:1px solid rgba(0,212,255,.2);border-right:1px solid rgba(0,212,255,.2)}
+
+/* ─── INFO PANEL RIGHT ─────────────────────── */
+#info-panel{
+  position:fixed;top:52px;right:0;bottom:32px;width:300px;z-index:200;
+  background:var(--bg2);border-left:1px solid var(--border);
+  display:flex;flex-direction:column;overflow:hidden;
+  transform:translateX(100%);transition:transform .3s cubic-bezier(.16,1,.3,1);
+}
+#info-panel.open{transform:translateX(0)}
+
+/* ─── HOW PANEL ─────────────────────────────── */
+#how-panel{
+  position:fixed;top:52px;right:0;bottom:32px;width:360px;z-index:199;
+  background:var(--bg2);border-left:1px solid var(--border);
+  display:flex;flex-direction:column;overflow:hidden;
+  transform:translateX(100%);transition:transform .3s cubic-bezier(.16,1,.3,1);
+}
+#how-panel.open{transform:translateX(0)}
+.how-header{padding:14px 18px 12px;border-bottom:1px solid var(--border);display:flex;align-items:center;justify-content:space-between;flex-shrink:0}
+.how-kicker{font-size:9px;font-weight:800;letter-spacing:.14em;text-transform:uppercase;color:var(--accent);font-family:var(--mono)}
+.how-close{background:transparent;border:1px solid var(--border2);border-radius:3px;cursor:pointer;color:var(--textdim);font-size:12px;width:22px;height:22px;display:flex;align-items:center;justify-content:center;transition:all .15s}
+.how-close:hover{background:rgba(255,255,255,.08);color:var(--text)}
+.how-body{flex:1;overflow-y:auto;padding:14px;scrollbar-width:thin}
+.how-body::-webkit-scrollbar{width:3px}
+.how-body::-webkit-scrollbar-thumb{background:var(--border2);border-radius:2px}
+.how-h2{font-size:13px;font-weight:700;color:var(--text);margin:0 0 8px;line-height:1.4;font-family:var(--display)}
+.how-intro{font-size:11px;color:var(--textdim);margin:0 0 14px;line-height:1.6}
+.how-card{background:rgba(255,255,255,.025);border:1px solid rgba(255,255,255,.07);border-radius:10px;padding:12px;margin-bottom:10px}
+.how-card-title{font-family:var(--mono);font-size:9px;letter-spacing:2px;text-transform:uppercase;color:var(--accent);margin-bottom:6px}
+.how-card-intro{font-size:11px;color:var(--textdim);margin:0 0 10px;line-height:1.5}
+.how-flow-list{display:grid;gap:6px}
+.how-flow-item{padding:8px 10px;background:rgba(255,255,255,.03);border:1px solid rgba(255,255,255,.05);border-radius:6px}
+.how-flow-item strong{display:block;font-size:11px;font-weight:700;color:var(--text);margin-bottom:5px}
+.how-flow-path{font-family:var(--mono);font-size:9px;line-height:1.8;color:#d7e4ff;background:#09111d;border:1px solid rgba(255,255,255,.06);padding:7px 9px;border-radius:5px;white-space:pre-line}
+.how-gear-grid{display:grid;grid-template-columns:1fr 1fr;gap:6px;margin-top:8px}
+.how-gear{padding:8px 10px;background:rgba(255,255,255,.03);border:1px solid rgba(255,255,255,.05);border-radius:6px}
+.how-gear h4{font-size:10px;font-weight:700;color:var(--text);margin:0 0 4px}
+.how-gear p{font-size:10px;color:var(--textdim);margin:0;line-height:1.5}
+
+.ip-header{padding:18px 18px 14px;border-bottom:1px solid var(--border);position:relative;flex-shrink:0}
+.ip-badge{
+  display:inline-block;font-family:var(--mono);font-size:8px;letter-spacing:3px;
+  text-transform:uppercase;padding:3px 8px;border-radius:2px;margin-bottom:8px;
+}
+.ip-name{font-family:var(--display);font-size:14px;font-weight:700;color:#fff;letter-spacing:1px;line-height:1.3}
+#ip-name[contenteditable]{cursor:text;outline:none;border-radius:3px;padding:1px 3px;margin:-1px -3px;transition:box-shadow .15s}
+#ip-name[contenteditable]:hover{box-shadow:0 1px 0 0 rgba(0,212,255,.35)}
+#ip-name[contenteditable]:focus{box-shadow:0 1px 0 0 var(--accent);color:#fff;background:rgba(0,212,255,.04)}
+.ip-short{font-family:var(--mono);font-size:9px;color:var(--textdim);letter-spacing:1.5px;text-transform:uppercase;margin-top:3px;min-height:13px}
+#ip-short[contenteditable]{cursor:text;outline:none;border-radius:3px;padding:1px 3px;margin:-1px -3px;transition:box-shadow .15s}
+#ip-short[contenteditable]:hover{box-shadow:0 1px 0 0 rgba(0,212,255,.25)}
+#ip-short[contenteditable]:focus{box-shadow:0 1px 0 0 var(--accent);color:var(--text);background:rgba(0,212,255,.04)}
+#ip-short:empty::before{content:attr(data-ph);color:rgba(255,255,255,.15);font-style:italic;text-transform:none;letter-spacing:0}
+#info-panel.signal-mode #ip-short{display:none}
+.ip-close{
+  position:absolute;top:14px;right:14px;width:22px;height:22px;
+  background:transparent;border:1px solid var(--border2);border-radius:3px;
+  cursor:pointer;color:var(--textdim);font-size:12px;
+  display:flex;align-items:center;justify-content:center;transition:all .15s;
+}
+.ip-close:hover{background:rgba(255,255,255,.08);color:var(--text)}
+#ip-delete-node{
+  position:absolute;top:14px;right:42px;width:22px;height:22px;
+  background:transparent;border:1px solid rgba(255,80,80,.3);border-radius:3px;
+  cursor:pointer;color:rgba(255,80,80,.5);font-size:12px;
+  display:flex;align-items:center;justify-content:center;transition:all .15s;
+}
+#ip-delete-node:hover{background:rgba(255,60,60,.15);color:#ff5555;border-color:#ff5555}
+
+.ip-body{display:flex;flex-direction:column;flex:1;overflow:hidden}
+.ip-img{margin:14px 18px;height:130px;border-radius:5px;overflow:hidden;background:var(--bg3);border:1px solid var(--border);display:flex;align-items:center;justify-content:center;flex-shrink:0;position:relative}
+.ip-img img{max-width:100%;max-height:100%;object-fit:cover;padding:6px}
+.ip-right{display:flex;flex-direction:column;flex:1;overflow-y:auto;min-height:0}
+
+.ip-desc{padding:0 18px 14px;font-family:var(--body);font-size:13px;line-height:1.6;color:var(--text);border-bottom:1px solid var(--border);flex-shrink:0;white-space:pre-line}
+#ip-desc[contenteditable]{cursor:text;outline:none;transition:box-shadow .15s;border-radius:3px}
+#ip-desc[contenteditable]:hover{box-shadow:inset 0 0 0 1px rgba(0,212,255,.2)}
+#ip-desc[contenteditable]:focus{box-shadow:inset 0 0 0 1px rgba(0,212,255,.35);background:rgba(0,212,255,.02)}
+
+.ip-conns{padding:14px 18px;flex:1}
+.ip-conns::-webkit-scrollbar{width:3px}
+.ip-conns::-webkit-scrollbar-thumb{background:var(--border2);border-radius:2px}
+
+/* ── MODE SIGNAL ─────────────────────────────── */
+#info-panel.signal-mode .ip-img{display:none}
+#info-panel.signal-mode .ip-conn-title{display:none}
+#info-panel.signal-mode #ip-routes{display:none!important}
+#info-panel.signal-mode .ip-desc{display:none}
+#info-panel.signal-mode #ip-conn-add-btn{display:none}
+#info-panel.signal-mode #ip-add-conn-form{display:none!important}
+#info-panel.signal-mode #ip-delete-node{display:none}
+.ip-conn-title{font-family:var(--mono);font-size:8px;letter-spacing:3px;color:var(--textdim);text-transform:uppercase;margin-bottom:10px}
+.ip-conn-item{
+  display:flex;align-items:center;gap:8px;padding:7px 0;
+  border-bottom:1px solid rgba(255,255,255,.04);cursor:pointer;transition:all .12s;
+}
+.ip-conn-item:hover{padding-left:4px}
+.ip-conn-dot{width:8px;height:8px;border-radius:2px;flex-shrink:0}
+.ip-conn-name{font-family:var(--body);font-size:12px;font-weight:600;color:var(--text);flex:1}
+.ip-conn-type{font-family:var(--mono);font-size:9px;padding:2px 6px;background:var(--bg3);border-radius:2px}
+.ip-conn-del{
+  background:none;border:none;color:transparent;font-size:13px;cursor:pointer;
+  padding:0 2px;margin-left:4px;line-height:1;flex-shrink:0;transition:color .15s;
+}
+.ip-conn-item:hover .ip-conn-del{color:var(--textdim)}
+.ip-conn-del:hover{color:#ff5555!important}
+/* Port badges */
+.ip-conn-item{flex-wrap:wrap}
+.ip-conn-ports{
+  width:calc(100% - 20px);display:flex;align-items:center;gap:4px;
+  margin:3px 0 4px 16px;flex-wrap:nowrap;
+}
+.ip-port-tag{
+  font-family:var(--mono);font-size:9px;color:var(--textdim);
+  background:rgba(255,255,255,.05);border:1px solid var(--border2);
+  border-radius:3px;padding:1px 5px;cursor:pointer;
+  transition:all .15s;white-space:nowrap;max-width:120px;overflow:hidden;text-overflow:ellipsis;
+}
+.ip-port-tag:hover{border-color:var(--accent);color:var(--accent)}
+.ip-port-tag.empty{border-style:dashed;opacity:.4}
+.ip-port-tag.editing{border-color:var(--accent);background:rgba(0,212,255,.08)}
+.ip-port-tag input{
+  background:none;border:none;outline:none;
+  color:var(--text);font-size:9px;font-family:var(--mono);
+  width:80px;padding:0;
+}
+.ip-port-arrow{font-size:9px;color:rgba(255,255,255,.2);flex-shrink:0}
+/* Route badge (lecture seule) sur les câbles du panneau info */
+.ip-cable-route-badge{
+  font-family:var(--mono);font-size:7px;letter-spacing:.5px;font-weight:600;
+  color:#00d4aa;border:1px solid rgba(0,212,170,.35);border-radius:3px;
+  padding:1px 5px;margin-left:auto;flex-shrink:0;opacity:.8;white-space:nowrap;
+}
+/* Route assign inline panel */
+/* Route assignment modal */
+#route-modal-overlay{
+  display:none;position:fixed;inset:0;z-index:9000;
+  background:rgba(0,0,0,.6);backdrop-filter:blur(3px);
+  align-items:center;justify-content:center;
+}
+#route-modal-overlay.open{display:flex}
+#route-modal{
+  background:#1a1c22;border:1px solid rgba(0,212,255,.22);border-radius:10px;
+  width:460px;max-width:calc(100vw - 32px);max-height:85vh;overflow-y:auto;
+  padding:22px 26px 24px;box-shadow:0 16px 60px rgba(0,0,0,.7);position:relative;
+}
+.rm-header{display:flex;align-items:flex-start;justify-content:space-between;margin-bottom:6px}
+.rm-title{font-family:var(--mono);font-size:13px;color:var(--text);letter-spacing:.5px;font-weight:600}
+.rm-subtitle{font-family:var(--mono);font-size:9px;color:var(--textdim);margin-top:4px;margin-bottom:0}
+.rm-close{background:none;border:none;color:var(--textdim);font-size:18px;cursor:pointer;padding:0 0 0 12px;line-height:1;flex-shrink:0}
+.rm-close:hover{color:#fff}
+.rm-section{margin-top:18px}
+.rm-section-title{font-family:var(--mono);font-size:8px;letter-spacing:3px;color:var(--textdim);text-transform:uppercase;margin-bottom:8px}
+.rm-chips{display:flex;flex-wrap:wrap;gap:6px;min-height:28px;align-items:center}
+.rm-chip{
+  display:inline-flex;align-items:center;gap:5px;
+  font-family:var(--mono);font-size:9px;padding:4px 9px;border-radius:4px;
+  border:1px solid rgba(255,255,255,.15);background:rgba(255,255,255,.06);color:var(--text);
+}
+.rm-chip-label{font-weight:600}
+.rm-chip-del{background:none;border:none;color:rgba(255,255,255,.35);cursor:pointer;font-size:13px;padding:0;line-height:1;margin-left:2px;transition:color .12s}
+.rm-chip-del:hover{color:#ff5555}
+.rm-none{font-family:var(--mono);font-size:9px;color:rgba(255,255,255,.3);font-style:italic}
+.rm-add-row{display:flex;gap:8px;align-items:center;margin-top:8px}
+.rm-add-row select{
+  flex:1;background:rgba(255,255,255,.06);border:1px solid rgba(255,255,255,.15);
+  color:var(--text);font-family:var(--mono);font-size:10px;
+  border-radius:4px;padding:7px 9px;
+}
+.rm-add-btn{
+  font-family:var(--mono);font-size:10px;padding:7px 16px;border-radius:4px;
+  border:1px solid rgba(0,212,170,.4);color:#00d4aa;background:rgba(0,212,170,.06);
+  cursor:pointer;transition:all .15s;white-space:nowrap;flex-shrink:0;
+}
+.rm-add-btn:hover{background:rgba(0,212,170,.16)}
+.rm-divider{border:none;border-top:1px solid rgba(255,255,255,.08);margin:20px 0 0}
+.rm-new-section{margin-top:16px}
+.rm-new-toggle{
+  background:none;border:1px dashed rgba(255,255,255,.2);border-radius:4px;
+  color:rgba(255,255,255,.45);font-family:var(--mono);font-size:9px;letter-spacing:.5px;
+  cursor:pointer;padding:6px 12px;width:100%;text-align:left;transition:all .15s;
+}
+.rm-new-toggle:hover{border-color:rgba(255,255,255,.4);color:rgba(255,255,255,.8)}
+.rm-new-form{display:none;margin-top:14px}
+.rm-field{margin-bottom:12px}
+.rm-field label{display:block;font-family:var(--mono);font-size:8px;color:var(--textdim);margin-bottom:5px;letter-spacing:2px;text-transform:uppercase}
+.rm-field input,.rm-field select{
+  width:100%;background:rgba(255,255,255,.06);border:1px solid rgba(255,255,255,.15);
+  color:var(--text);font-family:var(--mono);font-size:11px;
+  border-radius:4px;padding:7px 9px;box-sizing:border-box;transition:border-color .15s;
+}
+.rm-field input:focus,.rm-field select:focus{border-color:var(--accent);outline:none}
+.rm-field input::placeholder{color:rgba(255,255,255,.22)}
+.rm-field-row{display:flex;gap:12px}
+.rm-field-row .rm-field{flex:1}
+.rm-field input[type=color]{width:48px;height:34px;padding:2px;cursor:pointer}
+.rm-advanced{margin-top:12px}
+.rm-advanced summary{
+  font-family:var(--mono);font-size:8px;letter-spacing:2px;text-transform:uppercase;
+  color:rgba(255,255,255,.35);cursor:pointer;list-style:none;padding:4px 0;
+  transition:color .15s;
+}
+.rm-advanced summary:hover{color:rgba(255,255,255,.65)}
+.rm-advanced summary::-webkit-details-marker{display:none}
+.rm-advanced-body{margin-top:10px}
+.rm-form-actions{display:flex;gap:8px;margin-top:16px;justify-content:flex-end}
+.rm-form-actions button{
+  font-family:var(--mono);font-size:10px;padding:8px 18px;border-radius:4px;
+  border:1px solid rgba(255,255,255,.15);background:rgba(255,255,255,.05);
+  color:var(--textdim);cursor:pointer;transition:all .15s;
+}
+.rm-form-actions button.ok{border-color:rgba(0,212,170,.4);color:#00d4aa;background:rgba(0,212,170,.06)}
+.rm-form-actions button.ok:hover{background:rgba(0,212,170,.18)}
+.rm-form-actions button:not(.ok):hover{color:#fff}
+/* ── ROUTE MANAGER PANEL ─────────────────────── */
+#rm-panel{
+  position:fixed;top:54px;right:16px;z-index:8500;
+  width:360px;max-height:calc(100vh - 76px);
+  background:#1a1c22;border:1px solid rgba(0,212,255,.22);border-radius:10px;
+  box-shadow:0 16px 60px rgba(0,0,0,.75);
+  display:none;flex-direction:column;overflow:hidden;
+}
+#rm-panel.open{display:flex}
+.rmp-head{
+  display:flex;align-items:center;justify-content:space-between;
+  padding:13px 18px 11px;border-bottom:1px solid rgba(255,255,255,.08);flex-shrink:0;
+}
+.rmp-head-title{font-family:var(--mono);font-size:10px;letter-spacing:3px;color:var(--text);font-weight:600;text-transform:uppercase}
+.rmp-close{background:none;border:none;color:var(--textdim);font-size:20px;cursor:pointer;padding:0;line-height:1;transition:color .12s}
+.rmp-close:hover{color:#fff}
+.rmp-body{overflow-y:auto;flex:1;padding:4px 0}
+.rmp-body::-webkit-scrollbar{width:3px}
+.rmp-body::-webkit-scrollbar-thumb{background:var(--border2);border-radius:2px}
+.rmp-empty{padding:18px;font-family:var(--mono);font-size:10px;color:var(--textdim);font-style:italic;line-height:1.6}
+.rmp-route{border-bottom:1px solid rgba(255,255,255,.06)}
+.rmp-route-head{
+  display:flex;align-items:center;gap:8px;
+  padding:11px 18px;cursor:pointer;user-select:none;transition:background .12s;
+}
+.rmp-route-head:hover{background:rgba(255,255,255,.04)}
+.rmp-dot{width:9px;height:9px;border-radius:50%;flex-shrink:0}
+.rmp-name{font-family:var(--mono);font-size:10px;font-weight:600;color:var(--text);flex:1;min-width:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.rmp-count{font-family:var(--mono);font-size:8px;color:var(--textdim);flex-shrink:0;background:rgba(255,255,255,.07);padding:2px 6px;border-radius:10px}
+.rmp-toggle{background:none;border:none;color:var(--textdim);font-size:9px;cursor:pointer;padding:0;line-height:1;flex-shrink:0;transition:transform .15s;display:inline-block}
+.rmp-route.open .rmp-toggle{transform:rotate(90deg)}
+/* Chemin signal — toujours visible */
+.rmp-path{padding:0 18px 10px;font-family:var(--mono);font-size:9px;line-height:1.5;}
+.rmp-path-line{white-space:nowrap;overflow:hidden;text-overflow:ellipsis;}
+.rmp-path-dest-line{margin-top:2px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;opacity:.6;}
+.rmp-path-dest-arr{color:rgba(255,255,255,.25);margin-right:3px;font-size:8px;}
+.rmp-path-node{color:var(--text);opacity:.75}
+.rmp-path-arrow{color:rgba(255,255,255,.22);margin:0 3px}
+.rmp-path-dest{color:rgba(255,255,255,.4);font-style:italic}
+.rmp-path-empty{color:rgba(255,255,255,.2);font-style:italic}
+.rmp-cables{padding:2px 18px 10px;display:none}
+.rmp-route.open .rmp-cables{display:block}
+.rmp-chain-item{display:flex;align-items:center;gap:6px;padding:5px 0;border-bottom:1px solid rgba(255,255,255,.04);transition:background .1s}
+.rmp-chain-item:last-of-type{border-bottom:none}
+.rmp-chain-nodes{flex:1;font-family:var(--mono);font-size:9px;color:var(--textdim);line-height:1.5;min-width:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.rmp-chain-id{color:rgba(255,255,255,.28);font-size:8px;margin-right:5px;transition:color .1s}
+.rmp-chain-from,.rmp-chain-to{color:var(--text);transition:color .1s}
+.rmp-chain-arrow{color:rgba(255,255,255,.22);margin:0 3px;transition:color .1s}
+/* anim-active color applied via inline style (cable color) */
+.rmp-chain-ctype{font-size:7px;letter-spacing:.5px;color:rgba(255,255,255,.3);flex-shrink:0}
+.rmp-chain-del{background:none;border:none;color:rgba(255,255,255,.18);cursor:pointer;font-size:14px;padding:2px 4px;flex-shrink:0;transition:color .12s;line-height:1}
+.rmp-chain-del:hover{color:#ff5555}
+.rmp-rename-btn{background:none;border:none;color:rgba(255,255,255,.18);cursor:pointer;font-size:10px;padding:2px 4px;flex-shrink:0;transition:color .12s;line-height:1}
+.rmp-rename-btn:hover{color:var(--accent)}
+.rmp-light-btn{background:none;border:none;color:rgba(255,255,255,.18);cursor:pointer;font-size:10px;padding:2px 4px;flex-shrink:0;transition:color .15s,filter .15s;line-height:1}
+.rmp-light-btn:hover{color:#ffd700}
+.rmp-light-btn.active{color:#ffd700;filter:drop-shadow(0 0 5px #ffd70099)}
+.rmp-cable-flip-btn{background:none;border:none;color:rgba(255,255,255,.18);cursor:pointer;font-size:12px;padding:2px 3px;flex-shrink:0;transition:color .12s;line-height:1}
+.rmp-cable-flip-btn:hover{color:var(--accent)}
+.rmp-path-group{margin:3px 0 1px}
+.rmp-path-group-head{display:flex;align-items:center;padding:3px 0 1px;border-top:1px solid rgba(255,255,255,.06);margin-top:4px}
+.rmp-path-group:first-child .rmp-path-group-head{border-top:none;margin-top:0}
+.rmp-path-group-label{font-family:var(--mono);font-size:8px;letter-spacing:.8px;color:rgba(255,255,255,.28);text-transform:uppercase;cursor:pointer;flex:1;transition:color .12s}
+.rmp-path-group-label:hover{color:var(--accent)}
+.rmp-move-btn{background:none;border:none;color:rgba(255,255,255,.15);cursor:pointer;font-size:9px;padding:1px 2px;flex-shrink:0;transition:color .12s;line-height:1}
+.rmp-move-btn:hover{color:rgba(255,255,255,.55)}
+.rmp-move-btn:disabled{opacity:.15;cursor:default;pointer-events:none}
+.rmp-no-cables{font-family:var(--mono);font-size:9px;color:rgba(255,255,255,.22);font-style:italic;padding:4px 0 6px}
+.rmp-add-btn{
+  display:block;width:100%;margin-top:6px;box-sizing:border-box;
+  background:none;border:1px dashed rgba(255,255,255,.16);border-radius:4px;
+  color:rgba(255,255,255,.35);font-family:var(--mono);font-size:9px;letter-spacing:.5px;
+  cursor:pointer;padding:6px 10px;text-align:left;transition:all .15s;
+}
+.rmp-add-btn:hover{border-color:rgba(0,212,170,.5);color:#00d4aa}
+.rmp-picker{margin-top:6px;border:1px solid rgba(255,255,255,.12);border-radius:6px;overflow:hidden;background:rgba(0,0,0,.22)}
+.rmp-picker-search{
+  display:block;width:100%;background:rgba(255,255,255,.05);
+  border:none;border-bottom:1px solid rgba(255,255,255,.1);
+  color:var(--text);font-family:var(--mono);font-size:10px;
+  padding:8px 12px;box-sizing:border-box;outline:none;
+}
+.rmp-picker-search::placeholder{color:rgba(255,255,255,.2)}
+.rmp-picker-list{max-height:200px;overflow-y:auto}
+.rmp-picker-list::-webkit-scrollbar{width:2px}
+.rmp-picker-list::-webkit-scrollbar-thumb{background:rgba(255,255,255,.15)}
+.rmp-picker-group{font-family:var(--mono);font-size:7px;letter-spacing:2.5px;text-transform:uppercase;color:rgba(255,255,255,.26);padding:7px 12px 3px}
+.rmp-picker-item{display:flex;align-items:center;gap:8px;padding:7px 12px;cursor:pointer;transition:background .1s}
+.rmp-picker-item:hover{background:rgba(255,255,255,.07)}
+.rmp-picker-item.done{opacity:.35;pointer-events:none}
+.rmp-picker-cdot{width:6px;height:6px;border-radius:50%;flex-shrink:0}
+.rmp-picker-label{flex:1;font-family:var(--mono);font-size:9px;color:var(--text);line-height:1.4;min-width:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.rmp-picker-cid{color:rgba(255,255,255,.32);font-size:8px;margin-right:4px}
+.rmp-picker-arr{color:rgba(255,255,255,.28);margin:0 2px}
+.rmp-picker-ctype{font-family:var(--mono);font-size:7px;color:var(--textdim);flex-shrink:0;letter-spacing:.5px}
+.rmp-picker-check{color:#00d4aa;font-size:9px;flex-shrink:0}
+.rmp-footer{padding:12px 18px;border-top:1px solid rgba(255,255,255,.08);flex-shrink:0}
+.rmp-new-btn{
+  width:100%;background:none;border:1px dashed rgba(0,212,255,.28);border-radius:4px;
+  color:rgba(0,212,255,.5);font-family:var(--mono);font-size:9px;letter-spacing:1px;
+  cursor:pointer;padding:8px;text-align:center;transition:all .15s;
+}
+.rmp-new-btn:hover{border-color:rgba(0,212,255,.7);color:var(--accent);background:rgba(0,212,255,.05)}
+.rmp-new-form{display:none;margin-top:10px}
+.rmp-new-form.visible{display:block}
+.rmp-nf-field{margin-bottom:10px}
+.rmp-nf-field label{display:block;font-family:var(--mono);font-size:8px;color:var(--textdim);margin-bottom:4px;letter-spacing:2px;text-transform:uppercase}
+.rmp-nf-field input,.rmp-nf-field select{
+  width:100%;background:rgba(255,255,255,.06);border:1px solid rgba(255,255,255,.15);
+  color:var(--text);font-family:var(--mono);font-size:11px;
+  border-radius:4px;padding:7px 9px;box-sizing:border-box;transition:border-color .15s;
+}
+.rmp-nf-field input:focus,.rmp-nf-field select:focus{border-color:var(--accent);outline:none}
+.rmp-nf-field input::placeholder{color:rgba(255,255,255,.2)}
+.rmp-nf-field input[type=color]{width:48px;height:34px;padding:2px;cursor:pointer}
+.rmp-nf-row{display:flex;gap:10px;align-items:flex-end}
+.rmp-nf-row .rmp-nf-field{flex:1}
+.rmp-nf-actions{display:flex;gap:8px;justify-content:flex-end;margin-top:6px}
+.rmp-nf-actions button{font-family:var(--mono);font-size:9px;padding:7px 14px;border-radius:4px;border:1px solid rgba(255,255,255,.15);background:rgba(255,255,255,.05);color:var(--textdim);cursor:pointer;transition:all .15s}
+.rmp-nf-actions button.ok{border-color:rgba(0,212,170,.4);color:#00d4aa;background:rgba(0,212,170,.06)}
+.rmp-nf-actions button.ok:hover{background:rgba(0,212,170,.18)}
+.rmp-nf-actions button:not(.ok):hover{color:#fff}
+/* Path builder */
+.rpb-path{display:flex;flex-wrap:wrap;align-items:center;gap:3px;min-height:24px;padding:4px 0 10px;font-family:var(--mono);font-size:9px;line-height:1.5}
+.rpb-path-node{background:rgba(0,212,255,.1);border:1px solid rgba(0,212,255,.22);color:var(--text);border-radius:3px;padding:2px 7px;white-space:nowrap}
+.rpb-path-cable{color:rgba(255,255,255,.28);font-size:8px;margin:0 1px}
+.rpb-path-arrow{color:rgba(255,255,255,.22);margin:0 1px}
+.rpb-path-empty{color:rgba(255,255,255,.2);font-style:italic}
+.rpb-cur-label{font-family:var(--mono);font-size:8px;letter-spacing:1.5px;text-transform:uppercase;color:var(--accent);margin-bottom:6px;display:flex;align-items:center;gap:5px}
+.rpb-cur-label::before{content:'▶';font-size:7px;opacity:.7}
+.rpb-cable-list{max-height:160px;overflow-y:auto;border:1px solid rgba(255,255,255,.09);border-radius:5px;background:rgba(0,0,0,.18)}
+.rpb-cable-list::-webkit-scrollbar{width:2px}
+.rpb-cable-list::-webkit-scrollbar-thumb{background:rgba(255,255,255,.15)}
+.rpb-cable-item{display:flex;align-items:center;gap:8px;padding:7px 10px;cursor:pointer;transition:background .1s;border-bottom:1px solid rgba(255,255,255,.05)}
+.rpb-cable-item:last-child{border-bottom:none}
+.rpb-cable-item:hover{background:rgba(0,212,255,.07)}
+.rpb-cable-dot{width:7px;height:7px;border-radius:50%;flex-shrink:0}
+.rpb-cable-info{flex:1;font-family:var(--mono);font-size:9px;min-width:0}
+.rpb-cable-id{color:rgba(255,255,255,.3);font-size:8px;margin-right:4px}
+.rpb-cable-dest{color:#00d4aa;font-weight:600}
+.rpb-cable-via{color:rgba(255,255,255,.35);font-size:8px;display:block;margin-top:1px}
+.rpb-cable-type{font-family:var(--mono);font-size:7px;color:var(--textdim);flex-shrink:0;letter-spacing:.5px}
+.rpb-no-cables{font-family:var(--mono);font-size:9px;color:rgba(255,255,255,.28);font-style:italic;padding:10px 12px}
+/* Cable picker floating modal (Route Manager) */
+#rmp-pick-overlay{
+  display:none;position:fixed;inset:0;z-index:9100;
+  background:rgba(0,0,0,.65);backdrop-filter:blur(4px);
+  align-items:center;justify-content:center;
+}
+#rmp-pick-overlay.open{display:flex}
+#rmp-pick-modal{
+  background:#1a1c22;border:1px solid rgba(0,212,255,.22);border-radius:10px;
+  width:500px;max-width:calc(100vw - 32px);max-height:82vh;
+  display:flex;flex-direction:column;overflow:hidden;
+  box-shadow:0 20px 70px rgba(0,0,0,.85);
+}
+.rpmk-head{display:flex;align-items:flex-start;justify-content:space-between;padding:18px 22px 14px;border-bottom:1px solid rgba(255,255,255,.08);flex-shrink:0}
+.rpmk-title{font-family:var(--mono);font-size:12px;font-weight:600;color:var(--text);letter-spacing:.5px}
+.rpmk-sub{font-family:var(--mono);font-size:9px;color:var(--textdim);margin-top:4px}
+.rpmk-close{background:none;border:none;color:var(--textdim);font-size:20px;cursor:pointer;padding:0;line-height:1;flex-shrink:0;margin-left:12px;transition:color .12s}
+.rpmk-close:hover{color:#fff}
+.rpmk-search{
+  display:block;width:100%;box-sizing:border-box;flex-shrink:0;
+  background:rgba(255,255,255,.04);border:none;border-bottom:1px solid rgba(255,255,255,.1);
+  color:var(--text);font-family:var(--mono);font-size:11px;
+  padding:12px 22px;outline:none;
+}
+.rpmk-search::placeholder{color:rgba(255,255,255,.2)}
+.rpmk-list{overflow-y:auto;flex:1}
+.rpmk-list::-webkit-scrollbar{width:3px}
+.rpmk-list::-webkit-scrollbar-thumb{background:rgba(255,255,255,.15);border-radius:2px}
+.rpmk-group{font-family:var(--mono);font-size:7px;letter-spacing:3px;text-transform:uppercase;color:rgba(255,255,255,.24);padding:10px 22px 4px;flex-shrink:0}
+.rpmk-item{
+  display:flex;align-items:center;gap:12px;
+  padding:10px 22px;cursor:pointer;transition:background .1s;
+  border-bottom:1px solid rgba(255,255,255,.03);
+}
+.rpmk-item:hover{background:rgba(255,255,255,.06)}
+.rpmk-item.done{opacity:.35;pointer-events:none}
+.rpmk-cdot{width:9px;height:9px;border-radius:50%;flex-shrink:0}
+.rpmk-label{flex:1;font-family:var(--mono);font-size:10px;color:var(--text);line-height:1.5;min-width:0}
+.rpmk-cid{color:rgba(255,255,255,.3);font-size:9px;margin-right:6px}
+.rpmk-arr{color:rgba(255,255,255,.25);margin:0 4px}
+.rpmk-ports{display:block;font-size:8px;color:rgba(255,255,255,.32);margin-top:1px}
+.rpmk-type{font-family:var(--mono);font-size:8px;color:rgba(255,255,255,.45);flex-shrink:0;letter-spacing:.5px;padding:2px 7px;background:rgba(255,255,255,.07);border-radius:3px}
+.rpmk-check{color:#00d4aa;font-size:12px;flex-shrink:0}
+.rpmk-path{
+  padding:10px 22px 8px;border-bottom:1px solid rgba(255,255,255,.07);
+  font-family:var(--mono);font-size:9px;line-height:1.6;flex-shrink:0;
+  min-height:32px;background:rgba(0,0,0,.15);
+  white-space:nowrap;overflow:hidden;text-overflow:ellipsis;
+}
+.rpmk-path-node{color:#fff;font-weight:600}
+.rpmk-path-arrow{color:rgba(255,255,255,.25);margin:0 5px;font-size:11px}
+.rpmk-path-dest{color:rgba(255,255,255,.3);font-style:italic}
+.rpmk-path-empty{color:rgba(255,255,255,.2);font-style:italic}
+.rpmk-foot{padding:12px 22px;border-top:1px solid rgba(255,255,255,.08);flex-shrink:0;display:flex;justify-content:flex-end}
+.rpmk-done-btn{
+  font-family:var(--mono);font-size:10px;padding:8px 22px;border-radius:4px;
+  border:1px solid rgba(0,212,170,.4);color:#00d4aa;background:rgba(0,212,170,.06);
+  cursor:pointer;transition:all .15s;
+}
+.rpmk-done-btn:hover{background:rgba(0,212,170,.18)}
+/* Toolbar ROUTES button */
+#btn-routes{
+  font-family:var(--mono);font-size:9px;letter-spacing:1.5px;padding:5px 10px;
+  border-radius:4px;border:1px solid rgba(0,212,170,.35);
+  background:rgba(0,212,170,.06);color:rgba(0,212,170,.6);
+  cursor:pointer;transition:all .15s;white-space:nowrap;flex-shrink:0;
+}
+#btn-routes:hover,#btn-routes.active{background:rgba(0,212,170,.18);color:#00d4aa;border-color:rgba(0,212,170,.6)}
+/* Route trace canvas highlight */
+.cp.route-active{stroke-width:4.5!important;opacity:.97!important;filter:url(#glow)!important}
+.cp.route-dim{opacity:.03!important;stroke-width:1!important;transition:none;filter:none!important}
+.node.route-dim{opacity:.08!important;pointer-events:none!important;transition:none}
+.node.route-dim.sel,.node.route-dim.lit{opacity:.08!important}
+/* Routes section in panel */
+#ip-routes{margin-top:10px;padding:10px 0 14px;border-top:1px solid var(--border);display:none}
+.ip-routes-title{font-family:var(--mono);font-size:8px;letter-spacing:3px;color:var(--textdim);text-transform:uppercase;margin-bottom:8px}
+.ip-route-row{display:flex;align-items:center;gap:6px;margin-bottom:4px}
+.ip-route-btn{
+  flex:1;padding:4px 8px;font-family:var(--mono);font-size:9px;letter-spacing:1px;
+  border-radius:3px;cursor:pointer;transition:all .15s;text-align:left;white-space:normal;overflow:visible;line-height:1.4;
+  background:rgba(0,180,255,.05);border:1px solid rgba(0,180,255,.22);color:var(--textdim);
+}
+.ip-route-btn:hover{background:rgba(0,180,255,.15);border-color:var(--accent);color:#fff}
+.ip-route-btn.active{background:rgba(0,180,255,.2);border-color:var(--accent);color:#fff;font-weight:700}
+.ip-route-num{font-family:var(--mono);font-size:8px;padding:2px 5px;border-radius:2px;background:rgba(0,180,255,.12);color:var(--accent);flex-shrink:0;min-width:20px;text-align:center}
+#ip-conn-add-btn{
+  width:100%;margin-top:8px;padding:5px;background:none;
+  border:1px dashed var(--border2);border-radius:4px;
+  color:var(--textdim);font-family:var(--mono);font-size:9px;letter-spacing:2px;
+  cursor:pointer;transition:all .15s;text-align:center;
+}
+#ip-conn-add-btn:hover{border-color:rgba(0,212,255,.4);color:var(--accent)}
+#ip-add-conn-form{
+  display:none;margin-top:8px;padding:8px;
+  background:var(--bg3);border:1px solid var(--border);border-radius:6px;
+}
+#ip-add-conn-form select{
+  width:100%;box-sizing:border-box;margin-bottom:6px;
+  background:var(--bg2);border:1px solid var(--border2);border-radius:3px;
+  padding:5px 8px;font-family:var(--body);font-size:12px;color:var(--text);
+  outline:none;cursor:pointer;
+}
+#ip-add-conn-form select option{background:var(--bg2)}
+#ip-conn-mode-tabs{display:flex;gap:4px;margin-bottom:8px}
+#ip-conn-mode-tabs button{
+  flex:1;padding:4px 2px;font-family:var(--mono);font-size:9px;letter-spacing:1px;
+  background:none;border:1px solid var(--border2);border-radius:3px;
+  color:var(--textdim);cursor:pointer;transition:all .15s;
+}
+#ip-conn-mode-tabs button.active{background:var(--accent);color:#000;border-color:var(--accent);font-weight:700}
+.ip-add-conn-actions{display:flex;gap:6px;margin-top:2px}
+.ip-add-conn-actions button{
+  flex:1;padding:5px;border-radius:3px;font-family:var(--mono);font-size:9px;
+  letter-spacing:1px;cursor:pointer;border:1px solid var(--border2);
+  background:none;color:var(--textdim);transition:all .15s;
+}
+.ip-add-conn-actions button.ok{background:var(--accent);color:#000;border-color:var(--accent);font-weight:700}
+.ip-add-conn-actions button.ok:hover{filter:brightness(1.15)}
+.ip-add-conn-actions button.cancel:hover{color:#fff}
+
+/* ─── BOTTOM BAR ───────────────────────────── */
+#bottom-bar{
+  grid-column:1/-1;grid-row:3;
+  background:var(--bg2);border-top:1px solid var(--border);
+  display:flex;align-items:center;padding:0 14px;gap:16px;
+  font-family:var(--mono);font-size:10px;color:var(--textdim);
+}
+.bb-sep{width:1px;height:14px;background:var(--border)}
+.bb-info{flex:1;color:var(--text)}
+.zoom-ctrl{display:flex;align-items:center;gap:5px;margin-left:auto}
+.zoom-btn{
+  width:22px;height:22px;background:var(--bg3);border:1px solid var(--border2);
+  border-radius:3px;cursor:pointer;color:var(--text);
+  display:flex;align-items:center;justify-content:center;font-size:13px;
+  transition:all .12s;font-family:var(--mono);
+}
+.zoom-btn:hover{background:var(--border2)}
+#zoom-val{font-family:var(--mono);font-size:10px;color:var(--textdim);min-width:38px;text-align:center}
+
+/* ─── TOOLTIP ──────────────────────────────── */
+#tt{
+  position:fixed;background:var(--panel);border:1px solid var(--border2);
+  border-radius:5px;padding:10px 13px;pointer-events:none;z-index:500;
+  display:none;max-width:220px;box-shadow:0 8px 30px rgba(0,0,0,.6);
+}
+.tt-name{font-family:var(--display);font-size:11px;font-weight:700;color:#fff;margin-bottom:4px;letter-spacing:.5px}
+.tt-cat{font-family:var(--mono);font-size:8px;letter-spacing:2px;text-transform:uppercase;margin-bottom:5px}
+.tt-info{font-family:var(--mono);font-size:9px;color:var(--textdim)}
+
+/* ─── CABLE TOOLTIP ────────────────────────── */
+#ctt{position:fixed;background:rgba(10,13,22,.95);border:1px solid var(--border2);border-radius:3px;padding:5px 10px;pointer-events:none;z-index:501;display:none;font-family:var(--mono);font-size:10px}
+
+/* ─── SCANLINES ────────────────────────────── */
+#scanlines{
+  position:fixed;inset:0;pointer-events:none;z-index:1000;
+  background:repeating-linear-gradient(0deg,transparent,transparent 2px,rgba(0,0,0,.025) 2px,rgba(0,0,0,.025) 4px);
+}
+
+/* ─── KEYBOARD HINTS ───────────────────────── */
+#kbd-hints{
+  position:absolute;bottom:8px;right:8px;z-index:20;
+  display:flex;gap:6px;flex-direction:column;align-items:flex-end;
+}
+.kbd-hint{font-family:var(--mono);font-size:8px;color:var(--textdim);letter-spacing:.5px}
+kbd{background:var(--bg3);border:1px solid var(--border2);border-radius:2px;padding:1px 4px;font-family:var(--mono);font-size:8px;color:var(--textdim)}
+
+/* ─── MOBILE HAMBURGER ─────────────────────── */
+#mob-menu{
+  display:none;width:32px;height:32px;
+  background:transparent;border:1px solid var(--border2);border-radius:4px;
+  cursor:pointer;color:var(--text);
+  align-items:center;justify-content:center;font-size:18px;
+  flex-shrink:0;line-height:1;
+}
+
+/* ─── RESPONSIVE ≤ 768px ───────────────────── */
+@media(max-width:768px){
+  #app{grid-template-columns:1fr}
+  #sidebar-left{
+    position:fixed;top:52px;bottom:32px;left:0;width:220px;
+    z-index:150;
+    transform:translateX(-110%);
+    transition:transform .3s cubic-bezier(.16,1,.3,1);
+  }
+  #sidebar-left.mob-open{transform:translateX(0)}
+  #mob-menu{display:flex}
+  #canvas-area{grid-column:1}
+  #kbd-hints{display:none}
+  #info-panel{
+    top:auto;left:0;right:0;bottom:32px;
+    width:100%;height:26vh;
+    border-left:none;border-top:1px solid var(--border2);
+    border-radius:14px 14px 0 0;
+    transform:translateY(110%);
+  }
+  #info-panel.open{transform:translateY(0)}
+  #info-panel::before{
+    content:'';display:block;width:36px;height:4px;border-radius:2px;
+    background:var(--border2);margin:8px auto 0;flex-shrink:0;
+  }
+  .ip-body{flex-direction:row}
+  .ip-img{width:64px!important;min-width:64px!important;max-width:64px!important;height:64px!important;min-height:64px!important;align-self:center;margin:8px 0 8px 10px;border-radius:4px;border:1px solid var(--border);flex-shrink:0}
+  .ip-img img{width:100%!important;height:100%!important;object-fit:contain!important;padding:4px}
+  .ip-right{flex:1;overflow-y:auto;display:flex;flex-direction:column}
+  .ip-desc{padding:10px 12px;font-size:11px;border-bottom:1px solid var(--border);max-height:40%;overflow-y:auto}
+  .ip-conns{padding:10px 12px}
+  #minimap{width:110px;height:62px}
+  #search-input{width:130px}
+  #search-input:focus{width:160px}
+  .h-stats{display:none}
+  .h-ur{display:none}
+  button[onclick="exportViewer()"]{display:none}
+  .h-logo > div{display:none}
+  .h-sep{display:none}
+  #how-panel{
+    top:auto;left:0;right:0;bottom:32px;
+    width:100%;height:70vh;
+    border-left:none;border-top:1px solid var(--border2);
+    border-radius:14px 14px 0 0;
+    transform:translateY(110%);
+  }
+  #how-panel.open{transform:translateY(0)}
+  .how-gear-grid{grid-template-columns:1fr}
+}
+
+/* ─── PREFERS REDUCED MOTION ───────────────── */
+@media(prefers-reduced-motion:reduce){
+  *,*::before,*::after{
+    animation-duration:.001ms!important;
+    animation-iteration-count:1!important;
+    transition-duration:.001ms!important;
+  }
+  #scanlines{display:none!important}
+}
+
+.node{cursor:pointer!important}
+.rh{display:none!important}
+.node.dim .node-box{opacity:.45!important;filter:grayscale(1) brightness(.35)!important;transform:none}
+.node.dim .node-lbl{opacity:.35!important}
+#cables-svg .cp{transition:opacity .15s,stroke-width .15s,filter .15s}
+@media(max-width:768px){
+  /* Sidebar : dropdown depuis le haut */
+  #sidebar-left{position:fixed!important;top:52px!important;left:0!important;right:0!important;bottom:auto!important;width:100%!important;height:auto!important;max-height:75vh!important;border-left:none!important;border-right:none!important;border-top:none!important;border-bottom:1px solid var(--border2)!important;border-radius:0 0 12px 12px!important;transform:translateY(-110%)!important;z-index:149!important;box-shadow:0 8px 32px rgba(0,0,0,.6)!important;overflow-y:auto!important;}
+  #sidebar-left.mob-open{transform:translateY(0)!important}
+  #sidebar-left::before{display:none!important}
+  /* Masquer dans le header les éléments déplacés dans le menu */
+  #header > *:not(.h-logo):not(#mob-menu){display:none!important}
+  /* Backdrop quand menu ouvert */
+  #mob-backdrop{display:block;position:fixed;inset:0;z-index:148;background:rgba(0,0,0,.4)}
+  /* Info panel : moins haut pour laisser le canvas visible */
+  #info-panel{height:42vh!important}
+  #info-panel::before{margin:8px auto 0!important;cursor:grab!important}
+  /* Bloc header dans le menu déroulant */
+  #mob-header-items{padding:10px 12px 6px;border-bottom:1px solid var(--border2);margin-bottom:6px;display:flex;flex-direction:column;gap:8px;}
+  #mob-header-items .h-search{width:100%!important;margin-left:0!important;flex:none!important;}
+  #mob-header-items #search-input{width:100%!important;max-width:none!important;flex:1!important;min-width:0;}
+  #mob-header-items #search-input:focus{width:100%!important;}
+  #mob-header-items .mob-hdr-row{display:flex;align-items:center;gap:6px;flex-wrap:wrap;}
+  #mob-header-items .mob-hdr-row > button{flex:1;min-width:0;text-align:center;}
+  #mob-header-items .h-oab{font-size:10px;padding:2px 8px;white-space:nowrap;flex-shrink:0;}
+}
+</style>
+</head>
+<body>
+<div id="loading">
+  <img class="ld-logo" src="Alkoda_on_Air_transparent.png" alt="Alkoda On Air" draggable="false">
+  <div class="ld-bar-wrap"><div class="ld-bar" id="ld-bar"></div></div>
+  <div class="ld-status" id="ld-status">LOADING...</div>
+</div>
+<div id="app">
+  <header id="header">
+    <button id="mob-menu" onclick="toggleMenu()">☰</button>
+    <a class="h-logo" href="https://alkoda-onair.com/" target="_blank" rel="noopener" style="text-decoration:none;color:inherit" title="alkoda-onair.com">
+      <img class="h-logo-img" src="Alkoda_on_Air_transparent.png" alt="Alkoda On Air" draggable="false">
+      <div>
+        <div class="h-name">BROADCAST SYSTEM</div>
+        <div class="h-ver">SIGNAL MAP</div>
+      </div>
+    </a>
+    <button onclick="history.length>1?history.back():(window.location.href='https://alkoda-onair.com/')" data-i18n="back_btn" style="background:rgba(255,255,255,.07);border:1px solid var(--border2);color:var(--text);border-radius:4px;padding:3px 10px;font-family:var(--mono);font-size:10px;letter-spacing:1px;cursor:pointer;flex-shrink:0">← RETOUR</button>
+    <div class="h-sep"></div>
+    <div class="h-oab">● ON AIR</div>
+    <button id="lang-toggle" onclick="toggleLang()" title="Change language / Changer de langue"><span id="lang-flag"></span></button>
+    <div class="h-search" style="margin-left:12px">
+      <span class="h-search-icon">&#128269;</span>
+      <input id="search-input" type="text" placeholder="Rechercher..." autocomplete="off" data-i18n-ph="search_ph">
+      <div id="search-drop"></div>
+    </div>
+    <button id="how-btn" onclick="toggleHowPanel()" data-i18n="how_btn" style="background:rgba(255,255,255,.06);border:1px solid var(--border2);color:var(--textdim);border-radius:4px;padding:4px 10px;font-family:var(--mono);font-size:10px;letter-spacing:1px;cursor:pointer;white-space:nowrap;flex-shrink:0;transition:all .15s" onmouseenter="this.style.background='rgba(255,255,255,.12)';this.style.color='var(--text)'" onmouseleave="this.style.background='rgba(255,255,255,.06)';this.style.color='var(--textdim)'">Comment&#160;?</button>
+    <div class="h-stats">
+      <div class="h-stat"><div class="h-dot" style="background:#ffc000"></div> <span id="h-count-txt">33 APPAREILS · 60 CONNEXIONS</span></div>
+    </div>
+  </header>
+  <aside id="sidebar-left">
+    <div class="sl-section">
+      <div class="sl-title" data-i18n="categories">Catégories</div>
+      <button class="f-btn active" data-cat="all" onclick="fCat('all',this)"><div class="f-dot" style="background:#555"></div><span class="f-label" data-i18n="show_all">Tout afficher</span></button>
+      <button class="f-btn" data-cat="power" onclick="fCat('power',this)"><div class="f-dot" style="background:#a1887f"></div><span class="f-label">Alim.</span><span class="f-count">3</span></button><button class="f-btn" data-cat="audio" onclick="fCat('audio',this)"><div class="f-dot" style="background:#ec407a"></div><span class="f-label">Audio</span><span class="f-count">3</span></button><button class="f-btn" data-cat="capture" onclick="fCat('capture',this)"><div class="f-dot" style="background:#00bcd4"></div><span class="f-label">Capture</span><span class="f-count">2</span></button><button class="f-btn" data-cat="conversion" onclick="fCat('conversion',this)"><div class="f-dot" style="background:#ab47bc"></div><span class="f-label">Conversion</span><span class="f-count">3</span></button><button class="f-btn" data-cat="external" onclick="fCat('external',this)"><div class="f-dot" style="background:#ffa726"></div><span class="f-label">Externe</span><span class="f-count">5</span></button><button class="f-btn" data-cat="rack" onclick="fCat('rack',this)"><div class="f-dot" style="background:#78909c"></div><span class="f-label">Rack</span><span class="f-count">4</span></button><button class="f-btn" data-cat="network" onclick="fCat('network',this)"><div class="f-dot" style="background:#66bb6a"></div><span class="f-label">Réseau</span><span class="f-count">5</span></button><button class="f-btn" data-cat="storage" onclick="fCat('storage',this)"><div class="f-dot" style="background:#bdbdbd"></div><span class="f-label">Stockage</span><span class="f-count">1</span></button><button class="f-btn" data-cat="switcher" onclick="fCat('switcher',this)"><div class="f-dot" style="background:#ff6b35"></div><span class="f-label">Switcher</span><span class="f-count">1</span></button><button class="f-btn" data-cat="usb" onclick="fCat('usb',this)"><div class="f-dot" style="background:#ffca28"></div><span class="f-label">USB</span><span class="f-count">1</span></button><button class="f-btn" data-cat="video" onclick="fCat('video',this)"><div class="f-dot" style="background:#42a5f5"></div><span class="f-label">Vidéo</span><span class="f-count">5</span></button>
+    </div>
+    <div class="sl-section">
+      <div class="sl-title" data-i18n="cables">Câbles</div>
+      <button class="c-btn active" data-ctype="all" onclick="fCable('all',this)"><div class="c-line" style="background:#888"></div><span class="c-label" style="color:var(--text)" data-i18n="all">Tous</span></button>
+      <button class="c-btn" data-ctype="Audio" onclick="fCable('Audio',this)"><div class="c-line" style="background:#ff4444"></div><span class="c-label" style="color:#ff4444">Audio</span></button>
+      <button class="c-btn" data-ctype="DC-USB" onclick="fCable('DC-USB',this)"><div class="c-line" style="background:repeating-linear-gradient(90deg,#888 0,#888 4px,transparent 4px,transparent 8px)"></div><span class="c-label" style="color:#888">DC-USB</span></button>
+      <button class="c-btn" data-ctype="HDMI" onclick="fCable('HDMI',this)"><div class="c-line" style="background:#00b0f0"></div><span class="c-label" style="color:#00b0f0">HDMI</span></button>
+      <button class="c-btn" data-ctype="RJ45" onclick="fCable('RJ45',this)"><div class="c-line" style="background:#bfbfbf"></div><span class="c-label" style="color:#bfbfbf">RJ45</span></button>
+      <button class="c-btn" data-ctype="SDI" onclick="fCable('SDI',this)"><div class="c-line" style="background:#00b050"></div><span class="c-label" style="color:#00b050">SDI</span></button>
+      <button class="c-btn" data-ctype="USB" onclick="fCable('USB',this)"><div class="c-line" style="background:#ffc000"></div><span class="c-label" style="color:#ffc000">USB</span></button>
+    </div>
+    <div class="sl-actions">
+      <button class="act-btn" onclick="resetView()"><span>⊡</span> <span data-i18n="overview">Vue d'ensemble</span></button>
+    </div>
+  </aside>
+  <main id="canvas-area">
+    <div class="corner tl"></div><div class="corner tr"></div>
+    <div class="corner bl"></div><div class="corner br"></div>
+    <div id="canvas-root">
+      <svg id="cables-svg"></svg>
+      <div id="nodes-layer"></div>
+    </div>
+    <div id="minimap"><canvas id="mm-canvas" width="160" height="90"></canvas></div>
+    <div id="kbd-hints">
+      <div class="kbd-hint"><kbd>F</kbd> Fit</div>
+      <div class="kbd-hint"><kbd>+/-</kbd> Zoom</div>
+    </div>
+  </main>
+  <aside id="info-panel">
+    <div class="ip-header">
+      <div class="ip-badge" id="ip-badge"></div>
+      <div class="ip-name" id="ip-name"></div>
+      <button class="ip-close" onclick="closePanel()">✕</button>
+    </div>
+    <div class="ip-body">
+      <div class="ip-img"><img id="ip-img" src="" alt=""></div>
+      <div class="ip-right">
+        <div class="ip-desc" id="ip-desc"></div>
+        <div class="ip-conns">
+          <div class="ip-conn-title" data-i18n="connections">Connexions</div>
+          <div id="ip-conn-list"></div>
+          <div id="ip-routes">
+            <div class="ip-routes-title" data-i18n="signal_routes">Routes signal</div>
+            <div id="ip-routes-list"></div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </aside>
+  <aside id="how-panel">
+    <div class="how-header">
+      <span class="how-kicker" id="how-kicker">Partie technique</span>
+      <button class="how-close" onclick="closeHowPanel()">✕</button>
+    </div>
+    <div class="how-body" id="how-body"></div>
+  </aside>
+  <div id="bottom-bar">
+    <span id="bb-equip">⬡ 33 équipements</span>
+    <div class="bb-sep"></div>
+    <span id="bb-conn">◈ 60 connexions</span>
+    <div class="bb-sep"></div>
+    <span class="bb-info" id="bb-info" data-i18n="bb_hint">Cliquez sur un équipement pour voir ses connexions</span>
+    <div class="zoom-ctrl">
+      <button class="zoom-btn" onclick="dz(-.15)">−</button>
+      <span id="zoom-val">100%</span>
+      <button class="zoom-btn" onclick="dz(.15)">+</button>
+      <button class="zoom-btn" onclick="resetView()" title="Fit">⊡</button>
+    </div>
+  </div>
+</div>
+<div id="tt"><div class="tt-name" id="tt-n"></div><div class="tt-cat" id="tt-c"></div><div class="tt-info" id="tt-i"></div></div>
+<div id="ctt"></div>
+<script>
+const CAT={"switcher":{"label":"Switcher","label_en":"Switcher","color":"#ff6b35"},"capture":{"label":"Capture","label_en":"Capture","color":"#00bcd4"},"conversion":{"label":"Conversion","label_en":"Conversion","color":"#ab47bc"},"video":{"label":"Vidéo","label_en":"Video","color":"#42a5f5"},"audio":{"label":"Audio","label_en":"Audio","color":"#ec407a"},"network":{"label":"Réseau","label_en":"Network","color":"#66bb6a"},"rack":{"label":"Rack","label_en":"Rack","color":"#78909c"},"external":{"label":"Externe","label_en":"External","color":"#ffa726"},"usb":{"label":"USB","label_en":"USB","color":"#ffca28"},"power":{"label":"Alim.","label_en":"Power","color":"#a1887f"},"storage":{"label":"Stockage","label_en":"Storage","color":"#bdbdbd"}};
+const SH={"4":{"id":"4","name":"Decimator MD-HX 1","short":"DECI 1","cat":"conversion","desc":"Conversion SDI→HDMI\nEntrée PTZ HE130 (SDI) → Sortie HDMI vers rack sorties (SDI-HDMI)","desc_en":"SDI→HDMI Conversion\nInput PTZ HE130 (SDI) → HDMI Output to rack outputs (SDI-HDMI)","img":"assets/Decimator_MD-HX.avif","x":2737,"y":1225,"w":152,"h":115,"zindex":1,"bb":{"left":0,"right":1,"top":0.05,"bottom":0.95}},"5":{"id":"5","name":"Decimator MD-HX 2","short":"DECI 2","cat":"conversion","desc":"Conversion HDMI→SDI+HDMI\nOBSBOT UVC → Sorties Programme HDMI & SDI","desc_en":"HDMI→SDI+HDMI Conversion\nOBSBOT UVC → Programme Outputs HDMI & SDI","img":"assets/Decimator_MD-HX.avif","x":2262,"y":1763,"w":152,"h":115,"zindex":1,"bb":{"left":0,"right":1,"top":0.05,"bottom":0.95}},"7":{"id":"7","name":"Raspberry Pi","short":"RPi","cat":"network","desc":"Playout Bee (simule HyperDeck)\nSignal HDMI → Splitter 1 → ATEM entrée 7\nContrôle IP via réseau local","desc_en":"Playout Bee (HyperDeck emulator)\nHDMI Signal → Splitter 1 → ATEM input 7\nIP control via local network","img":"assets/raspberry_pi.avif","x":3911,"y":1568,"w":185,"h":125,"zindex":1,"bb":{"left":0.98,"right":1,"top":0.05,"bottom":0.95}},"12":{"id":"12","name":"Rack AC Infinity","short":"FAN","cat":"rack","desc":"Rack ventilateur 1U\nFace avant valise","desc_en":"1U rack fan\nFront of broadcast case","img":"assets/Fan-AC-Infinity.avif","x":4314,"y":1333,"w":1198,"h":120,"zindex":1,"bb":{"left":0.05,"right":0.95,"top":0,"bottom":0.01}},"13":{"id":"13","name":"OBSBOT UVC","short":"OBSBOT","cat":"conversion","desc":"Convertisseur USB-C → HDMI\nSortie programme ATEM → Decimator 2","desc_en":"USB-C → HDMI Converter\nATEM programme output → Decimator 2","img":"assets/Osbot.avif","x":1892,"y":1974,"w":96,"h":98,"zindex":1,"bb":{"left":0.05,"right":0.95,"top":0.8,"bottom":1}},"14":{"id":"14","name":"Elite Splitter 1","short":"SPLITTER 1","cat":"video","desc":"Splitter HDMI 1→2\nEntrée: Raspberry Pi\nSortie 1: ATEM entrée 7\nSortie 2: HDMI 2.1 Switch","desc_en":"HDMI 1→2 Splitter\nInput: Raspberry Pi\nOutput 1: ATEM input 7\nOutput 2: HDMI 2.1 Switch","img":"assets/splitter_HDElite.avif","x":3356,"y":1920,"w":110,"h":80,"zindex":1,"bb":{"left":0,"right":1,"top":0.2,"bottom":0.8}},"15":{"id":"15","name":"Elite Splitter 2","short":"SPLITTER 2","cat":"video","desc":"Splitter HDMI 1→2\nEntrée: StarTech Fill\nSortie 1: ATEM entrée 8\nSortie 2: HDMI 2.1 Switch","desc_en":"HDMI 1→2 Splitter\nInput: StarTech Fill\nOutput 1: ATEM input 8\nOutput 2: HDMI 2.1 Switch","img":"assets/splitter_HDElite.avif","x":3489,"y":2146,"w":110,"h":66,"zindex":1,"bb":{"left":0,"right":1,"top":0.2,"bottom":0.8}},"16":{"id":"16","name":"HDMI Converter Audio","short":"AUD CVT","cat":"audio","desc":"Extracteur audio HDMI\nATEM → RCA L/R → Rack patch sorties\n→ Enceintes externes XLR","desc_en":"HDMI Audio Extractor\nATEM → RCA L/R → Rack patch outputs\n→ External XLR speakers","img":"assets/Hdmi-to-RCA.avif","x":2645,"y":2205,"w":115,"h":90,"zindex":1,"bb":{"left":0,"right":1,"top":0.2,"bottom":0.8}},"17":{"id":"17","name":"PC MSI","short":"MSI PC","cat":"external","desc":"PC portable MSI\nH2R Graphics · OBS Studio\nCompanion · Stream Deck","desc_en":"MSI Laptop\nH2R Graphics · OBS Studio\nCompanion · Stream Deck","img":"assets/laptop.avif","x":-247,"y":366,"w":967,"h":629,"zindex":1,"bb":{"left":0.05,"right":0.95,"top":0,"bottom":0.02}},"18":{"id":"18","name":"Monitor Aztine 15.6\"","short":"PGM","cat":"external","desc":"Écran programme externe\nFull HD 1080p\nSortie PROGRAM OUT rack","desc_en":"External programme monitor\nFull HD 1080p\nRack PROGRAM OUT output","img":"assets/Moniteur-Programme.avif","x":-268,"y":1670,"w":900,"h":679,"zindex":1,"bb":{"left":0,"right":0.02,"top":0.05,"bottom":0.95}},"19":{"id":"19","name":"Monitor Multiview","short":"MULTIVIEW","cat":"external","desc":"Écran multiview principal\nSortie MULTIVIEW ATEM\nPreview + Program + 8 cams","desc_en":"Main multiview monitor\nATEM MULTIVIEW output\nPreview + Program + 8 cameras","img":"assets/Moniteur-Multiview.avif","x":2405,"y":-251,"w":1664,"h":965,"zindex":1,"bb":{"left":0,"right":0.02,"top":0.05,"bottom":0.95}},"20":{"id":"20","name":"Routeur GL.iNet AX","short":"ROUTER","cat":"network","desc":"Routeur WiFi 6 AX1800\nCrée le réseau local\nConnexion Internet via WWW","desc_en":"WiFi 6 AX1800 Router\nCreates the local network\nInternet connection via WWW","img":"assets/Routeur.avif","x":2304,"y":1215,"w":158,"h":115,"zindex":1,"bb":{"left":0.5,"right":1,"top":0.3,"bottom":0.9}},"21":{"id":"21","name":"Switch TP-Link PoE","short":"SWITCH","cat":"network","desc":"Switch 5 ports Gigabit PoE+\nDistribution réseau filaire\nAlimente PTZ via PoE","desc_en":"5-port Gigabit PoE+ Switch\nWired network distribution\nPowers PTZ via PoE","img":"assets/Switch-POE.avif","x":2203,"y":1419,"w":219,"h":85,"zindex":1,"bb":{"left":0.05,"right":0.95,"top":0.98,"bottom":1}},"22":{"id":"22","name":"PowerPlugs AC Inside","short":"AC INT","cat":"power","desc":"Multiprise secteur INSIDE\nFace intérieure valise","desc_en":"Power strip INSIDE\nInner face of broadcast case","img":"assets/Multiprise-Rack-Back.avif","x":920,"y":1412,"w":1033,"h":95,"zindex":1,"bb":null},"23":{"id":"23","name":"SSD SanDisk","short":"SSD","cat":"storage","desc":"SSD SanDisk Extreme USB\nEnregistrement ISO ATEM\nToutes sources + programme","desc_en":"SSD SanDisk Extreme USB\nATEM ISO recording\nAll sources + programme","img":"assets/DD_externe.avif","x":3770,"y":2165,"w":105,"h":102,"zindex":1,"bb":{"left":0.05,"right":0.95,"top":0.98,"bottom":1}},"25":{"id":"25","name":"MOTU M6 Front","short":"MOTU M6 Front","cat":"audio","desc":"Interface audio 6in/4out\n4 préamplis XLR\nVU-mètres LCD couleur\nFace avant valise","desc_en":"6in/4out audio interface\n4 XLR preamps\nColour LCD VU-meters\nFront of broadcast case","img":"assets/Motu-M6.avif","x":4866,"y":1450,"w":607,"h":121,"zindex":40,"bb":null},"26":{"id":"26","name":"Rack Front","short":" ","cat":"rack","desc":"Rack contrôle face avant\nBouton ATEM · MOTU · Magewell\nPorts Stream Deck XL USB","desc_en":"Front panel control rack\nATEM · MOTU · Magewell buttons\nStream Deck XL USB ports","img":"assets/Patch-Front-Middle2.avif","x":4317,"y":1450,"w":1205,"h":223,"zindex":1,"bb":{"left":0.05,"right":0.95,"top":0.98,"bottom":1}},"27":{"id":"27","name":"Rack Patch Entrées","short":"PATCH IN","cat":"rack","desc":"Patch entrées 1U\nSDI IN 1-3 · HDMI IN 1-8\nCONV IN · WWW · PC (RJ45)","desc_en":"1U input patch\nSDI IN 1-3 · HDMI IN 1-8\nCONV IN · WWW · PC (RJ45)","img":"assets/Patch-Back-Down.avif","x":936,"y":1565,"w":1033,"h":91,"zindex":1,"bb":{"left":0.05,"right":0.95,"top":0.98,"bottom":1}},"28":{"id":"28","name":"Rack Patch OUT","short":"PATCH OUT","cat":"rack","desc":"Patch sorties 1U\nProgram · Multiview · PC IN\nSDI-HDMI · Master L/R\nMic 1-2 IN · Alim écrans","desc_en":"1U output patch\nProgram · Multiview · PC IN\nSDI-HDMI · Master L/R\nMic 1-2 IN · Monitor power","img":"assets/Patch-Back-Up.avif","x":935,"y":1211,"w":1034,"h":112,"zindex":1,"bb":{"left":0.05,"right":0.95,"top":0,"bottom":0.02}},"29":{"id":"29","name":"ATEM Mini Extreme ISO","short":"ATEM","cat":"switcher","desc":"Switcher principal 8 entrées\n2 sorties HDMI · USB-C programme\nISO recording · Fairlight audio\nEntrée 3: Magewell 4K · E7: RPi","desc_en":"Main 8-input switcher\n2 HDMI outputs · USB-C programme\nISO recording · Fairlight audio\nInput 3: Magewell 4K · E7: RPi","img":"assets/ATEM-Mini-Extreme.avif","x":2423,"y":2562,"w":957,"h":473,"zindex":1,"bb":{"left":0.05,"right":0.95,"top":0,"bottom":0.02}},"52":{"id":"52","name":"Hub USB 3","short":"HUB USB 3","cat":"usb","desc":"Hub USB 3.0 alimenté secteur\n4 ports avec interrupteurs\nMagewell Gen2 + 4K + PC MSI","desc_en":"Powered USB 3.0 Hub\n4 ports with switches\nMagewell Gen2 + 4K + PC MSI","img":"assets/Hub-USB3.avif","x":2097,"y":1954,"w":185,"h":170,"zindex":1,"bb":{"left":0.98,"right":1,"top":0.05,"bottom":0.95}},"55":{"id":"55","name":"PWAY HDMI Extender","short":"PWAY","cat":"video","desc":"Récepteur HDMI over RJ45\nSignal écran speaker → ATEM E3\nVia rack entrées WWW","desc_en":"HDMI over RJ45 receiver\nSpeaker monitor signal → ATEM E3\nVia rack inputs WWW","img":"assets/extender-hdmi-RJ45-RX.avif","x":3518,"y":1392,"w":125,"h":90,"zindex":1,"bb":{"left":0,"right":1,"top":0.2,"bottom":0.8}},"60":{"id":"60","name":"StarTech USB→2xHDMI","short":"STARTECH","cat":"video","desc":"Adaptateur USB 3.0 → 2x HDMI\nKey → ATEM entrée 5\nFill → Splitter 2 → ATEM E8","desc_en":"USB 3.0 → 2x HDMI adapter\nKey → ATEM input 5\nFill → Splitter 2 → ATEM E8","img":"assets/StarTech.avif","x":3253,"y":2155,"w":125,"h":98,"zindex":1,"bb":{"left":0,"right":0.02,"top":0.05,"bottom":0.95}},"63":{"id":"63","name":"PowerPlugs AC BACK","short":"AC EXT","cat":"power","desc":"Multiprise secteur BACK\nFace extérieure valise\nPrises accessibles dehors","desc_en":"Power strip BACK\nOuter face of broadcast case\nSockets accessible from outside","img":"assets/Multiprise-Rack.avif","x":-227,"y":1393,"w":996,"h":100,"zindex":1,"bb":null},"65":{"id":"65","name":"Hub USB-C Alim.","short":"PD HUB","cat":"power","desc":"Chargeur USB-C 4 ports PD\nAlimente: Écrans · Routeur\nRack avant boutons","desc_en":"4-port USB-C PD charger\nPowers: Monitors · Router\nFront panel rack","img":"assets/Station-USB-C.avif","x":1054,"y":125,"w":324,"h":332,"zindex":1,"bb":{"left":0,"right":1,"top":0.05,"bottom":0.95}},"72":{"id":"72","name":"Internet (WWW)","short":"WWW","cat":"network","desc":"Connexion Internet RJ45\nVia rack entrées (WWW)\n→ Routeur GL.iNet","desc_en":"RJ45 Internet connection\nVia rack inputs (WWW)\n→ GL.iNet Router","img":"assets/www.avif","x":1219,"y":2732,"w":108,"h":98,"zindex":1,"bb":{"left":0.98,"right":1,"top":0.05,"bottom":0.95}},"80":{"id":"80","name":"MOTU M6 Back","short":"MOTU M6 Back","cat":"audio","desc":"MOTU M6 face arrière\nXLR IN 1-4 (micros)\nLine Out → ATEM MIC 1/2\nUSB-C · 15V DC","desc_en":"MOTU M6 rear panel\nXLR IN 1-4 (mics)\nLine Out → ATEM MIC 1/2\nUSB-C · 15V DC","img":"assets/Motu-M6-back.avif","x":5630,"y":1464,"w":628,"h":110,"zindex":1,"bb":{"left":0.05,"right":0.95,"top":0,"bottom":1}},"104":{"id":"104","name":"H2R Graphics (Key/Fill)","short":"PREVIEW 1 & 2","cat":"external","desc":"Petit écran rack avant\nVia HDMI 2.1 Switch\nAffiche: Key ou Raspberry Pi","desc_en":"Small front rack monitor\nVia HDMI 2.1 Switch\nDisplays: Key or Raspberry Pi","img":"assets/h2r-exemple.avif","x":4444,"y":1511,"w":202,"h":160,"zindex":30,"bb":{"left":0,"right":1,"top":0.2,"bottom":0.8}},"115":{"id":"115","name":"HDMI 2.1 Switch 8K","short":"HDMI Switch","cat":"video","desc":"Switch HDMI 2→1 8K\nE1: Splitter 1 (Raspberry Pi)\nE2: Splitter 2 (Fill)\nSortie: Écran prévisualisation","desc_en":"8K HDMI 2→1 Switch\nE1: Splitter 1 (Raspberry Pi)\nE2: Splitter 2 (Fill)\nOutput: Preview monitor","img":"assets/Switch.avif","x":3788,"y":1897,"w":115,"h":100,"zindex":1,"bb":{"left":0,"right":1,"top":0.2,"bottom":0.8}},"117":{"id":"117","name":"Magewell Gen 2","short":"MW GEN2","cat":"capture","desc":"USB Capture HDMI Gen 2\nCapture plan large → OBS Source 1\nVia rack patch entrées HDMI IN","desc_en":"USB HDMI Capture Gen 2\nWide shot capture → OBS Source 1\nVia rack patch inputs HDMI IN","img":"assets/Magewell_Capture_Gen2.avif","x":2993,"y":1217,"w":168,"h":110,"zindex":1,"bb":{"left":0,"right":1,"top":0.3,"bottom":0.7}},"119":{"id":"119","name":"Magewell 4K","short":"MW 4K","cat":"capture","desc":"Magewell 4K USB Capture\nCapture écran speaker (PWAY)\n→ OBS Source 2 · ATEM entrée 3","desc_en":"Magewell 4K USB Capture\nSpeaker screen capture (PWAY)\n→ OBS Source 2 · ATEM input 3","img":"assets/magewell-usb-capture-hdmi-4k-plus.avif","x":3019,"y":1629,"w":155,"h":115,"zindex":1,"bb":{"left":0,"right":1,"top":0.3,"bottom":0.7}},"120":{"id":"120","name":"StreamDeck XL","short":"StreamDeck","cat":"external","desc":"FONCTIONS :\n├── Contrôle ATEM (cuts, transitions, macros)\n├── Pilotage OBS (scènes, enregistrement, streaming)\n├── Contrôle H2R Graphics / Layouts (Key/Fill, overlays)\n├── Interaction avec scripts Lua (CornerPin, zoom, etc.)\n└── Déclenchement d’actions complexes synchronisées","img":"assets/streamdeck_xl.avif","x":4758,"y":2119,"w":345,"h":242,"zindex":1,"bb":null},"121":{"id":"121","name":"Tp-Link - TL-WR702N - Nano","short":"TL-WR702N","cat":"network","desc":"Réseau WiFi dédié tally\nPoint d’accès autonome\nIsolé du réseau principal","img":"assets/tplink__tlwr702n__nano.avif","x":2726,"y":1414,"w":120,"h":90,"zindex":1,"bb":null}};
+const CA=[{"id":0,"from":"52","to":"80","type":"USB","color":"#ffc000","dashed":false,"from_nx":0.745945945945946,"from_ny":0.6764705882352942,"to_nx":0.160828025477707,"to_ny":0.7545454545454545,"from_port":"USB","to_port":"USB"},{"id":1,"from":"115","to":"104","type":"HDMI","color":"#00b0f0","dashed":false,"from_nx":0.6041,"from_ny":0.1493,"to_nx":0.4897959183673469,"to_ny":0.9801324503311258,"from_port":"Sortie","to_port":"HDMI IN"},{"id":2,"from":"14","to":"115","type":"HDMI","color":"#00b0f0","dashed":false,"from_nx":0.8272727272727273,"from_ny":0.6125,"to_nx":0.391304347826087,"to_ny":0.71,"from_port":"Entrée 2","to_port":"Sortie 2","_flipped":true},{"id":3,"from":"26","to":"52","type":"USB","color":"#ffc000","dashed":false,"from_nx":0.9078838174273859,"from_ny":0.7488789237668162,"to_nx":0.6432432432432432,"to_ny":0.5941176470588235,"from_port":"USB","to_port":"USB StreamDeck","_flipped":true},{"id":4,"from":"60","to":"15","type":"HDMI","color":"#00b0f0","dashed":false,"from_nx":0.632,"from_ny":0.8469387755102041,"to_nx":0.19090909090909092,"to_ny":0.18181818181818182,"from_port":"IN","to_port":"HDMI OUT 2","_flipped":true},{"id":5,"from":"19","to":"28","type":"DC-USB","color":"#cc8800","dashed":true,"from_nx":0,"from_ny":0.8944,"to_nx":0.05899419729206963,"to_ny":0.5357142857142857,"from_port":"DC IN","to_port":"Alim. Écran 2"},{"id":6,"from":"28","to":"19","type":"HDMI","color":"#00b0f0","dashed":false,"from_nx":0.4825918762088975,"from_ny":0.5357142857142857,"to_nx":0.0030048076923076925,"to_ny":0.9202072538860103,"from_port":"MULTIVIEW","to_port":"HDMI IN"},{"id":7,"from":"28","to":"18","type":"DC-USB","color":"#cc8800","dashed":true,"from_nx":0.11798839458413926,"from_ny":0.5267857142857143,"to_nx":0.89,"to_ny":0.5007363770250368,"from_port":"Alim. Écran 1","to_port":"DC IN"},{"id":8,"from":"18","to":"28","type":"HDMI","color":"#00b0f0","dashed":false,"from_nx":0.9066666666666666,"from_ny":0.5964653902798233,"to_nx":0.36266924564796904,"to_ny":0.5714285714285714,"from_port":"HDMI IN","to_port":"PROGRAM OUT"},{"id":9,"from":"26","to":"29","type":"Audio","color":"#ff4444","dashed":false,"from_nx":0.08381742738589211,"from_ny":0.695067264573991,"to_nx":0.08254963427377221,"to_ny":0.08668076109936575,"from_port":"Jack Casque","to_port":"Sortie Casque"},{"id":10,"from":"17","to":"28","type":"HDMI","color":"#00b0f0","dashed":false,"from_nx":0.42359767891682787,"from_ny":0.5357142857142857,"to_nx":0.5,"to_ny":0,"from_port":"PC IN","to_port":"HDMI OUT","_flipped":true},{"id":11,"from":"4","to":"28","type":"HDMI","color":"#00b0f0","dashed":false,"from_nx":0.013157894736842105,"from_ny":0.34782608695652173,"to_nx":0.5512572533849129,"to_ny":0.5446428571428571,"from_port":"Sdi - Hdmi","to_port":"HDMI OUT","_flipped":true},{"id":12,"from":"27","to":"4","type":"SDI","color":"#00b050","dashed":false,"from_nx":0.14908034849951599,"from_ny":0.5714285714285714,"to_nx":0.9671052631578947,"to_ny":0.23478260869565218,"from_port":"SDI IN 1","to_port":"SDI IN"},{"id":13,"from":"27","to":"20","type":"RJ45","color":"#bfbfbf","dashed":false,"from_nx":0.75,"from_ny":0.7111111111111111,"to_nx":-3.0443037974683542,"to_ny":3.4521739130434783,"from_port":"LAN","to_port":"P.C.","_flipped":true},{"id":14,"from":"27","to":"21","type":"RJ45","color":"#bfbfbf","dashed":false,"from_nx":0.1552511415525114,"from_ny":0.7176470588235294,"to_nx":0.9128751210067764,"to_ny":0.4945054945054945,"from_port":"LAN","to_port":"P.C."},{"id":15,"from":"20","to":"21","type":"RJ45","color":"#bfbfbf","dashed":false,"from_nx":0.9240506329113924,"from_ny":0.6521739130434783,"to_nx":0.5981735159817352,"to_ny":0.7176470588235294,"from_port":"LAN","to_port":"LAN"},{"id":16,"from":"28","to":"80","type":"Audio","color":"#ffffff","dashed":false,"from_nx":0.844294003868472,"from_ny":0.5357142857142857,"to_nx":0.9124203821656051,"to_ny":0.4818181818181818,"from_port":"Mic 2 IN","to_port":"XLR IN 1"},{"id":17,"from":"80","to":"29","type":"Audio","color":"#ffffff","dashed":false,"from_nx":0.11285266457680251,"from_ny":0.08668076109936575,"to_nx":0.428343949044586,"to_ny":0.20909090909090908,"from_port":"Mic IN 1","to_port":"Line Out 1","_flipped":true},{"id":18,"from":"80","to":"29","type":"Audio","color":"#ff4444","dashed":false,"from_nx":0.14211076280041798,"from_ny":0.08456659619450317,"to_nx":0.4299363057324841,"to_ny":0.6181818181818182,"from_port":"Mic IN 2","to_port":"Line Out 2","_flipped":true},{"id":19,"from":"28","to":"80","type":"Audio","color":"#ffffff","dashed":false,"from_nx":0.7054140127388535,"from_ny":0.4818181818181818,"to_nx":0.9003868471953579,"to_ny":0.3482142857142857,"from_port":"XLR IN 3","to_port":"Mic 1 IN Jack","_flipped":true},{"id":20,"from":"28","to":"80","type":"Audio","color":"#ff4444","dashed":false,"from_nx":0.8121019108280255,"from_ny":0.4818181818181818,"to_nx":0.7833655705996132,"to_ny":0.5,"from_port":"XLR IN 2","to_port":"Mic 1 IN","_flipped":true},{"id":22,"from":"17","to":"60","type":"USB","color":"#ffc000","dashed":false,"from_nx":0.9286452947259566,"from_ny":0.8616852146263911,"to_nx":0.0428,"to_ny":0.6345,"from_port":"USB","to_port":"USB IN"},{"id":23,"from":"15","to":"29","type":"HDMI","color":"#00b0f0","dashed":false,"from_nx":0.509090909090909,"from_ny":0.7727272727272727,"to_nx":0.6185997910135841,"to_ny":0.0824524312896406,"from_port":"Entrée 8","to_port":"Sortie 1","_flipped":true},{"id":24,"from":"29","to":"13","type":"USB","color":"#ffc000","dashed":false,"from_nx":0.8296760710553814,"from_ny":0.07610993657505286,"to_nx":0.14583333333333334,"to_ny":0.7857142857142857,"from_port":"USB-C","to_port":"USB-C IN"},{"id":25,"from":"16","to":"28","type":"Audio","color":"#ffffff","dashed":false,"from_nx":0.8173913043478261,"from_ny":0.5888888888888889,"to_nx":0.690522243713733,"to_ny":0.5089285714285714,"from_port":"Master Out L","to_port":"Audio L OUT","_flipped":true},{"id":26,"from":"16","to":"28","type":"Audio","color":"#ff4444","dashed":false,"from_nx":0.9478260869565217,"from_ny":0.5111111111111111,"to_nx":0.6315280464216635,"to_ny":0.5267857142857143,"from_port":"Master Out R","to_port":"Audio R OUT","_flipped":true},{"id":27,"from":"16","to":"28","type":"HDMI","color":"#00b0f0","dashed":false,"from_nx":0.5043478260869565,"from_ny":0.7444444444444445,"to_nx":0.49709864603481624,"to_ny":0.21428571428571427,"from_port":"MULTIVIEW","to_port":"HDMI Loop Out","_flipped":true},{"id":28,"from":"29","to":"16","type":"HDMI","color":"#00b0f0","dashed":false,"from_nx":0.6823406478578893,"from_ny":0.08879492600422834,"to_nx":0.14782608695652175,"to_ny":0.2111111111111111,"from_port":"HDMI IN","to_port":"Sortie HDMI 1","_flipped":true},{"id":29,"from":"13","to":"5","type":"HDMI","color":"#00b0f0","dashed":false,"from_nx":0.8148,"from_ny":0.1007,"to_nx":0,"to_ny":0.2681,"from_port":"HDMI OUT","to_port":"HDMI IN"},{"id":30,"from":"5","to":"28","type":"HDMI","color":"#00b0f0","dashed":false,"from_nx":0,"from_ny":0.5265,"to_nx":0.3733075435203095,"to_ny":0.5089285714285714,"from_port":"HDMI OUT","to_port":"SDI - HDMI"},{"id":31,"from":"5","to":"28","type":"SDI","color":"#00b050","dashed":false,"from_nx":1,"from_ny":0.6987,"to_nx":0.30947775628626695,"to_ny":0.5178571428571429,"from_port":"SDI OUT","to_port":"Out 1"},{"id":32,"from":"28","to":"29","type":"HDMI","color":"#00b0f0","dashed":false,"from_nx":0.18808777429467086,"from_ny":0.08879492600422834,"to_nx":0.43133462282398455,"to_ny":0.5357142857142857,"from_port":"Sortie HDMI 1","to_port":"MULTIVIEW","_flipped":true},{"id":33,"from":"14","to":"29","type":"HDMI","color":"#00b0f0","dashed":false,"from_nx":0.5337,"from_ny":0.8785,"to_nx":0.5579937304075235,"to_ny":0.08456659619450317,"from_port":"Sortie 1","to_port":"Entrée 7"},{"id":34,"from":"27","to":"29","type":"HDMI","color":"#00b0f0","dashed":false,"from_nx":0.2497387669801463,"from_ny":0.08456659619450317,"to_nx":0.39399806389157793,"to_ny":0.5604395604395604,"from_port":"Entrée 2","to_port":"HDMI IN 2","_flipped":true},{"id":35,"from":"60","to":"29","type":"HDMI","color":"#00b0f0","dashed":false,"from_nx":0.352,"from_ny":0.7346938775510204,"to_nx":0.43573667711598746,"to_ny":0.080338266384778,"from_port":"Entrée 5","to_port":"HDMI OUT 1","_flipped":true},{"id":36,"from":"27","to":"29","type":"HDMI","color":"#00b0f0","dashed":false,"from_nx":0.6137463697967086,"from_ny":0.5604395604395604,"to_nx":0.49634273772204807,"to_ny":0.08668076109936575,"from_port":"HDMI IN 2","to_port":"Entrée 2"},{"id":37,"from":"29","to":"29","type":"HDMI","color":"#00b0f0","dashed":false,"from_nx":0.7398119122257053,"from_ny":0.0824524312896406,"to_nx":0.3709508881922675,"to_ny":0.07822410147991543,"from_port":"Sortie HDMI 2","to_port":"Entrée 4"},{"id":38,"from":"20","to":"29","type":"RJ45","color":"#bfbfbf","dashed":false,"from_nx":6.050632911392405,"from_ny":12.156521739130435,"to_nx":0.012539184952978056,"to_ny":-2.682875264270613,"from_port":"RJ45","to_port":"LAN","_flipped":true},{"id":39,"from":"27","to":"117","type":"HDMI","color":"#00b0f0","dashed":false,"from_nx":0.3378509196515005,"from_ny":0.6043956043956044,"to_nx":0.0932,"to_ny":0.5,"from_port":"HDMI IN 1","to_port":"HDMI IN"},{"id":40,"from":"117","to":"52","type":"USB","color":"#ffc000","dashed":false,"from_nx":0.9028,"from_ny":0.5,"to_nx":0.4702702702702703,"to_ny":0.4588235294117647,"from_port":"USB OUT","to_port":"USB"},{"id":41,"from":"52","to":"17","type":"USB","color":"#ffc000","dashed":false,"from_nx":0.958,"from_ny":0.518,"to_nx":0.9513960703205792,"to_ny":0.8855325914149443,"from_port":"USB","to_port":"USB"},{"id":42,"from":"27","to":"55","type":"RJ45","color":"#bfbfbf","dashed":false,"from_nx":0.8034849951597289,"from_ny":0.5934065934065934,"to_nx":0.832,"to_ny":0.1,"from_port":"RJ45","to_port":"WWW","_flipped":true},{"id":43,"from":"55","to":"119","type":"HDMI","color":"#00b0f0","dashed":false,"from_nx":0.192,"from_ny":0.7888888888888889,"to_nx":0.17419354838709677,"to_ny":0.6956521739130435,"from_port":"HDMI OUT","to_port":"HDMI IN"},{"id":44,"from":"119","to":"52","type":"USB","color":"#ffc000","dashed":false,"from_nx":0.7427,"from_ny":0.0819,"to_nx":0.5513513513513514,"to_ny":0.5117647058823529,"from_port":"USB OUT","to_port":"USB"},{"id":45,"from":"119","to":"29","type":"HDMI","color":"#00b0f0","dashed":false,"from_nx":0.3548387096774194,"from_ny":0.8,"to_nx":0.3103448275862069,"to_ny":0.08456659619450317,"from_port":"HDMI OUT","to_port":"Entrée 3"},{"id":46,"from":"7","to":"14","type":"HDMI","color":"#00b0f0","dashed":false,"from_nx":0.16071428571428573,"from_ny":0.624,"to_nx":0.1946,"to_ny":0.2067,"from_port":"HDMI OUT","to_port":"IN"},{"id":47,"from":"21","to":"7","type":"RJ45","color":"#bfbfbf","dashed":false,"from_nx":0.45662100456621,"from_ny":0.6941176470588235,"to_nx":0.9761904761904762,"to_ny":0.528,"from_port":"RJ45","to_port":"LAN","_flipped":true},{"id":48,"from":"65","to":"28","type":"DC-USB","color":"#cc8800","dashed":true,"from_nx":0.8055555555555556,"from_ny":0.8403614457831325,"to_nx":0.047388781431334626,"to_ny":0.5089285714285714,"from_port":"USB-C","to_port":"Alim. Écran 1"},{"id":49,"from":"65","to":"28","type":"DC-USB","color":"#cc8800","dashed":true,"from_nx":0.8209876543209876,"from_ny":0.677710843373494,"to_nx":0.10541586073500966,"to_ny":0.5178571428571429,"from_port":"USB-C","to_port":"Alim. Écran 2"},{"id":50,"from":"65","to":"26","type":"DC-USB","color":"#cc8800","dashed":true,"from_nx":0.8038461538461539,"from_ny":0.3524590163934426,"to_nx":0.6937759336099585,"to_ny":0.7443946188340808,"from_port":"USB-C","to_port":"USB-C Alim"},{"id":51,"from":"65","to":"20","type":"DC-USB","color":"#cc8800","dashed":true,"from_nx":0.8641975308641975,"from_ny":0.5120481927710844,"to_nx":0.619,"to_ny":0.9173,"from_port":"USB-C","to_port":"USB-C Alim"},{"id":52,"from":"27","to":"17","type":"RJ45","color":"#bfbfbf","dashed":false,"from_nx":0.9007238883143743,"from_ny":0.8441971383147854,"to_nx":2.1923474663908995,"to_ny":1.9682034976152623,"from_port":"RJ45","to_port":"P.C.","_flipped":true},{"id":53,"from":"72","to":"27","type":"RJ45","color":"#bfbfbf","dashed":false,"from_nx":1,"from_ny":0.5,"to_nx":0.850919651500484,"to_ny":0.7692307692307693,"from_port":"RJ45","to_port":"WWW"},{"id":54,"from":"15","to":"115","type":"HDMI","color":"#00b0f0","dashed":false,"from_nx":0.8818181818181818,"from_ny":0.6363636363636364,"to_nx":0.11304347826086956,"to_ny":0.51,"from_port":"Entrée 1","to_port":"Sortie 2","_flipped":true},{"id":55,"from":"29","to":"23","type":"USB","color":"#ffc000","dashed":false,"from_nx":0.7920585161964472,"from_ny":0.080338266384778,"to_nx":0.6186,"to_ny":1,"from_port":"USB-C","to_port":"USB"},{"id":56,"from":"120","to":"26","type":"USB","color":"#ffc000","from_nx":0.9217391304347826,"from_ny":0.384297520661157,"to_nx":0.9195020746887966,"to_ny":0.7623318385650224,"_userCreated":true},{"id":57,"from":"21","to":"121","type":"RJ45","color":"#bfbfbf","from_nx":0.7534246575342466,"from_ny":0.788235294117647,"to_nx":0.5583333333333333,"to_ny":0.8111111111111111,"_userCreated":true},{"id":59,"from":"21","to":"27","type":"RJ45","color":"#bfbfbf","from_nx":0.09293320425943853,"from_ny":0.6593406593406593,"to_nx":0.3059360730593607,"to_ny":0.7176470588235294,"_userCreated":true},{"id":60,"from":"22","to":"80","type":"DC-USB","color":"#888888","from_nx":0.2855759922555663,"from_ny":0.5052631578947369,"to_nx":0.10828025477707007,"to_ny":0.6363636363636364,"_userCreated":true},{"id":66,"from":"28","to":"27","type":"HDMI","color":"#00b0f0","from_nx":0.5444874274661509,"from_ny":0.5892857142857143,"to_nx":0.6030977734753146,"to_ny":0.3956043956043956,"_userCreated":true}];
+const ROUTES={"0":[[2235,2069],[5731,2069],[5731,1547]],"1":[[3857,1912],[4543,1912],[4543,1668]],"2":[[3447,1969],[3447,2001],[3833,2001],[3833,1968]],"3":[[5411,1617],[5401,1617],[5401,2048],[2216,2048],[2216,2055]],"4":[[3332,2238],[3332,2311],[3449,2311],[3449,2158],[3510,2158]],"5":[[2405,612],[891,612],[891,1339],[996,1339],[996,1271]],"6":[[1434,1271],[1434,1329],[908,1329],[908,637],[2410,637]],"7":[[1057,1270],[1057,1352],[780,1352],[780,2010],[533,2010]],"8":[[548,2075],[856,2075],[856,1380],[1311,1380],[1311,1276],[1313,1276],[1310,1276]],"9":[[4418,1605],[4281,1605],[4281,2421],[2502,2421],[2502,2603]],"10":[[1373,1271],[1373,1368],[863,1368],[863,291],[237,291],[237,366]],"11":[[2739,1265],[2718,1265],[2718,1118],[1505,1118],[1505,1272]],"12":[[1090,1617],[1090,1537.9],[2914,1537.9],[2914,1252],[2884,1252]],"13":[[2423,1297],[2423,1346],[2079,1346],[2079,1557],[1823,1557],[1823,1612]],"14":[[1879,1610],[1879,1532],[2237,1532],[2237,1480]],"15":[[2450,1290],[2469,1290],[2469,1547],[2334,1547],[2334,1480]],"16":[[1808,1271],[1808,1138],[6203,1138],[6203,1517]],"17":[[2531,2603],[2531,2476.3525],[5611,2476.3525],[5611,1428],[5899,1428],[5899,1487]],"18":[[2559,2602],[2559,2490.3525],[5900,2490.3525],[5900,1532]],"19":[[6073,1517],[6073,1198],[1866,1198],[1866,1250]],"20":[[6140,1517],[6140,1276],[3363,1276],[3363,1410],[2023,1410],[2023,1179],[1745,1179],[1745,1267]],"22":[[651,908],[3258,908],[3258,2217]],"23":[[3545,2197],[3545,2546.3525],[3015,2546.3525],[3015,2601]],"24":[[3217,2598],[3217,2127],[1861,2127],[1861,2051],[1906,2051]],"25":[[2739,2258],[2739,2301],[2610,2301],[2610,1073],[1649,1073],[1649,1268]],"26":[[2754,2251],[2774,2251],[2774,1640],[2629,1640],[2629,1031],[1589,1031],[1589,1270],[1588,1270]],"27":[[2703,2272],[2703,2338],[2593,2338],[2593,1096],[1449,1096],[1449,1235]],"28":[[3076,2604],[3076,2161],[2662,2161],[2662,2224]],"29":[[1970,1984],[1970,1794],[2262,1794]],"30":[[2262,1824],[2037,1824],[2037,970],[1321,970],[1321,1268]],"31":[[2414,1843],[2492,1843],[2492,1602],[2051,1602],[2051,1002],[1255,1002],[1255,1269]],"32":[[2603,2604],[2603,2522],[2065,2522],[2065,1051],[1381,1051],[1381,1271]],"33":[[3415,1990],[3415,2092],[2957,2092],[2957,2602]],"34":[[2662,2602],[2662,2445],[1343,2445],[1343,1616]],"35":[[3297,2227],[3297,2532.3525],[2840,2532.3525],[2840,2600]],"36":[[1570,1616],[1570,1737],[2898,1737],[2898,2603]],"37":[[3131,2601],[3131,2509],[2778,2509],[2778,2599]],"38":[[3260,2613],[3260,2458],[2435,2458],[2435,1293]],"39":[[1285,1620],[1285,1719],[2974,1719],[2974,1272],[3009,1272]],"40":[[3145,1272],[3172,1272],[3172,1214],[2944,1214],[2944,1391],[2184,1391],[2184,2032]],"41":[[2274,2042],[2274,2314],[827,2314],[827,923],[673,923]],"42":[[1766,1619],[1761,1619],[1761,1521],[1967,1521],[1967,1377],[3622,1377],[3622,1401]],"43":[[3542,1463],[3542,1583],[2988,1583],[2988,1704],[3046,1704],[3046,1709]],"44":[[3134,1638],[3134,1608],[3209,1608],[3209,1935],[2199,1935],[2199,2041]],"45":[[3074,1721],[3074,1756],[3927,1756],[3927,2441],[2720,2441],[2720,2602]],"46":[[3941,1646],[3345,1646],[3345,1937],[3377,1937]],"47":[[2303,1478],[2303,1567],[4092,1567],[4092,1634]],"48":[[1315,404],[1414,404],[1414,500],[984,500],[984,1268]],"49":[[1320,350],[1440,350],[1440,531],[1044,531],[1044,1269]],"50":[[1314,242],[1517,242],[1517,775],[5557,775],[5557,1740],[5153,1740],[5153,1616]],"51":[[1334,295],[1472,295],[1472,818],[2243,818],[2243,1320],[2402,1320]],"52":[[624,897],[2003,897],[2003,1529],[2003,1528],[2003,1688],[1873,1688],[1873,1604]],"53":[[1327,2781],[1815,2781],[1815,1635]],"54":[[3586,2188],[3586,2267],[3744,2267],[3744,1948],[3801,1948]],"55":[[3181,2600],[3181,2560.3525],[3835,2560.3525],[3835,2267]],"56":[[5076,2212],[5425,2212],[5425,1620]],"57":[[2368,1486],[2368,1523],[2793,1523],[2793,1487]],"59":[[1032,1625],[1032,1755],[2270,1755],[2270,1480]],"60":[[1215,1460],[1215,1528],[894,1528],[894,1882],[2250,1882],[2250,1882.25],[2430,1882.25],[2430,1882],[5698,1882],[5698,1534]],"66":[[1498,1277],[1495,1277],[1495,1332],[1982,1332],[1982,1548],[1563,1548],[1563,1601],[1559,1601]]};
+const SIGNAL_CHAINS=[{"id":"in7","badge":"E7 · HYPERDECK","type":"VIDEO","color":"#00b0f0","title":"Entrée 7 — Playout Bee (Raspberry Pi)","title_en":"Raspberry Pi → Splitter 1 → ATEM input 7 + preview screen","steps":[{"nid":"7","port":"Raspberry Pi [HDMI OUT]"},{"nid":"14","port":"Splitter 1 [IN — division signal]","branches":[[{"nid":"29","port":"ATEM — Entrée 7 [Sortie 1]"}],[{"nid":"115","port":"HDMI 2.1 Switch 8K [Entrée 2]"},{"nid":"104","port":"Écran preview H2R [HDMI IN]"}]]}],"nodes":["7","14","29","115","104"],"cables":[46,33,2,1]},{"id":"out-prog-obsbot","badge":"PROG · RACK","type":"VIDEO","color":"#ff6b35","title":"Sortie programme → Rack arrière","steps":[{"nid":"29","port":"ATEM [USB-C (out B)]"},{"nid":"13","port":"OBSBOT UVC [USB-C IN → HDMI OUT]"},{"nid":"5","port":"Decimator MD-HX 2 [HDMI IN — division signal]","branches":[[{"nid":"28","port":"Rack Patch Sorties [PROGRAM HDMI]"},{"nid":"18","port":"Écran Aztine 15.6\" [HDMI IN]"}],[{"nid":"28","port":"Rack Patch Sorties [Program Out SDI]"}]]}],"nodes":["29","13","5","28","18"],"cables":[24,29,30,31,8]},{"id":"controle-streamdeck-xl","badge":"USB · CONTROLE·STREAMDE·XL","type":"USB","color":"#ffc000","title":"StreamDeck → MSI PC","steps":[{"nid":"120","port":"StreamDeck XL"},{"nid":"26","port":"Rack Front"},{"nid":"52","port":"Hub USB 3"},{"nid":"17","port":"PC MSI"}],"nodes":["120","26","52","17"],"cables":[56,3,41],"_userCreated":true,"sourceNode":"120","pathGroups":[{"id":"pg0","label":null,"_destNid":"17","cables":[56,3,41],"_labelCustom":false}]},{"id":"he-130-patch-out","badge":"VIDEO · HE-130 → PATCH OUT","type":"VIDEO","color":"#00b0f0","title":"HE-130 → ATEM 6","steps":[{"nid":"27","port":"Rack Patch Entrées","branches":[[{"nid":"4","port":"Decimator MD-HX 1"},{"nid":"28","port":"Rack Patch OUT"}],[{"nid":"29","port":"ATEM Mini Extreme ISO"}]]}],"nodes":["27","4","28","29"],"cables":[12,11,66,36],"pathGroups":[{"id":"pg0","label":null,"_destNid":"29","cables":[12,11,66,36],"_labelCustom":false}],"_userCreated":true,"sourceNode":"122","_titleCustom":true},{"id":"out-preview","badge":"PREVIEW · ÉCRAN","type":"VIDEO","color":"#ab47bc","title":"RPi, MSI PC → PREVIEW 1 & 2, ATEM","parallel":[[{"nid":"7","port":"Raspberry Pi [HDMI OUT]"},{"nid":"14","port":"Splitter 1 [Sortie 2]"}],[{"nid":"17","port":"PC MSI — H2R Graphics [HDMI OUT]"},{"nid":"60","port":"StarTech USB→2xHDMI [HDMI OUT 2]"},{"nid":"15","port":"Splitter 2 [Sortie 2]"}]],"steps":[{"nid":"7","port":"Raspberry Pi"},{"nid":"14","port":"Elite Splitter 1","branches":[[{"nid":"115","port":"HDMI 2.1 Switch 8K"},{"nid":"104","port":"H2R Graphics (Key/Fill)"}],[{"nid":"29","port":"ATEM Mini Extreme ISO"}]]}],"nodes":["7","14","17","60","15","115","104"],"cables":[46,2,22,4,54,1,33],"pathGroups":[{"id":"pg0","label":null,"_destNid":"104","cables":[46,2,1],"_labelCustom":false},{"id":"pg1","label":null,"_destNid":"29","cables":[46,33],"_labelCustom":false},{"id":"pg2","label":null,"_destNid":"104","cables":[22,4,54,1],"_labelCustom":false}],"_promotedFrom":"out-preview","_userCreated":true,"sourceNode":"7"},{"id":"out-prog-mv","badge":"PROG · MULTIVIEW","type":"VIDEO","color":"#ff6b35","title":"ATEM → MULTIVIEW","steps":[{"nid":"29","port":"ATEM Mini Extreme ISO"},{"nid":"16","port":"HDMI Converter Audio"},{"nid":"28","port":"Rack Patch OUT"},{"nid":"19","port":"Monitor Multiview"}],"nodes":["29","16","28","19"],"cables":[28,27,25,26,6],"pathGroups":[{"id":"pg0","label":null,"_destNid":"19","cables":[28,27,25,26,6],"_labelCustom":false}],"_promotedFrom":"out-prog-mv","_userCreated":true,"sourceNode":"29"},{"id":"audio-embed","badge":"AUDIO · EMBED","type":"AUDIO","color":"#ec407a","title":"ATEM → PATCH OUT","title_en":"ATEM → HDMI Converter → audio L/R extraction → Rack","steps":[{"nid":"29","port":"ATEM Mini Extreme ISO"},{"nid":"16","port":"HDMI Converter Audio"},{"nid":"28","port":"Rack Patch OUT"}],"nodes":["29","16","28"],"cables":[28,25,26],"pathGroups":[{"id":"pg0","label":null,"_destNid":null,"cables":[28,25,26],"_labelCustom":false}],"_promotedFrom":"audio-embed","_userCreated":true,"sourceNode":"29"},{"id":"in4","badge":"E4 · BOUCLE","type":"VIDEO","color":"#00b0f0","title":"ATEM [Sortie HDMI 2] →  4","steps":[{"nid":"29","port":"ATEM [Sortie HDMI 2 → SuperSource]"},{"nid":"29","port":"ATEM — Entrée 4 (rebouclage)"}],"nodes":["29"],"cables":[37],"pathGroups":[{"id":"pg0","label":null,"_destNid":null,"cables":[37],"_labelCustom":false}],"_promotedFrom":"in4","_userCreated":true,"_titleCustom":true},{"id":"iso-record","badge":"ISO · SSD","type":"CONTROL","color":"#ffc000","title":"ATEM → SSD","title_en":"ISO Recording → SSD SanDisk","steps":[{"nid":"29","port":"ATEM Mini Extreme ISO"},{"nid":"23","port":"SSD SanDisk"}],"nodes":["29","23"],"cables":[55],"pathGroups":[{"id":"pg0","label":null,"_destNid":"23","cables":[55],"_labelCustom":false}],"_promotedFrom":"iso-record","_userCreated":true,"sourceNode":"29"},{"id":"in2","badge":"E2 · DIRECT","type":"VIDEO","color":"#00b0f0","title":"PATCH IN → ATEM 2","steps":[{"nid":"27","port":"Rack Patch Entrées"},{"nid":"29","port":"ATEM Mini Extreme ISO"}],"nodes":["27","29"],"cables":[34],"pathGroups":[{"id":"pg0","label":null,"_destNid":"29","cables":[34],"_labelCustom":false}],"_promotedFrom":"in2","_userCreated":true,"sourceNode":"27","_titleCustom":true},{"id":"in6","badge":"E6 · DIRECT","type":"VIDEO","color":"#00b0f0","title":"PATCH IN → ATEM 6","steps":[{"nid":"27","port":"Rack Patch Entrées"},{"nid":"29","port":"ATEM Mini Extreme ISO"}],"nodes":["27","29"],"cables":[36],"pathGroups":[{"id":"pg0","label":null,"_destNid":"29","cables":[36],"_labelCustom":false}],"_promotedFrom":"in6","_userCreated":true,"sourceNode":"27","_titleCustom":true},{"id":"in5","badge":"E5 · KEY","type":"VIDEO","color":"#00b0f0","title":"MSI PC → ATEM 5 KEY","steps":[{"nid":"17","port":"PC MSI"},{"nid":"60","port":"StarTech USB→2xHDMI"},{"nid":"29","port":"ATEM Mini Extreme ISO"}],"nodes":["17","60","29"],"cables":[22,35],"pathGroups":[{"id":"pg0","label":null,"_destNid":"29","cables":[22,35],"_labelCustom":false}],"_promotedFrom":"in5","_userCreated":true,"sourceNode":"17","_titleCustom":true},{"id":"audio-mic","badge":"MIC · ATEM","type":"AUDIO","color":"#ff4444","title":"PATCH OUT → ATEM Mic 1 & 2","title_en":"Mics → MOTU M6 → ATEM","steps":[{"nid":"28","port":"Rack Patch OUT"},{"nid":"80","port":"MOTU M6 Back"},{"nid":"29","port":"ATEM Mini Extreme ISO"}],"steps_en":[{"nid":null,"port":"XLR Mics"},{"nid":"28","port":"Rack Patch Outputs [Mic 1 IN / Mic 2 IN]","branches":[[{"nid":"80","port":"MOTU M6 [XLR IN → Line Out 1]"},{"nid":"29","port":"ATEM [Mic IN 1]"}],[{"nid":"80","port":"MOTU M6 [XLR IN → Line Out 2]"},{"nid":"29","port":"ATEM [Mic IN 2]"}],[{"nid":"80","port":"MOTU M6 [XLR IN → Mix]"},{"nid":"29","port":"ATEM [Mic IN 1]"}]]}],"nodes":["28","80","29"],"cables":[16,20,19,17,18,17],"pathGroups":[{"id":"pg0","label":null,"_destNid":null,"cables":[16,20,19,17,18],"_labelCustom":false}],"_promotedFrom":"audio-mic","_userCreated":true,"sourceNode":"28","_titleCustom":true},{"id":"in8","badge":"E8 · FILL","type":"VIDEO","color":"#00b0f0","title":"MSI PC → ATEM 8, PREVIEW 1 & 2","steps":[{"nid":"17","port":"PC MSI"},{"nid":"60","port":"StarTech USB→2xHDMI"},{"nid":"15","port":"Elite Splitter 2","branches":[[{"nid":"29","port":"ATEM Mini Extreme ISO"}],[{"nid":"115","port":"HDMI 2.1 Switch 8K"},{"nid":"104","port":"H2R Graphics (Key/Fill)"}]]}],"nodes":["17","60","15","29","115","104"],"cables":[22,4,23,54,1],"pathGroups":[{"id":"pg0","label":null,"_destNid":"29","cables":[22,4,23],"_labelCustom":false},{"id":"pg1","label":null,"_destNid":"104","cables":[22,4,54,1],"_labelCustom":false}],"_promotedFrom":"in8","_userCreated":true,"sourceNode":"17","_titleCustom":true},{"id":"in1","badge":"E1 · CAM 1","type":"VIDEO","color":"#00b0f0","title":"PATCH IN → ATEM 1","steps":[{"nid":"27","port":"Rack Patch Entrées"},{"nid":"117","port":"Magewell Gen 2"},{"nid":"52","port":"Hub USB 3"},{"nid":"17","port":"PC MSI"},{"nid":"28","port":"Rack Patch OUT"},{"nid":"29","port":"ATEM Mini Extreme ISO"}],"nodes":["27","117","52","17","28","29"],"cables":[39,40,41,10,32],"pathGroups":[{"id":"pg0","label":null,"_destNid":"29","cables":[39,40,41,10,32],"_labelCustom":false}],"_promotedFrom":"in1","_userCreated":true,"sourceNode":"27","_titleCustom":true},{"id":"in3","badge":"E3 · SPEAKER","type":"VIDEO","color":"#00b0f0","title":"PATCH IN → ATEM 1 & 3","title_en":"Speaker screen → PWAY → Magewell 4K → split HDMI+USB","steps":[{"nid":"27","port":"Rack Patch Entrées"},{"nid":"55","port":"PWAY HDMI Extender"},{"nid":"119","port":"Magewell 4K","branches":[[{"nid":"29","port":"ATEM Mini Extreme ISO"}],[{"nid":"52","port":"Hub USB 3"},{"nid":"17","port":"PC MSI"},{"nid":"28","port":"Rack Patch OUT"},{"nid":"29","port":"ATEM Mini Extreme ISO"}]]}],"nodes":["27","55","119","52","17","28","29"],"cables":[42,43,45,44,41,10,32],"pathGroups":[{"id":"pg0","label":null,"_destNid":"29","cables":[42,43,45],"_labelCustom":false},{"id":"pg1","label":null,"_destNid":"29","cables":[42,43,44,41,10,32],"_labelCustom":false}],"_promotedFrom":"in3","_userCreated":true,"sourceNode":"27","_titleCustom":true},{"id":"sdi-cam1","badge":"SDI · CAM PTZ","type":"VIDEO","color":"#00b050","title":"PATCH IN → PATCH OUT","title_en":"PTZ camera SDI → Decimator 1 → Rack","steps":[{"nid":"27","port":"Rack Patch Entrées"},{"nid":"4","port":"Decimator MD-HX 1"},{"nid":"28","port":"Rack Patch OUT"}],"steps_en":[{"nid":null,"port":"PTZ Camera [SDI OUT]"},{"nid":"27","port":"Rack Patch Inputs [SDI IN 1]"},{"nid":"4","port":"Decimator MD-HX 1 [SDI IN → HDMI OUT]"},{"nid":"28","port":"Rack Patch Outputs [SDI-HDMI]"}],"nodes":["27","4","28"],"cables":[12,11],"pathGroups":[{"id":"pg0","label":null,"_destNid":"28","cables":[12,11],"_labelCustom":false}],"_promotedFrom":"sdi-cam1","_userCreated":true,"sourceNode":"27"},{"id":"net-lan","badge":"LAN · RÉSEAU","type":"NETWORK","color":"#39ff14","title":"WWW → ATEM, RPi, MSI PC, TL-WR702N, HE-130","title_en":"Internet → Router → devices","badge_en":"LAN · NETWORK","steps":[{"nid":"72","port":"Internet (WWW)"},{"nid":"27","port":"Rack Patch Entrées","branches":[[{"nid":"20","port":"Routeur GL.iNet AX","branches":[[{"nid":"21","port":"Switch TP-Link PoE","branches":[[{"nid":"7","port":"Raspberry Pi"}],[{"nid":"121","port":"Tp-Link - TL-WR702N - Nano"}]]}],[{"nid":"29","port":"ATEM Mini Extreme ISO"}]]}],[{"nid":"21","port":"Switch TP-Link PoE","branches":[[{"nid":"7","port":"Raspberry Pi"}],[{"nid":"121","port":"Tp-Link - TL-WR702N - Nano"}]]}],[{"nid":"17","port":"PC MSI"}],[{"nid":"122","port":"AW-HE130 Panasonic"}],[{"nid":"123","port":"AW-RP50 Panasonic"},{"nid":"122","port":"AW-HE130 Panasonic"}]]}],"steps_en":[{"nid":"72","port":"Internet [RJ45]"},{"nid":"27","port":"Rack Patch Inputs [WWW]"},{"nid":"20","port":"GL.iNet AX Router [WAN → LAN]","branches":[[{"nid":"29","port":"ATEM [RJ45]"}],[{"nid":"21","port":"TP-Link PoE Switch [network distribution]","branches":[[{"nid":"7","port":"Raspberry Pi [RJ45]"}],[{"nid":"27","port":"Rack Patch Inputs [PC IN]"},{"nid":"17","port":"PC MSI [RJ45]"}],[{"nid":"121","port":"TL-WR702N Nano [RJ45]"}]]}]]}],"nodes":["72","27","20","21","29","17","7","121"],"cables":[53,13,15,14,38,47,52,57,59],"pathGroups":[{"id":"pg1","label":null,"_destNid":"7","cables":[53,13,15,47],"_labelCustom":false},{"id":"pg2","label":null,"_destNid":"29","cables":[53,13,38],"_labelCustom":false},{"id":"pg3","label":null,"_destNid":"121","cables":[53,13,15,57],"_labelCustom":false},{"id":"pg4","label":null,"_destNid":"17","cables":[53,13,15,14,52],"_labelCustom":false}],"_promotedFrom":"net-lan","_userCreated":true,"sourceNode":"72"}];
+const signalPaths={"1":{"title":"ATEM entrée 1 — Retour PC MSI","badge":"RETOUR PC","source":"PC MSI","destination":"ATEM Mini Extreme ISO — entrée 1","path":["PC MSI","sortie HDMI écran 1","Rack Patch Sorties (PC IN ext.)","Rack Patch Sorties (PC IN int.)","ATEM entrée 1"],"branches":[],"role":"Retour HDMI du PC MSI vers l'ATEM. Si une source a été capturée dans le PC puis réémise en HDMI, elle réapparaît ici.","note":"Voie de retour PC — le contenu peut provenir d'une capture préalable.","couple":null},"2":{"title":"ATEM entrée 2 — Source directe HDMI IN 2","badge":"DIRECT","source":"Source externe","destination":"ATEM Mini Extreme ISO — entrée 2","path":["Source externe","HDMI IN 2 (rack arrière)","liaison interne patch","ATEM entrée 2"],"branches":[],"role":"Voie directe sans traitement intermédiaire. Ni PC, ni Magewell, ni splitter, ni conversion.","note":"Source directe branchée sur HDMI IN 2 du rack arrière.","couple":null},"3":{"title":"ATEM entrée 3 — Écran speaker via PWAY + Magewell 4K","badge":"SPEAKER","source":"Ordinateur du speaker","destination":"ATEM Mini Extreme ISO — entrée 3","path":["Ordinateur du speaker","sortie HDMI","PWAY Extender (émetteur)","câble RJ45 long","Rack Patch Entrées","PWAY Extender (récepteur)","Magewell 4K","ATEM entrée 3"],"branches":["Signal aussi lié à la capture OBS via le PC MSI."],"role":"Récupère l'écran du speaker à distance. Transit par le système PWAY HDMI-over-RJ45, puis Magewell 4K.","note":"Si le port physique exact du patch n'est pas confirmé, ce chemin reste la logique documentée.","couple":null},"4":{"title":"ATEM entrée 4 — Rebouclage SuperSource","badge":"BOUCLE INT.","source":"ATEM (sortie SuperSource)","destination":"ATEM Mini Extreme ISO — entrée 4","path":["ATEM (sortie HDMI configurée en SuperSource)","câble HDMI interne","ATEM entrée 4"],"branches":[],"role":"Boucle interne physique : la SuperSource sort de l'ATEM et revient dans l'entrée 4. Permet de réinjecter la SuperSource comme une source classique.","note":"Pas de source externe — rebouclage interne uniquement.","couple":null},"5":{"title":"ATEM entrée 5 — KEY H2R Graphics","badge":"KEY","source":"PC MSI / H2R Graphics","destination":"ATEM Mini Extreme ISO — entrée 5","path":["PC MSI","H2R Graphics (sortie KEY)","USB 3","StarTech USB→2xHDMI","sortie HDMI KEY","ATEM entrée 5"],"branches":[],"role":"Signal KEY pour incrustation. H2R Graphics génère le KEY sur le PC MSI, envoyé via USB au StarTech.","note":"Chemin direct depuis le StarTech vers l'ATEM, sans splitter.","couple":"⇄ Couple KEY/FILL avec entrée 8 (FILL)"},"6":{"title":"ATEM entrée 6 — Source directe HDMI IN 6","badge":"DIRECT","source":"Source externe","destination":"ATEM Mini Extreme ISO — entrée 6","path":["Source externe","HDMI IN 6 (rack arrière)","liaison interne patch","ATEM entrée 6"],"branches":[],"role":"Voie directe libre pour source HDMI externe supplémentaire. Même logique que l'entrée 2.","note":"Pas de conversion, pas de capture, pas de PC.","couple":null},"7":{"title":"ATEM entrée 7 — Playback HyperDeck simulé","badge":"HYPERDECK","source":"Raspberry Pi (Playout Bee)","destination":"ATEM Mini Extreme ISO — entrée 7","path":["Raspberry Pi (Playout Bee)","sortie HDMI","Splitter 1","sortie 1","ATEM entrée 7"],"branches":["Splitter 1 → sortie 2 → HDMI Switch → écran preview"],"role":"Lecteur vidéo autonome simulant un HyperDeck pour lire des vidéos, jingles, inserts et playback automatisé.","note":"Le Splitter 1 duplique le signal : une branche ATEM, une branche monitoring.","couple":null},"8":{"title":"ATEM entrée 8 — FILL H2R Graphics","badge":"FILL","source":"PC MSI / H2R Graphics","destination":"ATEM Mini Extreme ISO — entrée 8","path":["PC MSI","H2R Graphics (sortie FILL)","USB 3","StarTech USB→2xHDMI","sortie HDMI FILL","Splitter 2","sortie 1","ATEM entrée 8"],"branches":["Splitter 2 → sortie 2 → HDMI Switch → écran preview"],"role":"Signal FILL pour incrustation — l'image visible du graphisme H2R. Le Splitter 2 duplique : une branche ATEM, une branche monitoring.","note":"Toujours lié à l'entrée 5 (KEY). Les deux forment le couple KEY/FILL.","couple":"⇄ Couple KEY/FILL avec entrée 5 (KEY)"}};
+const cableFlows={"0":{"type":"AUDIO","badge":"AUDIO · USB","title":"Hub USB → MOTU M6 (USB audio)","role":"Liaison USB audio entre le Hub USB 3 et le MOTU M6 arrière. Permet le traitement audio via le MOTU.","path":["Hub USB 3","USB","MOTU M6 (arrière)"],"branches":[],"title_en":"Hub USB → MOTU M6 (USB audio)","role_en":"USB audio link between Hub USB 3 and MOTU M6 rear. Enables audio processing via MOTU.","path_en":["Hub USB 3","USB","MOTU M6 (rear)"]},"1":{"type":"VIDEO","badge":"VIDEO · MONITORING","title":"HDMI Switch — sorties monitoring","role":"Distribution des signaux de monitoring vers les écrans preview via le HDMI Switch 8K.","path":["HDMI 2.1 Switch 8K","câble HDMI","Rack Avant Boutons / écrans preview"],"branches":[],"title_en":"HDMI Switch — monitoring outputs","role_en":"Distribution of monitoring signals to preview monitors via HDMI 8K Switch.","path_en":["HDMI 2.1 8K Switch","HDMI cable","Front Rack / preview monitors"]},"2":{"type":"VIDEO","badge":"VIDEO · E7","atEntry":7,"role":"HDMI Switch → Splitter 1 (branche monitoring HyperDeck)","path":["HDMI Switch 8K","câble HDMI","Elite Splitter 1","sortie 1 → ATEM entrée 7","sortie 2 → écran preview"],"branches":["Sortie 2 Splitter 1 → HDMI Switch → écran preview"],"role_en":"HDMI Switch → Splitter 1 (HyperDeck monitoring branch)","path_en":["HDMI 8K Switch","HDMI cable","Elite Splitter 1","output 1 → ATEM input 7","output 2 → preview monitor"],"branches_en":["Splitter 1 Output 2 → HDMI Switch → preview monitor"]},"3":{"type":"CONTROL","badge":"CONTROL · USB","title":"Hub USB → Rack Avant (USB)","role":"Liaison USB entre le Hub USB 3 et le Rack Avant Boutons.","path":["Hub USB 3","USB","Rack Avant Boutons"],"branches":[],"title_en":"Hub USB → Front Rack (USB)","role_en":"USB link between Hub USB 3 and Front Panel Rack.","path_en":["Hub USB 3","USB","Front Panel Rack"]},"4":{"type":"VIDEO","badge":"VIDEO · E8","atEntry":8,"role":"Splitter 2 → StarTech (FILL retour)","role_en":"Splitter 2 → StarTech (FILL return)"},"5":{"type":"POWER","badge":"ALIM · DC","badge_en":"POWER · DC","title":"Alimentation Écran Multiview","role":"Câble d'alimentation DC-USB depuis le Rack Patch Sorties vers l'Écran Multiview.","path":["Écran Multiview","DC-USB","Rack Patch Sorties"],"branches":[],"title_en":"Multiview Monitor Power","role_en":"DC-USB power cable from Rack Patch Outputs to Multiview Monitor.","path_en":["Multiview Monitor","DC-USB","Rack Patch Outputs"]},"6":{"type":"VIDEO","badge":"VIDEO · MONITORING","title":"Rack Sorties → Écran Multiview","role":"Signal HDMI de monitoring depuis le Rack Patch Sorties vers l'écran Multiview.","path":["Rack Patch Sorties","câble HDMI","Écran Multiview"],"branches":[],"title_en":"Rack Outputs → Multiview Monitor","role_en":"HDMI monitoring signal from Rack Patch Outputs to the Multiview monitor.","path_en":["Rack Patch Outputs","HDMI cable","Multiview Monitor"]},"7":{"type":"POWER","badge":"ALIM · DC","badge_en":"POWER · DC","title":"Alimentation Écran Aztine","role":"Câble d'alimentation DC-USB depuis le Rack Patch Sorties vers l'Écran Aztine 15.6\".","path":["Rack Patch Sorties","DC-USB","Écran Aztine 15.6\""],"branches":[],"title_en":"Aztine Monitor Power","role_en":"DC-USB power cable from Rack Patch Outputs to Aztine 15.6\" Monitor.","path_en":["Rack Patch Outputs","DC-USB","Aztine 15.6\" Monitor"]},"8":{"type":"VIDEO","badge":"VIDEO · MONITORING","title":"Écran Aztine → Rack (SDI)","role":"Retour SDI depuis l'écran Aztine vers le Rack Patch.","path":["Écran Aztine 15.6\"","SDI","Rack Patch Sorties"],"branches":[],"title_en":"Aztine Monitor → Rack (SDI)","role_en":"SDI return from the Aztine monitor to Rack Patch.","path_en":["Aztine 15.6\" Monitor","SDI","Rack Patch Outputs"]},"9":{"type":"AUDIO","badge":"AUDIO · ATEM","title":"Rack Avant → ATEM (audio analogique)","role":"Signal audio analogique depuis le Rack Avant Boutons vers l'ATEM.","path":["Rack Avant Boutons","câble audio","ATEM Mini Extreme ISO"],"branches":[],"title_en":"Front Rack → ATEM (analogue audio)","role_en":"Analogue audio signal from Front Panel Rack to ATEM.","path_en":["Front Panel Rack","audio cable","ATEM Mini Extreme ISO"]},"10":{"type":"VIDEO","badge":"VIDEO · E1","atEntry":1,"role":"Rack Patch Sorties → PC MSI (retour HDMI)","role_en":"Rack Patch Outputs → PC MSI (HDMI return)"},"11":{"type":"VIDEO","badge":"VIDEO · SDI","title":"Rack Sorties → Decimator MD-HX 1","role":"Signal HDMI vers Decimator pour conversion SDI.","path":["Rack Patch Sorties","HDMI","Decimator MD-HX 1"],"branches":[],"title_en":"Rack Outputs → Decimator MD-HX 1","role_en":"HDMI signal to Decimator for SDI conversion.","path_en":["Rack Patch Outputs","HDMI","Decimator MD-HX 1"]},"12":{"type":"VIDEO","badge":"VIDEO · SDI","title":"Rack Entrées → Decimator MD-HX 1","role":"Signal SDI entrant vers Decimator MD-HX 1.","path":["Rack Patch Entrées","SDI","Decimator MD-HX 1"],"branches":[],"title_en":"Rack Inputs → Decimator MD-HX 1","role_en":"Incoming SDI signal to Decimator MD-HX 1.","path_en":["Rack Patch Inputs","SDI","Decimator MD-HX 1"]},"13":{"type":"NETWORK","badge":"RÉSEAU · LAN","badge_en":"NETWORK · LAN","title":"Routeur → Rack Entrées (RJ45)","role":"Liaison réseau local depuis le routeur GL.iNet AX vers le Rack Patch Entrées.","path":["Routeur GL.iNet AX","RJ45","Rack Patch Entrées"],"branches":[],"title_en":"Router → Rack Inputs (RJ45)","role_en":"Local network link from GL.iNet AX router to Rack Patch Inputs.","path_en":["GL.iNet AX Router","RJ45","Rack Patch Inputs"]},"14":{"type":"NETWORK","badge":"RÉSEAU · LAN","badge_en":"NETWORK · LAN","title":"Rack Entrées → Switch PoE (RJ45)","role":"Connexion réseau entre le Rack Patch Entrées et le Switch TP-Link PoE.","path":["Rack Patch Entrées","RJ45","Switch TP-Link PoE"],"branches":[],"title_en":"Rack Inputs → PoE Switch (RJ45)","role_en":"Network connection between Rack Patch Inputs and TP-Link PoE Switch.","path_en":["Rack Patch Inputs","RJ45","TP-Link PoE Switch"]},"15":{"type":"NETWORK","badge":"RÉSEAU · LAN","badge_en":"NETWORK · LAN","title":"Routeur → Switch PoE (RJ45)","role":"Liaison directe entre le routeur et le switch PoE pour le réseau local.","path":["Routeur GL.iNet AX","RJ45","Switch TP-Link PoE"],"branches":[],"title_en":"Router → PoE Switch (RJ45)","role_en":"Direct link between router and PoE switch for the local network.","path_en":["GL.iNet AX Router","RJ45","TP-Link PoE Switch"]},"16":{"type":"AUDIO","badge":"AUDIO · MOTU","title":"Rack Sorties → MOTU M6 (entrée audio)","role":"Signal audio depuis le Rack Patch Sorties vers le MOTU M6 arrière.","path":["Rack Patch Sorties","câble audio","MOTU M6 (arrière)"],"branches":[],"title_en":"Rack Outputs → MOTU M6 (audio input)","role_en":"Audio signal from Rack Patch Outputs to MOTU M6 rear.","path_en":["Rack Patch Outputs","audio cable","MOTU M6 (rear)"]},"17":{"type":"AUDIO","badge":"AUDIO · MOTU","title":"ATEM → MOTU M6 (sortie programme)","role":"Sortie audio programme de l'ATEM vers le MOTU M6 pour monitoring ou enregistrement.","path":["ATEM Mini Extreme ISO","câble audio","MOTU M6 (arrière)"],"branches":[],"title_en":"ATEM → MOTU M6 (programme output)","role_en":"ATEM programme audio output to MOTU M6 for monitoring or recording.","path_en":["ATEM Mini Extreme ISO","audio cable","MOTU M6 (rear)"]},"18":{"type":"AUDIO","badge":"AUDIO · MOTU","title":"ATEM → MOTU M6 (sortie programme 2)","role":"Deuxième sortie audio de l'ATEM vers le MOTU M6.","path":["ATEM Mini Extreme ISO","câble audio","MOTU M6 (arrière)"],"branches":[],"title_en":"ATEM → MOTU M6 (programme output 2)","role_en":"Second ATEM audio output to MOTU M6.","path_en":["ATEM Mini Extreme ISO","audio cable","MOTU M6 (rear)"]},"19":{"type":"AUDIO","badge":"AUDIO · MOTU","title":"MOTU M6 → Rack Sorties (sortie audio 1)","role":"Sortie audio traitée par le MOTU M6 vers le Rack Patch Sorties.","path":["MOTU M6 (arrière)","câble audio","Rack Patch Sorties"],"branches":[],"title_en":"MOTU M6 → Rack Outputs (audio output 1)","role_en":"Audio output processed by MOTU M6 to Rack Patch Outputs.","path_en":["MOTU M6 (rear)","audio cable","Rack Patch Outputs"]},"20":{"type":"AUDIO","badge":"AUDIO · MOTU","title":"MOTU M6 → Rack Sorties (sortie audio 2)","role":"Deuxième sortie audio traitée par le MOTU M6 vers le Rack Patch Sorties.","path":["MOTU M6 (arrière)","câble audio","Rack Patch Sorties"],"branches":[],"title_en":"MOTU M6 → Rack Outputs (audio output 2)","role_en":"Second audio output processed by MOTU M6 to Rack Patch Outputs.","path_en":["MOTU M6 (rear)","audio cable","Rack Patch Outputs"]},"22":{"type":"CONTROL","badge":"CONTROL · E5","atEntry":5,"role":"PC MSI → StarTech USB (signal KEY via USB 3)","role_en":"PC MSI → StarTech USB (KEY signal via USB 3)"},"23":{"type":"VIDEO","badge":"VIDEO · E8","atEntry":8,"role":"ATEM → Splitter 2 (FILL H2R)","role_en":"ATEM → Splitter 2 (H2R FILL)"},"24":{"type":"CONTROL","badge":"CONTROL · CAM","title":"ATEM → OBSBOT UVC (contrôle PTZ)","role":"Liaison USB de contrôle entre l'ATEM et la caméra OBSBOT pour le pilotage PTZ.","path":["ATEM Mini Extreme ISO","USB","OBSBOT UVC"],"branches":[],"title_en":"ATEM → OBSBOT UVC (PTZ control)","role_en":"USB control link between ATEM and OBSBOT camera for PTZ control.","path_en":["ATEM Mini Extreme ISO","USB","OBSBOT UVC"]},"25":{"type":"AUDIO","badge":"AUDIO · EMBED","title":"Rack Sorties → HDMI Converter (audio 1)","role":"Signal audio analogique vers le HDMI Converter pour intégration dans le flux HDMI.","path":["Rack Patch Sorties","câble audio","HDMI Converter Audio"],"branches":[],"title_en":"Rack Outputs → HDMI Converter (audio 1)","role_en":"Analogue audio signal to HDMI Converter for embedding into HDMI stream.","path_en":["Rack Patch Outputs","audio cable","HDMI Converter Audio"]},"26":{"type":"AUDIO","badge":"AUDIO · EMBED","title":"Rack Sorties → HDMI Converter (audio 2)","role":"Deuxième canal audio vers le HDMI Converter.","path":["Rack Patch Sorties","câble audio","HDMI Converter Audio"],"branches":[],"title_en":"Rack Outputs → HDMI Converter (audio 2)","role_en":"Second audio channel to HDMI Converter.","path_en":["Rack Patch Outputs","audio cable","HDMI Converter Audio"]},"27":{"type":"VIDEO","badge":"VIDEO · EMBED","title":"Rack Sorties → HDMI Converter (HDMI)","role":"Signal HDMI vers le convertisseur d'embed audio.","path":["Rack Patch Sorties","HDMI","HDMI Converter Audio"],"branches":[],"title_en":"Rack Outputs → HDMI Converter (HDMI)","role_en":"HDMI signal to the audio embed converter.","path_en":["Rack Patch Outputs","HDMI","HDMI Converter Audio"]},"28":{"type":"VIDEO","badge":"VIDEO · EMBED","title":"HDMI Converter → ATEM (HDMI embarqué)","role":"Signal HDMI avec audio embarqué depuis le HDMI Converter vers l'ATEM.","path":["HDMI Converter Audio","HDMI","ATEM Mini Extreme ISO"],"branches":[],"title_en":"HDMI Converter → ATEM (embedded HDMI)","role_en":"HDMI signal with embedded audio from HDMI Converter to ATEM.","path_en":["HDMI Converter Audio","HDMI","ATEM Mini Extreme ISO"]},"29":{"type":"VIDEO","badge":"VIDEO · CAM","title":"OBSBOT UVC → Decimator MD-HX 2","role":"Signal caméra OBSBOT vers Decimator pour conversion SDI.","path":["OBSBOT UVC (caméra PTZ)","HDMI","Decimator MD-HX 2"],"branches":[],"title_en":"OBSBOT UVC → Decimator MD-HX 2","role_en":"OBSBOT camera signal to Decimator for SDI conversion.","path_en":["OBSBOT UVC (PTZ camera)","HDMI","Decimator MD-HX 2"]},"30":{"type":"VIDEO","badge":"VIDEO · CAM","title":"Decimator MD-HX 2 → Rack Sorties (HDMI)","role":"Signal HDMI converti vers le Rack Sorties.","path":["Decimator MD-HX 2","HDMI","Rack Patch Sorties"],"branches":[],"title_en":"Decimator MD-HX 2 → Rack Outputs (HDMI)","role_en":"Converted HDMI signal to Rack Outputs.","path_en":["Decimator MD-HX 2","HDMI","Rack Patch Outputs"]},"31":{"type":"VIDEO","badge":"VIDEO · CAM","title":"Decimator MD-HX 2 → Rack Sorties (SDI)","role":"Signal SDI converti vers le Rack Sorties.","path":["Decimator MD-HX 2","SDI","Rack Patch Sorties"],"branches":[],"title_en":"Decimator MD-HX 2 → Rack Outputs (SDI)","role_en":"Converted SDI signal to Rack Outputs.","path_en":["Decimator MD-HX 2","SDI","Rack Patch Outputs"]},"32":{"type":"VIDEO","badge":"VIDEO · E1","atEntry":1,"role":"ATEM → Rack Patch Sorties (chemin retour PC)","title_en":"VIDEO · INPUT 1","role_en":"ATEM → Rack Patch Outputs (return path to PC)"},"33":{"type":"VIDEO","badge":"VIDEO · E7","atEntry":7,"role":"Splitter 1 → ATEM entrée 7","role_en":"Splitter 1 → ATEM input 7"},"34":{"type":"VIDEO","badge":"VIDEO · E2","atEntry":2,"role":"ATEM → Rack Patch Entrées (HDMI IN 2)","role_en":"ATEM → Rack Patch Inputs (HDMI IN 2)"},"35":{"type":"VIDEO","badge":"VIDEO · E5","atEntry":5,"role":"ATEM → StarTech (KEY HDMI)","role_en":"ATEM → StarTech (KEY HDMI)"},"36":{"type":"VIDEO","badge":"VIDEO · E6","atEntry":6,"role":"Rack Patch Entrées [HDMI IN 6] → ATEM Entrée 6","role_en":"Rack Patch Inputs [HDMI IN 6] → ATEM Input 6"},"37":{"type":"VIDEO","badge":"VIDEO · E4","atEntry":4,"role":"Rebouclage HDMI interne ATEM → ATEM entrée 4","role_en":"ATEM internal HDMI loopback → ATEM input 4"},"38":{"type":"NETWORK","badge":"RÉSEAU · ATEM","badge_en":"NETWORK · ATEM","title":"ATEM → Routeur (RJ45)","role":"Connexion réseau de l'ATEM vers le routeur pour le contrôle ATEM Software Control.","path":["ATEM Mini Extreme ISO","RJ45","Routeur GL.iNet AX"],"branches":[],"title_en":"ATEM → Router (RJ45)","role_en":"ATEM network connection to router for ATEM Software Control.","path_en":["ATEM Mini Extreme ISO","RJ45","GL.iNet AX Router"]},"39":{"type":"VIDEO","badge":"VIDEO · E1","atEntry":1,"role":"Rack Entrées → Magewell Gen 2 (capture source HDMI IN 1)","path":["HDMI IN 1 (rack arrière)","Rack Patch Entrées","Magewell Gen 2","Hub USB 3","PC MSI","sortie HDMI écran 1","ATEM entrée 1"],"branches":[],"note":"La source est capturée par la Magewell Gen 2, ressort du PC en HDMI vers ATEM 1.","role_en":"Rack Inputs → Magewell Gen 2 (HDMI IN 1 source capture)","path_en":["HDMI IN 1 (rear rack)","Rack Patch Inputs","Magewell Gen 2","Hub USB 3","PC MSI","HDMI output monitor 1","ATEM input 1"],"note_en":"Source is captured by Magewell Gen 2, goes back out from PC via HDMI to ATEM input 1."},"40":{"type":"CONTROL","badge":"CONTROL · E1","atEntry":1,"role":"Magewell Gen 2 → Hub USB 3 (USB data capture)","role_en":"Magewell Gen 2 → Hub USB 3 (USB capture data)"},"41":{"type":"CONTROL","badge":"CONTROL · E1","atEntry":1,"role":"Hub USB 3 → PC MSI (USB data vers PC)","role_en":"Hub USB 3 → PC MSI (USB data to PC)"},"42":{"type":"NETWORK","badge":"NETWORK · E3","title":"PWAY RJ45 — écran speaker","role":"Liaison RJ45 longue portée HDMI-over-Ethernet entre PWAY TX (speaker) et Rack Patch Entrées.","path":["Ordinateur speaker","PWAY Extender (émetteur)","câble RJ45 long","Rack Patch Entrées","PWAY Extender (récepteur)"],"branches":[],"note":"Fait partie du chemin ATEM entrée 3.","title_en":"PWAY RJ45 — speaker monitor","role_en":"Long-range RJ45 HDMI-over-Ethernet link between PWAY TX (speaker side) and Rack Patch Inputs.","path_en":["Speaker computer","PWAY Extender (transmitter)","long RJ45 cable","Rack Patch Inputs","PWAY Extender (receiver)"],"note_en":"Part of the ATEM input 3 path."},"43":{"type":"VIDEO","badge":"VIDEO · E3","atEntry":3,"role":"PWAY (récepteur) → Magewell 4K (HDMI)","role_en":"PWAY (receiver) → Magewell 4K (HDMI)"},"44":{"type":"CONTROL","badge":"CONTROL · E3","title":"USB — Magewell 4K → Hub USB","role":"Liaison USB entre la Magewell 4K et le Hub USB 3. Fait partie du chemin capture entrée 3.","path":["Magewell 4K","USB","Hub USB 3"],"branches":[],"title_en":"USB — Magewell 4K → Hub USB","role_en":"USB link between Magewell 4K and Hub USB 3. Part of input 3 capture path.","path_en":["Magewell 4K","USB","Hub USB 3"]},"45":{"type":"VIDEO","badge":"VIDEO · E3","atEntry":3,"role":"Magewell 4K → ATEM entrée 3","role_en":"Magewell 4K → ATEM input 3"},"46":{"type":"VIDEO","badge":"VIDEO · E7","atEntry":7,"role":"Raspberry Pi → Splitter 1 (playback HDMI)","role_en":"Raspberry Pi → Splitter 1 (playback HDMI)"},"47":{"type":"NETWORK","badge":"RÉSEAU · PI","badge_en":"NETWORK · PI","title":"Raspberry Pi → Switch PoE (RJ45)","role":"Connexion réseau du Raspberry Pi (Playout Bee) vers le Switch PoE pour le contrôle et la synchronisation.","path":["Raspberry Pi","RJ45","Switch TP-Link PoE"],"branches":[],"title_en":"Raspberry Pi → PoE Switch (RJ45)","role_en":"Raspberry Pi (Playout Bee) network connection to PoE Switch for control and sync.","path_en":["Raspberry Pi","RJ45","TP-Link PoE Switch"]},"48":{"type":"POWER","badge":"ALIM · USB-C","badge_en":"POWER · USB-C","title":"Hub USB-C → Rack Sorties (alim 1)","role":"Alimentation DC-USB depuis le Hub USB-C Alim vers le Rack Patch Sorties.","path":["Hub USB-C Alim.","DC-USB","Rack Patch Sorties"],"branches":[],"title_en":"USB-C Hub → Rack Outputs (power 1)","role_en":"DC-USB power from USB-C Power Hub to Rack Patch Outputs.","path_en":["USB-C Power Hub","DC-USB","Rack Patch Outputs"]},"49":{"type":"POWER","badge":"ALIM · USB-C","badge_en":"POWER · USB-C","title":"Hub USB-C → Rack Sorties (alim 2)","role":"Deuxième câble d'alimentation vers le Rack Patch Sorties.","path":["Hub USB-C Alim.","DC-USB","Rack Patch Sorties"],"branches":[],"title_en":"USB-C Hub → Rack Outputs (power 2)","role_en":"Second power cable to Rack Patch Outputs.","path_en":["USB-C Power Hub","DC-USB","Rack Patch Outputs"]},"50":{"type":"POWER","badge":"ALIM · USB-C","badge_en":"POWER · USB-C","title":"Hub USB-C → Rack Avant (alimentation)","role":"Alimentation DC-USB depuis le Hub USB-C Alim vers le Rack Avant Boutons.","path":["Hub USB-C Alim.","DC-USB","Rack Avant Boutons"],"branches":[],"title_en":"USB-C Hub → Front Rack (power)","role_en":"DC-USB power from USB-C Power Hub to Front Panel Rack.","path_en":["USB-C Power Hub","DC-USB","Front Panel Rack"]},"51":{"type":"POWER","badge":"ALIM · USB-C","badge_en":"POWER · USB-C","title":"Hub USB-C → Routeur (alimentation)","role":"Alimentation DC-USB depuis le Hub USB-C Alim vers le Routeur GL.iNet AX.","path":["Hub USB-C Alim.","DC-USB","Routeur GL.iNet AX"],"branches":[],"title_en":"USB-C Hub → Router (power)","role_en":"DC-USB power from USB-C Power Hub to GL.iNet AX Router.","path_en":["USB-C Power Hub","DC-USB","GL.iNet AX Router"]},"52":{"type":"NETWORK","badge":"RÉSEAU · PC","badge_en":"NETWORK · PC","title":"PC MSI → Rack Entrées (RJ45)","role":"Connexion réseau du PC MSI vers le Rack Patch pour le réseau local.","path":["PC MSI","RJ45","Rack Patch Entrées"],"branches":[],"title_en":"PC MSI → Rack Inputs (RJ45)","role_en":"PC MSI network connection to Rack Patch for local network.","path_en":["PC MSI","RJ45","Rack Patch Inputs"]},"53":{"type":"NETWORK","badge":"RÉSEAU · WAN","badge_en":"NETWORK · WAN","title":"Internet (WWW) → Rack Entrées (RJ45)","role":"Liaison WAN / accès Internet vers le Rack Patch Entrées.","path":["Internet (WWW)","RJ45","Rack Patch Entrées"],"branches":[],"title_en":"Internet (WWW) → Rack Inputs (RJ45)","role_en":"WAN / Internet access link to Rack Patch Inputs.","path_en":["Internet (WWW)","RJ45","Rack Patch Inputs"]},"54":{"type":"VIDEO","badge":"VIDEO · E8","atEntry":8,"role":"HDMI Switch → Splitter 2 (branche monitoring FILL)","role_en":"HDMI Switch → Splitter 2 (FILL monitoring branch)"},"55":{"type":"CONTROL","badge":"CONTROL · SSD","title":"ATEM → SSD SanDisk (enregistrement USB)","role":"Liaison USB entre l'ATEM et le SSD SanDisk pour l'enregistrement ISO direct.","path":["ATEM Mini Extreme ISO","USB","SSD SanDisk"],"branches":[],"title_en":"ATEM → SSD SanDisk (USB recording)","role_en":"USB link between ATEM and SSD SanDisk for direct ISO recording.","path_en":["ATEM Mini Extreme ISO","USB","SSD SanDisk"]}};
+const nodeFlows={"4":{"type":"VIDEO","badge":"VIDEO · SDI","title":"Decimator MD-HX 1","role":"Convertisseur HDMI↔SDI. Reçoit le signal du Rack Sorties/Entrées et convertit pour le monitoring SDI.","path":["Rack Patch Sorties","Decimator MD-HX 1","Rack Patch Entrées"],"branches":[],"title_en":"Decimator MD-HX 1","role_en":"HDMI↔SDI converter. Receives signal from Rack Outputs/Inputs and converts for SDI monitoring.","path_en":["Rack Patch Outputs","Decimator MD-HX 1","Rack Patch Inputs"]},"5":{"type":"VIDEO","badge":"VIDEO · SDI","title":"Decimator MD-HX 2","role":"Convertisseur HDMI↔SDI pour la caméra OBSBOT. Reçoit en HDMI, ressort en HDMI et SDI.","path":["OBSBOT UVC","Decimator MD-HX 2","Rack Patch Sorties (HDMI+SDI)"],"branches":[],"title_en":"Decimator MD-HX 2","role_en":"HDMI↔SDI converter for OBSBOT camera. Receives HDMI, outputs HDMI and SDI.","path_en":["OBSBOT UVC","Decimator MD-HX 2","Rack Patch Outputs (HDMI+SDI)"]},"16":{"type":"AUDIO","badge":"AUDIO · EMBED","title":"HDMI Converter Audio","role":"Convertisseur d'embed audio. Reçoit audio analogique du Rack Sorties et l'intègre dans le signal HDMI vers l'ATEM.","path":["Rack Patch Sorties (audio)","HDMI Converter Audio","ATEM Mini Extreme ISO"],"branches":[],"title_en":"HDMI Converter Audio","role_en":"Audio embed converter. Receives analogue audio from Rack Outputs and embeds it into the HDMI signal to ATEM.","path_en":["Rack Patch Outputs (audio)","HDMI Converter Audio","ATEM Mini Extreme ISO"]},"20":{"type":"NETWORK","badge":"RÉSEAU · ROUTEUR","badge_en":"NETWORK · ROUTER","title":"Routeur GL.iNet AX","role":"Gère le réseau local de la valise. Connecté au Switch PoE, au Rack Entrées et à l'ATEM pour le contrôle réseau.","path":["Internet (WAN)","Routeur GL.iNet AX","Switch TP-Link PoE","ATEM / PC / Raspberry Pi"],"branches":[],"title_en":"GL.iNet AX Router","role_en":"Manages the local network of the broadcast case. Connected to PoE Switch, Rack Inputs and ATEM for network control.","path_en":["Internet (WAN)","GL.iNet AX Router","TP-Link PoE Switch","ATEM / PC / Raspberry Pi"]},"21":{"type":"NETWORK","badge":"RÉSEAU · POE","badge_en":"NETWORK · POE","title":"Switch TP-Link PoE","role":"Distribue le réseau local et l'alimentation PoE aux équipements. Reçoit le routeur, le Raspberry Pi, le Rack Entrées.","path":["Routeur GL.iNet AX","Switch TP-Link PoE","Raspberry Pi","PC MSI","ATEM"],"branches":[],"title_en":"TP-Link PoE Switch","role_en":"Distributes the local network and PoE power to devices. Receives from router, Raspberry Pi, Rack Inputs.","path_en":["GL.iNet AX Router","TP-Link PoE Switch","Raspberry Pi","PC MSI","ATEM"]},"52":{"type":"CONTROL","badge":"CONTROL · USB","title":"Hub USB 3","role":"Hub USB central. Connecté au MOTU M6, à la Magewell Gen 2, à la Magewell 4K, et au PC MSI.","path":["Magewell Gen 2","Hub USB 3","PC MSI"],"branches":["Magewell 4K → Hub USB 3","Hub USB 3 → MOTU M6 (audio)"],"title_en":"Hub USB 3","role_en":"Central USB hub. Connected to MOTU M6, Magewell Gen 2, Magewell 4K, and PC MSI.","path_en":["Magewell Gen 2","Hub USB 3","PC MSI"],"branches_en":["Magewell 4K → Hub USB 3","Hub USB 3 → MOTU M6 (audio)"]},"65":{"type":"POWER","badge":"ALIM · USB-C","badge_en":"POWER · USB-C","title":"Hub USB-C Alim.","role":"Distributeur d'alimentation USB-C pour les équipements de la valise.","path":["Secteur","Hub USB-C Alim.","Rack Sorties / Rack Avant / Routeur"],"branches":[],"title_en":"USB-C Power Hub","role_en":"USB-C power distributor for the broadcast case devices.","path_en":["Mains","USB-C Power Hub","Rack Outputs / Front Rack / Router"]},"80":{"type":"AUDIO","badge":"AUDIO · MOTU","title":"MOTU M6 (arrière)","role":"Interface audio USB. Reçoit et envoie du son depuis/vers l'ATEM, le Rack Sorties, et le PC via Hub USB.","path":["ATEM Mini Extreme ISO","MOTU M6 (arrière)","Rack Patch Sorties"],"branches":["Hub USB 3 → PC MSI (enregistrement audio)"],"title_en":"MOTU M6 (rear)","role_en":"USB audio interface. Sends and receives audio to/from ATEM, Rack Outputs, and PC via Hub USB.","path_en":["ATEM Mini Extreme ISO","MOTU M6 (rear)","Rack Patch Outputs"],"branches_en":["Hub USB 3 → PC MSI (audio recording)"]}};
+const TCOL={VIDEO:'#00b0f0',AUDIO:'#ff4444',NETWORK:'#39ff14',CONTROL:'#ffc000',POWER:'#888888'};
+const CW=6008,CH=3172;
+const STRINGS={fr:{categories:'Catégories',show_all:'Tout afficher',cables:'Câbles',all:'Tous',video:'Vidéo',network:'Réseau',external:'Externe',power:'Alimentation',overview:"Vue d'ensemble",clear_sel:'Effacer sélection',search_ph:'Rechercher un équipement...',connections:'Connexions',signal_routes:'Routes signal',bb_hint:'Cliquez sur un équipement pour voir ses connexions',conn_sing:'connexion',conn_pl:'connexions',equip_lbl:'équipements',conn_lbl:'connexions',devices:'APPAREILS',conns_hdr:'CONNEXIONS',back_btn:'← RETOUR',how_btn:'Comment ?'},en:{categories:'Categories',show_all:'Show all',cables:'Cables',all:'All',video:'Video',network:'Network',external:'External',power:'Power',overview:'Overview',clear_sel:'Clear selection',search_ph:'Search a device...',connections:'Connections',signal_routes:'Signal routes',bb_hint:'Click on a device to see its connections',conn_sing:'connection',conn_pl:'connections',equip_lbl:'devices',conn_lbl:'connections',devices:'DEVICES',conns_hdr:'CONNECTIONS',back_btn:'← BACK',how_btn:'How?'}};
+let _lang='fr';
+function t(k){return(STRINGS[_lang]||STRINGS.fr)[k]||k;}
+function setLang(lang){
+  _lang=lang;
+  try{localStorage.setItem('alkoda_lang',lang);}catch(e){}
+  const fl=document.getElementById('lang-flag');
+  const _svgFR='<svg width="22" height="15" viewBox="0 0 3 2" xmlns="http://www.w3.org/2000/svg" style="border-radius:2px;vertical-align:middle;display:inline-block"><rect width="1" height="2" fill="#002395"/><rect x="1" width="1" height="2" fill="#fff"/><rect x="2" width="1" height="2" fill="#ED2939"/></svg>';
+  const _svgUK='<svg width="22" height="15" viewBox="0 0 60 30" xmlns="http://www.w3.org/2000/svg" style="border-radius:2px;vertical-align:middle;display:inline-block"><rect width="60" height="30" fill="#012169"/><path d="M0,0 L60,30 M60,0 L0,30" stroke="#fff" stroke-width="6"/><line x1="0" y1="0" x2="30" y2="15" stroke="#C8102E" stroke-width="4"/><line x1="30" y1="15" x2="60" y2="30" stroke="#C8102E" stroke-width="4"/><line x1="60" y1="0" x2="30" y2="15" stroke="#C8102E" stroke-width="4"/><line x1="30" y1="15" x2="0" y2="30" stroke="#C8102E" stroke-width="4"/><path d="M30,0 V30 M0,15 H60" stroke="#fff" stroke-width="10"/><path d="M30,0 V30 M0,15 H60" stroke="#C8102E" stroke-width="6"/></svg>';
+  if(fl)fl.innerHTML=lang==='fr'?_svgFR:_svgUK;
+  document.querySelectorAll('[data-i18n]').forEach(el=>el.textContent=t(el.dataset.i18n));
+  document.querySelectorAll('[data-i18n-ph]').forEach(el=>el.placeholder=t(el.dataset.i18nPh));
+  const bb=document.getElementById('bb-info');
+  if(bb&&!selId)bb.textContent=t('bb_hint');
+  const eEl=document.getElementById('bb-equip');
+  if(eEl)eEl.textContent=`⬡ ${Object.keys(SH).length} ${t('equip_lbl')}`;
+  const cEl=document.getElementById('bb-conn');
+  if(cEl)cEl.textContent=`◈ ${CA.length} ${t('conn_lbl')}`;
+  const hct=document.getElementById('h-count-txt');
+  if(hct)hct.textContent=`${Object.keys(SH).length} ${t('devices')} · ${CA.length} ${t('conns_hdr')}`;
+  document.querySelectorAll('.f-btn[data-cat]').forEach(btn=>{
+    const key=btn.getAttribute('data-cat');if(key==='all')return;
+    const cat=CAT[key];const lbl=btn.querySelector('.f-label');
+    if(cat&&lbl)lbl.textContent=_lang==='en'?(cat.label_en||cat.label):cat.label;
+  });
+  // Refresh panneau ouvert immédiatement
+  setTimeout(()=>{
+    const _ip=document.getElementById('info-panel');
+    if(!_ip||!_ip.classList.contains('open')) return;
+    if(selId&&SH[selId]){
+      showPanel(SH[selId],CM[selId]||[]);
+    }
+  },0);
+  const _hp=document.getElementById('how-panel');
+  if(_hp&&_hp.classList.contains('open'))renderHowPanel();
+}
+function toggleLang(){setLang(_lang==='fr'?'en':'fr');}
+function renderHowPanel(){
+  var fr=_lang==='fr';
+  var k=document.getElementById('how-kicker');
+  if(k)k.textContent=fr?'Partie technique \u2014 pour les pros et les geeks':'Technical section \u2014 for pros and geeks';
+  var b=document.getElementById('how-body');
+  if(!b)return;
+  var nl='\\n';
+  b.innerHTML=
+    '<h2 class="how-h2">'+(fr?'Lecture d\u00e9taill\u00e9e des flux, des outils et des choix techniques.':'Detailed analysis of signal flows, tools and technical choices.')+'</h2>'+
+    '<p class="how-intro">'+(fr?'Cette deuxi\u00e8me partie est volontairement plus d\u00e9taill\u00e9e. Elle explique les choix techniques qui permettent \u00e0 la valise de fonctionner comme une vraie r\u00e9gie.':'This second part is deliberately more detailed. It explains the technical choices that allow the case to function as a real control room.')+'</p>'+
+    '<div class="how-card">'+
+      '<div class="how-card-title">'+(fr?'Cha\u00eenes de signal embl\u00e9matiques':'Key signal chains')+'</div>'+
+      '<p class="how-card-intro">'+(fr?'Quelques chemins cl\u00e9s pour comprendre la philosophie\u00a0: qualit\u00e9 d&#39;image, stabilit\u00e9 et souplesse d&#39;adaptation.':'A few key signal paths to understand the philosophy: image quality, stability and adaptability.')+'</p>'+
+      '<div class="how-flow-list">'+
+        '<div class="how-flow-item"><strong>1. '+(fr?'Plan large OBS \u2192 ATEM 1':'Wide shot OBS \u2192 ATEM 1')+'</strong><div class="how-flow-path">'+(fr?['Cam\u00e9ra plan large + \u00e9cran speaker','\u2192 capture d\u00e9di\u00e9e','\u2192 recomposition dans OBS','\u2192 sortie HDMI du PC','\u2192 retour vers ATEM entr\u00e9e 1'].join(nl):['Wide camera + speaker screen','\u2192 dedicated capture','\u2192 recomposition in OBS','\u2192 PC HDMI output','\u2192 back to ATEM input 1'].join(nl))+'</div></div>'+
+        '<div class="how-flow-item"><strong>2. '+(fr?'\u00c9cran speaker plein \u00e9cran \u2192 ATEM 3':'Speaker screen fullscreen \u2192 ATEM 3')+'</strong><div class="how-flow-path">'+(fr?['Ordinateur du speaker','\u2192 transport PWAY','\u2192 Magewell 4K','\u2192 cha\u00eene PC / restitution d\u00e9di\u00e9e','\u2192 entr\u00e9e 3 de l&#39;ATEM'].join(nl):['Speaker laptop','\u2192 PWAY transport','\u2192 Magewell 4K','\u2192 dedicated PC chain','\u2192 ATEM input 3'].join(nl))+'</div></div>'+
+        '<div class="how-flow-item"><strong>3. Key / Fill \u2192 ATEM 5 &amp; 8</strong><div class="how-flow-path">'+(fr?['H2R Graphics','\u2192 StarTech USB \u2192 HDMI','\u2192 voie KEY vers entr\u00e9e 5','\u2192 voie FILL vers entr\u00e9e 8'].join(nl):['H2R Graphics','\u2192 StarTech USB \u2192 HDMI','\u2192 KEY channel to input 5','\u2192 FILL channel to input 8'].join(nl))+'</div></div>'+
+        '<div class="how-flow-item"><strong>4. '+(fr?'Super Source reboucl\u00e9e \u2192 ATEM 4':'Super Source loopback \u2192 ATEM 4')+'</strong><div class="how-flow-path">'+(fr?['ATEM sortie HDMI 2','(configur\u00e9e en Super Source)','\u2192 rebouclage interne','\u2192 ATEM entr\u00e9e 4'].join(nl):['ATEM HDMI output 2','(configured as Super Source)','\u2192 internal loopback','\u2192 ATEM input 4'].join(nl))+'</div></div>'+
+        '<div class="how-flow-item"><strong>5. '+(fr?'Playback / magn\u00e9to \u2192 ATEM 7':'Playout / recorder \u2192 ATEM 7')+'</strong><div class="how-flow-path">'+(fr?['Raspberry Pi + PlayoutBee','\u2192 Splitter','\u2192 entr\u00e9e 7 de l&#39;ATEM','\u2192 sortie parall\u00e8le vers pr\u00e9visualisation'].join(nl):['Raspberry Pi + PlayoutBee','\u2192 Splitter','\u2192 ATEM input 7','\u2192 optional parallel output to preview'].join(nl))+'</div></div>'+
+      '</div>'+
+    '</div>'+
+    '<div class="how-card">'+
+      '<div class="how-card-title">'+(fr?'Pourquoi ces outils':'Why these tools')+'</div>'+
+      '<p class="how-card-intro">'+(fr?'La page ne se contente pas de lister des marques\u00a0: elle explique le r\u00f4le de chaque brique dans l&#39;ensemble.':'Not just a list of brands \u2014 each tool explained in terms of its role in the system.')+'</p>'+
+      '<div class="how-gear-grid">'+
+        '<div class="how-gear"><h4>Blackmagic ATEM Mini Extreme ISO</h4><p>'+(fr?'Le m\u00e9langeur central\u00a0: entr\u00e9es, programme, enregistrement ISO et bascules en direct.':'The central mixer: inputs, program, ISO recording and live switching.')+'</p></div>'+
+        '<div class="how-gear"><h4>OBS</h4><p>'+(fr?'Fabrique un plan large enrichi de l&#39;\u00e9cran speaker, plus lisible qu&#39;une simple captation d&#39;\u00e9cran projet\u00e9.':'Builds an enhanced wide shot with the speaker screen \u2014 cleaner than a raw projected screen.')+'</p></div>'+
+        '<div class="how-gear"><h4>H2R Graphics</h4><p>'+(fr?'G\u00e9n\u00e8re les lower thirds en key/fill, sans chromakey, pour un rendu plus propre.':'Generates lower thirds via key/fill \u2014 no chroma key, cleaner result.')+'</p></div>'+
+        '<div class="how-gear"><h4>H2R Layouts</h4><p>'+(fr?'G\u00e8re les super sources et transitions entre compositions, logique mix effect compact.':'Manages super sources and composition transitions, compact mix-effect logic.')+'</p></div>'+
+        '<div class="how-gear"><h4>Magewell</h4><p>'+(fr?'Capture fiable de signaux vid\u00e9o vers le PC pour recomposition ou r\u00e9int\u00e9gration propre.':'Reliable video signal capture to PC for recomposition or clean reintegration.')+'</p></div>'+
+        '<div class="how-gear"><h4>PlayoutBee</h4><p>'+(fr?'Remplace un HyperDeck pour la logique magn\u00e9to\u00a0: clips, jingles, triggers et lecture m\u00e9dia.':'Replaces a HyperDeck for playout logic: clips, jingles, triggers and live media.')+'</p></div>'+
+        '<div class="how-gear"><h4>MOTU M6</h4><p>'+(fr?'Contr\u00f4le les niveaux micros avant l&#39;ATEM. Le son est trait\u00e9 comme un vrai maillon de production.':'Controls mic levels before the ATEM. Audio treated as a full production element.')+'</p></div>'+
+        '<div class="how-gear"><h4>StarTech, splitters, r\u00e9seau</h4><p>'+(fr?'Transport, conversion et duplication des signaux. Architecture compacte mais tr\u00e8s flexible.':'Transport, conversion and signal duplication. Compact but highly flexible architecture.')+'</p></div>'+
+      '</div>'+
+    '</div>';
+}
+function openHowPanel(){renderHowPanel();document.getElementById('how-panel').classList.add('open');}
+function closeHowPanel(){document.getElementById('how-panel').classList.remove('open');}
+function toggleHowPanel(){var p=document.getElementById('how-panel');if(p.classList.contains('open'))closeHowPanel();else openHowPanel();}
+let zoom=1,panX=0,panY=0,drag=false,lmx=0,lmy=0;
+let selId=null,activeCat='all',activeCable='all';
+let activeRouteEntry=null;
+const _nodeChains={};
+SIGNAL_CHAINS.forEach(chain=>{
+  const add=nid=>{if(!_nodeChains[nid])_nodeChains[nid]=[];if(!_nodeChains[nid].includes(chain.id))_nodeChains[nid].push(chain.id);};
+  chain.cables.forEach(cid=>{const c=CA.find(x=>x.id===cid);if(c){add(c.from);add(c.to);}});
+  (chain.nodes||[]).forEach(add);
+});
+let CM={};
+const area=document.getElementById('canvas-area');
+const root=document.getElementById('canvas-root');
+const svg=document.getElementById('cables-svg');
+const nodesL=document.getElementById('nodes-layer');
+const infoP=document.getElementById('info-panel');
+const tt=document.getElementById('tt');
+const ctt=document.getElementById('ctt');
+function buildCM(){
+  CM={};
+  CA.forEach(c=>{
+    const add=(a,b)=>{if(!CM[a])CM[a]=[];CM[a].push({sid:b,cid:c.id,type:c.type,color:c.color});};
+    add(c.from,c.to);add(c.to,c.from);
+  });
+}
+function toSVG(pts){
+  if(pts.length<2)return'';
+  const R=10;
+  if(pts.length===2)return`M${pts[0][0]} ${pts[0][1]} L${pts[1][0]} ${pts[1][1]}`;
+  let d=`M${pts[0][0].toFixed(1)} ${pts[0][1].toFixed(1)}`;
+  for(let i=1;i<pts.length-1;i++){
+    const [px,py]=pts[i-1],[cx,cy]=pts[i],[nx,ny]=pts[i+1];
+    const l1=Math.hypot(cx-px,cy-py),l2=Math.hypot(nx-cx,ny-cy);
+    const r=Math.min(R,l1/2,l2/2);
+    const dx1=(cx-px)/l1*r,dy1=(cy-py)/l1*r;
+    const dx2=(nx-cx)/l2*r,dy2=(ny-cy)/l2*r;
+    d+=` L${(cx-dx1).toFixed(1)} ${(cy-dy1).toFixed(1)} Q${cx} ${cy} ${(cx+dx2).toFixed(1)} ${(cy+dy2).toFixed(1)}`;
+  }
+  d+=` L${pts[pts.length-1][0].toFixed(1)} ${pts[pts.length-1][1].toFixed(1)}`;
+  return d;
+}
+function renderZones(){
+  [{t:'FACE ARRIÈRE',x:90,y:600,rot:-90},{t:'FACE AVANT',x:2700,y:600,rot:-90},
+   {t:'RÉSEAU LOCAL',x:750,y:30,rot:0},{t:'SWITCHER CENTRAL',x:1100,y:30,rot:0},
+   {t:'CAPTURE & CONVERSION',x:1400,y:30,rot:0},{t:'MONITORING',x:1900,y:30,rot:0}]
+  .forEach(z=>{
+    const d=document.createElement('div');
+    d.className='zone-lbl';d.textContent=z.t;
+    d.style.cssText=`left:${z.x}px;top:${z.y}px;transform:rotate(${z.rot}deg)`;
+    nodesL.appendChild(d);
+  });
+}
+function renderCables(){
+  const defs=document.createElementNS('http://www.w3.org/2000/svg','defs');
+  const gf=document.createElementNS('http://www.w3.org/2000/svg','filter');
+  gf.setAttribute('id','glow');
+  const gb=document.createElementNS('http://www.w3.org/2000/svg','feGaussianBlur');
+  gb.setAttribute('stdDeviation','2.5');gb.setAttribute('result','blur');
+  const fm=document.createElementNS('http://www.w3.org/2000/svg','feMerge');
+  const fn1=document.createElementNS('http://www.w3.org/2000/svg','feMergeNode');fn1.setAttribute('in','blur');
+  const fn2=document.createElementNS('http://www.w3.org/2000/svg','feMergeNode');fn2.setAttribute('in','SourceGraphic');
+  fm.append(fn1,fn2);gf.append(gb,fm);defs.append(gf);svg.append(defs);
+  CA.forEach(c=>{
+    const pts=ROUTES[c.id];
+    if(!pts||pts.length<2)return;
+    const p=document.createElementNS('http://www.w3.org/2000/svg','path');
+    p.setAttribute('d',toSVG(pts));
+    p.setAttribute('stroke',c.color);p.setAttribute('stroke-width','3.5');
+    p.setAttribute('fill','none');p.setAttribute('opacity','0.85');
+    p.setAttribute('data-cid',c.id);p.setAttribute('data-from',c.from);
+    p.setAttribute('data-to',c.to);p.setAttribute('data-type',c.type);
+    p.classList.add('cp','cable-visual');
+    if(c.dashed)p.setAttribute('stroke-dasharray','6,4');
+    p.style.pointerEvents='none';
+    svg.append(p);
+    const ph=document.createElementNS('http://www.w3.org/2000/svg','path');
+    ph.setAttribute('d',toSVG(pts));
+    ph.setAttribute('stroke','transparent');
+    ph.setAttribute('stroke-width','20');
+    ph.setAttribute('fill','none');
+    ph.setAttribute('pointer-events','stroke');
+    ph.setAttribute('data-cid',c.id);
+    ph.setAttribute('cursor','pointer');
+    ph.classList.add('cable-hit');
+    ph.addEventListener('mouseenter',e=>{
+      ph._hOp=parseFloat(p.getAttribute('opacity')||'0.85');
+      const _vis=ph._hOp>0.1&&p.style.display!=='none';
+      if(_vis&&!selId){
+        ctt.style.display='block';
+        ctt.innerHTML=`<span style="opacity:.5;font-size:10px">#${c.id}</span> <span style="color:${c.color}">${c.type}</span> — ${SH[c.from]?.name||''} ↔ ${SH[c.to]?.name||''}`;
+      }
+      if(_vis){ p.setAttribute('stroke-width','5');p.setAttribute('opacity','1'); }
+    });
+    ph.addEventListener('mousemove',e=>{
+      ctt.style.left=Math.min(e.clientX+12,window.innerWidth-300)+'px';
+      ctt.style.top=(e.clientY-30)+'px';
+    });
+    ph.addEventListener('mouseleave',()=>{
+      ctt.style.display='none';
+      if(ph._hOp!=null&&ph._hOp<=0.1)return;
+      p.setAttribute('stroke-width','3.5');p.setAttribute('opacity',String(ph._hOp??0.85));
+    });
+    ph.addEventListener('click',e=>{e.stopPropagation();ctt.style.display='none';showCableSignal(c.id);});
+    svg.append(ph);
+  });
+}
+function showCablePanel(c){
+  selId=null;
+  const sa=SH[c.from],sb=SH[c.to];
+  if(!sa||!sb)return;
+  const badge=document.getElementById('ip-badge');
+  badge.textContent=c.type;
+  badge.style.cssText=`background:${c.color}22;color:${c.color};border:1px solid ${c.color}44`;
+  document.getElementById('ip-name').textContent=`${sa.name}  ↔  ${sb.name}`;
+  document.getElementById('ip-img').src='';
+  document.getElementById('ip-desc').textContent=`Signal : ${c.type}\\nSource  : ${sa.name}\\nDest.   : ${sb.name}`;
+  const list=document.getElementById('ip-conn-list');
+  list.innerHTML=`
+    <div class="ip-conn-item" onclick="selectNode('${c.from}')">
+      <div class="ip-conn-dot" style="background:${c.color}"></div>
+      <div class="ip-conn-name">${sa.name}</div>
+      <div class="ip-conn-type" style="color:${c.color}">SOURCE</div>
+    </div>
+    <div style="padding:6px 8px;font-family:var(--mono);font-size:9px;color:var(--textdim);text-align:center;letter-spacing:2px;border-bottom:1px solid rgba(255,255,255,.04)">── ${c.type} ──</div>
+    <div class="ip-conn-item" onclick="selectNode('${c.to}')">
+      <div class="ip-conn-dot" style="background:${c.color}"></div>
+      <div class="ip-conn-name">${sb.name}</div>
+      <div class="ip-conn-type" style="color:${c.color}">DEST.</div>
+    </div>`;
+  document.querySelectorAll('.node').forEach(n=>{
+    const nid=n.id.replace('n-','');
+    n.classList.remove('sel','lit','dim');
+    if(nid===c.from||nid===c.to)n.classList.add('lit');
+    else n.classList.add('dim');
+  });
+  document.querySelectorAll('.cp').forEach(p=>{
+    const cid=parseInt(p.getAttribute('data-cid'));
+    if(cid===c.id){p.style.filter='url(#glow)';p.setAttribute('opacity','0.95');p.setAttribute('stroke-width','4.5');}
+    else{p.style.filter='grayscale(1) opacity(0.15)';p.setAttribute('stroke-width','1');}
+  });
+  document.getElementById('bb-info').textContent=`◈ ${c.type}  —  ${sa.name} ↔ ${sb.name}`;
+  infoP.classList.add('open');
+}
+function renderNodes(){
+  Object.values(SH).forEach(s=>{
+    const node=document.createElement('div');
+    node.className='node';node.id='n-'+s.id;
+    node.style.cssText=`left:${s.x}px;top:${s.y}px;width:${s.w}px;height:${s.h+22}px;z-index:${s.zindex||1};cursor:pointer`;
+    const box=document.createElement('div');
+    box.className='node-box';box.style.width=s.w+'px';box.style.height=s.h+'px';
+    const wrap=document.createElement('div');
+    wrap.className='node-img-wrap';
+    wrap.style.cssText=`width:${s.w}px;height:${s.h-3}px`;
+    if(s.img){
+      const img=document.createElement('img');
+      img.src=s.img;img.alt=s.name;img.draggable=false;
+      img.style.cssText=`width:${s.w}px;height:${s.h-3}px;pointer-events:none;-webkit-user-drag:none;user-select:none`;
+      if(s.id==='25'){img.style.objectFit='fill';img.style.padding='0';}
+      if(s.id==='63'||s.id==='22')img.style.objectPosition='top';
+      wrap.append(img);
+    }
+    box.append(wrap);node.append(box);
+    const lbl=document.createElement('div');
+    lbl.className='node-lbl';lbl.textContent=s.short||s.name;
+    node.append(lbl);
+    node.addEventListener('mouseenter',e=>showTT(e,s));
+    node.addEventListener('mousemove',e=>moveTT(e));
+    node.addEventListener('mouseleave',()=>hideTT());
+    // Touch: tap fiable — seuil de mouvement pour éviter faux-positif sur micro-tremblement
+    let _tStarted=false,_tX=0,_tY=0;
+    node.addEventListener('touchstart',e=>{
+      e.stopPropagation(); // empêche area.touchstart de mettre drag=true
+      _tStarted=true;_tX=e.touches[0].clientX;_tY=e.touches[0].clientY;
+    },{passive:false});
+    node.addEventListener('touchend',e=>{
+      if(!_tStarted)return;
+      _tStarted=false;
+      e.stopPropagation();
+      e.preventDefault(); // bloque le clic synthétique navigateur
+      drag=false;
+      selectNode(s.id);
+    },{passive:false});
+    node.addEventListener('touchmove',e=>{
+      if(!_tStarted)return;
+      // annule le tap seulement si vrai geste de pan (> 8px)
+      if(Math.hypot(e.touches[0].clientX-_tX,e.touches[0].clientY-_tY)>8)_tStarted=false;
+    },{passive:true});
+    node.addEventListener('click',e=>{e.stopPropagation();selectNode(s.id);});
+    nodesL.append(node);
+  });
+}
+function selectNode(id){
+  if(selId===id){clearSel();return;}
+  selId=id;
+  const s=SH[id];if(!s)return;
+  const conns=CM[id]||[];
+  const litSet=new Set(conns.map(c=>c.sid));
+  const cabSet=new Set(conns.map(c=>c.cid));
+  document.querySelectorAll('.node').forEach(n=>{
+    const nid=n.id.replace('n-','');
+    n.classList.remove('sel','lit','dim');
+    if(nid===id)n.classList.add('sel');
+    else if(litSet.has(nid))n.classList.add('lit');
+    else n.classList.add('dim');
+  });
+  document.querySelectorAll('.cp').forEach(p=>{
+    const cid=parseInt(p.getAttribute('data-cid'));
+    if(cabSet.has(cid)){
+      p.style.filter='url(#glow)';p.setAttribute('opacity','0.95');p.setAttribute('stroke-width','3.5');
+    }else{
+      p.style.filter='grayscale(1) opacity(0.15)';p.setAttribute('stroke-width','1');
+    }
+  });
+  showPanel(s,conns);
+  document.getElementById('bb-info').textContent=`▶ ${s.name}  —  ${conns.length} ${conns.length>1?t('conn_pl'):t('conn_sing')}`;
+}
+function clearSel(){
+  selId=null;activeRouteEntry=null;
+  infoP.classList.remove('signal-mode');
+  document.querySelectorAll('.node').forEach(n=>n.classList.remove('sel','lit','dim','route-dim'));
+  document.querySelectorAll('.cp').forEach(p=>{
+    p.classList.remove('route-active','route-dim');
+    p.style.filter='';
+    const t=p.getAttribute('data-type');
+    p.setAttribute('opacity',(activeCable==='all'||t===activeCable)?'0.85':'0.05');
+    p.setAttribute('stroke-width','3.5');
+  });
+  document.querySelectorAll('.ip-route-btn').forEach(b=>b.classList.remove('active'));
+  document.getElementById('bb-info').textContent=t('bb_hint');
+  applyFilters();
+}
+function _routeEndpoints(chain){
+  const cids=chain.cables||[];
+  if(!cids.length)return{sources:[],dests:[]};
+  const fS=new Set(),tS=new Set();
+  cids.forEach(cid=>{const c=CA.find(x=>x.id===cid);if(!c)return;fS.add(String(c.from));tS.add(String(c.to));});
+  return{sources:[...fS].filter(n=>!tS.has(n)),dests:[...tS].filter(n=>!fS.has(n))};
+}
+function _calcDynTitle(chain){
+  const _nl=nid=>{const n=SH[nid];if(!n)return String(nid);const s=(n.short||'').trim();return s?s:n.name||String(nid);};
+  const {sources,dests}=_routeEndpoints(chain);
+  if(sources.length&&dests.length){
+    const sl=[...new Set(sources.map(n=>_nl(n)).filter(Boolean))].join(', ');
+    const dl=[...new Set(dests.map(n=>_nl(n)).filter(Boolean))].join(', ');
+    if(sl&&dl)return sl+' → '+dl;
+  }
+  // Fallback : titre stocké ou premier/dernier câble (direction canvas)
+  if(chain.title&&chain.title!==chain.id)return chain.title;
+  const _pgs=chain.pathGroups&&chain.pathGroups.length?chain.pathGroups:[{cables:chain.cables||[]}];
+  const _starts=[],_ends=[];
+  _pgs.forEach(pg=>{
+    const _cbs=pg.cables||[];if(!_cbs.length)return;
+    const _fc=CA.find(c=>c.id===_cbs[0]),_lc=CA.find(c=>c.id===_cbs[_cbs.length-1]);
+    if(_fc){const n=(SH[_fc.from]&&SH[_fc.from].name)||String(_fc.from);if(!_starts.includes(n))_starts.push(n);}
+    if(_lc){const n=(SH[_lc.to]&&SH[_lc.to].name)||String(_lc.to);if(!_ends.includes(n))_ends.push(n);}
+  });
+  return (_starts.length||_ends.length)?(_starts.join(', ')||'?')+' → '+(_ends.join(', ')||'?'):(chain.title||chain.id);
+}
+function showPanel(s,conns){
+  const cat=CAT[s.cat]||{label:s.cat,color:'#888888'};
+  const badge=document.getElementById('ip-badge');
+  badge.textContent=(_lang==='en'?(cat.label_en||cat.label):cat.label).toUpperCase();
+  badge.style.cssText=`background:${cat.color}22;color:${cat.color};border:1px solid ${cat.color}44`;
+  document.getElementById('ip-name').textContent=s.name;
+  document.getElementById('ip-img').src=s.img;
+  document.getElementById('ip-desc').textContent=_lang==='en'?(s.desc_en||s.desc):s.desc;
+  infoP.classList.remove('signal-mode');
+  const list=document.getElementById('ip-conn-list');
+  list.innerHTML='';
+  conns.forEach(c=>{
+    const other=SH[c.sid];if(!other)return;
+    const item=document.createElement('div');
+    item.className='ip-conn-item';item.onclick=()=>selectNode(c.sid);
+    item.innerHTML=`<div class="ip-conn-dot" style="background:${c.color}"></div><div class="ip-conn-name">${other.name}</div><div class="ip-conn-type" style="color:${c.color}">${c.type}</div>`;
+    list.append(item);
+  });
+  // ── Section Routes Signal
+  const routeEl=document.getElementById('ip-routes');
+  const routeList=document.getElementById('ip-routes-list');
+  const chainIds=_nodeChains[s.id]||[];
+  if(chainIds.length>0&&routeEl&&routeList){
+    routeList.innerHTML='';
+    chainIds.forEach(cid=>{
+      const chain=SIGNAL_CHAINS.find(c=>c.id===cid);if(!chain)return;
+      const row=document.createElement('div');row.className='ip-route-row';
+      const num=document.createElement('span');num.className='ip-route-num';
+      num.style.cssText=`background:${chain.color}22;color:${chain.color};border:1px solid ${chain.color}44`;
+      num.textContent=chain.badge;
+      const btn=document.createElement('button');btn.className='ip-route-btn';
+      btn.dataset.chainId=chain.id;btn.title=chain.title||'';btn.textContent=_calcDynTitle(chain);
+      btn.onclick=e=>{e.stopPropagation();if(activeRouteEntry===chain.id){clearRouteTrace();return;}showSignalPanel(chain.id);};
+      row.append(num,btn);routeList.append(row);
+    });
+    routeEl.style.display='block';
+  } else if(routeEl){
+    routeEl.style.display='none';
+  }
+  infoP.classList.add('open');
+}
+function closePanel(){infoP.classList.remove('open','signal-mode');clearRouteTrace();clearSel();}
+function fCat(cat,btn){
+  document.querySelectorAll('.f-btn').forEach(b=>b.classList.remove('active'));
+  btn.classList.add('active');activeCat=cat;applyFilters();
+}
+function fCable(type,btn){
+  document.querySelectorAll('.c-btn').forEach(b=>b.classList.remove('active'));
+  btn.classList.add('active');activeCable=type;applyFilters();
+}
+function applyFilters(){
+  let nodeSet=null;
+  if(activeCable!=='all'){
+    nodeSet=new Set();
+    CA.forEach(c=>{if(c.type===activeCable){nodeSet.add(c.from);nodeSet.add(c.to);}});
+    if(activeCable==='Audio') nodeSet.add('25');
+  }
+  // Passe 1 — nodes primaires
+  const primaryNodes=new Set();
+  Object.values(SH).forEach(s=>{
+    let vis=activeCat==='all'||s.cat===activeCat;
+    if(vis&&nodeSet!==null)vis=nodeSet.has(s.id);
+    if(vis)primaryNodes.add(s.id);
+  });
+  // Passe 2 — nodes secondaires (connectés aux primaires)
+  const secondaryNodes=new Set();
+  if(activeCat!=='all'){
+    CA.forEach(c=>{
+      const typeVis=activeCable==='all'||c.type===activeCable;
+      if(!typeVis)return;
+      if(primaryNodes.has(c.from)&&!primaryNodes.has(c.to))secondaryNodes.add(c.to);
+      if(primaryNodes.has(c.to)&&!primaryNodes.has(c.from))secondaryNodes.add(c.from);
+    });
+  }
+  const visNodes=new Set([...primaryNodes,...secondaryNodes]);
+  Object.values(SH).forEach(s=>{
+    const node=document.getElementById('n-'+s.id);if(!node)return;
+    if(primaryNodes.has(s.id)){
+      node.style.display='';node.style.opacity='1';node.style.pointerEvents='auto';
+    } else if(secondaryNodes.has(s.id)){
+      node.style.display='';node.style.opacity='0.35';node.style.pointerEvents='auto';
+    } else {
+      node.style.display='none';node.style.opacity='1';node.style.pointerEvents='none';
+    }
+  });
+  document.querySelectorAll('.cp').forEach(p=>{
+    const t=p.getAttribute('data-type');
+    const from=p.getAttribute('data-from');
+    const to=p.getAttribute('data-to');
+    const typeVis=activeCable==='all'||t===activeCable;
+    const nodeVis=activeCat==='all'||(primaryNodes.has(from)||primaryNodes.has(to));
+    p.style.display=(typeVis&&nodeVis)?'':'none';
+  });
+}
+function showTT(e,s){
+  const cat=CAT[s.cat]||{label:s.cat,color:'#888888'};
+  const n=CM[s.id]?.length||0;
+  document.getElementById('tt-n').textContent=s.name;
+  const ttc=document.getElementById('tt-c');
+  ttc.textContent=(_lang==='en'?(cat.label_en||cat.label):cat.label).toUpperCase();ttc.style.color=cat.color;
+  document.getElementById('tt-i').textContent=`${n} ${n>1?t('conn_pl'):t('conn_sing')}`;
+  tt.style.display='block';moveTT(e);
+}
+function moveTT(e){tt.style.left=Math.min(e.clientX+14,window.innerWidth-240)+'px';tt.style.top=Math.max(e.clientY-10,4)+'px';}
+function hideTT(){tt.style.display='none';}
+let _mmRaf=null;
+function applyT(){
+  root.style.transform=`translate(${panX}px,${panY}px) scale(${zoom})`;
+  const zv=document.getElementById('zoom-val');if(zv)zv.textContent=Math.round(zoom*100)+'%';
+  if(!_mmRaf)_mmRaf=requestAnimationFrame(()=>{drawMinimap();_mmRaf=null;});
+}
+function fitView(){
+  const ww=area.clientWidth,wh=area.clientHeight;
+  const nodes=Object.values(SH);
+  if(!nodes.length){
+    zoom=Math.min(ww/CW,wh/CH)*.92;
+    panX=(ww-CW*zoom)/2;panY=(wh-CH*zoom)/2;
+    applyT();return;
+  }
+  const pad=80;
+  const minX=Math.min(...nodes.map(s=>s.x))-pad;
+  const minY=Math.min(...nodes.map(s=>s.y))-pad;
+  const maxX=Math.max(...nodes.map(s=>s.x+(s.w||120)))+pad;
+  const maxY=Math.max(...nodes.map(s=>s.y+(s.h||90)))+pad;
+  const bw=maxX-minX,bh=maxY-minY;
+  zoom=Math.min(ww/bw,wh/bh);
+  panX=ww/2-(minX+bw/2)*zoom;
+  panY=wh/2-(minY+bh/2)*zoom;
+  applyT();
+}
+function resetView(){fitView();clearSel();closePanel();}
+function dz(d){
+  const ww=area.clientWidth,wh=area.clientHeight;
+  const nz=Math.max(.05,Math.min(4,zoom+d));
+  const sc=nz/zoom;
+  panX=ww/2-sc*(ww/2-panX);panY=wh/2-sc*(wh/2-panY);
+  zoom=nz;applyT();
+}
+function drawMinimap(){
+  const mc=document.getElementById('mm-canvas');
+  const ctx=mc.getContext('2d');
+  ctx.clearRect(0,0,160,90);
+  const sx=160/CW,sy=90/CH;
+  CA.forEach(c=>{
+    const pts=ROUTES[c.id];if(!pts||pts.length<2)return;
+    ctx.beginPath();ctx.moveTo(pts[0][0]*sx,pts[0][1]*sy);
+    for(let i=1;i<pts.length;i++)ctx.lineTo(pts[i][0]*sx,pts[i][1]*sy);
+    ctx.strokeStyle=c.color+'66';ctx.lineWidth=.6;ctx.stroke();
+  });
+  Object.values(SH).forEach(s=>{
+    ctx.fillStyle=(CAT[s.cat]?.color||'#888888')+'cc';
+    ctx.fillRect(s.x*sx,s.y*sy,Math.max(s.w*sx,2.5),Math.max(s.h*sy,2.5));
+  });
+  const vx=-panX/zoom*sx,vy=-panY/zoom*sy;
+  const vw=area.clientWidth/zoom*sx,vh=area.clientHeight/zoom*sy;
+  ctx.strokeStyle='rgba(0,212,255,.7)';ctx.lineWidth=1;ctx.strokeRect(vx,vy,vw,vh);
+}
+function navigateTo(id){
+  const s=SH[id];if(!s)return;
+  panX=area.clientWidth/2-(s.x+s.w/2)*zoom;
+  panY=area.clientHeight/2-(s.y+s.h/2)*zoom;
+  applyT();selectNode(id);
+}
+let _animRAF=null;
+let _animDots=[];
+let _animSvgEl=null;
+let _animGroup=null;
+let _animRoots=[];
+let _animOutEdges={};
+let _animDotColor='#00d4ff';
+let _animLastTime=0;
+const ANIM_PX_PER_SEC=800;
+function stopRouteAnimation(){
+  if(_animRAF){cancelAnimationFrame(_animRAF);_animRAF=null;}
+  if(_animGroup){_animGroup.remove();_animGroup=null;}
+  _animDots=[];_animSvgEl=null;_animRoots=[];_animOutEdges={};
+  _animHighlightRoutePanel(new Map());
+}
+function _animHighlightRoutePanel(cidColorMap){
+  document.querySelectorAll('.rmp-chain-item').forEach(el=>{
+    const cid=Number(el.dataset.cid);
+    const col=cidColorMap.get(cid);
+    const active=col!=null;
+    el.classList.toggle('anim-active',active);
+    el.querySelectorAll('.rmp-chain-id,.rmp-chain-from,.rmp-chain-arrow,.rmp-chain-to').forEach(s=>{s.style.color=active?col:'';});
+  });
+}
+function _animMakeDot(color){
+  const c=document.createElementNS('http://www.w3.org/2000/svg','circle');
+  c.setAttribute('r','18');c.setAttribute('fill',color);
+  c.setAttribute('filter','url(#_anim-glow)');c.style.cssText='pointer-events:none';
+  _animGroup.appendChild(c);return c;
+}
+function _animSpawnFrom(node,fromNode,fromCid){
+  const edges=_animOutEdges[node]||[];
+  const activeKeys=new Set(_animDots.map(d=>d._eid!=null?d._eid:d.cid).filter(v=>v!=null));
+  edges.forEach(edge=>{
+    if(edge.fromOnly!=null&&edge.fromOnly!==fromNode)return;
+    if(edge.fromCid!=null&&edge.fromCid!==fromCid)return;
+    const _ekey=edge._eid!=null?edge._eid:edge.cid;
+    if(activeKeys.has(_ekey))return;
+    const pathEl=_animSvgEl.querySelector('.cable-visual[data-cid="'+edge.cid+'"]')||_animSvgEl.querySelector('[data-cid="'+edge.cid+'"]');
+    if(!pathEl)return;
+    const length=pathEl.getTotalLength();if(!length)return;
+    const color=pathEl.getAttribute('stroke')||_animDotColor;
+    _animDots.push({el:_animMakeDot(color),pathEl,length,progress:0,forward:edge.forward,toNode:edge.to,cid:edge.cid,_eid:edge._eid,fromNode:node});
+  });
+}
+function _animFrame(ts){
+  if(!_animLastTime)_animLastTime=ts;
+  const dt=(ts-_animLastTime)/1000;_animLastTime=ts;
+  const finished=[];
+  _animDots.forEach(dot=>{
+    dot.progress+=ANIM_PX_PER_SEC*dt;
+    if(dot.progress>=dot.length){finished.push(dot);return;}
+    const t=dot.forward?dot.progress:(dot.length-dot.progress);
+    const pt=dot.pathEl.getPointAtLength(t);
+    dot.el.setAttribute('cx',pt.x);dot.el.setAttribute('cy',pt.y);
+  });
+  finished.forEach(dot=>{dot.el.remove();_animDots=_animDots.filter(d=>d!==dot);_animSpawnFrom(dot.toNode,dot.fromNode,dot.cid);});
+  _animHighlightRoutePanel(new Map(_animDots.map(d=>{const cab=CA.find(c=>c.id===d.cid);return[d.cid,cab?cab.color:'#ffffff'];})));
+  if(!_animDots.length){
+    _animRAF=null;const savedGrp=_animGroup;
+    setTimeout(()=>{
+      if(savedGrp===_animGroup&&_animGroup){
+        _animLastTime=0;_animRoots.forEach(r=>_animSpawnFrom(r));
+        if(_animDots.length)_animRAF=requestAnimationFrame(_animFrame);
+      }
+    },500);
+    return;
+  }
+  _animRAF=requestAnimationFrame(_animFrame);
+}
+function startRouteAnimation(chain){
+  stopRouteAnimation();
+  const svgEl=document.getElementById('cables-svg');if(!svgEl)return;
+  _animSvgEl=svgEl;
+  if(!svgEl.querySelector('#_anim-glow')){
+    let defs=svgEl.querySelector('defs');
+    if(!defs){defs=document.createElementNS('http://www.w3.org/2000/svg','defs');svgEl.prepend(defs);}
+    (function(){
+      const NS='http://www.w3.org/2000/svg';
+      const filt=document.createElementNS(NS,'filter');
+      filt.setAttribute('id','_anim-glow');filt.setAttribute('x','-200%');filt.setAttribute('y','-200%');
+      filt.setAttribute('width','500%');filt.setAttribute('height','500%');
+      filt.setAttribute('color-interpolation-filters','sRGB');
+      function fe(tag,attrs){const el=document.createElementNS(NS,tag);Object.entries(attrs).forEach(([k,v])=>el.setAttribute(k,v));return el;}
+      filt.appendChild(fe('feGaussianBlur',{in:'SourceGraphic',stdDeviation:'9',result:'b1'}));
+      filt.appendChild(fe('feGaussianBlur',{in:'SourceGraphic',stdDeviation:'20',result:'b2'}));
+      const merge=document.createElementNS(NS,'feMerge');
+      ['b2','b2','b1','b1','SourceGraphic'].forEach(n=>merge.appendChild(fe('feMergeNode',{in:n})));
+      filt.appendChild(merge);
+      defs.appendChild(filt);
+    })();
+  }
+  const chainCabs=chain.cables.map(cid=>{const c=CA.find(x=>x.id===cid);return c?{...c}:null;}).filter(Boolean);
+  if(!chainCabs.length)return;
+  _animOutEdges={};_animRoots=[];
+  const usedCabs=new Set();let _eidCtr=0;
+  function _addEdge(f,t,_fromOnly,_fromCid=null){
+    if(!f||!t)return;
+    const isLoop=f===t;
+    const cab=chainCabs.find(c=>!usedCabs.has(c)&&((String(c.from)===f&&String(c.to)===t)||(!isLoop&&String(c.from)===t&&String(c.to)===f)));
+    if(!cab)return;
+    usedCabs.add(cab);
+    let fwd=String(cab.from)===f;
+    const _pathEl=_animSvgEl?(_animSvgEl.querySelector('.cable-visual[data-cid="'+cab.id+'"]'))||_animSvgEl.querySelector('[data-cid="'+cab.id+'"]'):null;
+    if(!isLoop&&_pathEl&&SH[f]){
+      const _len=_pathEl.getTotalLength();
+      if(_len>1){
+        const _nf=SH[f];
+        const _cx=_nf.x+_nf.w/2,_cy=_nf.y+_nf.h/2;
+        const _p0=_pathEl.getPointAtLength(0);
+        const _pL=_pathEl.getPointAtLength(_len);
+        const _d0=Math.hypot(_p0.x-_cx,_p0.y-_cy);
+        const _dL=Math.hypot(_pL.x-_cx,_pL.y-_cy);
+        fwd=_d0<_dL;
+      }
+    }
+    if(isLoop&&cab._flipped)fwd=!fwd;
+    if(!_animOutEdges[f])_animOutEdges[f]=[];
+    _animOutEdges[f].push({to:t,cid:cab.id,forward:fwd,fromOnly:(_fromOnly!=null?_fromOnly:null),fromCid:(_fromCid!=null?_fromCid:null),_eid:_eidCtr++});
+  }
+  function _buildGraph(steps,prevNid){
+    const nidSteps=(steps||[]).filter(s=>s.nid!=null);
+    for(let i=0;i<nidSteps.length;i++){
+      const step=nidSteps[i];const t=String(step.nid);
+      if(prevNid)_addEdge(prevNid,t);
+      if(step.branches){step.branches.forEach(branch=>_buildGraph(branch,t));return;}
+      prevNid=t;
+    }
+  }
+  if(chain.pathGroups&&chain.pathGroups.length){
+    // ── Construire le graphe depuis pathGroups en déduisant le sens par connectivité séquentielle ──
+    // Source canonique de la chaîne : sert de prevExit initial pour le premier câble.
+    const _chainSrc=(chain.steps&&chain.steps[0])?String(chain.steps[0].nid):null;
+    const rootsSet=new Set();
+    const _pgCtx={};
+    chain.pathGroups.forEach(pg=>{
+      let prevExit=pg._srcNid||_chainSrc;
+      let lastEntry=null,lastExit=null,ctxPrev=null,lastCid=null;
+      (pg.cables||[]).forEach((cid,cidx)=>{
+        const c=chainCabs.find(x=>x.id===cid); if(!c) return;
+        const f=String(c.from), t=String(c.to);
+        let entry, exit;
+        const _par=lastEntry!==null&&lastExit!==null&&
+          ((f===lastEntry&&t===lastExit)||(f===lastExit&&t===lastEntry));
+        if(_par){ entry=lastEntry; exit=lastExit; }
+        else if(prevExit&&f===prevExit){ entry=f; exit=t; }
+        else if(prevExit&&t===prevExit){ entry=t; exit=f; }
+        else { entry=f; exit=t; }
+        if(cidx===0) rootsSet.add(entry);
+        const thisCtx=(entry===lastEntry)?ctxPrev:lastEntry;
+        let fromOnly=null;
+        if(entry in _pgCtx){
+          if(_pgCtx[entry]!==thisCtx){
+            (_animOutEdges[entry]||[]).forEach(e=>{if(e.fromOnly==null)e.fromOnly=_pgCtx[entry];});
+            fromOnly=thisCtx;
+          }
+        } else { _pgCtx[entry]=thisCtx; }
+        // fromCid uniquement si désambiguïsation active (fromOnly est set)
+        _addEdge(entry, exit, fromOnly, fromOnly!==null?lastCid:null);
+        if(entry!==lastEntry) ctxPrev=thisCtx;
+        lastEntry=entry; lastExit=exit; prevExit=exit; lastCid=cid;
+      });
+    });
+    _animRoots=[...rootsSet];
+  } else if(chain.parallel){
+    const endNids=[];
+    chain.parallel.forEach(src=>{
+      const nidSteps=(src||[]).filter(s=>s.nid!=null);if(!nidSteps.length)return;
+      _animRoots.push(String(nidSteps[0].nid));_buildGraph(src,null);
+      endNids.push(String(nidSteps[nidSteps.length-1].nid));
+    });
+    endNids.forEach(endNid=>_buildGraph(chain.steps||[],endNid));
+  } else {
+    const mainSteps=(chain.steps||[]).filter(s=>s.nid!=null);
+    if(mainSteps.length)_animRoots=[String(mainSteps[0].nid)];
+    _buildGraph(chain.steps||[],null);
+  }
+  if(!_animRoots.length)return;
+  _animGroup=document.createElementNS('http://www.w3.org/2000/svg','g');
+  _animGroup.id='_anim-dots';svgEl.appendChild(_animGroup);
+  _animDots=[];_animLastTime=0;
+  _animRoots.forEach(r=>_animSpawnFrom(r));
+  if(_animDots.length)_animRAF=requestAnimationFrame(_animFrame);
+}
+function getAllChains(){return SIGNAL_CHAINS;}
+function traceRoute(chainId){
+  clearRouteTrace(false);
+  if(chainId==null)return;
+  activeRouteEntry=chainId;
+  const _cid=typeof chainId==='number'?'in'+chainId:chainId;
+  const chain=getAllChains().find(c=>c.id===_cid);
+  const tracedCabs=new Set(chain?chain.cables:[]);
+  const tracedNodes=new Set();
+  CA.forEach(c=>{if(tracedCabs.has(c.id)){tracedNodes.add(c.from);tracedNodes.add(c.to);}});
+  (chain&&chain.nodes||[]).forEach(nid=>tracedNodes.add(nid));
+  document.querySelectorAll('.cp').forEach(p=>{
+    const cid=parseInt(p.getAttribute('data-cid'));
+    if(tracedCabs.has(cid)){p.classList.add('route-active');p.classList.remove('route-dim');p.style.removeProperty('filter');p.setAttribute('opacity','0.97');p.setAttribute('stroke-width','4.5');}
+    else{p.classList.add('route-dim');p.classList.remove('route-active');p.style.filter='';p.setAttribute('opacity','0.03');p.setAttribute('stroke-width','1');}
+  });
+  document.querySelectorAll('.node').forEach(n=>{
+    const nid=n.id.replace('n-','');
+    if(tracedNodes.has(nid)){n.classList.remove('route-dim','dim');n.style.opacity='1';}
+    else{n.classList.add('route-dim');n.style.opacity='0.08';}
+  });
+  document.querySelectorAll('.ip-route-btn').forEach(b=>b.classList.toggle('active',b.dataset.chainId===String(chainId)));
+  if(chain)startRouteAnimation(chain);
+}
+function clearRouteTrace(resetOpacity=true){
+  stopRouteAnimation();
+  activeRouteEntry=null;
+  document.querySelectorAll('.cp').forEach(p=>{
+    p.classList.remove('route-active','route-dim');
+    if(resetOpacity){const t=p.getAttribute('data-type');p.setAttribute('opacity',(activeCable==='all'||t===activeCable)?'0.85':'0.05');p.setAttribute('stroke-width','3.5');p.style.filter='';}
+  });
+  document.querySelectorAll('.node').forEach(n=>{n.classList.remove('route-dim');n.style.opacity='';});
+  document.querySelectorAll('.ip-route-btn').forEach(b=>b.classList.remove('active'));
+}
+function showFlowPanel(flow,cableNum){
+  const col=TCOL[flow.type]||'#00d4ff';
+  const badge=document.getElementById('ip-badge');
+  const _btext=(_lang==='en'?(flow.badge_en||flow.badge):flow.badge)||flow.type;
+  badge.textContent=cableNum!=null?_btext+' · #'+cableNum:_btext;
+  badge.style.cssText=`background:${col}22;color:${col};border:1px solid ${col}44`;
+  document.getElementById('ip-name').textContent=(_lang==='en'?(flow.title_en||flow.title):flow.title)||(flow.badge||'');
+  document.getElementById('ip-desc').textContent=(_lang==='en'?(flow.role_en||flow.role):flow.role)||flow.desc||'';
+  const list=document.getElementById('ip-conn-list');list.innerHTML='';
+  function makeFlowItem(label,dotColor,prefix){
+    const item=document.createElement('div');item.className='ip-conn-item';
+    const match=Object.values(SH).find(s=>s.name===label);
+    if(match){item.style.cursor='pointer';item.title='Centrer sur cet équipement';item.onclick=()=>navigateTo(match.id);}
+    else item.style.cursor='default';
+    item.innerHTML=`<div class="ip-conn-dot" style="background:${dotColor}"></div><div class="ip-conn-name">${prefix||''}${label}</div>`;
+    return item;
+  }
+  const _flowPath=(_lang==='en'?(flow.path_en||flow.path):flow.path)||[];
+  if(_flowPath.length>0){
+    _flowPath.forEach((step,i)=>{
+      list.appendChild(makeFlowItem(step,col,''));
+      if(i<_flowPath.length-1){const arr=document.createElement('div');arr.style.cssText=`padding:0 0 2px 18px;font-size:11px;color:${col}88;font-family:var(--mono)`;arr.textContent='↓';list.appendChild(arr);}
+    });
+  }
+  const _flowBranches=(_lang==='en'?(flow.branches_en||flow.branches):flow.branches)||[];
+  if(_flowBranches.length>0){
+    const sep=document.createElement('div');sep.style.cssText='padding:10px 0 4px;font-family:var(--mono);font-size:8px;letter-spacing:3px;color:var(--textdim);text-transform:uppercase';sep.textContent=_lang==='en'?'SECONDARY BRANCH':'BRANCHE SECONDAIRE';list.appendChild(sep);
+    _flowBranches.forEach(b=>list.appendChild(makeFlowItem(b,'#ff6b35','\u21b3 ')));
+  }
+  const _flowNote=_lang==='en'?(flow.note_en||flow.note):flow.note;
+  if(_flowNote){const n=document.createElement('div');n.style.cssText='padding:8px 0 0;font-family:var(--mono);font-size:9px;color:var(--textdim);font-style:italic';n.textContent='\u2139 '+_flowNote;list.appendChild(n);}
+  if(flow.couple){const c=document.createElement('div');c.style.cssText='margin-top:8px;font-family:var(--mono);font-size:9px;color:var(--accent2);padding:4px 8px;border:1px solid var(--accent2);border-radius:3px;display:inline-block';c.textContent=flow.couple;list.appendChild(c);}
+  const routeEl=document.getElementById('ip-routes');if(routeEl)routeEl.style.display='none';
+  infoP.classList.add('open','signal-mode');
+}
+function showCableSignal(cid){
+  const cf=cableFlows[cid];
+  // 1. atEntry prioritaire (routes signalPaths codées en dur)
+  if(cf&&cf.atEntry!=null){
+    const sp=signalPaths[cf.atEntry];
+    traceRoute('in'+cf.atEntry);
+    if(sp){showFlowPanel({type:cf.type,badge:cf.badge,title:sp.title,role:sp.role,path:sp.path,branches:sp.branches,note:sp.note,couple:sp.couple},cid);return;}
+  }
+  // 2. Chercher une chaîne qui contient ce câble (couvre les câbles absents de cableFlows)
+  const matchChain=SIGNAL_CHAINS.find(c=>(c.cables||[]).includes(cid));
+  if(matchChain){showSignalPanel(matchChain.id);return;}
+  // 3. cableFlows standalone (câble documenté sans chaîne associée)
+  if(cf){showFlowPanel(cf,cid);return;}
+  // 4. Fallback brut : extrémités du câble seulement
+  const c=CA.find(x=>x.id===cid);if(!c)return;
+  const sa=SH[c.from],sb=SH[c.to];
+  showFlowPanel({type:'VIDEO',badge:c.type.toUpperCase(),title:`${sa?sa.name:'?'} → ${sb?sb.name:'?'}`,role:`Câble ${c.type} entre ${sa?sa.name:'?'} et ${sb?sb.name:'?'}.`,path:sa&&sb?[sa.name,sb.name]:[],branches:[]},cid);
+}
+function showSignalPanel(chainId){
+  if(typeof chainId==='number')chainId='in'+chainId;
+  const chain=getAllChains().find(c=>c.id===chainId);if(!chain)return;
+  traceRoute(chainId);
+  const col=TCOL[chain.type]||chain.color||'#00d4ff';
+  const badge=document.getElementById('ip-badge');
+  badge.textContent=_lang==='en'?(chain.badge_en||chain.badge):chain.badge;badge.style.cssText=`background:${col}22;color:${col};border:1px solid ${col}44`;
+  document.getElementById('ip-name').textContent=_calcDynTitle(chain);
+  document.getElementById('ip-desc').textContent='';
+  const list=document.getElementById('ip-conn-list');list.innerHTML='';
+  // Lignes câbles — lecture seule, même style que l'éditeur
+  const _paths=chain.pathGroups&&chain.pathGroups.length?chain.pathGroups:[{cables:chain.cables||[]}];
+  const _multi=_paths.length>1;
+  _paths.forEach(pg=>{
+    if(_multi){
+      const grpHead=document.createElement('div');
+      grpHead.style.cssText='font-family:var(--mono);font-size:8px;letter-spacing:2px;color:var(--textdim);text-transform:uppercase;padding:6px 0 4px';
+      grpHead.textContent=pg.label||'Chemin';
+      list.appendChild(grpHead);
+    }
+    (pg.cables||[]).forEach(cid=>{
+      const cable=CA.find(c=>c.id===cid);if(!cable)return;
+      const fromName=(SH[cable.from]&&SH[cable.from].name)||cable.from_port||String(cable.from);
+      const toName=(SH[cable.to]&&SH[cable.to].name)||cable.to_port||String(cable.to);
+      const item=document.createElement('div');
+      item.className='rmp-chain-item';item.dataset.cid=String(cid);item.style.padding='8px 0';
+      const nodes=document.createElement('div');nodes.className='rmp-chain-nodes';nodes.style.fontSize='13px';
+      nodes.innerHTML=`<span class="rmp-chain-id" style="font-size:11px;margin-right:7px">#${cid}</span><span class="rmp-chain-from">${fromName}</span><span class="rmp-chain-arrow">→</span><span class="rmp-chain-to">${toName}</span>`;
+      item.appendChild(nodes);
+      const ctype=document.createElement('span');ctype.className='rmp-chain-ctype';ctype.style.fontSize='10px';ctype.textContent=cable.type||'';
+      item.appendChild(ctype);
+      list.appendChild(item);
+    });
+  });
+  const routeEl=document.getElementById('ip-routes');if(routeEl)routeEl.style.display='none';
+  infoP.classList.add('open','signal-mode');
+}
+function setupEvents(){
+  let _panMoved=false;
+  area.addEventListener('mousedown',e=>{if(e.button!==0)return;drag=true;lmx=e.clientX;lmy=e.clientY;_panMoved=false;});
+  window.addEventListener('mousemove',e=>{if(!drag)return;const dx=e.clientX-lmx,dy=e.clientY-lmy;if(Math.abs(dx)>2||Math.abs(dy)>2)_panMoved=true;panX+=dx;panY+=dy;lmx=e.clientX;lmy=e.clientY;applyT();});
+  window.addEventListener('mouseup',()=>{drag=false;});
+  area.addEventListener('wheel',e=>{
+    e.preventDefault();
+    const r=area.getBoundingClientRect();
+    const mx=e.clientX-r.left,my=e.clientY-r.top;
+    const nd=e.deltaY<0?0.1:-0.1;
+    const nz=Math.max(.05,Math.min(4,zoom+nd));
+    panX=mx-(mx-panX)*(nz/zoom);panY=my-(my-panY)*(nz/zoom);
+    zoom=nz;applyT();
+  },{passive:false});
+  area.addEventListener('click',e=>{
+    if(_panMoved){_panMoved=false;return;}
+    if(e.target===area||e.target===svg){
+      clearSel();closePanel();
+      document.getElementById('sidebar-left').classList.remove('mob-open');
+    }
+  });
+  svg.addEventListener('pointerdown',e=>{if(e.target===svg){drag=true;lmx=e.clientX;lmy=e.clientY;}});
+  document.getElementById('mm-canvas').addEventListener('click',e=>{
+    const r=e.target.getBoundingClientRect();
+    const mx=(e.clientX-r.left)/r.width,my=(e.clientY-r.top)/r.height;
+    panX=area.clientWidth/2-mx*CW*zoom;panY=area.clientHeight/2-my*CH*zoom;applyT();
+  });
+  // ── Touch pan & pinch-zoom ──────────────────
+  let tDist=0;
+  area.addEventListener('touchstart',e=>{
+    if(e.touches.length===1){drag=true;lmx=e.touches[0].clientX;lmy=e.touches[0].clientY;}
+    else if(e.touches.length>=2){drag=false;tDist=Math.hypot(e.touches[1].clientX-e.touches[0].clientX,e.touches[1].clientY-e.touches[0].clientY);e.preventDefault();}
+  },{passive:false});
+  area.addEventListener('touchmove',e=>{
+    if(e.touches.length===1&&drag){
+      panX+=e.touches[0].clientX-lmx;panY+=e.touches[0].clientY-lmy;
+      lmx=e.touches[0].clientX;lmy=e.touches[0].clientY;applyT();
+    } else if(e.touches.length===2){
+      const d=Math.hypot(e.touches[1].clientX-e.touches[0].clientX,e.touches[1].clientY-e.touches[0].clientY);
+      if(tDist===0){tDist=d;return;}
+      const r=area.getBoundingClientRect();
+      const mx=(e.touches[0].clientX+e.touches[1].clientX)/2-r.left;
+      const my=(e.touches[0].clientY+e.touches[1].clientY)/2-r.top;
+      const nz=Math.max(.05,Math.min(4,zoom*(d/tDist)));
+      panX=mx-(mx-panX)*(nz/zoom);panY=my-(my-panY)*(nz/zoom);
+      zoom=nz;tDist=d;applyT();
+    }
+    e.preventDefault();
+  },{passive:false});
+  area.addEventListener('touchend',e=>{if(e.touches.length===0){drag=false;tDist=0;}},{passive:false});
+}
+function toggleMenu(){
+  const sl=document.getElementById('sidebar-left');
+  const open=sl.classList.toggle('mob-open');
+  let bd=document.getElementById('mob-backdrop');
+  if(open){
+    if(!bd){bd=document.createElement('div');bd.id='mob-backdrop';document.body.appendChild(bd);}
+    bd.style.display='block';
+    bd.ontouchstart=bd.onclick=()=>toggleMenu();
+  } else {
+    if(bd) bd.style.display='none';
+  }
+}
+window.addEventListener('DOMContentLoaded',()=>{
+  root.style.width=CW+'px';root.style.height=CH+'px';
+  svg.setAttribute('width',CW);svg.setAttribute('height',CH);
+  svg.style.width=CW+'px';svg.style.height=CH+'px';
+  buildCM();renderZones();renderCables();renderNodes();setupEvents();
+  setTimeout(()=>{fitView();drawMinimap();},100);
+  // Drag-to-close sur l'info panel (mobile)
+  (function(){
+    const panel=document.getElementById('info-panel');
+    if(!panel)return;
+    let _dy=0,_dragging=false;
+    panel.addEventListener('touchstart',e=>{
+      if(e.target.closest('.ip-body')) return;
+      _dy=e.touches[0].clientY;_dragging=true;
+    },{passive:true});
+    panel.addEventListener('touchmove',e=>{
+      if(!_dragging)return;
+      const diff=e.touches[0].clientY-_dy;
+      if(diff>0){panel.style.transform=`translateY(${diff}px)`;e.preventDefault();}
+    },{passive:false});
+    panel.addEventListener('touchend',e=>{
+      if(!_dragging)return;_dragging=false;
+      const diff=e.changedTouches[0].clientY-_dy;
+      panel.style.transform='';
+      if(diff>80){closePanel();}
+    },{passive:true});
+  })();
+  // Mobile : déplace les éléments du header dans le menu déroulant
+  if(window.innerWidth<=768){
+    const sidebar=document.getElementById('sidebar-left');
+    const firstSection=sidebar&&sidebar.querySelector('.sl-section');
+    if(sidebar&&firstSection){
+      const wrap=document.createElement('div');
+      wrap.id='mob-header-items';
+      const search=document.querySelector('.h-search');
+      if(search){search.style.marginLeft='';wrap.appendChild(search);}
+      const row=document.createElement('div');
+      row.className='mob-hdr-row';
+      [
+        document.querySelector('button[data-i18n="back_btn"]'),
+        document.querySelector('.h-oab'),
+        document.getElementById('lang-toggle'),
+        document.getElementById('how-btn'),
+      ].forEach(el=>{if(el)row.appendChild(el);});
+      wrap.appendChild(row);
+      sidebar.insertBefore(wrap,firstSection);
+    }
+  }
+  // Language detection — toujours basée sur le navigateur/système
+  const sys2=(navigator.language||'fr').toLowerCase().startsWith('fr')?'fr':'en';
+  setLang(sys2);
+  const ldMsgs=sys2==='fr'
+    ?[[0,'CHARGEMENT...'],[30,'ANALYSE DES APPAREILS...'],[65,'TRACÉ DES CÂBLES...'],[100,'PRÊT']]
+    :[[0,'LOADING SIGNAL MAP...'],[30,'PARSING DEVICES...'],[65,'DRAWING CABLES...'],[100,'READY']];
+  let ldIdx=0;
+  const ldBar=document.getElementById('ld-bar'),ldStat=document.getElementById('ld-status');
+  function ldStep(){
+    if(ldIdx>=ldMsgs.length)return;
+    const [pct,msg]=ldMsgs[ldIdx++];
+    ldBar.style.width=pct+'%';ldStat.textContent=msg;
+    if(ldIdx<ldMsgs.length)setTimeout(ldStep,280);
+    else setTimeout(()=>document.getElementById('loading').classList.add('done'),350);
+  }
+  setTimeout(ldStep,200);
+});
+window.addEventListener('keydown',e=>{
+  if(e.key==='Escape'){clearSel();closePanel();}
+  if(e.key==='f'||e.key==='F')resetView();
+  if(e.key==='+'||e.key==='=')dz(.15);
+  if(e.key==='-')dz(-.15);
+});
+window.addEventListener('resize',fitView);
+// ── Recherche autocomplete ───────────────────────────────────────────────
+(function(){
+  const inp=document.getElementById('search-input');
+  const drop=document.getElementById('search-drop');
+  if(!inp)return;
+  let acIdx=-1,acHits=[];
+  function getColor(s){return(CAT[s.cat]||{color:'#888'}).color;}
+  function renderDrop(hits){
+    acHits=hits;acIdx=-1;drop.innerHTML='';
+    if(!hits.length){drop.classList.remove('open');return;}
+    hits.forEach((s,i)=>{
+      const item=document.createElement('div');
+      item.className='sd-item';item.dataset.idx=i;
+      item.innerHTML=`<div class="sd-dot" style="background:${getColor(s)}"></div><span>${s.name}</span><span class="sd-cat">${s.cat}</span>`;
+      item.addEventListener('mousedown',ev=>{ev.preventDefault();selectResult(i);});
+      drop.appendChild(item);
+    });
+    drop.classList.add('open');
+  }
+  function selectResult(i){
+    const s=acHits[i];if(!s)return;
+    inp.value=s.name;drop.classList.remove('open');acHits=[];acIdx=-1;
+    const cx=s.x+s.w/2,cy=s.y+s.h/2;
+    panX=area.clientWidth/2-cx*zoom;
+    panY=area.clientHeight/2-cy*zoom;
+    applyT();selectNode(s.id);
+  }
+  function setActive(i){
+    drop.querySelectorAll('.sd-item').forEach((el,j)=>el.classList.toggle('active',j===i));
+    acIdx=i;
+  }
+  inp.addEventListener('input',()=>{
+    const q=inp.value.toLowerCase().trim();
+    if(!q){drop.classList.remove('open');acHits=[];return;}
+    const hits=Object.values(SH).filter(s=>
+      s.name.toLowerCase().includes(q)||
+      (s.short&&s.short.toLowerCase().includes(q))||
+      s.cat.toLowerCase().includes(q)
+    ).slice(0,12);
+    renderDrop(hits);
+  });
+  inp.addEventListener('keydown',e=>{
+    if(!drop.classList.contains('open'))return;
+    if(e.key==='ArrowDown'){e.preventDefault();setActive(Math.min(acIdx+1,acHits.length-1));}
+    else if(e.key==='ArrowUp'){e.preventDefault();setActive(Math.max(acIdx-1,0));}
+    else if(e.key==='Enter'){e.preventDefault();if(acIdx>=0)selectResult(acIdx);else if(acHits.length===1)selectResult(0);}
+    else if(e.key==='Escape'){drop.classList.remove('open');inp.blur();}
+  });
+  inp.addEventListener('blur',()=>{setTimeout(()=>drop.classList.remove('open'),150);});
+  inp.addEventListener('focus',()=>{if(acHits.length)drop.classList.add('open');});
+})();
+</script>
+</body>
+</html>

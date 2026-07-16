@@ -250,6 +250,8 @@
     @media(hover:hover){.media-frame:not(.video-frame){cursor:zoom-in}}
 .media-frame:not(.video-frame){transition:.3s}
 .media-frame:not(.video-frame):hover{transform:scale(1.02)}
+.wires-credit{display:flex;align-items:center;gap:8px;margin-top:24px;font-size:13px;color:var(--dim);flex-wrap:wrap}
+.wires-logo{height:40px;width:auto;transition:opacity .2s;display:block}
     #lightbox{display:none;position:fixed;inset:0;background:rgba(0,0,0,.92);z-index:2000;align-items:center;justify-content:center;padding:24px;cursor:zoom-out}
     #lightbox.open{display:flex}
     #lightbox img{max-width:100%;max-height:100%;object-fit:contain;border-radius:12px;box-shadow:0 24px 80px rgba(0,0,0,.7)}
@@ -698,6 +700,12 @@
           <div class="cta-row" style="margin-top:20px">
             <a class="btn btn-primary" href="../visio/alkoda_visio.html" data-i18n="v_cta_visio">Voir le schéma interactif</a>
           </div>
+          <div class="wires-credit">
+            <span data-i18n="v_wires_credit">Cette vue graphique interactive a été réalisée avec</span>
+            <a href="https://alkoda-wires.com" target="_blank" rel="noopener noreferrer">
+              <img src="logo-wires.avif" alt="Wires" class="wires-logo">
+            </a>
+          </div>
         </div>
         <div class="media-frame" style="aspect-ratio:16/8; margin-top:10px;" onclick="lbOpen(this)">
             <img src="broadcast.system.avif" alt="Visualisation Broadcast System" onerror="this.outerHTML='&lt;div class=&quot;img-placeholder&quot;&gt;&lt;strong&gt;broadcast.system.avif&lt;/strong&gt;&lt;span&gt;Ce visuel apparaîtra ici lorsque le média correspondant sera présent dans le même dossier que la page.&lt;/span&gt;&lt;/div&gt;'">
@@ -826,6 +834,7 @@ const STRINGS_V={
     v_vendor_stream:'Le Stream Deck permet de déclencher et piloter les actions de la régie, d\'H2R Graphics & Layouts, d\'OBS, via Companion en temps réel.',
     v_vendor_pway:'Le couple émetteur/récepteur HDMI sur RJ45 permet de récupérer l\'écran du speaker à distance et de l\'intégrer dans le workflow de composition.',
     v_visio_p:'Une page graphique interactive permet de parcourir visuellement les équipements, les liaisons et les chemins de signal. Elle complète cette page de présentation en donnant une lecture beaucoup plus fine du système régie pro conçu par Alkoda on Air.',
+    v_wires_credit:'Cette vue graphique interactive a été réalisée avec',
     v_cta_box_title:'Pour un futur client',
     v_cta_box_p1:'Cette valise n\'est pas qu\'un assemblage de matériel. C\'est une petite régie complète, conçue pour absorber un événement réel : live, captation, habillage, playback et postproduction.',
     v_cta_box_p2:'En d\'autres termes : Alkoda On Air peut prendre en charge votre événement avec une logique de télévision, dans un format beaucoup plus agile.',
@@ -940,6 +949,7 @@ const STRINGS_V={
     v_vendor_motu:'The MOTU M6 adjusts and controls microphone levels before they enter the ATEM, maintaining true audio control upstream of the live feed.',
     v_vendor_pway:'The HDMI over RJ45 transmitter/receiver pair retrieves the speaker screen remotely and integrates it into the composition workflow.',
     v_visio_p:'An interactive graphical page allows visually browsing the equipment, connections and signal paths. It complements this presentation page by giving a much more detailed view of the professional control room system designed by Alkoda on Air.',
+    v_wires_credit:'This interactive diagram was created with',
     v_cta_box_title:'For a prospective client',
     v_cta_box_p1:'This case is not just an assembly of equipment. It is a complete compact control room, designed to absorb a real event: live streaming, capture, graphics, playout and post-production.',
     v_cta_box_p2:'In other words: Alkoda On Air can handle your event with television-grade logic, in a far more agile format.',

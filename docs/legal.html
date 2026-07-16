@@ -323,9 +323,15 @@ function setLangL(lang){
   document.documentElement.lang=lang;
   document.querySelectorAll('.lang-fr').forEach(el=>el.style.display=lang==='fr'?'':'none');
   document.querySelectorAll('.lang-en').forEach(el=>el.style.display=lang==='en'?'block':'none');
+  if(window._alkodaConsentLang)window._alkodaConsentLang(lang);
 }
 function toggleLangL(){setLangL(_langL==='fr'?'en':'fr');}
 setLangL(_langL);
 </script>
+<div style="padding:16px 24px 24px;text-align:center;font-size:12px;color:#5a7090">
+  <a href="RGPD.html" class="alkoda-privacy-link" style="color:#5a7090;text-decoration:none;margin-right:16px">Confidentialité et cookies</a>
+  <button class="alkoda-cookie-btn" onclick="window.alkodaConsent&&window.alkodaConsent.open()" style="color:#5a7090;font-size:12px">Gérer les cookies</button>
+</div>
+<script src="consent.js?v=20260716-1"></script>
 </body>
 </html>

@@ -6,15 +6,20 @@
 <link rel="icon" type="image/png" sizes="32x32" href="https://alkoda-onair.com/alkoda-32x32.png">
 <link rel="icon" type="image/png" sizes="16x16" href="https://alkoda-onair.com/alkoda-16x16.png">
 <link rel="apple-touch-icon" sizes="180x180" href="https://alkoda-onair.com/alkoda-apple-touch-icon.png">
-<title>Politique de confidentialité — Alkoda On Air</title>
-<meta name="description" content="Politique de confidentialité et protection des données personnelles d'Alkoda On Air.">
+<title>Confidentialité et cookies — Alkoda On Air</title>
+<meta name="description" content="Politique de confidentialité et gestion des cookies d'Alkoda On Air. Utilisation de Google Analytics 4 uniquement avec votre consentement explicite.">
 <link rel="canonical" href="https://alkoda-onair.com/RGPD.html">
-<meta name="robots" content="noindex, follow">
+<meta name="robots" content="index, follow">
+<meta property="og:type" content="website">
+<meta property="og:locale" content="fr_FR">
+<meta property="og:title" content="Confidentialité et cookies — Alkoda On Air">
+<meta property="og:description" content="Gestion des cookies et politique de confidentialité d'Alkoda On Air. Google Analytics 4 uniquement avec votre accord.">
+<meta property="og:url" content="https://alkoda-onair.com/RGPD.html">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Share+Tech+Mono&display=swap">
 <style>
-:root{--bg:#07101d;--card:#101b2f;--line:#22314f;--text:#e8eefb;--muted:#9db0d0;--accent:#00d2ff;}
+:root{--bg:#07101d;--card:#101b2f;--line:#22314f;--text:#e8eefb;--muted:#9db0d0;--accent:#00d2ff;--dim:#4a6080;}
 *{box-sizing:border-box;margin:0;padding:0}
 html{scroll-behavior:smooth}
 body{font-family:'Inter',sans-serif;background:var(--bg);color:var(--text);line-height:1.75;padding:0 0 60px}
@@ -42,6 +47,8 @@ h2{font-size:20px;font-weight:700;color:#fff;margin:32px 0 12px;padding-bottom:8
 h3{font-size:16px;font-weight:600;color:var(--text);margin:20px 0 8px}
 p{font-size:15px;color:var(--muted);font-weight:300;margin-bottom:12px}
 p strong{color:var(--text);font-weight:600}
+ul.cookie-list{margin:12px 0 12px 20px}
+ul.cookie-list li{font-size:15px;color:var(--muted);font-weight:300;margin-bottom:6px;line-height:1.6}
 .info-grid{display:grid;grid-template-columns:auto 1fr;gap:4px 24px;margin:16px 0;font-size:14px}
 .info-grid dt{color:var(--muted);font-weight:400;white-space:nowrap}
 .info-grid dd{color:var(--text);font-weight:500}
@@ -49,7 +56,12 @@ p strong{color:var(--text);font-weight:600}
 .highlight-box p{margin:0;font-size:14px}
 .divider{border:none;border-top:1px solid var(--line);margin:48px 0}
 .lang-en{display:none}
-@media (max-width:680px){.nav{padding:0 22px}.shell{width:min(100% - 32px,860px)}.toc ul{grid-template-columns:1fr}.info-grid{grid-template-columns:1fr;gap:2px 0}.info-grid dt{margin-top:8px}}
+.manage-btn{display:inline-flex;align-items:center;gap:8px;margin-top:12px;padding:10px 22px;border-radius:999px;background:transparent;border:1px solid var(--line);color:var(--muted);font-size:14px;font-weight:500;cursor:pointer;font-family:inherit;transition:.2s}
+.manage-btn:hover{border-color:var(--accent);color:var(--accent)}
+.page-footer{text-align:center;padding:20px 0 8px;border-top:1px solid var(--line);margin-top:48px;display:flex;justify-content:center;gap:20px;flex-wrap:wrap;font-size:12px;color:var(--dim)}
+.page-footer a,.page-footer button{color:var(--dim);background:none;border:none;cursor:pointer;padding:0;font-size:12px;font-family:inherit}
+.page-footer a:hover,.page-footer button:hover{color:var(--accent);text-decoration:none}
+@media (max-width:680px){.nav{padding:0 22px}.shell{width:min(100% - 32px,860px)}.toc ul{grid-template-columns:1fr}.info-grid{grid-template-columns:1fr;gap:2px 0}.info-grid dt{margin-top:8px}.page-footer{flex-direction:column;align-items:center;gap:12px}}
 </style>
 </head>
 <body>
@@ -60,7 +72,7 @@ p strong{color:var(--text);font-weight:600}
     <span id="back-label">Retour au site</span>
   </button>
   <div class="nav-right">
-    <span class="nav-title" id="nav-title">Confidentialité & RGPD</span>
+    <span class="nav-title" id="nav-title">Confidentialité & cookies</span>
     <button id="lang-toggle-l" onclick="toggleLangL()" title="Change language"><span id="lang-flag-l"></span></button>
   </div>
 </nav>
@@ -69,202 +81,214 @@ p strong{color:var(--text);font-weight:600}
 
   <!-- VERSION FRANÇAISE -->
   <div class="lang-fr">
-    <div class="section-kicker">Données personnelles</div>
-    <h1>Politique de<br>confidentialité</h1>
-    <p style="margin-top:16px;margin-bottom:40px">Document relatif au traitement des données personnelles dans le cadre de l’utilisation d’Alkoda StartPage.</p>
+    <div class="section-kicker">Vie privée & cookies</div>
+    <h1>Confidentialité<br>et cookies</h1>
+    <p style="margin-top:16px;margin-bottom:40px">Cette page explique comment Alkoda OnAir utilise les cookies statistiques et comment gérer vos préférences.</p>
 
     <div class="toc">
       <div class="toc-title">Sommaire</div>
       <ul>
-        <li><a href="#responsable">Responsable du traitement</a></li>
-        <li><a href="#donnees">Données collectées</a></li>
-        <li><a href="#finalites">Finalités</a></li>
-        <li><a href="#base-legale">Base légale</a></li>
-        <li><a href="#hebergement">Hébergement</a></li>
-        <li><a href="#acces">Accès aux données</a></li>
-        <li><a href="#securite">Sécurité</a></li>
-        <li><a href="#conservation">Conservation</a></li>
-        <li><a href="#suppression">Suppression</a></li>
-        <li><a href="#cookies">Cookies et stockage local</a></li>
-        <li><a href="#partage">Partage des données</a></li>
-        <li><a href="#droits">Droits des utilisateurs</a></li>
+        <li><a href="#ga4-fr">Google Analytics 4</a></li>
+        <li><a href="#mesures-fr">Ce qui est mesuré</a></li>
+        <li><a href="#consentement-fr">Consentement</a></li>
+        <li><a href="#cookies-fr">Cookies déposés</a></li>
+        <li><a href="#conservation-fr">Durée de conservation</a></li>
+        <li><a href="#retrait-fr">Retrait du consentement</a></li>
+        <li><a href="#droits-fr">Vos droits</a></li>
+        <li><a href="#responsable-fr">Responsable</a></li>
       </ul>
     </div>
 
-    <div class="legal-section" id="responsable">
+    <div class="legal-section" id="ga4-fr">
+      <h2>Google Analytics 4</h2>
+      <p>Alkoda OnAir utilise <strong>Google Analytics 4</strong> (identifiant de mesure : G-7CB706LQZ8) pour comprendre comment les visiteurs utilisent le site et améliorer son contenu.</p>
+      <div class="highlight-box"><p><strong>Aucune ressource Google Analytics n'est chargée et aucune donnée n'est envoyée avant que vous ayez explicitement accepté.</strong> Si vous refusez ou n'avez pas encore fait de choix, Google Analytics reste inactif.</p></div>
+    </div>
+
+    <div class="legal-section" id="mesures-fr">
+      <h2>Ce qui est mesuré après acceptation</h2>
+      <p>Lorsque vous acceptez les cookies statistiques, Google Analytics peut collecter :</p>
+      <ul class="cookie-list">
+        <li>Les pages consultées sur le site</li>
+        <li>Le nombre de visites et de visiteurs</li>
+        <li>La durée approximative des sessions</li>
+        <li>Les interactions générales (clics, navigation)</li>
+        <li>Le type d'appareil et le navigateur utilisé</li>
+        <li>La provenance générale du trafic (pays, source)</li>
+      </ul>
+      <p>Ces données sont pseudonymisées et traitées par Google conformément à leur politique de confidentialité. Alkoda OnAir n'a pas accès à des données permettant d'identifier directement un visiteur.</p>
+    </div>
+
+    <div class="legal-section" id="consentement-fr">
+      <h2>Consentement</h2>
+      <p>Lors de votre première visite, un bandeau s'affiche en bas de l'écran. Vous pouvez :</p>
+      <ul class="cookie-list">
+        <li><strong>Accepter les statistiques</strong> — Google Analytics est activé et commence à mesurer les visites.</li>
+        <li><strong>Refuser</strong> — aucun cookie Analytics n'est déposé et aucune donnée n'est envoyée.</li>
+      </ul>
+      <p>Les deux choix sont présentés de manière identique. Aucun n'est présenté comme le choix par défaut ou comme étant plus recommandé que l'autre.</p>
+      <button class="manage-btn alkoda-cookie-btn" onclick="window.alkodaConsent&&window.alkodaConsent.open()">Gérer les cookies</button>
+    </div>
+
+    <div class="legal-section" id="cookies-fr">
+      <h2>Cookies déposés</h2>
+      <p>En cas d'acceptation, Google Analytics dépose les cookies suivants :</p>
+      <dl class="info-grid">
+        <dt><code>_ga</code></dt><dd>Identifiant anonyme de visiteur — durée 2 ans (Google)</dd>
+        <dt><code>_ga_*</code></dt><dd>État de session GA4 — durée 2 ans (Google)</dd>
+      </dl>
+      <p>Ces cookies sont déposés par Google et soumis à la politique de confidentialité de Google. Avant acceptation ou après refus, aucun de ces cookies n'est créé.</p>
+      <p>Alkoda OnAir utilise également <code>localStorage</code> pour mémoriser votre choix (acceptation ou refus) pendant 180 jours. Ce stockage est purement fonctionnel et ne sert qu'à éviter l'affichage répété du bandeau.</p>
+    </div>
+
+    <div class="legal-section" id="conservation-fr">
+      <h2>Durée de conservation du choix</h2>
+      <p>Votre préférence (acceptation ou refus) est enregistrée dans le stockage local de votre navigateur pendant <strong>180 jours</strong>. Au-delà de cette période, le bandeau s'affiche à nouveau.</p>
+      <p>Le refus est conservé exactement de la même manière que l'acceptation.</p>
+    </div>
+
+    <div class="legal-section" id="retrait-fr">
+      <h2>Retrait du consentement</h2>
+      <p>Vous pouvez modifier votre choix à tout moment en cliquant sur <strong>« Gérer les cookies »</strong> présent dans le pied de page de chaque page du site.</p>
+      <p>Lorsque vous retirez votre consentement :</p>
+      <ul class="cookie-list">
+        <li>Google Analytics est immédiatement désactivé.</li>
+        <li>Aucun nouvel événement n'est envoyé à Google.</li>
+        <li>Les cookies <code>_ga</code> et <code>_ga_*</code> sont supprimés dans la mesure du possible depuis votre navigateur.</li>
+        <li>Google Analytics ne sera pas rechargé lors de vos prochaines visites tant que vous n'aurez pas accepté à nouveau.</li>
+      </ul>
+      <button class="manage-btn alkoda-cookie-btn" onclick="window.alkodaConsent&&window.alkodaConsent.open()">Gérer les cookies</button>
+    </div>
+
+    <div class="legal-section" id="droits-fr">
+      <h2>Vos droits</h2>
+      <p>Conformément au Règlement général sur la protection des données (RGPD), vous disposez d'un droit d'accès, de rectification, de suppression et de limitation concernant vos données personnelles.</p>
+      <p>Pour toute demande : <a href="#" onclick="this.href='mai'+'lto:contact@alkoda-onair.com';return true;">contact@alkoda-onair.com</a></p>
+      <p>Les informations complètes sur l'éditeur du site figurent dans les <a href="legal.html">mentions légales</a>.</p>
+    </div>
+
+    <div class="legal-section" id="responsable-fr">
       <h2>Responsable du traitement</h2>
       <dl class="info-grid">
-        <dt>Service</dt><dd>Alkoda StartPage</dd>
         <dt>Éditeur</dt><dd>Alkoda On Air (Entreprise Individuelle)</dd>
-        <dt>Contact</dt><dd><a href="#" onclick="this.href='mai'+'lto:contact@alkoda-onair.com';return true;">contact@alkoda-onair.com</a></dd>
+        <dt>Responsable</dt><dd>Christophe Koclejda</dd>
+        <dt>Adresse</dt><dd>25 rue Pradier — 75019 Paris, France</dd>
+        <dt>Email</dt><dd><a href="#" onclick="this.href='mai'+'lto:contact@alkoda-onair.com';return true;">contact@alkoda-onair.com</a></dd>
+        <dt>SIRET</dt><dd>820 390 409 00010</dd>
       </dl>
-      <p>L’identification complète de l’éditeur est disponible dans les mentions légales du site.</p>
     </div>
 
-    <div class="legal-section" id="donnees">
-      <h2>Données collectées</h2>
-      <p>Dans le cadre de l’utilisation d’Alkoda StartPage, les données suivantes peuvent être collectées :</p>
-      <p>adresse email — données du webmix — liens favoris — images importées — paramètres de grille — préférences visuelles.</p>
-      <p>Les mots de passe sont gérés de manière sécurisée par un service tiers et ne sont pas accessibles par l’administrateur.</p>
+    <p style="margin-top:40px;font-family:'Share Tech Mono',monospace;font-size:11px;color:var(--dim);letter-spacing:.08em">© 2026 Alkoda On Air — Politique de confidentialité et cookies</p>
+    <div class="page-footer">
+      <a href="legal.html">Mentions légales</a>
+      <button class="alkoda-cookie-btn" onclick="window.alkodaConsent&&window.alkodaConsent.open()">Gérer les cookies</button>
     </div>
-
-    <div class="legal-section" id="finalites">
-      <h2>Finalités du traitement</h2>
-      <p>Les données sont utilisées uniquement pour permettre la création, la personnalisation et la sauvegarde d’un webmix, ainsi que pour gérer l’accès au compte utilisateur.</p>
-      <div class="highlight-box"><p>Aucune utilisation commerciale, publicitaire ou de profilage n’est effectuée à partir des données enregistrées dans le service.</p></div>
-    </div>
-
-    <div class="legal-section" id="base-legale">
-      <h2>Base légale</h2>
-      <p>Le traitement des données repose sur l’exécution du service demandé par l’utilisateur : création d’un compte, connexion et sauvegarde du webmix personnalisé.</p>
-    </div>
-
-    <div class="legal-section" id="hebergement">
-      <h2>Hébergement et stockage des données</h2>
-      <p>Le site est hébergé par GitHub. La gestion des comptes, l’authentification et le stockage des données sont assurés via Supabase.</p>
-      <p>Ces services techniques peuvent impliquer un hébergement ou un traitement de données en dehors de l’Union européenne.</p>
-    </div>
-
-    <div class="legal-section" id="acces">
-      <h2>Accès aux données</h2>
-      <p>Chaque utilisateur accède uniquement à ses propres données. L’administrateur peut techniquement accéder aux données uniquement pour des besoins de maintenance, de sécurité ou de bon fonctionnement du service.</p>
-    </div>
-
-    <div class="legal-section" id="securite">
-      <h2>Sécurité des données</h2>
-      <p>Le service utilise un système d’authentification sécurisé. Les images stockées dans Supabase Storage ne sont pas prévues pour être publiques et peuvent être affichées au moyen d’URLs signées temporaires.</p>
-      <p>Les accès aux données doivent rester limités à l’utilisateur concerné et aux besoins strictement nécessaires à l’administration technique du service.</p>
-    </div>
-
-    <div class="legal-section" id="conservation">
-      <h2>Durée de conservation</h2>
-      <p>Les données sont conservées tant que le compte utilisateur existe. Une durée maximale de conservation pourra être ajoutée ultérieurement pour les comptes inactifs pendant une longue période.</p>
-    </div>
-
-    <div class="legal-section" id="suppression">
-      <h2>Suppression des données</h2>
-      <p>L’utilisateur peut supprimer son compte. La suppression du compte entraîne la suppression immédiate des données associées au compte, dans la limite du fonctionnement normal des services techniques utilisés.</p>
-    </div>
-
-    <div class="legal-section" id="cookies">
-      <h2>Cookies et stockage local</h2>
-      <p>Le service peut utiliser des cookies techniques, le stockage local du navigateur ou des mécanismes équivalents nécessaires à la connexion, à la session utilisateur et au bon fonctionnement de l’interface.</p>
-      <p>Aucun cookie publicitaire ou outil de suivi marketing n’est utilisé.</p>
-    </div>
-
-    <div class="legal-section" id="partage">
-      <h2>Partage des données</h2>
-      <p>Les données personnelles ne sont ni vendues, ni louées, ni transmises à des tiers à des fins commerciales.</p>
-      <p>Elles peuvent être traitées par les prestataires techniques strictement nécessaires au fonctionnement du service, notamment GitHub et Supabase.</p>
-    </div>
-
-    <div class="legal-section" id="droits">
-      <h2>Droits des utilisateurs</h2>
-      <p>Conformément au RGPD, l’utilisateur dispose d’un droit d’accès, de rectification, de suppression et de limitation du traitement de ses données.</p>
-      <p>Pour toute demande relative aux données personnelles : <a href="#" onclick="this.href='mai'+'lto:contact@alkoda-onair.com';return true;">contact@alkoda-onair.com</a></p>
-    </div>
-
-    <p style="margin-top:40px;font-family:'Share Tech Mono',monospace;font-size:11px;color:var(--muted);letter-spacing:.08em">© 2026 Alkoda On Air — Politique de confidentialité</p>
   </div>
 
   <!-- ENGLISH VERSION -->
   <div class="lang-en">
-    <div class="section-kicker">Personal data</div>
-    <h1>Privacy<br>Policy</h1>
-    <p style="margin-top:16px;margin-bottom:40px">This document explains how personal data is processed when using Alkoda StartPage.</p>
+    <div class="section-kicker">Privacy & cookies</div>
+    <h1>Privacy<br>and cookies</h1>
+    <p style="margin-top:16px;margin-bottom:40px">This page explains how Alkoda OnAir uses analytics cookies and how to manage your preferences.</p>
 
     <div class="toc">
       <div class="toc-title">Contents</div>
       <ul>
-        <li><a href="#responsable">Data controller</a></li>
-        <li><a href="#donnees">Data collected</a></li>
-        <li><a href="#finalites">Purposes</a></li>
-        <li><a href="#base-legale">Legal basis</a></li>
-        <li><a href="#hebergement">Hosting</a></li>
-        <li><a href="#acces">Data access</a></li>
-        <li><a href="#securite">Security</a></li>
-        <li><a href="#conservation">Retention</a></li>
-        <li><a href="#suppression">Deletion</a></li>
-        <li><a href="#cookies">Cookies and local storage</a></li>
-        <li><a href="#partage">Data sharing</a></li>
-        <li><a href="#droits">User rights</a></li>
+        <li><a href="#ga4-fr">Google Analytics 4</a></li>
+        <li><a href="#mesures-fr">What is measured</a></li>
+        <li><a href="#consentement-fr">Consent</a></li>
+        <li><a href="#cookies-fr">Cookies set</a></li>
+        <li><a href="#conservation-fr">Retention period</a></li>
+        <li><a href="#retrait-fr">Withdrawing consent</a></li>
+        <li><a href="#droits-fr">Your rights</a></li>
+        <li><a href="#responsable-fr">Data controller</a></li>
       </ul>
+    </div>
+
+    <div class="legal-section">
+      <h2>Google Analytics 4</h2>
+      <p>Alkoda OnAir uses <strong>Google Analytics 4</strong> (measurement ID: G-7CB706LQZ8) to understand how visitors use the website and improve its content.</p>
+      <div class="highlight-box"><p><strong>No Google Analytics resource is loaded and no data is sent until you have explicitly accepted.</strong> If you refuse or have not yet made a choice, Google Analytics remains inactive.</p></div>
+    </div>
+
+    <div class="legal-section">
+      <h2>What is measured after acceptance</h2>
+      <p>When you accept analytics cookies, Google Analytics may collect:</p>
+      <ul class="cookie-list">
+        <li>Pages visited on the website</li>
+        <li>Number of visits and visitors</li>
+        <li>Approximate session duration</li>
+        <li>General interactions (clicks, navigation)</li>
+        <li>Device type and browser used</li>
+        <li>General traffic source (country, origin)</li>
+      </ul>
+      <p>This data is pseudonymised and processed by Google in accordance with their privacy policy. Alkoda OnAir does not have access to data that would directly identify a visitor.</p>
+    </div>
+
+    <div class="legal-section">
+      <h2>Consent</h2>
+      <p>On your first visit, a banner appears at the bottom of the screen. You can:</p>
+      <ul class="cookie-list">
+        <li><strong>Accept analytics</strong> — Google Analytics is activated and starts measuring visits.</li>
+        <li><strong>Refuse</strong> — no Analytics cookie is set and no data is sent.</li>
+      </ul>
+      <p>Both choices are presented identically. Neither is presented as the default or as more recommended than the other.</p>
+      <button class="manage-btn alkoda-cookie-btn" onclick="window.alkodaConsent&&window.alkodaConsent.open()">Cookie settings</button>
+    </div>
+
+    <div class="legal-section">
+      <h2>Cookies set</h2>
+      <p>If you accept, Google Analytics sets the following cookies:</p>
+      <dl class="info-grid">
+        <dt><code>_ga</code></dt><dd>Anonymous visitor identifier — 2 years (Google)</dd>
+        <dt><code>_ga_*</code></dt><dd>GA4 session state — 2 years (Google)</dd>
+      </dl>
+      <p>These cookies are set by Google and are subject to Google's privacy policy. Before acceptance or after refusal, none of these cookies are created.</p>
+      <p>Alkoda OnAir also uses <code>localStorage</code> to remember your choice (acceptance or refusal) for 180 days. This storage is purely functional and only serves to avoid showing the banner repeatedly.</p>
+    </div>
+
+    <div class="legal-section">
+      <h2>Retention period of your choice</h2>
+      <p>Your preference (acceptance or refusal) is stored in your browser's local storage for <strong>180 days</strong>. After this period, the banner is shown again.</p>
+      <p>Refusal is stored in exactly the same way as acceptance.</p>
+    </div>
+
+    <div class="legal-section">
+      <h2>Withdrawing consent</h2>
+      <p>You can change your choice at any time by clicking <strong>"Cookie settings"</strong> in the footer of any page on the site.</p>
+      <p>When you withdraw your consent:</p>
+      <ul class="cookie-list">
+        <li>Google Analytics is immediately disabled.</li>
+        <li>No new events are sent to Google.</li>
+        <li>The <code>_ga</code> and <code>_ga_*</code> cookies are deleted from your browser where technically possible.</li>
+        <li>Google Analytics will not be reloaded on future visits until you accept again.</li>
+      </ul>
+      <button class="manage-btn alkoda-cookie-btn" onclick="window.alkodaConsent&&window.alkodaConsent.open()">Cookie settings</button>
+    </div>
+
+    <div class="legal-section">
+      <h2>Your rights</h2>
+      <p>Under the General Data Protection Regulation (GDPR), you have the right to access, rectify, delete and restrict the processing of your personal data.</p>
+      <p>For any request: <a href="#" onclick="this.href='mai'+'lto:contact@alkoda-onair.com';return true;">contact@alkoda-onair.com</a></p>
+      <p>Full publisher details are available in the <a href="legal.html">legal notice</a>.</p>
     </div>
 
     <div class="legal-section">
       <h2>Data controller</h2>
       <dl class="info-grid">
-        <dt>Service</dt><dd>Alkoda StartPage</dd>
         <dt>Publisher</dt><dd>Alkoda On Air (Sole proprietorship)</dd>
-        <dt>Contact</dt><dd><a href="#" onclick="this.href='mai'+'lto:contact@alkoda-onair.com';return true;">contact@alkoda-onair.com</a></dd>
+        <dt>Contact</dt><dd>Christophe Koclejda</dd>
+        <dt>Address</dt><dd>25 rue Pradier — 75019 Paris, France</dd>
+        <dt>Email</dt><dd><a href="#" onclick="this.href='mai'+'lto:contact@alkoda-onair.com';return true;">contact@alkoda-onair.com</a></dd>
+        <dt>SIRET</dt><dd>820 390 409 00010</dd>
       </dl>
-      <p>The full identification of the publisher is available in the website’s legal notice.</p>
     </div>
 
-    <div class="legal-section">
-      <h2>Data collected</h2>
-      <p>When using Alkoda StartPage, the following data may be collected:</p>
-      <p>email address — webmix data — favorite links — uploaded images — grid settings — visual preferences.</p>
-      <p>Passwords are securely managed by a third-party service and are not accessible by the administrator.</p>
+    <p style="margin-top:40px;font-family:'Share Tech Mono',monospace;font-size:11px;color:var(--dim);letter-spacing:.08em">© 2026 Alkoda On Air — Privacy and cookies policy</p>
+    <div class="page-footer">
+      <a href="legal.html">Legal notice</a>
+      <button class="alkoda-cookie-btn" onclick="window.alkodaConsent&&window.alkodaConsent.open()">Cookie settings</button>
     </div>
-
-    <div class="legal-section">
-      <h2>Purposes of processing</h2>
-      <p>The data is used only to allow users to create, personalize and save a webmix, and to manage access to the user account.</p>
-      <div class="highlight-box"><p>No commercial use, advertising use or profiling is performed using the data stored in the service.</p></div>
-    </div>
-
-    <div class="legal-section">
-      <h2>Legal basis</h2>
-      <p>The processing is based on the performance of the service requested by the user: account creation, login and saving of a personalized webmix.</p>
-    </div>
-
-    <div class="legal-section">
-      <h2>Hosting and data storage</h2>
-      <p>The website is hosted by GitHub. Account management, authentication and data storage are provided via Supabase.</p>
-      <p>These technical services may involve hosting or processing data outside the European Union.</p>
-    </div>
-
-    <div class="legal-section">
-      <h2>Data access</h2>
-      <p>Each user can access only their own data. The administrator may technically access the data only for maintenance, security or proper operation of the service.</p>
-    </div>
-
-    <div class="legal-section">
-      <h2>Data security</h2>
-      <p>The service uses a secure authentication system. Images stored in Supabase Storage are not intended to be public and may be displayed using temporary signed URLs.</p>
-      <p>Access to data must remain limited to the relevant user and to what is strictly necessary for technical administration of the service.</p>
-    </div>
-
-    <div class="legal-section">
-      <h2>Retention period</h2>
-      <p>Data is kept for as long as the user account exists. A maximum retention period may later be added for accounts inactive for a long period.</p>
-    </div>
-
-    <div class="legal-section">
-      <h2>Data deletion</h2>
-      <p>The user may delete their account. Account deletion results in the immediate deletion of the data associated with the account, within the normal operating limits of the technical services used.</p>
-    </div>
-
-    <div class="legal-section">
-      <h2>Cookies and local storage</h2>
-      <p>The service may use technical cookies, browser local storage or equivalent mechanisms necessary for login, user session management and proper interface operation.</p>
-      <p>No advertising cookies or marketing tracking tools are used.</p>
-    </div>
-
-    <div class="legal-section">
-      <h2>Data sharing</h2>
-      <p>Personal data is not sold, rented or shared with third parties for commercial purposes.</p>
-      <p>It may be processed by technical providers strictly necessary for the operation of the service, including GitHub and Supabase.</p>
-    </div>
-
-    <div class="legal-section">
-      <h2>User rights</h2>
-      <p>In accordance with the GDPR, users have the right to access, rectify, delete and restrict the processing of their data.</p>
-      <p>For any request regarding personal data: <a href="#" onclick="this.href='mai'+'lto:contact@alkoda-onair.com';return true;">contact@alkoda-onair.com</a></p>
-    </div>
-
-    <p style="margin-top:40px;font-family:'Share Tech Mono',monospace;font-size:11px;color:var(--muted);letter-spacing:.08em">© 2026 Alkoda On Air — Privacy Policy</p>
   </div>
 
 </div>
@@ -274,20 +298,22 @@ const _svgFRl='<svg width="22" height="15" viewBox="0 0 3 2" xmlns="http://www.w
 const _svgUKl='<svg width="22" height="15" viewBox="0 0 60 30" xmlns="http://www.w3.org/2000/svg" style="border-radius:2px;vertical-align:middle;display:inline-block"><rect width="60" height="30" fill="#012169"/><path d="M0,0 L60,30 M60,0 L0,30" stroke="#fff" stroke-width="6"/><path d="M0,0 L60,30 M60,0 L0,30" stroke="#C8102E" stroke-width="4"/><path d="M30,0 V30 M0,15 H60" stroke="#fff" stroke-width="10"/><path d="M30,0 V30 M0,15 H60" stroke="#C8102E" stroke-width="6"/></svg>';
 let _langL='fr';
 try{_langL=localStorage.getItem('alkoda_lang');}catch(e){}
-if(!_langL) _langL=navigator.language?.startsWith('fr')?'fr':'en';
+if(!_langL)_langL=navigator.language?.startsWith('fr')?'fr':'en';
 function setLangL(lang){
   _langL=lang;
   try{localStorage.setItem('alkoda_lang',lang);}catch(e){}
   document.getElementById('lang-flag-l').innerHTML=lang==='fr'?_svgFRl:_svgUKl;
   document.getElementById('back-label').textContent=lang==='fr'?'Retour au site':'Back to site';
-  document.getElementById('nav-title').textContent=lang==='fr'?'Confidentialité & RGPD':'Privacy & GDPR';
-  document.title=lang==='fr'?'Politique de confidentialité — Alkoda On Air':'Privacy Policy — Alkoda On Air';
+  document.getElementById('nav-title').textContent=lang==='fr'?'Confidentialité & cookies':'Privacy & cookies';
+  document.title=lang==='fr'?'Confidentialité et cookies — Alkoda On Air':'Privacy and cookies — Alkoda On Air';
   document.documentElement.lang=lang;
   document.querySelectorAll('.lang-fr').forEach(el=>el.style.display=lang==='fr'?'':'none');
   document.querySelectorAll('.lang-en').forEach(el=>el.style.display=lang==='en'?'block':'none');
+  if(window._alkodaConsentLang)window._alkodaConsentLang(lang);
 }
 function toggleLangL(){setLangL(_langL==='fr'?'en':'fr');}
 setLangL(_langL);
 </script>
+<script src="consent.js?v=20260716-1"></script>
 </body>
 </html>

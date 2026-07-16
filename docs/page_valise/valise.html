@@ -727,6 +727,9 @@
         <a href="#broadcast" data-i18n="v_nav3">Pourquoi c'est différent</a>
         <a href="#playout" data-i18n="v_nav4">Playback</a>
         <a href="#visio" data-i18n="v_nav6">Vue graphique</a>
+        <a href="../legal.html">Mentions légales</a>
+        <a href="../RGPD.html" class="alkoda-privacy-link">Confidentialité et cookies</a>
+        <button class="alkoda-cookie-btn" onclick="window.alkodaConsent&&window.alkodaConsent.open()">Gérer les cookies</button>
       </nav>
       <div class="copyright-note" data-i18n="v_copyright">Les marques citées appartiennent à leurs propriétaires respectifs, notamment Blackmagic Design, OBS Studio, H2R Graphics, H2R Layouts, PlayoutBee, Magewell, StarTech et MOTU. Cette page les cite à titre descriptif pour expliquer le workflow utilisé par Alkoda On Air.</div>
     </div>
@@ -1000,6 +1003,7 @@ function setLangV(lang){
     if(val) el.innerHTML=val;
   });
   document.title=lang==='fr'?'Alkoda On Air — La régie mobile':'Alkoda On Air — Mobile broadcast control room';
+  if(window._alkodaConsentLang)window._alkodaConsentLang(lang);
 }
 function toggleLangV(){setLangV(_langV==='fr'?'en':'fr');}
 function toggleLangDrop(){document.getElementById('lang-drop').classList.toggle('open');}
@@ -1020,5 +1024,6 @@ document.getElementById('lightbox').addEventListener('click',function(){this.cla
 document.addEventListener('keydown',function(e){if(e.key==='Escape')document.getElementById('lightbox').classList.remove('open');});
 </script>
 <div id="lightbox" onclick="this.classList.remove('open')"><img id="lb-img" src="" alt=""></div>
+<script src="../consent.js?v=20260716-1"></script>
 </body>
 </html>

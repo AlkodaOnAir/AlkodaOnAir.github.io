@@ -554,6 +554,8 @@ footer{padding:28px 0 40px;border-top:1px solid var(--line);background:#000}
       <a href="https://www.youtube.com/@alkoda" target="_blank" rel="noopener">YouTube</a>
       <a href="https://www.linkedin.com/company/alkoda-onair/" target="_blank" rel="noopener">LinkedIn</a>
       <a href="legal.html" data-i18n="legal">Mentions légales</a>
+      <a href="RGPD.html" class="alkoda-privacy-link">Confidentialité et cookies</a>
+      <button class="alkoda-cookie-btn" onclick="window.alkodaConsent&&window.alkodaConsent.open()">Gérer les cookies</button>
     </div>
     <div class="footer-copy" data-i18n="footer_copy">© 2026 Alkoda On Air · Paris</div>
   </div>
@@ -785,6 +787,7 @@ function setLang(lang){
     dv.addEventListener('canplay',function(){dv.play().catch(function(){});},{once:true});
     dv.load();
   }
+  if(window._alkodaConsentLang)window._alkodaConsentLang(lang);
 }
 
 function toggleLang(){setLang(_lang==='fr'?'en':'fr');}
@@ -849,6 +852,7 @@ function closeMobMenu(){document.getElementById('mob-panel').classList.remove('o
       });
   });
 })();
+
 function lbOpen(el){
   if(window.matchMedia('(hover:none)').matches)return;
   var img=el.tagName==='IMG'?el:el.querySelector('img');
@@ -861,5 +865,6 @@ document.getElementById('lightbox').addEventListener('click',function(){this.cla
 document.addEventListener('keydown',function(e){if(e.key==='Escape')document.getElementById('lightbox').classList.remove('open');});
 </script>
 <div id="lightbox" onclick="this.classList.remove('open')"><img id="lb-img" src="" alt=""></div>
+<script src="consent.js?v=20260716-1"></script>
 </body>
 </html>

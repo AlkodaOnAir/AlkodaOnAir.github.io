@@ -1110,6 +1110,9 @@ kbd{background:var(--bg3);border:1px solid var(--border2);border-radius:2px;padd
       <button class="zoom-btn" onclick="dz(.15)">+</button>
       <button class="zoom-btn" onclick="resetView()" title="Fit">⊡</button>
     </div>
+    <div class="bb-sep"></div>
+    <a href="../RGPD.html" class="alkoda-privacy-link" style="color:var(--textdim);text-decoration:none;font-family:var(--mono);font-size:10px;letter-spacing:.08em;transition:color .15s">Confidentialité</a>
+    <button class="alkoda-cookie-btn" onclick="window.alkodaConsent&&window.alkodaConsent.open()" style="color:var(--textdim);font-family:var(--mono);font-size:10px;letter-spacing:.08em">Gérer les cookies</button>
   </div>
 </div>
 <div id="tt"><div class="tt-name" id="tt-n"></div><div class="tt-cat" id="tt-c"></div><div class="tt-info" id="tt-i"></div></div>
@@ -1160,6 +1163,7 @@ function setLang(lang){
   },0);
   const _hp=document.getElementById('how-panel');
   if(_hp&&_hp.classList.contains('open'))renderHowPanel();
+  if(window._alkodaConsentLang)window._alkodaConsentLang(_lang);
 }
 function toggleLang(){setLang(_lang==='fr'?'en':'fr');}
 function renderHowPanel(){
@@ -2116,5 +2120,6 @@ window.addEventListener('resize',fitView);
   inp.addEventListener('focus',()=>{if(acHits.length)drop.classList.add('open');});
 })();
 </script>
+<script src="../consent.js?v=20260716-1"></script>
 </body>
 </html>

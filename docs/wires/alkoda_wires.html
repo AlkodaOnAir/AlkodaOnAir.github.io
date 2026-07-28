@@ -1023,7 +1023,7 @@ kbd{background:var(--bg3);border:1px solid var(--border2);border-radius:2px;padd
         <div class="h-ver">SIGNAL MAP</div>
       </div>
     </a>
-    <button onclick="history.length>1?history.back():(window.location.href='https://alkoda-onair.com/')" data-i18n="back_btn" style="background:rgba(255,255,255,.07);border:1px solid var(--border2);color:var(--text);border-radius:4px;padding:3px 10px;font-family:var(--mono);font-size:10px;letter-spacing:1px;cursor:pointer;flex-shrink:0">← RETOUR</button>
+    <a href="https://alkoda-onair.com/" data-i18n="back_btn" style="background:rgba(255,255,255,.07);border:1px solid var(--border2);color:var(--text);border-radius:4px;padding:3px 10px;font-family:var(--mono);font-size:10px;letter-spacing:1px;cursor:pointer;flex-shrink:0;text-decoration:none">← RETOUR</a>
     <div class="h-sep"></div>
     <div class="h-oab">● ON AIR</div>
     <button id="lang-toggle" onclick="toggleLang()" title="Change language / Changer de langue"><span id="lang-flag"></span></button>
@@ -1110,6 +1110,8 @@ kbd{background:var(--bg3);border:1px solid var(--border2);border-radius:2px;padd
       <button class="zoom-btn" onclick="dz(.15)">+</button>
       <button class="zoom-btn" onclick="resetView()" title="Fit">⊡</button>
     </div>
+    <div class="bb-sep"></div>
+    <a href="../legal.html" style="color:var(--textdim);text-decoration:none;font-family:var(--mono);font-size:10px;letter-spacing:.08em;transition:color .15s">Mentions légales</a>
     <div class="bb-sep"></div>
     <a href="../RGPD.html" class="alkoda-privacy-link" style="color:var(--textdim);text-decoration:none;font-family:var(--mono);font-size:10px;letter-spacing:.08em;transition:color .15s">Confidentialité</a>
     <button class="alkoda-cookie-btn" onclick="window.alkodaConsent&&window.alkodaConsent.open()" style="color:var(--textdim);font-family:var(--mono);font-size:10px;letter-spacing:.08em">Gérer les cookies</button>

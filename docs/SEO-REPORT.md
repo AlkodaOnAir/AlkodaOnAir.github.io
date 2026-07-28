@@ -13,7 +13,6 @@ Date : 2026-07-16
 | `visio/alkoda_visio.html` | ✅ Optimisé |
 | `legal.html` | ✅ Optimisé |
 | `RGPD.html` | ✅ noindex ajouté |
-| `feneu-18ans.html` | ⛔ Non modifié (page privée, hors périmètre) |
 | `OPV.html` | ⛔ Non modifié (document interne, hors périmètre) |
 | `terms-of-service-wires.html` | ⚠️ Non modifié (produit tiers Wires, hors périmètre Alkoda OnAir) |
 | `refund-policy-wires.html` | ⚠️ Non modifié (produit tiers Wires, hors périmètre Alkoda OnAir) |
@@ -130,7 +129,6 @@ Le site propose le français et l'anglais via un système i18n JavaScript côté
 | Page | Raison |
 |------|--------|
 | `RGPD.html` | Politique de confidentialité — convention noindex, pas une cible SEO |
-| `feneu-18ans.html` | Page privée personnelle, sans rapport avec l'activité d'Alkoda On Air |
 | `OPV.html` | Export de planning interne — document non destiné au public |
 | `terms-of-service-wires.html` | CGU d'un produit tiers (Wires) — hors périmètre Alkoda On Air |
 | `refund-policy-wires.html` | Politique de remboursement Wires — hors périmètre Alkoda On Air |

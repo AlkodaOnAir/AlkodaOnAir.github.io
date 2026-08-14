@@ -1485,6 +1485,18 @@ function onWirelessPortDblClick(nodeId,portId){
 // l'animation. Comportement propre à l'export, absent de Wires — où une route ne se
 // désactive que depuis son en-tête dans le panneau Routes. Regarder l'animation en
 // cliquant ailleurs ne doit pas l'interrompre.
+// Patch : viewer.js appelle stopFlowAnimation() sur clic vide du canvas,
+// ce qui coupe l'animation sans toucher _activeRoutes. On relance si des routes sont actives.
+const _origStopFlowAnimation = stopFlowAnimation;
+let _sfRestarting = false;
+stopFlowAnimation = function(){
+  _origStopFlowAnimation();
+  if(!_sfRestarting && Object.keys(_activeRoutes).length){
+    _sfRestarting = true;
+    _restartExportAnimation();
+    _sfRestarting = false;
+  }
+};
 </script>
 </body>
 </html>

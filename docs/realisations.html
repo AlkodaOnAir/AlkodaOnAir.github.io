@@ -222,8 +222,8 @@ footer{padding:28px 0 40px;border-top:1px solid var(--line);background:#000}
       <a href="index.html" data-i18n="nav_prestations">Prestations</a>
       <a href="realisations.html" class="active" data-i18n="nav_realisations">Réalisations</a>
       <a href="page_valise/valise.html" data-i18n="nav_valise">La régie</a>
-      <a href="wires/wires.html" data-i18n="nav_visio">Visio</a>
       <a href="index.html#contact" data-i18n="nav_contact">Contact</a>
+      <a href="wires/wires.html" data-i18n="nav_visio">Wires</a>
       <span class="nav-sep">|</span>
       <div id="lang-selector">
         <button id="lang-toggle" onclick="toggleLangDrop()" title="Change language / Changer de langue"><span id="lang-flag"></span><span id="lang-name"></span><span class="lang-arrow">▾</span></button>
@@ -241,8 +241,8 @@ footer{padding:28px 0 40px;border-top:1px solid var(--line);background:#000}
   <a href="index.html" data-i18n="nav_prestations" onclick="closeMobMenu()">Prestations</a>
   <a href="realisations.html" data-i18n="nav_realisations" onclick="closeMobMenu()">Réalisations</a>
   <a href="page_valise/valise.html" data-i18n="nav_valise" onclick="closeMobMenu()">La régie</a>
-  <a href="wires/wires.html" data-i18n="nav_visio" onclick="closeMobMenu()">Visio</a>
   <a href="index.html#contact" data-i18n="nav_contact" onclick="closeMobMenu()">Contact</a>
+  <a href="wires/wires.html" data-i18n="nav_visio" onclick="closeMobMenu()">Wires</a>
   <div class="mob-bottom">
     <a href="index.html#contact" class="mob-cta" data-i18n="nav_cta" onclick="closeMobMenu()">Nous contacter</a>
     <button id="lang-toggle-mob" onclick="toggleLang()" title="Changer de langue"><span id="lang-flag-mob"></span><span id="lang-name-mob"></span></button>
@@ -521,7 +521,7 @@ document.addEventListener('keydown',e=>{if(e.key==='Escape')closeModDir();});
 // ── SYSTÈME DE LANGUE ──
 const STRINGS={
   fr:{
-    nav_prestations:'Accueil', nav_valise:'La régie', nav_visio:'Broadcast System',
+    nav_prestations:'Accueil', nav_valise:'La régie', nav_visio:'Wires',
     nav_realisations:'Réalisations', nav_about:'À propos', nav_contact:'Contact',
     nav_cta:'Nous contacter',
     real_kicker:'Réalisations',
@@ -564,7 +564,7 @@ const STRINGS={
     legal:'Mentions légales'
   },
   en:{
-    nav_prestations:'Home', nav_valise:'Control Room', nav_visio:'Broadcast System',
+    nav_prestations:'Home', nav_valise:'Control Room', nav_visio:'Wires',
     nav_realisations:'Portfolio', nav_about:'About', nav_contact:'Contact',
     nav_cta:'Contact us',
     real_kicker:'Portfolio',

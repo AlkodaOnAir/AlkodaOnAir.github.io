@@ -1353,6 +1353,7 @@ document.addEventListener('mousedown',e=>{
   if(p.contains(e.target))return;
   if(e.target.closest('#btn-routes'))return;
   p.classList.remove('open');
+  window._routesPanelJustClosed=true;
 },true);
 // Espace → pause/reprend l'animation en cours (route, chemin ou segment isolé).
 // Aucun raccourci clavier n'existe déjà sur Espace dans cet export (pas de pan
@@ -1503,7 +1504,8 @@ function onWirelessPortDblClick(nodeId,portId){
     var infoPanel=document.getElementById('info-panel');
     if(infoPanel&&infoPanel.classList.contains('open'))return;
     var routesPanel=document.getElementById('routes-panel');
-    if(routesPanel&&routesPanel.classList.contains('open')){
+    if(routesPanel&&(routesPanel.classList.contains('open')||window._routesPanelJustClosed)){
+      window._routesPanelJustClosed=false;
       e.stopImmediatePropagation();
       routesPanel.classList.remove('open');
       return;

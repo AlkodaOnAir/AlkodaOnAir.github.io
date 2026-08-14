@@ -1490,6 +1490,8 @@ function onWirelessPortDblClick(nodeId,portId){
 (function(){
   var _area=document.getElementById('canvas-area');
   var _svg=document.getElementById('cables-svg');
+  var _root=document.getElementById('canvas-root');
+  var _nodesL=document.getElementById('nodes-layer');
   if(!_area)return;
   var _drag=false,_moved=false,_lx=0,_ly=0;
   _area.addEventListener('mousedown',function(e){if(e.button!==0)return;_drag=true;_lx=e.clientX;_ly=e.clientY;_moved=false;});
@@ -1500,9 +1502,18 @@ function onWirelessPortDblClick(nodeId,portId){
   window.addEventListener('mouseup',function(){_drag=false;});
   document.addEventListener('click',function(e){
     if(_moved){_moved=false;return;}
-    if(e.target!==_area&&e.target!==_svg)return;
-    var infoPanel=document.getElementById('info-panel');
-    if(infoPanel&&infoPanel.classList.contains('open'))return;
+    var isEmptyTarget=(e.target===_area||e.target===_svg||e.target===_root||e.target===_nodesL);
+    var inCanvas=isEmptyTarget||_area.contains(e.target);
+    if(!inCanvas)return;
+    if(isEmptyTarget){
+      var infoPanel=document.getElementById('info-panel');
+      if(infoPanel&&infoPanel.classList.contains('open'))return;
+    }
+    // Un clic n'importe ou dans le canevas (vide, appareil ou cable) participe a la
+    // meme sequence en deux temps qu'un clic sur le vide : s'il y a un panneau Routes
+    // ouvert ou une route active a arreter, ce clic sert a ca et rien d'autre - sinon
+    // (rien a fermer/arreter) on ne bloque rien, le clic garde son comportement normal
+    // (selection du noeud / ouverture de la fiche cable).
     var routesPanel=document.getElementById('routes-panel');
     if(routesPanel&&(routesPanel.classList.contains('open')||window._routesPanelJustClosed)){
       window._routesPanelJustClosed=false;

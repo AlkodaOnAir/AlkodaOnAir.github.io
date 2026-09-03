@@ -122,9 +122,13 @@ h2 em{font-style:normal;color:var(--accent)}
 #clients{background:var(--bg)}
 .clients-intro{font-size:16px;color:var(--muted);font-weight:300;line-height:1.7;max-width:640px;margin-bottom:48px}
 .logos-grid{display:grid;grid-template-columns:repeat(8,1fr);gap:1px;background:var(--line);border:1px solid var(--line);border-radius:16px;overflow:hidden}
-.logo-cell{background:var(--bg2);padding:28px 20px;display:flex;align-items:center;justify-content:center;transition:.2s}
+.logo-cell{background:var(--bg2);padding:12px 20px;min-height:88px;display:flex;align-items:center;justify-content:center;transition:.2s}
 .logo-cell:hover{background:var(--bg3)}
+.logo-cell--empty:hover{background:var(--bg2)}
+.logo-cell--tight{padding-left:15px;padding-right:15px}
 .logo-cell img{height:32px;width:auto;object-fit:contain;transition:.2s}
+.logo-cell img.md{height:46px}
+.logo-cell img.lg{height:56px}
 .logo-cell:hover img{opacity:.8}
 
 /* ── DEMO VIDEO ── */
@@ -222,7 +226,8 @@ footer{padding:28px 0 40px;border-top:1px solid var(--line);background:#000}
   .origine-grid,.contact-new{grid-template-columns:1fr;gap:36px}
   .services-grid,.needs-grid{grid-template-columns:1fr 1fr}
   #featured .vgrid{grid-template-columns:repeat(3,1fr)}
-  .logos-grid{grid-template-columns:repeat(4,1fr)}
+  .logos-grid{grid-template-columns:repeat(4,1fr);background:var(--bg2)}
+  .logo-cell--empty{display:none}
   .photo-strip{grid-template-columns:1fr 1fr}
 }
 @media(max-width:720px){
@@ -444,22 +449,30 @@ footer{padding:28px 0 40px;border-top:1px solid var(--line);background:#000}
     <h2 data-i18n="clients_h2">Ils nous ont<br><em>fait confiance.</em></h2>
     <p class="clients-intro" data-i18n="clients_lead">Des startups tech aux grandes entreprises, des associations culturelles aux chaînes TV. Nous nous adaptons à chaque contexte avec le même niveau d'exigence.</p>
     <div class="logos-grid">
-      <div class="logo-cell"><a href="https://www.elastic.co" target="_blank" rel="noopener"><img src="logo-elastic.avif?v=2" alt="Elastic"></a></div>
+      <div class="logo-cell"><a href="https://esotiq.com/pl/en/about-esotiq" target="_blank" rel="noopener"><img src="logo-esotiq.avif" alt="Esotiq"></a></div>
+      <div class="logo-cell"><a href="https://evaminge.com/en" target="_blank" rel="noopener"><img src="logo-evaminge.avif" alt="Eva Minge" class="lg"></a></div>
+      <div class="logo-cell"><a href="https://freshstudio.pl/" target="_blank" rel="noopener"><img src="logo-freshstudio.avif" alt="Fresh Studio"></a></div>
+      <div class="logo-cell"><a href="https://lahsc.fr/" target="_blank" rel="noopener"><img src="logo-lahsc.avif" alt="La Home Sweet Company"></a></div>
+      <div class="logo-cell"><a href="https://www.elastic.co" target="_blank" rel="noopener"><img src="logo-elastic.avif?v=2" alt="Elastic" class="md"></a></div>
       <div class="logo-cell"><a href="https://www.leboncoin.fr" target="_blank" rel="noopener"><img src="logo-leboncoin.avif" alt="LeBonCoin"></a></div>
       <div class="logo-cell"><a href="https://www.liferay.com" target="_blank" rel="noopener"><img src="logo-liferay.avif" alt="Liferay"></a></div>
       <div class="logo-cell"><a href="https://www.casio.com" target="_blank" rel="noopener"><img src="logo-casio.avif" alt="Casio"></a></div>
       <div class="logo-cell"><a href="https://gocardless.com" target="_blank" rel="noopener"><img src="logo-gocardless.avif" alt="GoCardless"></a></div>
-      <div class="logo-cell"><a href="https://www.confluent.io" target="_blank" rel="noopener"><img src="logo-confluent.avif" alt="Confluent"></a></div>
-      <div class="logo-cell"><a href="https://www.dcbrain.com" target="_blank" rel="noopener"><img src="logo-dcbrain.avif" alt="DCbrain"></a></div>
+      <div class="logo-cell logo-cell--tight"><a href="https://www.confluent.io" target="_blank" rel="noopener"><img src="logo-confluent.avif" alt="Confluent" class="md"></a></div>
+      <div class="logo-cell"><a href="https://www.dcbrain.com" target="_blank" rel="noopener"><img src="logo-dcbrain.avif" alt="DCbrain" class="lg"></a></div>
       <div class="logo-cell"><a href="https://www.cremedelacreme.io/" target="_blank" rel="noopener"><img src="creme_Logo_Full_White copie.avif" alt="creme de la creme"></a></div>
       <div class="logo-cell"><a href="https://viadeo.journaldunet.com/" target="_blank" rel="noopener"><img src="logo-viadeo.avif" alt="Viadeo"></a></div>
-      <div class="logo-cell"><a href="https://www.youtube.com/playlist?list=PLuZ_sYdawLiVpaW1w-oi97F_HnLj55dvh" target="_blank" rel="noopener"><img src="logo-devfest.avif" alt="DevFest Lille"></a></div>
-      <div class="logo-cell"><a href="https://paristestconf.com" target="_blank" rel="noopener"><img src="logo-paristestconf.avif" alt="ParisTestConf"></a></div>
+      <div class="logo-cell"><a href="https://www.youtube.com/playlist?list=PLuZ_sYdawLiVpaW1w-oi97F_HnLj55dvh" target="_blank" rel="noopener"><img src="logo-devfest.avif" alt="DevFest Lille" class="lg"></a></div>
+      <div class="logo-cell"><a href="https://paristestconf.com" target="_blank" rel="noopener"><img src="logo-paristestconf.avif" alt="ParisTestConf" class="lg"></a></div>
       <div class="logo-cell"><a href="https://www.moncarnet-gala.fr/articles/view/PHYSALIS-PARIS" target="_blank" rel="noopener"><img src="logo-physalis.avif" alt="Physalis Événements"></a></div>
       <div class="logo-cell"><a href="https://www.bechstein.com" target="_blank" rel="noopener"><img src="logo-bechstein.avif" alt="C. Bechstein"></a></div>
       <div class="logo-cell"><a href="https://www.techniques-ingenieur.fr/actualite/articles/covid3d-la-plate-forme-nationale-pour-une-visiere-de-protection-solidaire-78927/" target="_blank" rel="noopener"><img src="logo-covid3d.avif" alt="Covid3D"></a></div>
-      <div class="logo-cell"><a href="https://www.criteo.com" target="_blank" rel="noopener"><img src="logo-criteo.avif" alt="Criteo"></a></div>
+      <div class="logo-cell"><a href="https://www.criteo.com" target="_blank" rel="noopener"><img src="logo-criteo.avif" alt="Criteo" class="lg"></a></div>
       <div class="logo-cell"><a href="https://www.youtube.com/results?search_query=lbc2+2022" target="_blank" rel="noopener"><img src="logo-lbc2.avif" alt="LBC²"></a></div>
+      <div class="logo-cell logo-cell--empty" aria-hidden="true"></div>
+      <div class="logo-cell logo-cell--empty" aria-hidden="true"></div>
+      <div class="logo-cell logo-cell--empty" aria-hidden="true"></div>
+      <div class="logo-cell logo-cell--empty" aria-hidden="true"></div>
     </div>
   </div>
 </section>

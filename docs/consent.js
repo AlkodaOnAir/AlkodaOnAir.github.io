@@ -105,8 +105,8 @@
     '#alkoda-cb-accept,#alkoda-cb-refuse{flex:1;min-height:44px;border-radius:999px;font-size:13px;font-weight:700;cursor:pointer;border:1px solid #00d2ff;transition:.2s;font-family:inherit;line-height:1;background:transparent;color:#e8eefb}',
     '#alkoda-cb-accept:hover,#alkoda-cb-refuse:hover{background:rgba(0,210,255,.12);color:#fff;border-color:#00d2ff}',
     '#alkoda-cb-accept:focus-visible,#alkoda-cb-refuse:focus-visible{outline:2px solid #00d2ff;outline-offset:3px}',
-    '.alkoda-cookie-btn{background:none;border:none;cursor:pointer;padding:0;font-size:inherit;color:inherit;font-family:inherit;text-decoration:none;display:inline;line-height:inherit}',
-    '.alkoda-cookie-btn:hover,.alkoda-privacy-link:hover{color:#00d2ff!important}',
+    '.alkoda-cookie-btn:not(.manage-btn){background:none;border:none;cursor:pointer;padding:0;font-size:inherit;color:inherit;font-family:inherit;text-decoration:none;display:inline;line-height:inherit}',
+    '.alkoda-cookie-btn:not(.manage-btn):hover,.alkoda-privacy-link:hover{color:#00d2ff!important}',
     '@media(max-width:540px){#alkoda-cb-btns{flex-direction:column}#alkoda-cb-accept,#alkoda-cb-refuse{flex:none}}'
   ].join('');
 
